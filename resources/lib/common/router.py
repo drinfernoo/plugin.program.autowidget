@@ -22,7 +22,7 @@ class Router:
         for param in self.params:
             logstring += '[ {0}: {1} ] '.format(param, self.params[param])
 
-        xbmc.log(logstring, level=xbmc.LOGDEBUG)
+        xbmc.log(logstring, level=xbmc.LOGNOTICE)
 
         return self.params
         
@@ -30,7 +30,22 @@ class Router:
         self.params = dict(parse_qsl(paramstring))
         self._log_params()
         
+        mode = self.params.get('mode', '')
         
+        if not mode:
+            from resources.lib.gui import main_menu
+            self.route = main_menu.MainMenu()
+            
+        elif mode == 'path':
+            from resources.lib import path_utils
+            
+            action = self.params.get('action', '')
+            
+            if action == 'add':
+                path_utils.Path().add()
+            
+        if self.route:
+            self.route.show_menu()
         
         xbmcplugin.setContent(handle, 'files')
         xbmcplugin.endOfDirectory(handle)

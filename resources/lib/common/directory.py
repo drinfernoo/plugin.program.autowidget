@@ -27,5 +27,6 @@ def add_menu_item(title, params=None, description='', isFolder=False):
     item = xbmcgui.ListItem(title)
     item.setInfo(type="video", infoLabels={"title": title})
 
-    ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=liz, isFolder=isFolder)
+    ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u,
+                                     listitem=item, isFolder=isFolder)
     return ok
