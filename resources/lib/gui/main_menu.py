@@ -8,3 +8,7 @@ class MainMenu():
         directory.add_menu_item(title='Add Path', params={'mode': 'path',
                                                           'action': 'add'},
                                 description='Add a new path to be cycled.')
+                                
+        directory.add_menu_item(title='Open Shortcut Window',
+                                params={'mode': 'window'},
+                                description='Open the Skin Shortcuts dialog.')

@@ -43,6 +43,9 @@ class Router:
             
             if action == 'add':
                 path_utils.Path().add()
+        elif mode == 'window':
+            from resources.lib import window
+            window.show_window()
             
         if self.route:
             self.route.show_menu()
