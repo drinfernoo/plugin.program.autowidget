@@ -4,6 +4,12 @@ import xbmcgui
 
 import os
 import random
+import six
+
+if six.PY3:
+    from urllib.parse import parse_qsl
+elif six.PY2:
+    from urlparse import parse_qsl
 
 from xml.etree import ElementTree as ET
 
@@ -56,3 +62,40 @@ def add_group():
         xbmc.executebuiltin('Container.Refresh()')
     else:
         dialog.notification('AutoWidget', 'Cannot create a group with no name.')
+
+        
+def inject_paths():
+    shortcuts = xbmcaddon.Addon('script.skinshortcuts')
+    shortcut_path = xbmc.translatePath(shortcuts.getAddonInfo('profile'))
+    
+    for filename in os.listdir(shortcut_path):
+        if not filename.startswith('autowidget-') and filename.endswith('.xml'):
+            file_path = os.path.join(shortcut_path, filename)
+            root = ET.parse(file_path).getroot()
+            
+            for shortcut in root.findall('shortcut'):
+                action = shortcut.find('action')
+                action_tag = shortcut.find('auto_action')
+                group_tag = shortcut.find('auto_group')
+                
+                if 'plugin.program.autowidget' in action.text:                
+                    path = action.text.split('\"')[1]
+                    params = dict(parse_qsl(path.split('?')[1]))
+                    
+                    action_tag = ET.SubElement(shortcut, 'auto_action')
+                    action_tag.text = params.get('action', '')
+                    
+                    group_tag = ET.SubElement(shortcut, 'auto_group')
+                    group_tag.text = params.get('group', '')
+                    
+                    if action_tag.text == 'random':
+                        action.text = get_random_path(group_tag.text)
+                    
+                    tree = ET.ElementTree(root)
+                    tree.write(file_path)
+                elif action_tag is not None and group_tag is not None:
+                    if action_tag.text == 'random':
+                        action.text = get_random_path(group_tag.text)
+                    
+                    tree = ET.ElementTree(root)
+                    tree.write(file_path)

@@ -37,7 +37,7 @@ def show_group(group):
                             params={'mode': 'path',
                                     'action': 'random',
                                     'group': group},
-                            description='View a random path from the "{}" group.'
+                            description='Use a random path from the "{}" group.'
                                         .format(group),
                             isFolder=True)
                             

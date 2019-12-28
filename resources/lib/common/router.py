@@ -37,8 +37,6 @@ class Router:
             menu.root()
             
         elif mode == 'path':
-            from resources.lib import path_utils
-            
             action = self.params.get('action', '')
             group = self.params.get('group', '')
             
@@ -62,5 +60,8 @@ class Router:
                 
                 group = self.params.get('group', '')
                 window.show_window(group)
+        elif mode == 'force':
+            from resources.lib import path_utils
+            path_utils.inject_paths()
         
         xbmcplugin.endOfDirectory(_handle)

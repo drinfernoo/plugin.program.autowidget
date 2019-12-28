@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-    <setting id="debug" type="bool" label="32001" default="false"/>
+    <setting id="service.wait_time" type="labelenum" label="Minutes between refresh" values="10|30|60|120|1440" default="10" />
+    <!-- <setting type="action" label="Force refresh" action="RunPlugin('plugin://plugin.program.autowidget/?mode=force')" /> -->
 </settings>
 
