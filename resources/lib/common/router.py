@@ -15,10 +15,10 @@ class Router:
         self.route = None
         self.params = {}
         
-    def _log_params(self):
-        _plugin = sys.argv[0]
+    def _log_params(self, _plugin, _handle, _params):
+        self.params = dict(parse_qsl(_params))
         
-        logstring = '{0}: '.format(_plugin)
+        logstring = '{0} ({1}): '.format(_plugin, _handle)
         for param in self.params:
             logstring += '[ {0}: {1} ] '.format(param, self.params[param])
 
@@ -26,29 +26,41 @@ class Router:
 
         return self.params
         
-    def dispatch(self, handle, paramstring):
-        self.params = dict(parse_qsl(paramstring))
-        self._log_params()
+    def dispatch(self, _plugin, _handle, _params):
+        _handle = int(_handle)
+        self._log_params(_plugin, _handle, _params)
         
         mode = self.params.get('mode', '')
         
         if not mode:
-            from resources.lib.gui import main_menu
-            self.route = main_menu.MainMenu()
+            from resources.lib import menu
+            menu.root()
             
         elif mode == 'path':
             from resources.lib import path_utils
             
             action = self.params.get('action', '')
+            group = self.params.get('group', '')
+            
+            if action == 'random':
+                pass
+                # path = path_utils.get_random_path(group)
+                
+        elif mode == 'group':
+            action = self.params.get('action', '')
             
             if action == 'add':
-                path_utils.Path().add()
-        elif mode == 'window':
-            from resources.lib import window
-            window.show_window()
-            
-        if self.route:
-            self.route.show_menu()
+                from resources.lib import path_utils
+                path_utils.add_group()
+            elif action == 'view':
+                from resources.lib import menu
+                
+                group = self.params.get('group', '')
+                menu.show_group(group)
+            elif action == 'edit':
+                from resources.lib import window
+                
+                group = self.params.get('group', '')
+                window.show_window(group)
         
-        xbmcplugin.setContent(handle, 'files')
-        xbmcplugin.endOfDirectory(handle)
+        xbmcplugin.endOfDirectory(_handle)

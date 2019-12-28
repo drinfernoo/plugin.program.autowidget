@@ -1,54 +1,58 @@
 import xbmc
+import xbmcaddon
 import xbmcgui
 
+import os
+import random
 
-def _wait_for_dialog(success_cond, dialog, timeout=30, auto=False):
-    import time
-    
-    clicked = False
-    start = time.time()
-    
-    cond = 'Window.Is({0})'.format(dialog)
-    visible_cond = 'Window.IsVisible({0})'.format(dialog)
-    active_cond = 'Window.IsActive({0})'.format(dialog)
-    topmost_cond = 'Window.IsTopMost({0})'.format(dialog)
-    dialogtopmost_cond = 'Window.IsDialogTopMost({0})'.format(dialog)
-    modaltopmost_cond = 'Window.IsModalDialogTopMost({0})'.format(dialog)
-    
-    xbmc.sleep(1000)
-    
-    while not xbmc.getCondVisibility(success_cond):
-        if timeout > 0:
-            if time.time() >= start + timeout:
-                xbmc.log('Dialog timed out.', level=xbmc.LOGDEBUG)
-                return False
+from xml.etree import ElementTree as ET
 
-        xbmc.sleep(1000)
+from resources.lib import window
 
-        if xbmc.getCondVisibility(visible_cond) and not clicked:
-            xbmc.log('Dialog open.', level=xbmc.LOGDEBUG)
-            
-            # in order to auto-click the dialog
-            if auto:
-                xbmc.executebuiltin('SendClick(yesnodialog, 11)')
-                clicked = True
-        else:
-            xbmc.log('Waiting for dialog...', level=xbmc.LOGDEBUG)
 
-    xbmc.log('Dialog success!', level=xbmc.LOGDEBUG)
-    return True
-
-class Path:
-    def __init__(self):
-        pass
+def find_defined_groups():
+    shortcuts = xbmcaddon.Addon('script.skinshortcuts')
+    shortcut_path = xbmc.translatePath(shortcuts.getAddonInfo('profile'))
         
-    def add(self):
-        showNone = 'False'
-        grouping = 'default'
-        skinWidget = 'autowidget-{0}'.format(1)
-        skinWidgetType = 'autowidgetType-{0}'.format(1)
-        skinWidgetName = 'autowidgetName-{0}'.format(1)
-        skinWidgetTarget = 'autowidgetTarget-{0}'.format(1)
-        skinWidgetPath = 'autowidgetPath-{0}'.format(1)
+    groups = []
     
-        xbmc.executebuiltin("RunScript(script.skinshortcuts,type=widgets&amp;showNone=False&amp;skinWidgetType=autoWidgetType-1&amp;skinWidgetName=autoWidgetName-1&amp;skinWidgetTarget=autoWidgetTarget-1&amp;skinWidgetPath=autoWidgetPath-1)")
+    for filename in os.listdir(shortcut_path):
+        if filename.startswith('autowidget-') and filename.endswith('.DATA.xml'):
+            group_name = filename[11:-9]
+            groups.append(group_name)
+            
+    return groups
+    
+def find_defined_paths(group):
+        shortcuts = xbmcaddon.Addon('script.skinshortcuts')
+        shortcut_path = xbmc.translatePath(shortcuts.getAddonInfo('profile'))
+        
+        paths = []
+        filename = 'autowidget-{}.DATA.xml'.format(group)
+        
+        tree = ET.parse(os.path.join(shortcut_path, filename))
+        root = tree.getroot()
+                
+        for shortcut in root.findall('shortcut'):
+            action = shortcut.find('action').text
+            paths.append(action)
+        
+        return paths
+        
+        
+def get_random_path(group):
+    paths = find_defined_paths(group)
+    index = random.randint(0, len(paths)-1)
+
+    return paths[index]
+    
+    
+def add_group():
+    dialog = xbmcgui.Dialog()
+    group_name = dialog.input(heading='Name for Group') or ''
+    
+    if group_name:
+        window.show_window(group_name)
+        xbmc.executebuiltin('Container.Refresh()')
+    else:
+        dialog.notification('AutoWidget', 'Cannot create a group with no name.')
