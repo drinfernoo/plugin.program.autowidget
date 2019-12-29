@@ -7,11 +7,11 @@ _addon = xbmcaddon.Addon()
 _monitor = xbmc.Monitor()
 xbmc.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
 
-wait_time = int(_addon.getSetting('service.wait_time'))
+wait_time = _addon.getSettingInt('service.wait_time')
 
 while not _monitor.abortRequested():
     try:
-        if _monitor.waitForAbort(10):
+        if _monitor.waitForAbort(wait_time):
             break
         
         path_utils.inject_paths()
