@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window type="dialog">
+    <defaultcontrol>200</defaultcontrol>
+    <coordinates>
+        <left>0</left>
+        <top>0</top>
+    </coordinates>
+    
+    <controls>
+        <control type="button" id="200">
+            <left>800</left>
+            <top>500</top>
+            <width>320</width>
+            <height>80</height>
+            <label>Launch Dialog</label>
+            <onclick>RunScript(script.skinshortcuts,type=manage&amp;group=autowidget-$INFO[Window.Property(dialog.group)])</onclick>
+        </control>
+    </controls>
+</window>
