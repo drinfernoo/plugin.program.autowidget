@@ -1,13 +1,15 @@
 import xbmc
 import xbmcaddon
 
+import time
+
 from resources.lib import path_utils
 
 _addon = xbmcaddon.Addon()
 _monitor = xbmc.Monitor()
 xbmc.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
 
-wait_time = _addon.getSettingInt('service.wait_time')
+wait_time = int(_addon.getSetting('service.wait_time'))
 
 while not _monitor.abortRequested():
     try:

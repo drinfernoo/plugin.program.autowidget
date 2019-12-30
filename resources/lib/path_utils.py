@@ -5,6 +5,8 @@ import xbmcgui
 import os
 import random
 import six
+import time
+import uuid
 
 if six.PY3:
     from urllib.parse import parse_qsl
@@ -23,11 +25,12 @@ def find_defined_groups():
     groups = []
     
     for filename in os.listdir(shortcut_path):
-        if filename.startswith('autowidget-') and filename.endswith('.DATA.xml'):
+        if filename.startswith('autowidget-') and filename.endswith('.xml'):
             group_name = filename[11:-9]
             groups.append(group_name)
             
     return groups
+    
     
 def find_defined_paths(group):
         shortcuts = xbmcaddon.Addon('script.skinshortcuts')
@@ -46,11 +49,14 @@ def find_defined_paths(group):
         return paths
         
         
-def get_random_path(group):
+def get_random_path(group, change_sec=10):
+    now = time.time()
+    seed = now - (now % change_sec)
+    rand = random.Random(seed)
     paths = find_defined_paths(group)
-    index = random.randint(0, len(paths)-1)
+    random_id = uuid.uuid4()
 
-    return paths[index]
+    return (rand.choice(paths), random_id)
     
     
 def add_group():
@@ -64,15 +70,15 @@ def add_group():
         dialog.notification('AutoWidget', 'Cannot create a group with no name.')
 
         
-def save_path_reference(filename, action, group):
+def save_path_reference(filename, action, group, id):
     addon = xbmcaddon.Addon()
     data_path = xbmc.translatePath(addon.getAddonInfo('profile'))
     
-    path_to_saved = os.path.join(data_path, 'auto-{}.txt'.format(filename))
+    path_to_saved = os.path.join(data_path, '{}.auto'.format(filename))
     xbmc.log(path_to_saved)
     
     with open(path_to_saved, "w") as f:
-        content = '{},{}'.format(action, group)
+        content = '{},{},{}'.format(action, group, id)
         f.write(content)
         
         
@@ -86,19 +92,29 @@ def inject_paths():
             root = ET.parse(file_path).getroot()
             
             for shortcut in root.findall('shortcut'):
+                # label = shortcut.find('label')
                 action = shortcut.find('action')
                 
-                if 'plugin.program.autowidget' in action.text:                
+                if 'plugin.program.autowidget' in action.text:         
                     path = action.text.split('\"')[1]
+                    if '?' not in path:
+                        continue
+                    
                     params = dict(parse_qsl(path.split('?')[1]))
                     
                     action_param = params.get('action', '')
                     group_param = params.get('group', '')
                     
-                    if action_param == 'random':
-                        action.text = get_random_path(group_param)
+                    # skin_label = 'plugin.program.autowidget-{}-label'.format(group_param)
                     
-                    save_path_reference(filename, action_param, group_param)
+                    if action_param == 'random':
+                        random_path, random_id = get_random_path(group_param)
+                        skin_path = 'autowidget-{}-{}-path'.format(group_param, random_id)
+                        xbmc.log('Injecting path {} into skin string {}...'.format(random_path, skin_path))
+                        xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, random_path))
+                        action.text = '$INFO[Skin.String({})]'.format(skin_path)
+                    
+                    save_path_reference(filename, action_param, group_param, random_id)
                     
                     tree = ET.ElementTree(root)
                     tree.write(file_path)
@@ -114,8 +130,9 @@ def inject_paths():
                             with open(ref_path, "r") as f:
                                 params = f.read().split(',')
                                 
-                            if params[0] == 'random':
-                                action.text = get_random_path(params[1])
+                            skin_path = 'autowidget-{}-{}-path'.format(params[1], params[2])
                     
-                            tree = ET.ElementTree(root)
-                            tree.write(file_path)
+                            if params[0] == 'random':
+                                random_path, random_id = get_random_path(params[1])
+                                skin_path = 'autowidget-{}-{}-path'.format(params[1], params[2])
+                                xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, random_path))
