@@ -84,14 +84,18 @@ def save_path_reference(action, group, id):
         f.write(content)
 
         
-def inject_paths():
+def inject_paths(notify=False):
     addon = xbmcaddon.Addon()
     data_path = xbmc.translatePath(addon.getAddonInfo('profile'))
     shortcuts = xbmcaddon.Addon('script.skinshortcuts')
     shortcut_path = xbmc.translatePath(shortcuts.getAddonInfo('profile'))
     
+    if notify:
+        dialog = xbmcgui.Dialog()
+        dialog.notification('AutoWidget', 'Force refreshing autowidgets')
+    
     for filename in os.listdir(shortcut_path):
-        if not filename.startswith('autowidget-') and filename.endswith('.xml'):
+        if not filename.startswith('autowidget') and not filename.startswith('powermenu') and filename.endswith('.xml'):
             file_path = os.path.join(shortcut_path, filename)
             root = ET.parse(file_path).getroot()
             
@@ -118,6 +122,7 @@ def inject_paths():
                         label_string = '$INFO[Skin.String({})]'.format(skin_label)
                         final_path = path[1].replace(path[2], path_string).replace('\"', '')
                         
+                        xbmc.log('Setting skin string {} to path {}...'.format(skin_path, path_string))
                         xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2]))
                         xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
                         
@@ -140,5 +145,6 @@ def inject_paths():
                 
                         if params[0] == 'random':
                             path, id = get_random_path(params[1])
+                            xbmc.log('Setting skin string {} to path {}...'.format(skin_path, path[2]))
                             xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2]))
                             xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
