@@ -25,7 +25,7 @@ def find_defined_groups():
     groups = []
     
     for filename in os.listdir(shortcut_path):
-        if filename.startswith('autowidget-') and filename.endswith('.xml'):
+        if filename.startswith('autowidget') and filename.endswith('.xml'):
             group_name = filename[11:-9]
             groups.append(group_name)
             
@@ -33,22 +33,22 @@ def find_defined_groups():
     
     
 def find_defined_paths(group):
-        shortcuts = xbmcaddon.Addon('script.skinshortcuts')
-        shortcut_path = xbmc.translatePath(shortcuts.getAddonInfo('profile'))
+    shortcuts = xbmcaddon.Addon('script.skinshortcuts')
+    shortcut_path = xbmc.translatePath(shortcuts.getAddonInfo('profile'))
         
-        paths = []
-        filename = 'autowidget-{}.DATA.xml'.format(group)
+    paths = []
+    filename = 'autowidget-{}.DATA.xml'.format(group)
         
-        tree = ET.parse(os.path.join(shortcut_path, filename))
-        root = tree.getroot()
+    tree = ET.parse(os.path.join(shortcut_path, filename))
+    root = tree.getroot()
                 
-        for shortcut in root.findall('shortcut'):
-            label = shortcut.find('label').text
-            action = shortcut.find('action').text
-            path = action.split('\"')[1]
-            paths.append((label, action, path))
+    for shortcut in root.findall('shortcut'):
+        label = shortcut.find('label').text
+        action = shortcut.find('action').text
+        path = action.split('\"')[1]
+        paths.append((label, action, path))
         
-        return paths
+    return paths
         
         
 def get_random_path(group, change_sec=3600):
