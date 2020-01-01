@@ -15,7 +15,7 @@ while not _monitor.abortRequested():
     try:
         if _monitor.waitForAbort(wait_time):
             break
-        
+    
         path_utils.inject_paths()
     except Exception as e:
         xbmc.log('{}'.format(e), level=xbmc.LOGERROR)
