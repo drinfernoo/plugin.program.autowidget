@@ -7,15 +7,16 @@ from resources.lib import path_utils
 
 _addon = xbmcaddon.Addon()
 _monitor = xbmc.Monitor()
-xbmc.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
+_wait_time = int(_addon.getSetting('service.wait_time'))
 
-wait_time = int(_addon.getSetting('service.wait_time'))
+xbmc.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
+xbmc.log('+++++ REFRESHING EVERY {} HOURS... +++++'.format(_wait_time), level=xbmc.LOGNOTICE)
 
 while not _monitor.abortRequested():
     try:
-        if _monitor.waitForAbort(wait_time):
+        if _monitor.waitForAbort(_wait_time * 60 * 60):
             break
-    
+            
         path_utils.inject_paths()
     except Exception as e:
         xbmc.log('{}'.format(e), level=xbmc.LOGERROR)
