@@ -57,6 +57,6 @@ def dispatch(_plugin, _handle, _params):
             window.show_window(group)
     elif mode == 'force':
         from resources.lib import path_utils
-        path_utils.inject_paths(notify=True)
+        path_utils.refresh_paths(notify=True)
     
     xbmcplugin.endOfDirectory(_handle)
