@@ -2,8 +2,6 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
-from resources.lib import path_utils
-
 
 def show_window(group):
     class ShortcutWindow(xbmcgui.WindowXMLDialog):
@@ -13,10 +11,6 @@ def show_window(group):
         def onInit(self):
             self.setProperty('dialog.group', group)
             
-        def close(self):
-            path_utils.convert_paths()
-            super().close()
-                
     addon_path = xbmcaddon.Addon().getAddonInfo('path').decode('utf-8')
     sw = ShortcutWindow("shortcut_window.xml",
                         addon_path,
@@ -24,3 +18,6 @@ def show_window(group):
                         defaultRes='1080i')
     sw.doModal()
     del sw
+    
+    from resources.lib import path_utils
+    path_utils.convert_paths()

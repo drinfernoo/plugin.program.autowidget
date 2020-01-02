@@ -23,7 +23,7 @@ _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
 _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 
-def _find_defined_groups():
+def find_defined_groups():
     groups = []
     
     for filename in os.listdir(_shortcuts_path):
@@ -34,11 +34,12 @@ def _find_defined_groups():
     return groups
     
     
-def _find_defined_paths(group=None):
+def find_defined_paths(group=None):
     shortcuts = xbmcaddon.Addon('script.skinshortcuts')
     shortcut_path = xbmc.translatePath(shortcuts.getAddonInfo('profile'))
         
     paths = []
+    filename = ''
     
     if group:
         filename = 'autowidget-{}.DATA.xml'.format(group)
@@ -89,7 +90,7 @@ def _save_path_details(path):
     path_to_saved = os.path.join(_addon_path, '{}.auto'.format(id))
     
     with open(path_to_saved, "w") as f:
-        content = '{},{}'.format(action, group)
+        content = '{},{}'.format(action_param, group_param)
         f.write(content)
         
     return id
@@ -105,14 +106,14 @@ def convert_paths():
             
             for shortcut in root.findall('shortcut'):
                 label = shortcut.find('label')
-                action = shorcut.find('action')
+                action = shortcut.find('action')
                 
                 if all(term in action.text for term in ['plugin.program.autowidget', '?mode']):
                     path = action.text.split('\"')[1]
                 else:
                     continue
                     
-                id = save_path_details(path)
+                id = _save_path_details(path)
                 skin_path = 'autowidget-{}-path'.format(id)
                 skin_label = 'autowidget-{}-label'.format(id)
                 path_string = '$INFO[Skin.String({})]'.format(skin_path)
