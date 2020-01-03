@@ -30,7 +30,8 @@ def _find_defined_groups():
         if filename.startswith('autowidget-') and filename.endswith('.DATA.xml'):
             group_name = filename[11:-9]
             groups.append(group_name)
-            
+
+    xbmc.log('_find_defined_groups: {}'.format(groups))
     return groups
     
     
@@ -62,6 +63,7 @@ def _find_defined_paths(group=None):
         for group in _find_defined_groups():
             paths.append(_find_defined_paths(group))
     
+    xbmc.log('_find_defined_paths: {}'.format(paths))
     return paths
         
         
@@ -73,6 +75,7 @@ def _get_random_paths(group, force=False, change_sec=3600):
     paths = _find_defined_paths(group)
     rand.shuffle(paths)
     
+    xbmc.log('_get_random_paths: {}'.format(paths))
     return paths
     
     
@@ -98,7 +101,8 @@ def _save_path_details(path):
     with open(path_to_saved, "w") as f:
         content = '{},{}'.format(action_param, group_param)
         f.write(content)
-        
+    
+    xbmc.log('_save_path_details: {}'.format(id))
     return id
 
         
@@ -127,8 +131,10 @@ def convert_paths():
             final = action.text.replace(path[1], path_string).replace('\"', '')
             
             xbmc.log('Setting skin string {} to path {}...'.format(skin_path, path_string))
-            xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2]))
             xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
+            xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2]))
+            xbmc.log('{}: {}'.format(skin_label, path[0]))
+            xbmc.log('{}: {}'.format(skin_path, path[2]))
             
             label.text = label_string
             action.text = final
@@ -168,6 +174,7 @@ def refresh_paths(notify=False, force=False):
             paths = _get_random_paths(group, force)
         
         path = paths.pop()
-        # xbmc.log('Setting skin string {} to path {}...'.format(skin_path, path[2]))
         xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
         xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2].replace('\"','')))
+        xbmc.log('{}: {}'.format(skin_label, path[0]))
+        xbmc.log('{}: {}'.format(skin_path, path[2].replace('\"','')))
