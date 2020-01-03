@@ -20,4 +20,4 @@ def show_window(group):
     del sw
     
     from resources.lib import path_utils
-    path_utils.convert_paths()
+    path_utils.refresh_paths(force=True)

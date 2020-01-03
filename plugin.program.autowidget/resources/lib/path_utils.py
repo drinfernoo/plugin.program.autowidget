@@ -60,14 +60,20 @@ def find_defined_paths(group=None):
     return paths
         
         
-def _get_random_paths(group, change_sec=3600):
-    now = time.time()
-    seed = now - (now % change_sec)
-    rand = random.Random(seed)
-    
+def _get_random_paths(group, force=False):
+    change_sec = int(_addon.getSetting('service.wait_time'))
     paths = find_defined_paths(group)
-
-    return rand.sample(len(paths), paths)
+    
+    if force:
+        rand = random.Random()
+    else:
+        now = time.time()
+        seed = now - (now % change_sec)
+        rand = random.Random(seed)
+    
+    rand.shuffle(paths)
+        
+    return paths
     
     
 def add_group():
@@ -132,7 +138,10 @@ def convert_paths():
                 
     # xbmc.executebuiltin('ReloadSkin()')
                 
-                
+def refresh_paths(notify=False, force=False):
+    if force:
+        convert_paths()
+    
 def refresh_paths(notify=False):
     if notify:
         dialog = xbmcgui.Dialog()
@@ -156,7 +165,7 @@ def refresh_paths(notify=False):
         group = params[1]
         
         if action == 'random' and len(paths) == 0:
-            paths = get_random_paths(group)
+            paths = _get_random_paths(group, force)
         
         path = paths.pop()
         # xbmc.log('Setting skin string {} to path {}...'.format(skin_path, path[2]))

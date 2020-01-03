@@ -12,6 +12,8 @@ _wait_time = int(_addon.getSetting('service.wait_time'))
 xbmc.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
 xbmc.log('+++++ REFRESHING EVERY {} HOURS... +++++'.format(_wait_time), level=xbmc.LOGNOTICE)
 
+path_utils.refresh_paths(force=True)
+
 while not _monitor.abortRequested():
     try:
         if _monitor.waitForAbort(_wait_time * 60 * 60):
