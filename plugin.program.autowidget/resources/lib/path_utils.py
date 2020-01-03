@@ -16,6 +16,7 @@ elif six.PY2:
 from xml.etree import ElementTree as ET
 
 from resources.lib import window
+from resources.lib.common import utils
 
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
@@ -23,22 +24,19 @@ _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
 _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 
-def _find_defined_groups():
+def find_defined_groups():
     groups = []
     
     for filename in os.listdir(_shortcuts_path):
-        if filename.startswith('autowidget-') and filename.endswith('.DATA.xml'):
+        if filename.startswith('autowidget') and filename.endswith('DATA.xml'):
             group_name = filename[11:-9]
             groups.append(group_name)
 
-    xbmc.log('_find_defined_groups: {}'.format(groups))
+    utils.log('_find_defined_groups: {}'.format(groups))
     return groups
     
     
 def _find_defined_paths(group=None):
-    shortcuts = xbmcaddon.Addon('script.skinshortcuts')
-    shortcut_path = xbmc.translatePath(shortcuts.getAddonInfo('profile'))
-        
     paths = []
     filename = ''
     
@@ -63,7 +61,7 @@ def _find_defined_paths(group=None):
         for group in _find_defined_groups():
             paths.append(_find_defined_paths(group))
     
-    xbmc.log('_find_defined_paths: {}'.format(paths))
+    utils.log('_find_defined_paths: {}'.format(paths))
     return paths
         
         
@@ -75,7 +73,7 @@ def _get_random_paths(group, force=False, change_sec=3600):
     paths = _find_defined_paths(group)
     rand.shuffle(paths)
     
-    xbmc.log('_get_random_paths: {}'.format(paths))
+    utils.log('_get_random_paths: {}'.format(paths))
     return paths
     
     
@@ -102,13 +100,14 @@ def _save_path_details(path):
         content = '{},{}'.format(action_param, group_param)
         f.write(content)
     
-    xbmc.log('_save_path_details: {}'.format(id))
+    utils.log('_save_path_details: {}'.format(id))
     return id
 
         
 def convert_paths():
     for filename in os.listdir(_shortcuts_path):
-        if any(term in filename for term in ['powermenu', '.hash', '.properties']):
+        if any(term in filename for term in ['powermenu', '.hash',
+                                             '.properties']):
             continue
         
         file_path = os.path.join(_shortcuts_path, filename)
@@ -118,7 +117,8 @@ def convert_paths():
             label = shortcut.find('label')
             action = shortcut.find('action')
             
-            if all(term in action.text for term in ['plugin.program.autowidget', '?mode']):
+            if all(term in action.text for term in ['plugin.program.autowidget',
+                                                    '?mode']):
                 path = action.text.split(',')
             else:
                 continue
@@ -130,11 +130,14 @@ def convert_paths():
             label_string = '$INFO[Skin.String({})]'.format(skin_label)
             final = action.text.replace(path[1], path_string).replace('\"', '')
             
-            xbmc.log('Setting skin string {} to path {}...'.format(skin_path, path_string))
-            xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
-            xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2]))
-            xbmc.log('{}: {}'.format(skin_label, path[0]))
-            xbmc.log('{}: {}'.format(skin_path, path[2]))
+            utils.log('Setting skin string {} to path {}...'
+                      .format(skin_path, final))
+            xbmc.executebuiltin('Skin.SetString({},{})'
+                                .format(skin_label, path[0]))
+            xbmc.executebuiltin('Skin.SetString({},{})'
+                                .format(skin_path, path[2]))
+            utils.log('{}: {}'.format(skin_label, path[0]))
+            utils.log('{}: {}'.format(skin_path, path[2]))
             
             label.text = label_string
             action.text = final
@@ -175,6 +178,8 @@ def refresh_paths(notify=False, force=False):
         
         path = paths.pop()
         xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
-        xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2].replace('\"','')))
-        xbmc.log('{}: {}'.format(skin_label, path[0]))
-        xbmc.log('{}: {}'.format(skin_path, path[2].replace('\"','')))
+        xbmc.executebuiltin('Skin.SetString({},{})'
+                            .format(skin_path, path[2].replace('\"','')))
+        utils.log('{}: {}'.format(skin_label, path[0]))
+        utils.log('{}: {}'.format(skin_path, path[2].replace('\"','')))
+        

@@ -4,13 +4,14 @@ import xbmcaddon
 import time
 
 from resources.lib import path_utils
+from resources.lib.common import utils
 
 _addon = xbmcaddon.Addon()
 _monitor = xbmc.Monitor()
 _wait_time = int(_addon.getSetting('service.wait_time'))
 
-xbmc.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
-xbmc.log('+++++ REFRESHING EVERY {} HOURS... +++++'.format(_wait_time), level=xbmc.LOGNOTICE)
+utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
+utils.log('+++++ REFRESHING EVERY {} HOURS... +++++'.format(_wait_time), level=xbmc.LOGNOTICE)
 
 path_utils.refresh_paths(force=True)
 
@@ -21,4 +22,4 @@ while not _monitor.abortRequested():
             
         path_utils.refresh_paths(notify=True)
     except Exception as e:
-        xbmc.log('{}'.format(e), level=xbmc.LOGERROR)
+        utils.log('{}'.format(e), level=xbmc.LOGERROR)

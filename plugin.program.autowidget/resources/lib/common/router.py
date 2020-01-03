@@ -9,15 +9,17 @@ if six.PY3:
 elif six.PY2:
     from urlparse import parse_qsl
     
+from resources.lib.common import utils
+    
 
 def _log_params(_plugin, _handle, _params):
     params = dict(parse_qsl(_params))
     
-    logstring = '{0} ({1}): '.format(_plugin, _handle)
+    logstring = ''
     for param in params:
         logstring += '[ {0}: {1} ] '.format(param, params[param])
 
-    xbmc.log(logstring, level=xbmc.LOGNOTICE)
+    utils.log(logstring, level=xbmc.LOGNOTICE)
 
     return params
     
