@@ -103,46 +103,46 @@ def _save_path_details(path):
 
         
 def convert_paths():
-    total_paths = find_defined_paths()
-    
     for filename in os.listdir(_shortcuts_path):
-        if 'autowidget' in filename:
-            file_path = os.path.join(_shortcuts_path, filename)
-            root = ET.parse(file_path).getroot()
+        if any(term in filename for term in ['powermenu', '.hash', '.properties']):
+            continue
+        
+        file_path = os.path.join(_shortcuts_path, filename)
+        root = ET.parse(file_path).getroot()
+        
+        for shortcut in root.findall('shortcut'):
+            label = shortcut.find('label')
+            action = shortcut.find('action')
             
-            for shortcut in root.findall('shortcut'):
-                label = shortcut.find('label')
-                action = shortcut.find('action')
+            if all(term in action.text for term in ['plugin.program.autowidget', '?mode']):
+                path = action.text.split('\"')
+            else:
+                continue
                 
-                if all(term in action.text for term in ['plugin.program.autowidget', '?mode']):
-                    path = action.text.split('\"')[1]
-                else:
-                    continue
-                    
-                id = _save_path_details(path)
-                skin_path = 'autowidget-{}-path'.format(id)
-                skin_label = 'autowidget-{}-label'.format(id)
-                path_string = '$INFO[Skin.String({})]'.format(skin_path)
-                label_string = '$INFO[Skin.String({})]'.format(skin_label)
-                final = path[1].replace(path[2], path_string).replace('\"', '')
+            id = _save_path_details(path[1])
+            skin_path = 'autowidget-{}-path'.format(id)
+            skin_label = 'autowidget-{}-label'.format(id)
+            path_string = '$INFO[Skin.String({})]'.format(skin_path)
+            label_string = '$INFO[Skin.String({})]'.format(skin_label)
+            final = action.text.replace(path[1], path_string).replace('\"', '')
+            
+            xbmc.log('Setting skin string {} to path {}...'.format(skin_path, path_string))
+            xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2]))
+            xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
+            
+            label.text = label_string
+            action.text = final
+            
+            tree = ET.ElementTree(root)
+            tree.write(file_path)
                 
-                xbmc.log('Setting skin string {} to path {}...'.format(skin_path, path_string))
-                xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2]))
-                xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
+    xbmc.executebuiltin('ReloadSkin()')
                 
-                label.text = label_string
-                action.text = final
-                
-                tree = ET.ElementTree(root)
-                tree.write(file_path)
-                
-    # xbmc.executebuiltin('ReloadSkin()')
                 
 def refresh_paths(notify=False, force=False):
     if force:
         convert_paths()
     
-def refresh_paths(notify=False):
     if notify:
         dialog = xbmcgui.Dialog()
         dialog.notification('AutoWidget', 'Refreshing AutoWidgets')
@@ -169,5 +169,5 @@ def refresh_paths(notify=False):
         
         path = paths.pop()
         # xbmc.log('Setting skin string {} to path {}...'.format(skin_path, path[2]))
-        xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2]))
         xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
+        xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2]))
