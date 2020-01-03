@@ -23,7 +23,7 @@ _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
 _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 
-def find_defined_groups():
+def _find_defined_groups():
     groups = []
     
     for filename in os.listdir(_shortcuts_path):
@@ -34,7 +34,7 @@ def find_defined_groups():
     return groups
     
     
-def find_defined_paths(group=None):
+def _find_defined_paths(group=None):
     shortcuts = xbmcaddon.Addon('script.skinshortcuts')
     shortcut_path = xbmc.translatePath(shortcuts.getAddonInfo('profile'))
         
@@ -51,16 +51,17 @@ def find_defined_paths(group=None):
         for shortcut in root.findall('shortcut'):
             label = shortcut.find('label').text
             action = shortcut.find('action').text
-            path = action.split('\"')[1]
+
             try:
                 path = action.split(',')[1]
             except:
                 path = action
+                
             paths.append((label, action, path))
     else:
-        for group in find_defined_groups():
-            paths.append(find_defined_paths(group))
-        
+        for group in _find_defined_groups():
+            paths.append(_find_defined_paths(group))
+    
     return paths
         
         
@@ -69,9 +70,9 @@ def _get_random_paths(group, force=False, change_sec=3600):
     now = time.time()
     seed = now - (now % wait_time)
     rand = random.Random(seed)
-    paths = find_defined_paths(group)
+    paths = _find_defined_paths(group)
     rand.shuffle(paths)
-        
+    
     return paths
     
     
