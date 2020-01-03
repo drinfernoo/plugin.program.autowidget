@@ -52,6 +52,10 @@ def find_defined_paths(group=None):
             label = shortcut.find('label').text
             action = shortcut.find('action').text
             path = action.split('\"')[1]
+            try:
+                path = action.split(',')[1]
+            except:
+                path = action
             paths.append((label, action, path))
     else:
         for group in find_defined_groups():
@@ -61,7 +65,7 @@ def find_defined_paths(group=None):
         
         
 def _get_random_paths(group, force=False, change_sec=3600):
-    wait_time = 5 if force else change_sec    
+    wait_time = 5 if force else change_sec
     now = time.time()
     seed = now - (now % wait_time)
     rand = random.Random(seed)
@@ -84,8 +88,8 @@ def add_group():
         
 def _save_path_details(path):
     params = dict(parse_qsl(path.split('?')[1]))                    
-    action_param = params.get('action', '')
-    group_param = params.get('group', '')
+    action_param = params.get('action', '').replace('\"','')
+    group_param = params.get('group', '').replace('\"','')
     id = uuid.uuid4()
     
     path_to_saved = os.path.join(_addon_path, '{}.auto'.format(id))
@@ -110,13 +114,13 @@ def convert_paths():
             action = shortcut.find('action')
             
             if all(term in action.text for term in ['plugin.program.autowidget', '?mode']):
-                path = action.text.split('\"')
+                path = action.text.split(',')
             else:
                 continue
                 
-            id = _save_path_details(path[1])
-            skin_path = 'autowidget-{}-path'.format(id)
-            skin_label = 'autowidget-{}-label'.format(id)
+            _id = _save_path_details(path[1])
+            skin_path = 'autowidget-{}-path'.format(_id)
+            skin_label = 'autowidget-{}-label'.format(_id)
             path_string = '$INFO[Skin.String({})]'.format(skin_path)
             label_string = '$INFO[Skin.String({})]'.format(skin_label)
             final = action.text.replace(path[1], path_string).replace('\"', '')
@@ -147,7 +151,7 @@ def refresh_paths(notify=False, force=False):
     for saved in os.listdir(_addon_path):
         if not saved.endswith('.auto'):
             continue
-            
+        
         saved_path = os.path.join(_addon_path, saved)
         with open(saved_path, "r") as f:
             params = f.read().split(',')
@@ -165,4 +169,4 @@ def refresh_paths(notify=False, force=False):
         path = paths.pop()
         # xbmc.log('Setting skin string {} to path {}...'.format(skin_path, path[2]))
         xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
-        xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2]))
+        xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2].replace('\"','')))
