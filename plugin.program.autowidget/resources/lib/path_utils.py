@@ -5,6 +5,7 @@ import xbmcgui
 import os
 import random
 import six
+import shutil
 import time
 import uuid
 
@@ -16,6 +17,7 @@ elif six.PY2:
 from xml.etree import ElementTree as ET
 
 from resources.lib import window
+from resources.lib.common import utils
 
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
@@ -23,21 +25,19 @@ _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
 _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 
-def _find_defined_groups():
+def find_defined_groups():
     groups = []
     
     for filename in os.listdir(_shortcuts_path):
-        if filename.startswith('autowidget-') and filename.endswith('.DATA.xml'):
+        if filename.startswith('autowidget') and filename.endswith('DATA.xml'):
             group_name = filename[11:-9]
             groups.append(group_name)
-            
+
+    utils.log('_find_defined_groups: {}'.format(groups))
     return groups
     
     
 def _find_defined_paths(group=None):
-    shortcuts = xbmcaddon.Addon('script.skinshortcuts')
-    shortcut_path = xbmc.translatePath(shortcuts.getAddonInfo('profile'))
-        
     paths = []
     filename = ''
     
@@ -62,6 +62,7 @@ def _find_defined_paths(group=None):
         for group in _find_defined_groups():
             paths.append(_find_defined_paths(group))
     
+    utils.log('_find_defined_paths: {}'.format(paths))
     return paths
         
         
@@ -73,6 +74,7 @@ def _get_random_paths(group, force=False, change_sec=3600):
     paths = _find_defined_paths(group)
     rand.shuffle(paths)
     
+    utils.log('_get_random_paths: {}'.format(paths))
     return paths
     
     
@@ -98,13 +100,15 @@ def _save_path_details(path):
     with open(path_to_saved, "w") as f:
         content = '{},{}'.format(action_param, group_param)
         f.write(content)
-        
+    
+    utils.log('_save_path_details: {}'.format(id))
     return id
 
         
 def convert_paths():
     for filename in os.listdir(_shortcuts_path):
-        if any(term in filename for term in ['powermenu', '.hash', '.properties']):
+        if any(term in filename for term in ['powermenu', '.hash',
+                                             '.properties']):
             continue
         
         file_path = os.path.join(_shortcuts_path, filename)
@@ -114,7 +118,8 @@ def convert_paths():
             label = shortcut.find('label')
             action = shortcut.find('action')
             
-            if all(term in action.text for term in ['plugin.program.autowidget', '?mode']):
+            if all(term in action.text for term in ['plugin.program.autowidget',
+                                                    '?mode']):
                 path = action.text.split(',')
             else:
                 continue
@@ -126,9 +131,14 @@ def convert_paths():
             label_string = '$INFO[Skin.String({})]'.format(skin_label)
             final = action.text.replace(path[1], path_string).replace('\"', '')
             
-            xbmc.log('Setting skin string {} to path {}...'.format(skin_path, path_string))
-            xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2]))
-            xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
+            utils.log('Setting skin string {} to path {}...'
+                      .format(skin_path, final))
+            xbmc.executebuiltin('Skin.SetString({},{})'
+                                .format(skin_label, path[0]))
+            xbmc.executebuiltin('Skin.SetString({},{})'
+                                .format(skin_path, path[2]))
+            utils.log('{}: {}'.format(skin_label, path[0]))
+            utils.log('{}: {}'.format(skin_path, path[2]))
             
             label.text = label_string
             action.text = final
@@ -168,6 +178,75 @@ def refresh_paths(notify=False, force=False):
             paths = _get_random_paths(group, force)
         
         path = paths.pop()
-        # xbmc.log('Setting skin string {} to path {}...'.format(skin_path, path[2]))
         xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
-        xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_path, path[2].replace('\"','')))
+        xbmc.executebuiltin('Skin.SetString({},{})'
+                            .format(skin_path, path[2].replace('\"','')))
+        utils.log('{}: {}'.format(skin_label, path[0]))
+        utils.log('{}: {}'.format(skin_path, path[2].replace('\"','')))
+        
+       
+def clean_old_widgets():
+    for file in os.listdir(_addon_path):
+        if not file.endswith('.auto'):
+            continue
+        
+        found = False
+        ref_path = os.path.join(_addon_path, file)
+            
+        for shortcut in os.listdir(_shortcuts_path):
+            # import web_pdb; web_pdb.set_trace()
+            file_path = os.path.join(_shortcuts_path, shortcut)
+            with open(file_path, 'r') as f:
+                content = f.read()
+                
+            if file[:-5] in content:
+                found = True
+                break
+        
+        if not found:
+            try:
+                os.remove(ref_path)
+            except Exception as e:
+                utils.log('Could not remove old widget reference: {}'
+                          .format(file), level=xbmc.LOGNOTICE)
+                utils.log('{}'.format(e), level=xbmc.LOGERROR)
+                
+                
+def clean_old_strings():
+    dialog = xbmcgui.Dialog()
+    skin = xbmc.translatePath('special://skin/')
+    skin_id = os.path.basename(os.path.normpath(skin))
+    skin_addon = xbmcaddon.Addon(skin_id)
+    skin_path = xbmc.translatePath(skin_addon.getAddonInfo('profile'))
+    skin_settings = os.path.join(skin_path, 'settings.xml')
+
+    new_lines = []    
+    with open(skin_settings, 'r') as f:
+        for line in f.readlines():
+            if '\"' in line:
+                setting = line.split('\"')[1]
+                if setting.startswith('autowidget'):
+                    id = setting[11:-5] if setting.endswith('-path') else setting[11:-6]
+                    ref_name = '{}.auto'.format(id)
+                    ref_path = os.path.join(_addon_path, ref_name)
+                    if os.path.exists(ref_path):
+                       new_lines.append(line) 
+                else:
+                    new_lines.append(line)
+            else:
+                new_lines.append(line)
+    
+    temp_file = os.path.join(_addon_path, 'temp_settings.xml')
+    with open(temp_file, 'w') as f:
+        for line in new_lines:
+            f.write(line)
+    
+    with open(temp_file, 'r') as f:
+        utils.log(f.read())
+    
+    shutil.copy(temp_file, skin_settings)
+    os.remove(temp_file)
+    
+    close = dialog.yesno('AutoWidget', 'In order to successfully remove old references, Kodi needs to be restarted. Would you like to close Kodi now?')
+    if close:
+        os._exit(1)
