@@ -51,7 +51,7 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'force':
         path_utils.refresh_paths(notify=True, force=True)
     elif mode == 'clean':
-        path_utils.clean_old_widgets()
-        path_utils.clean_old_strings()
+        utils.clean_old_widgets()
+        utils.clean_old_strings()
     
     xbmcplugin.endOfDirectory(_handle)
