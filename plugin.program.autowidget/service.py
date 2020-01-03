@@ -19,6 +19,6 @@ while not _monitor.abortRequested():
         if _monitor.waitForAbort(_wait_time * 60 * 60):
             break
             
-        path_utils.refresh_paths()
+        path_utils.refresh_paths(notify=True)
     except Exception as e:
         xbmc.log('{}'.format(e), level=xbmc.LOGERROR)

@@ -26,34 +26,24 @@ def dispatch(_plugin, _handle, _params):
     params = _log_params(_plugin, _handle, _params)
     
     mode = params.get('mode', '')
+    action = params.get('action', '')
+    group = params.get('group', '')
     
     if not mode:
         from resources.lib import menu
         menu.root()
-        
     elif mode == 'path':
-        action = params.get('action', '')
-        group = params.get('group', '')
-        
         if action == 'random':
             pass
-            # path = path_utils.get_random_path(group)
-            
     elif mode == 'group':
-        action = params.get('action', '')
-        
         if action == 'add':
             from resources.lib import path_utils
             path_utils.add_group()
         elif action == 'view':
             from resources.lib import menu
-            
-            group = params.get('group', '')
             menu.show_group(group)
         elif action == 'edit':
             from resources.lib import window
-            
-            group = params.get('group', '')
             window.show_window(group)
     elif mode == 'force':
         from resources.lib import path_utils

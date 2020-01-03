@@ -60,17 +60,12 @@ def find_defined_paths(group=None):
     return paths
         
         
-def _get_random_paths(group, force=False):
-    change_sec = int(_addon.getSetting('service.wait_time'))
+def _get_random_paths(group, force=False, change_sec=3600):
+    wait_time = 5 if force else change_sec    
+    now = time.time()
+    seed = now - (now % wait_time)
+    rand = random.Random(seed)
     paths = find_defined_paths(group)
-    
-    if force:
-        rand = random.Random()
-    else:
-        now = time.time()
-        seed = now - (now % change_sec)
-        rand = random.Random(seed)
-    
     rand.shuffle(paths)
         
     return paths
