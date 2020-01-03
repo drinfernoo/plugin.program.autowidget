@@ -9,6 +9,9 @@ if six.PY3:
 elif six.PY2:
     from urlparse import parse_qsl
     
+from resources.lib import menu
+from resources.lib import path_utils
+from resources.lib import window
 from resources.lib.common import utils
     
 
@@ -32,23 +35,23 @@ def dispatch(_plugin, _handle, _params):
     group = params.get('group', '')
     
     if not mode:
-        from resources.lib import menu
-        menu.root()
+        menu.root_menu()
+    elif mode == 'tools':
+        menu.tools_menu()
     elif mode == 'path':
         if action == 'random':
             pass
     elif mode == 'group':
         if action == 'add':
-            from resources.lib import path_utils
             path_utils.add_group()
         elif action == 'view':
-            from resources.lib import menu
-            menu.show_group(group)
+            menu.group_menu(group)
         elif action == 'edit':
-            from resources.lib import window
             window.show_window(group)
     elif mode == 'force':
-        from resources.lib import path_utils
         path_utils.refresh_paths(notify=True, force=True)
+    elif mode == 'clean':
+        path_utils.clean_old_widgets()
+        path_utils.clean_old_strings()
     
     xbmcplugin.endOfDirectory(_handle)

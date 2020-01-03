@@ -8,7 +8,7 @@ from resources.lib.common import directory
 _handle = int(sys.argv[1])
 
 
-def root():
+def root_menu():
     directory.add_menu_item(title='Create New Group',
                             params={'mode': 'group', 'action': 'add'},
                             description='Create a new group of widget paths.')
@@ -22,10 +22,15 @@ def root():
                                             .format(group),
                                 isFolder=True)
                                 
+    directory.add_menu_item(title='Tools',
+                            params={'mode': 'tools'},
+                            description='Various tools for using AutoWidgets.',
+                            isFolder=True)
+                                
     xbmcplugin.setContent(_handle, 'files')
 
 
-def show_group(group):
+def group_menu(group):
     directory.add_menu_item(title='Edit {}'.format(group),
                                 params={'mode': 'group',
                                         'action': 'edit',
@@ -42,3 +47,12 @@ def show_group(group):
                             isFolder=True)
                             
     xbmcplugin.setContent(_handle, 'files')
+    
+    
+def tools_menu():
+    directory.add_menu_item(title='Force Refresh Widgets',
+                            params={'mode': 'force'},
+                            description='Force all defined widgets to refresh.')
+    directory.add_menu_item(title='Clean Old References',
+                            params={'mode': 'clean'},
+                            description='Clean old references to widgets that are no longer defined.')
