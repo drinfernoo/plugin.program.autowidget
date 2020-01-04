@@ -18,12 +18,11 @@
         <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
         <email></email>
-        <source></source>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news></news>
         <disclaimer></disclaimer>
         <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
+            <icon>icon.png</icon>
         </assets>
     </extension>
 </addon>

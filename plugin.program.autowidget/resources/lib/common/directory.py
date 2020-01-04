@@ -19,7 +19,7 @@ def add_separator(title=''):
         add_menu_item(title='-' * 80)
 
     
-def add_menu_item(title, params=None, description='', isFolder=False):
+def add_menu_item(title, params=None, description='', art={}, isFolder=False):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
     _params = sys.argv[2][1:]
@@ -38,5 +38,8 @@ def add_menu_item(title, params=None, description='', isFolder=False):
 
     # build list item
     item = xbmcgui.ListItem(title)
+    if art:
+        item.setArt(art)
+    
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
                                 isFolder=isFolder)

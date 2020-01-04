@@ -5,6 +5,7 @@ import sys
 
 from resources.lib import path_utils
 from resources.lib.common import directory
+from resources.lib.common import utils
 
 _handle = int(sys.argv[1])
 
@@ -12,6 +13,7 @@ _handle = int(sys.argv[1])
 def root_menu():
     directory.add_menu_item(title='Create New Group',
                             params={'mode': 'group', 'action': 'add'},
+                            art={'icon': utils.get_art('folder-plus-outline.png')},
                             description='Create a new group of widget paths.')
                             
     for group in path_utils.find_defined_groups():
@@ -21,10 +23,12 @@ def root_menu():
                                         'group': group},
                                 description='View the "{}" group.'
                                             .format(group),
+                                art={'icon': utils.get_art('folder-outline.png')},
                                 isFolder=True)
                                 
     directory.add_menu_item(title='Tools',
                             params={'mode': 'tools'},
+                            art={'icon': utils.get_art('tools.png')},
                             description='Various tools for using AutoWidgets.',
                             isFolder=True)
 
@@ -39,25 +43,28 @@ def group_menu(group):
                             params={'mode': 'group',
                                     'action': 'edit',
                                     'group': group},
+                            art={'icon': utils.get_art('pencil-outline.png')},
                             description='Edit the "{}" group.'
                                         .format(group))
     directory.add_menu_item(title='Remove Group',
                             params={'mode': 'group',
                                     'action': 'remove',
                                     'group': group},
+                            art={'icon': utils.get_art('folder-remove-outline.png')},
                             description='Remove this group definition. Cannot be undone.')
     
     if len(paths) > 0:
-        directory.add_menu_item(title='Random Path',
+        directory.add_menu_item(title='Random Path from {}'.format(group.capitalize()),
                                 params={'mode': 'path',
                                         'action': 'random',
                                         'group': group},
+                                art={'icon': utils.get_art('shuffle.png')},
                                 description='Use a random path from the {} group.'
                                             .format(group.capitalize()),
                                 isFolder=True)
     else:
-        directory.add_menu_item(title=('No AutoWidgets have been defined for')
-                                      (' this group.'),
+        directory.add_menu_item(title='No AutoWidgets have been defined for this group.',
+                                art={'icon': utils.get_art('alert-circle-outline.png')},
                                 isFolder=not_media)
     
     xbmcplugin.setPluginCategory(_handle, group.capitalize())
@@ -74,6 +81,7 @@ def random_path_menu(group):
         label = 'following:' if not not_media else '{} group.'.format(group.capitalize())
         directory.add_menu_item(title='Point a widget at this directory to get a random widget from the {}'
                                       .format(label),
+                                art={'icon': utils.get_art('shuffle.png')},
                                 isFolder=not_media)
                                 
         if not not_media:
@@ -83,11 +91,15 @@ def random_path_menu(group):
                 directory.add_menu_item(title=path[0],
                                         params={'mode': 'path',
                                                 'action': 'call',
-                                                'path': path[1]})
+                                                'path': path[1]},
+                                        art={'icon': path[3]})
     if home:
+        unpack = utils.get_art('package-variant.png')
+        sync = utils.get_art('sync.png')
         directory.add_menu_item(title='Initialize Widgets',
                         params={'mode': 'force'},
-                        description='Force all defined widgets to refresh.')
+                        art={'icon': unpack, 'thumb': unpack, 'banner': unpack, 'poster': unpack},
+                        description='Initialize this and any other AutoWidgets.')
     
     xbmcplugin.setPluginCategory(_handle, group.capitalize())
     xbmcplugin.setContent(_handle, 'files')
@@ -96,9 +108,11 @@ def random_path_menu(group):
 def tools_menu():
     directory.add_menu_item(title='Force Refresh Widgets',
                             params={'mode': 'force'},
+                            art={'icon': utils.get_art('refresh.png')},
                             description='Force all defined widgets to refresh.')
     directory.add_menu_item(title='Clean Old References',
                             params={'mode': 'clean'},
+                            art={'icon': utils.get_art('trash-can-outline.png')},
                             description='Clean old references to widgets that are no longer defined.')
     
     xbmcplugin.setPluginCategory(_handle, 'Tools')

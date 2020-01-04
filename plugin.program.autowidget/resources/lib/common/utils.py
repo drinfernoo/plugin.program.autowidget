@@ -15,6 +15,14 @@ _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 def log(msg, level=xbmc.LOGDEBUG):
     msg = '{}: {}'.format(sys.argv[0], msg)
     xbmc.log(msg, level)
+    
+    
+def get_art(filename):
+    _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
+    _art_path = os.path.join(_addon_root, 'resources', 'media')
+    image_path = os.path.join(_art_path, filename)
+    
+    return image_path if os.path.exists(image_path) else ''
 
 
 def clean_old_widgets():

@@ -51,13 +51,15 @@ def find_defined_paths(group=None):
         for shortcut in root.findall('shortcut'):
             label = shortcut.find('label').text
             action = shortcut.find('action').text
+            icon = shortcut.find('thumb').text
 
             try:
                 path = action.split(',')[1]
             except:
-                path = action
+                dialog = xbmcgui.Dialog()
+                dialog.notification('AutoWidget', 'Unsupported path in {}: {}'.format(group.capitalize(), action))
                 
-            paths.append((label, action, path))
+            paths.append((label, action, path, icon))
     else:
         for group in _find_defined_groups():
             paths.append(find_defined_paths(group))
@@ -176,17 +178,16 @@ def convert_paths():
             tree = ET.ElementTree(root)
             tree.write(file_path)
                 
-    utils.clean_old_widgets()
     xbmc.executebuiltin('ReloadSkin()')
                 
                 
 def refresh_paths(notify=False, force=False):
-    if force:
-        convert_paths()
-    
     if notify:
         dialog = xbmcgui.Dialog()
         dialog.notification('AutoWidget', 'Refreshing AutoWidgets')
+    
+    if force:
+        convert_paths()
     
     paths = []
     
