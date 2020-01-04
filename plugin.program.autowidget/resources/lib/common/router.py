@@ -44,6 +44,8 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'group':
         if action == 'add':
             path_utils.add_group()
+        elif action == 'remove':
+            path_utils.remove_group(group)
         elif action == 'view':
             menu.group_menu(group)
         elif action == 'edit':

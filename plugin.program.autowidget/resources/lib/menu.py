@@ -32,12 +32,16 @@ def root_menu():
 
 def group_menu(group):
     directory.add_menu_item(title='Edit {}'.format(group),
-                                params={'mode': 'group',
-                                        'action': 'edit',
-                                        'group': group},
-                                description='Edit the "{}" group.'
-                                            .format(group))
-                                            
+                            params={'mode': 'group',
+                                    'action': 'edit',
+                                    'group': group},
+                            description='Edit the "{}" group.'
+                                        .format(group))
+    directory.add_menu_item(title='Remove Group',
+                            params={'mode': 'group',
+                                    'action': 'remove',
+                                    'group': group},
+                            description='Remove this group definition. Cannot be undone.')
     directory.add_menu_item(title='Random Path',
                             params={'mode': 'path',
                                     'action': 'random',

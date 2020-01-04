@@ -87,6 +87,23 @@ def add_group():
         xbmc.executebuiltin('Container.Refresh()')
     else:
         dialog.notification('AutoWidget', 'Cannot create a group with no name.')
+        
+
+def remove_group(group):
+    dialog = xbmcgui.Dialog()
+    choice = dialog.yesno('AutoWidget', 'Are you sure you want to remove this group? This action [B]cannot[/B] be undone.')
+    
+    if choice:
+        filename = 'autowidget-{}.DATA.xml'.format(group).lower()
+        filepath = os.path.join(_shortcuts_path, filename)
+        try:
+            os.remove(filepath)
+        except Exception as e:
+            utils.log('{}'.format(e), level=xbmc.LOGERROR)
+        
+        xbmc.executebuiltin('Container.Update(plugin://plugin.program.autowidget/)')
+    else:
+        dialog.notification('AutoWidget', 'Cannot create a group with no name.')
 
         
 def _save_path_details(path):
