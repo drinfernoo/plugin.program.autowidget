@@ -91,7 +91,9 @@ def add_group():
 
 def remove_group(group):
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', 'Are you sure you want to remove this group? This action [B]cannot[/B] be undone.')
+    choice = dialog.yesno('AutoWidget', ('Are you sure you want to remove this')
+                                        ('group? This action [B]cannot[/B] be ')
+                                        ('undone.'))
     
     if choice:
         filename = 'autowidget-{}.DATA.xml'.format(group).lower()
@@ -100,6 +102,17 @@ def remove_group(group):
             os.remove(filepath)
         except Exception as e:
             utils.log('{}'.format(e), level=xbmc.LOGERROR)
+            
+        for file in os.listdir(_addon_path):
+            savedpath = os.path.join(_addon_path, file)
+            with open(savedpath, 'r') as f:
+                content = f.read()
+            
+            if group in content:
+                try:
+                    os.remove(savedpath)
+                except Exception as e:
+                    utils.log('{}'.format(e), level=xbmc.LOGERROR)
         
         xbmc.executebuiltin('Container.Update(plugin://plugin.program.autowidget/)')
     else:
@@ -163,7 +176,8 @@ def convert_paths():
             tree = ET.ElementTree(root)
             tree.write(file_path)
                 
-    # xbmc.executebuiltin('ReloadSkin()')
+    utils.clean_old_widgets()
+    xbmc.executebuiltin('ReloadSkin()')
                 
                 
 def refresh_paths(notify=False, force=False):

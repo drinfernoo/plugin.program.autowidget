@@ -8,6 +8,15 @@ if six.PY3:
     from urllib.parse import quote_plus
 elif six.PY2:
     from urllib import quote_plus
+    
+    
+def add_separator(title=''):
+    if title:
+        split = (len(title) + 2) / 2
+        edge = '-' * (40 - split)
+        add_menu_item(title='{} {} {}'.format(edge, title.capitalize(), edge))
+    else:
+        add_menu_item(title='-' * 80)
 
     
 def add_menu_item(title, params=None, description='', isFolder=False):

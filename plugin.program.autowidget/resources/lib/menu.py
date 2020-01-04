@@ -1,3 +1,4 @@
+import xbmc
 import xbmcplugin
 
 import sys
@@ -31,6 +32,7 @@ def root_menu():
 
 
 def group_menu(group):
+    not_media = xbmc.getCondVisibility('!Window.IsMedia')
     paths = path_utils.find_defined_paths(group)
     
     directory.add_menu_item(title='Edit {}'.format(group.capitalize()),
@@ -43,17 +45,21 @@ def group_menu(group):
                             params={'mode': 'group',
                                     'action': 'remove',
                                     'group': group},
-                            description='Remove this group definition. Cannot be undone.')
+                            description=('Remove this group definition.')
+                                        (' Cannot be undone.'))
     
     if len(paths) > 0:
         directory.add_menu_item(title='Random Path',
                                 params={'mode': 'path',
                                         'action': 'random',
                                         'group': group},
-                                description=('Use a random path from the ')
-                                            ('"{}" group.')
+                                description='Use a random path from the {} group.'
                                             .format(group.capitalize()),
                                 isFolder=True)
+    else:
+        directory.add_menu_item(title=('No AutoWidgets have been defined for')
+                                      (' this group.'),
+                                isFolder=not_media)
     
     xbmcplugin.setPluginCategory(_handle, group.capitalize())
     xbmcplugin.setContent(_handle, 'files')
@@ -64,24 +70,25 @@ def random_path_menu(group):
     paths = path_utils.find_defined_paths(group)
     
     if len(paths) > 0:
-        directory.add_menu_item(title='Point a widget at this directory to get a random widget from the following:',
+        label = 'following:' if not not_media else '{} group.'
+                                                   .format(group.capitalize())
+        directory.add_menu_item(title=('Point a widget at this directory to')
+                                      (' get a random widget from the {}')
+                                      .format(label),
                                 isFolder=not_media)
                                 
-        split = (len(group) + 2) / 2
-        edge = '-' * (40 - split)
-        directory.add_menu_item(title='{}{}{}'.format(edge, group, edge),
-                                isFolder=not_media)
+        if not not_media:
+            directory.add_separator(group)
     
-        for path in paths:
-            directory.add_menu_item(title=path[0],
-                                    params={'mode': 'path',
-                                            'action': 'call',
-                                            'path': path[1]},
-                                    isFolder=True)
-    else:
-        directory.add_menu_item(title='No AutoWidgets have been defined for this group.',
-                                isFolder=not_media)
-    
+            for path in paths:
+                directory.add_menu_item(title=path[0],
+                                        params={'mode': 'path',
+                                                'action': 'call',
+                                                'path': path[1]})
+        else:
+            directory.add_menu_item(title='Initialize Widgets',
+                            params={'mode': 'force'},
+                            description='Force all defined widgets to refresh.')
     
     xbmcplugin.setPluginCategory(_handle, group.capitalize())
     xbmcplugin.setContent(_handle, 'files')
@@ -93,7 +100,8 @@ def tools_menu():
                             description='Force all defined widgets to refresh.')
     directory.add_menu_item(title='Clean Old References',
                             params={'mode': 'clean'},
-                            description='Clean old references to widgets that are no longer defined.')
+                            description=('Clean old references to widgets that')
+                                        (' are no longer defined.'))
     
     xbmcplugin.setPluginCategory(_handle, 'Tools')
     xbmcplugin.setContent(_handle, 'files')
