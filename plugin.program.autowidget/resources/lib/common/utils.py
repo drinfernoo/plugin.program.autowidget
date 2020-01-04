@@ -3,6 +3,7 @@ import xbmcaddon
 import xbmcgui
 
 import os
+import shutil
 import sys
 
 _addon = xbmcaddon.Addon()
