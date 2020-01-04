@@ -31,6 +31,8 @@ def root_menu():
 
 
 def group_menu(group):
+    paths = path_utils.find_defined_paths(group)
+    
     directory.add_menu_item(title='Edit {}'.format(group.capitalize()),
                             params={'mode': 'group',
                                     'action': 'edit',
@@ -42,28 +44,44 @@ def group_menu(group):
                                     'action': 'remove',
                                     'group': group},
                             description='Remove this group definition. Cannot be undone.')
-    directory.add_menu_item(title='Random Path',
-                            params={'mode': 'path',
-                                    'action': 'random',
-                                    'group': group},
-                            description='Use a random path from the "{}" group.'
-                                        .format(group.capitalize()),
-                            isFolder=True)
+    
+    if len(paths) > 0:
+        directory.add_menu_item(title='Random Path',
+                                params={'mode': 'path',
+                                        'action': 'random',
+                                        'group': group},
+                                description=('Use a random path from the ')
+                                            ('"{}" group.')
+                                            .format(group.capitalize()),
+                                isFolder=True)
     
     xbmcplugin.setPluginCategory(_handle, group.capitalize())
     xbmcplugin.setContent(_handle, 'files')
     
     
 def random_path_menu(group):
-    directory.add_menu_item(title='Point a widget at this directory to get a random widget from the following:')
-    directory.add_menu_item(title='---------------------------------------------------------------------------')
-    
+    not_media = xbmc.getCondVisibility('!Window.IsMedia')
     paths = path_utils.find_defined_paths(group)
-    for path in paths:
-        directory.add_menu_item(title=path[0],
-                                params={'mode': 'path',
-                                        'action': 'call',
-                                        'path': path[1]})
+    
+    if len(paths) > 0:
+        directory.add_menu_item(title='Point a widget at this directory to get a random widget from the following:',
+                                isFolder=not_media)
+                                
+        split = (len(group) + 2) / 2
+        edge = '-' * (40 - split)
+        directory.add_menu_item(title='{}{}{}'.format(edge, group, edge),
+                                isFolder=not_media)
+    
+        for path in paths:
+            directory.add_menu_item(title=path[0],
+                                    params={'mode': 'path',
+                                            'action': 'call',
+                                            'path': path[1]},
+                                    isFolder=True)
+    else:
+        directory.add_menu_item(title='No AutoWidgets have been defined for this group.',
+                                isFolder=not_media)
+    
     
     xbmcplugin.setPluginCategory(_handle, group.capitalize())
     xbmcplugin.setContent(_handle, 'files')

@@ -163,7 +163,7 @@ def convert_paths():
             tree = ET.ElementTree(root)
             tree.write(file_path)
                 
-    xbmc.executebuiltin('ReloadSkin()')
+    # xbmc.executebuiltin('ReloadSkin()')
                 
                 
 def refresh_paths(notify=False, force=False):
@@ -194,9 +194,10 @@ def refresh_paths(notify=False, force=False):
         if action == 'random' and len(paths) == 0:
             paths = _get_random_paths(group, force)
         
-        path = paths.pop()
-        xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
-        xbmc.executebuiltin('Skin.SetString({},{})'
-                            .format(skin_path, path[2].replace('\"','')))
-        utils.log('{}: {}'.format(skin_label, path[0]))
-        utils.log('{}: {}'.format(skin_path, path[2].replace('\"','')))
+        if len(paths) > 0:
+            path = paths.pop()            
+            xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
+            xbmc.executebuiltin('Skin.SetString({},{})'
+                                .format(skin_path, path[2].replace('\"','')))
+            utils.log('{}: {}'.format(skin_label, path[0]))
+            utils.log('{}: {}'.format(skin_path, path[2].replace('\"','')))
