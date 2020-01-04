@@ -33,11 +33,11 @@ def find_defined_groups():
             group_name = filename[11:-9]
             groups.append(group_name)
 
-    utils.log('_find_defined_groups: {}'.format(groups))
+    utils.log('find_defined_groups: {}'.format(groups))
     return groups
     
     
-def _find_defined_paths(group=None):
+def find_defined_paths(group=None):
     paths = []
     filename = ''
     
@@ -60,9 +60,9 @@ def _find_defined_paths(group=None):
             paths.append((label, action, path))
     else:
         for group in _find_defined_groups():
-            paths.append(_find_defined_paths(group))
+            paths.append(find_defined_paths(group))
     
-    utils.log('_find_defined_paths: {}'.format(paths))
+    utils.log('find_defined_paths: {}'.format(paths))
     return paths
         
         
@@ -71,7 +71,7 @@ def _get_random_paths(group, force=False, change_sec=3600):
     now = time.time()
     seed = now - (now % wait_time)
     rand = random.Random(seed)
-    paths = _find_defined_paths(group)
+    paths = find_defined_paths(group)
     rand.shuffle(paths)
     
     utils.log('_get_random_paths: {}'.format(paths))

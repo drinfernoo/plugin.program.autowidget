@@ -33,6 +33,7 @@ def dispatch(_plugin, _handle, _params):
     mode = params.get('mode', '')
     action = params.get('action', '')
     group = params.get('group', '')
+    path = params.get('path', '')
     
     if not mode:
         menu.root_menu()
@@ -40,7 +41,9 @@ def dispatch(_plugin, _handle, _params):
         menu.tools_menu()
     elif mode == 'path':
         if action == 'random':
-            pass
+            menu.random_path_menu(group)
+        elif action == 'call':
+            xbmc.executebuiltin(path)
     elif mode == 'group':
         if action == 'add':
             path_utils.add_group()

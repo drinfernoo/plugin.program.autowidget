@@ -14,7 +14,7 @@ def root_menu():
                             description='Create a new group of widget paths.')
                             
     for group in path_utils.find_defined_groups():
-        directory.add_menu_item(title=group,
+        directory.add_menu_item(title=group.capitalize(),
                                 params={'mode': 'group',
                                         'action': 'view',
                                         'group': group},
@@ -26,12 +26,12 @@ def root_menu():
                             params={'mode': 'tools'},
                             description='Various tools for using AutoWidgets.',
                             isFolder=True)
-                                
+
     xbmcplugin.setContent(_handle, 'files')
 
 
 def group_menu(group):
-    directory.add_menu_item(title='Edit {}'.format(group),
+    directory.add_menu_item(title='Edit {}'.format(group.capitalize()),
                             params={'mode': 'group',
                                     'action': 'edit',
                                     'group': group},
@@ -47,9 +47,25 @@ def group_menu(group):
                                     'action': 'random',
                                     'group': group},
                             description='Use a random path from the "{}" group.'
-                                        .format(group),
+                                        .format(group.capitalize()),
                             isFolder=True)
-                            
+    
+    xbmcplugin.setPluginCategory(_handle, group.capitalize())
+    xbmcplugin.setContent(_handle, 'files')
+    
+    
+def random_path_menu(group):
+    directory.add_menu_item(title='Point a widget at this directory to get a random widget from the following:')
+    directory.add_menu_item(title='---------------------------------------------------------------------------')
+    
+    paths = path_utils.find_defined_paths(group)
+    for path in paths:
+        directory.add_menu_item(title=path[0],
+                                params={'mode': 'path',
+                                        'action': 'call',
+                                        'path': path[1]})
+    
+    xbmcplugin.setPluginCategory(_handle, group.capitalize())
     xbmcplugin.setContent(_handle, 'files')
     
     
@@ -60,3 +76,7 @@ def tools_menu():
     directory.add_menu_item(title='Clean Old References',
                             params={'mode': 'clean'},
                             description='Clean old references to widgets that are no longer defined.')
+    
+    xbmcplugin.setPluginCategory(_handle, 'Tools')
+    xbmcplugin.setContent(_handle, 'files')
+    
