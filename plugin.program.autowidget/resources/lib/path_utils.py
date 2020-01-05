@@ -150,8 +150,7 @@ def convert_paths():
             label = shortcut.find('label')
             action = shortcut.find('action')
             
-            if all(term in action.text for term in ['plugin.program.autowidget',
-                                                    '?mode']):
+            if all(term in action.text for term in ['plugin.program.autowidget', '?mode']):
                 path = action.text.split(',')
             else:
                 continue
@@ -177,7 +176,8 @@ def convert_paths():
             
             tree = ET.ElementTree(root)
             tree.write(file_path)
-                
+    
+    utils.clean_old_widgets()
     xbmc.executebuiltin('ReloadSkin()')
                 
                 
