@@ -148,8 +148,11 @@ def convert_paths():
             label = shortcut.find('label')
             action = shortcut.find('action')
             
-            if all(term in action.text for term in ['plugin.program.autowidget', '?mode']):
-                path = action.text.split(',')
+            if action.text:
+                if all(term in action.text for term in ['plugin.program.autowidget', '?mode']):
+                    path = action.text.split(',')
+                else:
+                    continue
             else:
                 continue
                 
