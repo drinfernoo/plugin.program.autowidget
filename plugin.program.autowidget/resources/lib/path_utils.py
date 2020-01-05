@@ -93,9 +93,7 @@ def add_group():
 
 def remove_group(group):
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', ('Are you sure you want to remove this')
-                                        ('group? This action [B]cannot[/B] be ')
-                                        ('undone.'))
+    choice = dialog.yesno('AutoWidget', 'Are you sure you want to remove this group? This action [B]cannot[/B] be undone.')
     
     if choice:
         filename = 'autowidget-{}.DATA.xml'.format(group).lower()
