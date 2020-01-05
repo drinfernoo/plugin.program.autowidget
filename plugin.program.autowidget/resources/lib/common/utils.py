@@ -15,6 +15,11 @@ _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 def log(msg, level=xbmc.LOGDEBUG):
     msg = '{}: {}'.format(sys.argv[0], msg)
     xbmc.log(msg, level)
+
+
+def ensure_addon_data():
+    if not os.path.exists(_addon_path):
+        os.makedirs(_addon_path)
     
     
 def get_art(filename):
