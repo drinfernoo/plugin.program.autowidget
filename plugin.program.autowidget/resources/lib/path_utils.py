@@ -135,7 +135,7 @@ def _save_path_details(path):
     return id
 
         
-def convert_paths():
+def convert_paths(force=False):
     for filename in os.listdir(_shortcuts_path):
         if any(term in filename for term in ['powermenu', '.hash',
                                              '.properties']):
@@ -179,7 +179,8 @@ def convert_paths():
             tree.write(file_path)
     
     utils.clean_old_widgets()
-    xbmc.executebuiltin('ReloadSkin()')
+    if force:
+        xbmc.executebuiltin('ReloadSkin()')
                 
                 
 def refresh_paths(notify=False, force=False):
@@ -188,32 +189,35 @@ def refresh_paths(notify=False, force=False):
         dialog.notification('AutoWidget', 'Refreshing AutoWidgets')
     
     if force:
-        convert_paths()
+        convert_paths(force)
     
-    paths = []
-    
-    for saved in os.listdir(_addon_path):
-        if not saved.endswith('.auto'):
-            continue
+    for group in find_defined_groups():       
+        paths = []
+        for saved in os.listdir(_addon_path):
+            if not saved.endswith('.auto'):
+                continue
         
-        saved_path = os.path.join(_addon_path, saved)
-        with open(saved_path, "r") as f:
-            params = f.read().split(',')
+            saved_path = os.path.join(_addon_path, saved)
+            with open(saved_path, "r") as f:
+                params = f.read().split(',')
+                
+            action_param = params[0]
+            group_param = params[1]
             
-        id = os.path.basename(saved_path)[:-5]
-        skin_path = 'autowidget-{}-path'.format(id)
-        skin_label = 'autowidget-{}-label'.format(id)
-
-        action = params[0]
-        group = params[1]
+            if group_param != group:
+                continue
+            
+            id = os.path.basename(saved_path)[:-5]
+            skin_path = 'autowidget-{}-path'.format(id)
+            skin_label = 'autowidget-{}-label'.format(id)
         
-        if action == 'random' and len(paths) == 0:
-            paths = _get_random_paths(group, force)
+            if action == 'random' and len(paths) == 0:
+                paths = _get_random_paths(group, force)
         
-        if len(paths) > 0:
-            path = paths.pop()            
-            xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
-            xbmc.executebuiltin('Skin.SetString({},{})'
+            if len(paths) > 0:
+                path = paths.pop()            
+                xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
+                xbmc.executebuiltin('Skin.SetString({},{})'
                                 .format(skin_path, path[2].replace('\"','')))
-            utils.log('{}: {}'.format(skin_label, path[0]))
-            utils.log('{}: {}'.format(skin_path, path[2].replace('\"','')))
+                utils.log('{}: {}'.format(skin_label, path[0]))
+                utils.log('{}: {}'.format(skin_path, path[2].replace('\"','')))
