@@ -25,5 +25,3 @@ def show_window(group):
                         defaultRes='1080i')
     sw.doModal()
     del sw
-
-    path_utils.refresh_paths(force=True)

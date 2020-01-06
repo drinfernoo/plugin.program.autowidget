@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window type="dialog">
     <defaultcontrol>200</defaultcontrol>
-    <coordinates>
-        <left>0</left>
-        <top>0</top>
-    </coordinates>
     
     <controls>
         <control type="button" id="200">
@@ -14,6 +10,7 @@
             <height>80</height>
             <label>Launch Dialog</label>
             <onclick>RunScript(script.skinshortcuts,type=manage&amp;group=autowidget-$INFO[Window.Property(dialog.group)])</onclick>
+            <onunload>RunScript(script.skinshortcuts,type=buildxml&amp;mainmenuID=9000&amp;group=$INFO[Window().Property(dialog.group_list)])</onunload>
         </control>
     </controls>
 </window>
