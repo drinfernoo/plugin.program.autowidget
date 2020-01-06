@@ -201,7 +201,7 @@ def refresh_paths(notify=False, force=False):
             with open(saved_path, "r") as f:
                 params = f.read().split(',')
                 
-            action_param = params[0]
+            action = params[0]
             group_param = params[1]
             
             if group_param != group:
