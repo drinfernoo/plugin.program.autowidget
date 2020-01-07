@@ -29,10 +29,11 @@ _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 def find_defined_groups():
     groups = []
     
-    for filename in os.listdir(_shortcuts_path):
-        if filename.startswith('autowidget') and filename.endswith('DATA.xml'):
-            group_name = filename[11:-9]
-            groups.append(group_name)
+    if os.path.exists(_shortcuts_path):
+        for filename in os.listdir(_shortcuts_path):
+            if filename.startswith('autowidget') and filename.endswith('DATA.xml'):
+                group_name = filename[11:-9]
+                groups.append(group_name)
 
     utils.log('find_defined_groups: {}'.format(groups))
     return groups
@@ -45,7 +46,7 @@ def find_defined_paths(group=None):
     if group:
         filename = 'autowidget-{}.DATA.xml'.format(group)
     
-    if filename:
+    if filename and os.path.exists(_shortcuts_path):
         tree = ET.parse(os.path.join(_shortcuts_path, filename))
         root = tree.getroot()
                 
@@ -87,7 +88,7 @@ def add_group():
     
     if group_name:
         xbmc.executebuiltin('RunScript(script.skinshortcuts,type=manage'
-                            '&group=autowidget-{})'.format(group), wait=True)
+                            '&group=autowidget-{})'.format(group_name.lower()), wait=True)
         xbmc.executebuiltin('Container.Refresh()')
     else:
         dialog.notification('AutoWidget', 'Cannot create a group with no name.')
@@ -241,10 +242,7 @@ def refresh_paths(notify=False, force=False):
     
     for group in find_defined_groups():       
         paths = []
-        for saved in os.listdir(_addon_path):
-            if not saved.endswith('.auto'):
-                continue
-        
+        for saved in [saved for saved in os.listdir(_addon_path) if not saved.endswith('.auto')]:
             saved_path = os.path.join(_addon_path, saved)
             with open(saved_path, "r") as f:
                 params = f.read().split(',')
@@ -263,7 +261,7 @@ def refresh_paths(notify=False, force=False):
                 paths = _get_random_paths(group, force)
         
             if len(paths) > 0:
-                path = paths.pop()            
+                path = paths.pop()
                 xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
                 xbmc.executebuiltin('Skin.SetString({},{})'
                                 .format(skin_path, path[2].replace('\"','')))
