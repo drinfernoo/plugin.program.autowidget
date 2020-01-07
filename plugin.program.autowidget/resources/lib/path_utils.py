@@ -241,7 +241,7 @@ def refresh_paths(notify=False, force=False):
     
     for group in find_defined_groups():       
         paths = []
-        for saved in [saved for saved in os.listdir(_addon_path) if not saved.endswith('.auto')]:
+        for saved in [saved for saved in os.listdir(_addon_path) if saved.endswith('.auto')]:
             saved_path = os.path.join(_addon_path, saved)
             with open(saved_path, "r") as f:
                 params = f.read().split(',')
