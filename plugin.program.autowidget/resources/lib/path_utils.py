@@ -17,7 +17,6 @@ elif six.PY2:
 
 from xml.etree import ElementTree as ET
 
-from resources.lib import window
 from resources.lib.common import utils
 
 _addon = xbmcaddon.Addon()
