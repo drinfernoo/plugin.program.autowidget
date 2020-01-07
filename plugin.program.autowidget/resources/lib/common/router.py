@@ -11,7 +11,6 @@ elif six.PY2:
     
 from resources.lib import menu
 from resources.lib import path_utils
-from resources.lib import window
 from resources.lib.common import utils
     
 
@@ -52,7 +51,8 @@ def dispatch(_plugin, _handle, _params):
         elif action == 'view':
             menu.group_menu(group)
         elif action == 'edit':
-            window.show_window(group)
+            xbmc.executebuiltin('RunScript(script.skinshortcuts,type=manage'
+                                '&group=autowidget-{})'.format(group))
     elif mode == 'force':
         path_utils.refresh_paths(notify=True, force=True)
     elif mode == 'clean':

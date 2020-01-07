@@ -86,7 +86,8 @@ def add_group():
     group_name = dialog.input(heading='Name for Group') or ''
     
     if group_name:
-        window.show_window(group_name)
+        xbmc.executebuiltin('RunScript(script.skinshortcuts,type=manage'
+                            '&group=autowidget-{})'.format(group), wait=True)
         xbmc.executebuiltin('Container.Refresh()')
     else:
         dialog.notification('AutoWidget', 'Cannot create a group with no name.')
