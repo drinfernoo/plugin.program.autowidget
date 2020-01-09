@@ -181,7 +181,7 @@ def _convert_shortcuts(force=False):
             tree.write(file_path)
     
     utils.clean_old_widgets()
-    _convert_includes()
+    # _convert_includes()
     
     if force:
         xbmc.executebuiltin('ReloadSkin()')
