@@ -13,7 +13,6 @@ _wait_time = int(_addon.getSetting('service.wait_time'))
 utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
 utils.log('+++++ REFRESHING EVERY {} HOURS... +++++'.format(_wait_time), level=xbmc.LOGNOTICE)
 
-utils.ensure_addon_data()
 path_utils.refresh_paths()
 
 while not _monitor.abortRequested():

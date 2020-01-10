@@ -5,6 +5,7 @@ import xbmcgui
 import ast
 import os
 import random
+import re
 import six
 import shutil
 import time
@@ -24,9 +25,14 @@ _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
 _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
+widget_props_pattern = '\w*[.-]*[wW]idget(\w+)[.-]*\w*'
+activate_window_pattern = '[aA]ctivate[wW]indow[(]\w+,(.*)(?:,[rR]eturn)?[)]'
 
 def find_defined_groups():
     groups = []
+    
+    if not os.path.exists(_shortcuts_path):
+        return
     
     if os.path.exists(_shortcuts_path):
         for filename in os.listdir(_shortcuts_path):
@@ -105,6 +111,7 @@ def remove_group(group):
         except Exception as e:
             utils.log('{}'.format(e), level=xbmc.LOGERROR)
             
+        utils.ensure_addon_data()
         for file in os.listdir(_addon_path):
             savedpath = os.path.join(_addon_path, file)
             with open(savedpath, 'r') as f:
@@ -138,6 +145,9 @@ def _save_path_details(path):
 
         
 def _convert_shortcuts(force=False):
+    if not os.path.exists(_shortcuts_path):
+        return
+
     for filename in os.listdir(_shortcuts_path):
         if any(term in filename for term in ['powermenu', '.hash',
                                              '.properties']):
@@ -160,35 +170,28 @@ def _convert_shortcuts(force=False):
                 
             _id = _save_path_details(path[1])
             skin_path = 'autowidget-{}-path'.format(_id)
-            skin_label = 'autowidget-{}-label'.format(_id)
+            skin_name = 'autowidget-{}-name'.format(_id)
             path_string = '$INFO[Skin.String({})]'.format(skin_path)
-            label_string = '$INFO[Skin.String({})]'.format(skin_label)
+            name_string = '$INFO[Skin.String({})]'.format(skin_name)
             final = action.text.replace(path[1], path_string).replace('\"', '')
             
             utils.log('Setting skin string {} to path {}...'
                       .format(skin_path, final))
             xbmc.executebuiltin('Skin.SetString({},{})'
-                                .format(skin_label, path[0]))
+                                .format(skin_name, path[0]))
             xbmc.executebuiltin('Skin.SetString({},{})'
                                 .format(skin_path, path[2]))
-            utils.log('{}: {}'.format(skin_label, path[0]))
+            utils.log('{}: {}'.format(skin_name, path[0]))
             utils.log('{}: {}'.format(skin_path, path[2]))
             
-            label.text = label_string
+            label.text = name_string
             action.text = final
             
             tree = ET.ElementTree(root)
             tree.write(file_path)
-    
-    utils.clean_old_widgets()
-    # _convert_includes()
-    
-    if force:
-        xbmc.executebuiltin('ReloadSkin()')
-    
                 
                 
-def _convert_includes():
+def _convert_properties():
     skin = xbmc.translatePath('special://skin/')
     skin_id = os.path.basename(os.path.normpath(skin))
     props_path = os.path.join(_shortcuts_path, '{}.properties'.format(skin_id))
@@ -202,42 +205,57 @@ def _convert_includes():
     prop_list = ast.literal_eval(content)
     
     for prop in prop_list:
-        path = prop[3]
+        group, menu, property, value = prop[:]
         
-        if all(term in path for term in ['plugin.program.autowidget', '?mode=path', '&action=random']):
-            groupid = prop[1]
+        if all(term in value for term in ['plugin.program.autowidget', '?mode=path']):
+            _id = _save_path_details(value)
             
-            for entry in [entry for entry in prop_list if entry[1] == groupid and 'widgetName' in entry[2]]:
-                _id = _save_path_details(path)
+            for check_prop in prop_list:
+                index = prop_list.index(check_prop)
+                check_group, check_menu, check_property, check_value = check_prop[:]
                 
+                if check_group != group and check_menu != menu:
+                    continue
+                
+                match = re.search(widget_props_pattern, check_property)
+                if match:
+                    utils.log('{}: {}'.format(match.group(), check_value))
+                    
+                    if 'name' in match.group().lower():
+                        skin_name = 'autowidget-{}-name'.format(_id)
+                        name_string = '$INFO[Skin.String({})]'.format(skin_name)
+                        check_prop[3] = name_string
+                        
+                    if 'path' in match.group().lower():
+                        skin_path = 'autowidget-{}-path'.format(_id)
+                        path_string = '$INFO[Skin.String({})]'.format(skin_path)
+                        if 'ActivateWindow'.lower() not in check_prop[3].lower():
+                            check_prop[3] = path_string
+                    
+                utils.log('prop: {}'.format(check_prop))
+                prop_list[index] = check_prop
+            
+            if re.search(activate_window_pattern, value):
                 skin_path = 'autowidget-{}-path'.format(_id)
-                skin_label = 'autowidget-{}-label'.format(_id)
                 path_string = '$INFO[Skin.String({})]'.format(skin_path)
-                label_string = '$INFO[Skin.String({})]'.format(skin_label)
+                prop[3] = re.sub(activate_window_pattern, value, path_string)
                 
-                utils.log('Setting skin string {} to path {}...'
-                          .format(skin_path, path))
-                xbmc.executebuiltin('Skin.SetString({},{})'
-                                    .format(skin_label, entry[3]))
-                xbmc.executebuiltin('Skin.SetString({},{})'
-                                    .format(skin_path, path))
-                utils.log('{}: {}'.format(skin_label, entry[3]))
-                utils.log('{}: {}'.format(skin_path, path))
-                
-                entry[3] = label_string
-                prop[3] = path_string
                 
     with open(props_path, 'w') as f:
         f.write('{}'.format(prop_list))
-                
+                    
                 
 def refresh_paths(notify=False, force=False):
+    utils.ensure_addon_data()
+    
     if notify:
         dialog = xbmcgui.Dialog()
         dialog.notification('AutoWidget', 'Refreshing AutoWidgets')
     
     if force:
-        _convert_shortcuts(force)
+        _convert_shortcuts()
+        _convert_properties()
+        xbmc.executebuiltin('ReloadSkin()')
     
     for group in find_defined_groups():       
         paths = []
@@ -254,15 +272,15 @@ def refresh_paths(notify=False, force=False):
             
             id = os.path.basename(saved_path)[:-5]
             skin_path = 'autowidget-{}-path'.format(id)
-            skin_label = 'autowidget-{}-label'.format(id)
+            skin_name = 'autowidget-{}-name'.format(id)
         
             if action == 'random' and len(paths) == 0:
                 paths = _get_random_paths(group, force)
         
             if len(paths) > 0:
                 path = paths.pop()
-                xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label, path[0]))
+                xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_name, path[0]))
                 xbmc.executebuiltin('Skin.SetString({},{})'
                                 .format(skin_path, path[2].replace('\"','')))
-                utils.log('{}: {}'.format(skin_label, path[0]))
+                utils.log('{}: {}'.format(skin_name, path[0]))
                 utils.log('{}: {}'.format(skin_path, path[2].replace('\"','')))
