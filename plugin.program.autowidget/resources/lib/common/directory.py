@@ -1,13 +1,12 @@
 import xbmcgui
 import xbmcplugin
 
-import six
 import sys
 
-if six.PY3:
-    from urllib.parse import quote_plus
-elif six.PY2:
-    from urllib import quote_plus
+try:
+    from urllib.parse import parse_qsl
+except ImportError:
+    from urlparse import parse_qsl
     
     
 def add_separator(title=''):

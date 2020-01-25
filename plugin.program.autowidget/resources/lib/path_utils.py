@@ -6,14 +6,13 @@ import ast
 import os
 import random
 import re
-import six
 import shutil
 import time
 import uuid
 
-if six.PY3:
+try:
     from urllib.parse import parse_qsl
-elif six.PY2:
+except ImportError:
     from urlparse import parse_qsl
 
 from xml.etree import ElementTree as ET

@@ -1,12 +1,11 @@
 import xbmc
 import xbmcplugin
 
-import six
 import sys
 
-if six.PY3:
+try:
     from urllib.parse import parse_qsl
-elif six.PY2:
+except ImportError:
     from urlparse import parse_qsl
     
 from resources.lib import menu
