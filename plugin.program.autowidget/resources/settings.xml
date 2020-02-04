@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-    <setting id="service.wait_time" type="slider" label="Hours between refresh" option="int" range="1,8" default="2" />
     <setting type="action" label="Force Refresh Widgets" option="close" action="RunPlugin(plugin://plugin.program.autowidget/?mode=force)" />
     <setting type="action" label="Clean Old References" option="close" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clean)" />
 </settings>
