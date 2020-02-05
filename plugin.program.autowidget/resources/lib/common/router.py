@@ -11,7 +11,7 @@ except ImportError:
 from resources.lib import menu
 from resources.lib import path_utils
 from resources.lib.common import utils
-    
+
 
 def _log_params(_plugin, _handle, _params):
     params = dict(parse_qsl(_params))

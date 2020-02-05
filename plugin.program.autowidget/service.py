@@ -1,5 +1,4 @@
 import xbmc
-import xbmcaddon
 
 import random
 import time
@@ -7,11 +6,9 @@ import time
 from resources.lib import path_utils
 from resources.lib.common import utils
 
-_addon = xbmcaddon.Addon()
 _monitor = xbmc.Monitor()
 
 utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
-utils.log('+++++ REFRESHING EVERY {} HOURS... +++++'.format(_wait_time), level=xbmc.LOGNOTICE)
 
 path_utils.refresh_paths()
 

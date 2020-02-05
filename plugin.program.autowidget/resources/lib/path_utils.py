@@ -47,27 +47,32 @@ def find_defined_paths(group=None):
     paths = []
     filename = ''
     
+    defined_paths = _addon.getSettingString('service.defined_paths')
+    if defined_paths:
+        defined_paths = defined_paths.split(',')
+        
     if group:
         filename = 'autowidget-{}.DATA.xml'.format(group)
-    
-    if filename and os.path.exists(_shortcuts_path):
-        tree = ET.parse(os.path.join(_shortcuts_path, filename))
-        root = tree.getroot()
-                
-        for shortcut in root.findall('shortcut'):
-            label = shortcut.find('label').text
-            action = shortcut.find('action').text
-            icon = shortcut.find('thumb').text
+        path = os.path.join(_shortcuts_path, filename)
+        
+        if os.path.exists(path):
+            tree = ET.parse(os.path.join(_shortcuts_path, filename))
+            root = tree.getroot()
+                    
+            for shortcut in root.findall('shortcut'):
+                label = shortcut.find('label').text
+                action = shortcut.find('action').text
+                icon = shortcut.find('thumb').text
 
-            try:
-                path = action.split(',')[1]
-            except:
-                dialog = xbmcgui.Dialog()
-                dialog.notification('AutoWidget', 'Unsupported path in {}: {}'.format(group.capitalize(), action))
-                
-            paths.append((label, action, path, icon))
+                try:
+                    path = action.split(',')[1]
+                except:
+                    dialog = xbmcgui.Dialog()
+                    dialog.notification('AutoWidget', 'Unsupported path in {}: {}'.format(group.capitalize(), action))
+                    
+                paths.append((label, action, path, icon))
     else:
-        for group in _find_defined_groups():
+        for group in find_defined_groups():
             paths.append(find_defined_paths(group))
     
     utils.log('find_defined_paths: {}'.format(paths))
@@ -256,7 +261,7 @@ def refresh_paths(notify=False, force=False):
         _convert_properties()
         xbmc.executebuiltin('ReloadSkin()')
     
-    for group in find_defined_groups():       
+    for group in find_defined_groups():
         paths = []
         for saved in [saved for saved in os.listdir(_addon_path) if saved.endswith('.auto')]:
             saved_path = os.path.join(_addon_path, saved)
