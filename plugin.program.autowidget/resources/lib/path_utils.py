@@ -46,10 +46,6 @@ def find_defined_groups():
 def find_defined_paths(group=None):
     paths = []
     filename = ''
-    
-    defined_paths = _addon.getSettingString('service.defined_paths')
-    if defined_paths:
-        defined_paths = defined_paths.split(',')
         
     if group:
         filename = 'autowidget-{}.DATA.xml'.format(group)
@@ -68,7 +64,8 @@ def find_defined_paths(group=None):
                     path = action.split(',')[1]
                 except:
                     dialog = xbmcgui.Dialog()
-                    dialog.notification('AutoWidget', 'Unsupported path in {}: {}'.format(group.capitalize(), action))
+                    dialog.notification('AutoWidget',
+                                        'Unsupported path in {}: {}'.format(group.capitalize(), action))
                     
                 paths.append((label, action, path, icon))
     else:
@@ -77,7 +74,7 @@ def find_defined_paths(group=None):
     
     utils.log('find_defined_paths: {}'.format(paths))
     return paths
-        
+    
         
 def _get_random_paths(group, force=False, change_sec=3600):
     wait_time = 5 if force else change_sec
@@ -165,7 +162,9 @@ def _convert_shortcuts(force=False):
             action = shortcut.find('action')
             
             if action.text:
-                if all(term in action.text for term in ['plugin.program.autowidget', '?mode=path', '&action=random']):
+                if all(term in action.text for term in ['plugin.program.autowidget',
+                                                        '?mode=path',
+                                                        '&action=random']):
                     path = action.text.split(',')
                 else:
                     continue
