@@ -155,7 +155,13 @@ def _convert_shortcuts(force=False):
             continue
         
         file_path = os.path.join(_shortcuts_path, filename)
-        root = ET.parse(file_path).getroot()
+        with open(file_path, 'r') as f:
+            content = f.read()
+        
+        if 'autowidget' not in content:
+            continue
+        
+        root = ET.fromstring(content)
         
         for shortcut in root.findall('shortcut'):
             label = shortcut.find('label')
