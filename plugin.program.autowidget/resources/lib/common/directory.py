@@ -4,9 +4,9 @@ import xbmcplugin
 import sys
 
 try:
-    from urllib.parse import parse_qsl
+    from urllib.parse import quote_plus
 except ImportError:
-    from urlparse import parse_qsl
+    from urllib import quote_plus
     
     
 def add_separator(title=''):
