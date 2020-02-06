@@ -187,11 +187,11 @@ def _convert_shortcuts(force=False):
             utils.log('Setting skin string {} to path {}...'
                       .format(skin_path, final))
             xbmc.executebuiltin('Skin.SetString({},{})'
-                                .format(skin_name, path[0]))
+                                .format(skin_name, label.text))
             xbmc.executebuiltin('Skin.SetString({},{})'
-                                .format(skin_path, path[2]))
-            utils.log('{}: {}'.format(skin_name, path[0]))
-            utils.log('{}: {}'.format(skin_path, path[2]))
+                                .format(skin_path, path[1]))
+            utils.log('{}: {}'.format(skin_name, label.text))
+            utils.log('{}: {}'.format(skin_path, path[1]))
             
             label.text = name_string
             action.text = final
