@@ -263,7 +263,7 @@ def refresh_paths(notify=False, force=False):
     
     if force:
         _convert_shortcuts()
-        _convert_properties()
+        # _convert_properties()
         xbmc.executebuiltin('ReloadSkin()')
     
     for group in find_defined_groups():
