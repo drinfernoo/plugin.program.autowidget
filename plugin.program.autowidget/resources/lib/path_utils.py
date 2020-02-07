@@ -86,7 +86,7 @@ def _get_random_paths(group, force=False, change_sec=3600):
     rand.shuffle(paths)
     
     utils.log('_get_random_paths: {}'.format(paths))
-    return paths[]
+    return paths
     
     
 def add_group():
