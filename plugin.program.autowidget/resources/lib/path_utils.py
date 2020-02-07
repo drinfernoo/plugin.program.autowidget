@@ -77,7 +77,7 @@ def find_defined_paths(group=None):
     return paths
     
         
-def _get_random_paths(group, num, force=False, change_sec=3600):
+def _get_random_paths(group, force=False, change_sec=3600):
     wait_time = 5 if force else change_sec
     now = time.time()
     seed = now - (now % wait_time)
@@ -86,7 +86,7 @@ def _get_random_paths(group, num, force=False, change_sec=3600):
     rand.shuffle(paths)
     
     utils.log('_get_random_paths: {}'.format(paths))
-    return paths[:num]
+    return paths[]
     
     
 def add_group():
@@ -256,6 +256,7 @@ def _convert_properties():
                     
                 
 def refresh_paths(notify=False, force=False):
+    processed = 0
     utils.ensure_addon_data()
     
     if notify:
@@ -269,7 +270,11 @@ def refresh_paths(notify=False, force=False):
     
     for group in find_defined_groups():
         paths = []
+        
         for saved in [saved for saved in os.listdir(_addon_path) if saved.endswith('.auto')]:
+            if processed > refresh_quantity:
+                break
+            
             saved_path = os.path.join(_addon_path, saved)
             with open(saved_path, "r") as f:
                 params = f.read().split(',')
@@ -285,7 +290,7 @@ def refresh_paths(notify=False, force=False):
             skin_name = 'autowidget-{}-name'.format(id)
         
             if action == 'random' and len(paths) == 0:
-                paths = _get_random_paths(group, refresh_quantity, force)
+                paths = _get_random_paths(group, force)
         
             if len(paths) > 0:
                 path = paths.pop()
@@ -294,3 +299,4 @@ def refresh_paths(notify=False, force=False):
                                 .format(skin_path, path[2].replace('\"','')))
                 utils.log('{}: {}'.format(skin_name, path[0]))
                 utils.log('{}: {}'.format(skin_path, path[2].replace('\"','')))
+                processed += 1
