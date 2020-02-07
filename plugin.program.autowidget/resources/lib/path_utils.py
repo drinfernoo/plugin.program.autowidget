@@ -249,7 +249,9 @@ def _convert_properties():
                 skin_path = 'autowidget-{}-path'.format(_id)
                 path_string = '$INFO[Skin.String({})]'.format(skin_path)
                 prop[3] = re.sub(activate_window_pattern, value, path_string)
-                
+        else:
+            index = prop_list.index(prop)
+            prop_list[index] = prop
                 
     with open(props_path, 'w') as f:
         f.write('{}'.format(prop_list))
