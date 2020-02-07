@@ -31,6 +31,7 @@ def get_art(filename):
 
 
 def clean_old_widgets():
+    w = 0
     for file in os.listdir(_addon_path):
         if not file.endswith('.auto'):
             continue
@@ -45,6 +46,7 @@ def clean_old_widgets():
                 
             if file[:-5] in content:
                 found = True
+                w += 1
                 break
         
         if not found:
@@ -54,6 +56,7 @@ def clean_old_widgets():
                 log('Could not remove old widget reference: {}'
                     .format(file), level=xbmc.LOGNOTICE)
                 log('{}'.format(e), level=xbmc.LOGERROR)
+    log('{} stale widget references removed.'.format(w))
                 
                 
 def clean_old_strings():
