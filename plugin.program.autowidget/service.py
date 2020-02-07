@@ -16,7 +16,7 @@ utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
 path_utils.refresh_paths()
 
 while not _monitor.abortRequested():
-    sleep_mins = 45 + int(random.random() * 30)
+    sleep_mins = (45 + int(random.random() * 30)) * 60
     try:
         if _monitor.waitForAbort(sleep_mins * refresh_duration):
             break
