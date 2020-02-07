@@ -26,6 +26,7 @@ _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 widget_props_pattern = '\w*[.-]*[wW]idget(\w+)[.-]*\w*'
 activate_window_pattern = '[aA]ctivate[wW]indow[(]\w+,(.*)(?:,[rR]eturn)?[)]'
+refresh_quantity = _addon.getSettingInt('service.refresh_quantity')
 
 def find_defined_groups():
     groups = []
@@ -76,7 +77,7 @@ def find_defined_paths(group=None):
     return paths
     
         
-def _get_random_paths(group, force=False, change_sec=3600):
+def _get_random_paths(group, num, force=False, change_sec=3600):
     wait_time = 5 if force else change_sec
     now = time.time()
     seed = now - (now % wait_time)
@@ -85,7 +86,7 @@ def _get_random_paths(group, force=False, change_sec=3600):
     rand.shuffle(paths)
     
     utils.log('_get_random_paths: {}'.format(paths))
-    return paths
+    return paths[:num]
     
     
 def add_group():
@@ -284,7 +285,7 @@ def refresh_paths(notify=False, force=False):
             skin_name = 'autowidget-{}-name'.format(id)
         
             if action == 'random' and len(paths) == 0:
-                paths = _get_random_paths(group, force)
+                paths = _get_random_paths(group, refresh_quantity, force)
         
             if len(paths) > 0:
                 path = paths.pop()
