@@ -44,14 +44,13 @@ def dispatch(_plugin, _handle, _params):
             xbmc.executebuiltin(path)
     elif mode == 'group':
         if action == 'add':
-            path_utils.add_group()
+            path_utils.edit_group()
         elif action == 'remove':
             path_utils.remove_group(group)
+        elif action == 'edit':
+            path_utils.edit_group(group)
         elif action == 'view':
             menu.group_menu(group)
-        elif action == 'edit':
-            xbmc.executebuiltin('RunScript(script.skinshortcuts,type=manage'
-                                '&group=autowidget-{})'.format(group))
     elif mode == 'force':
         path_utils.refresh_paths(notify=True, force=True)
     elif mode == 'clean':

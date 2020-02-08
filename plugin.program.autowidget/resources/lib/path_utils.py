@@ -89,14 +89,15 @@ def _get_random_paths(group, force=False, change_sec=3600):
     return paths
     
     
-def add_group():
-    dialog = xbmcgui.Dialog()
-    group_name = dialog.input(heading='Name for Group') or ''
+def edit_group(group=None):
+    if not group:
+        dialog = xbmcgui.Dialog()
+        group = dialog.input(heading='Name for Group') or ''
     
-    if group_name:
+    if group:
         xbmc.executebuiltin('RunScript(script.skinshortcuts,type=manage'
-                            '&group=autowidget-{})'.format(group_name.lower()), wait=True)
-        xbmc.executebuiltin('Container.Refresh()')
+                            '&group=autowidget-{})'.format(group), wait=True)
+        # xbmc.executebuiltin('Container.Refresh()')
     else:
         dialog.notification('AutoWidget', 'Cannot create a group with no name.')
         
