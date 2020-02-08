@@ -169,7 +169,7 @@ def _process_widgets():
         menu, group = convert[0:2]
         
         _id = _save_path_details(convert[3])
-        label_str = '$INFO[Skin.String(autowidget-{}-label)]'.format(_id)
+        label_str = '$INFO[Skin.String(autowidget-{}-name)]'.format(_id)
         path_str = '$INFO[Skin.String(autowidget-{}-path)]'.format(_id)
         
         # fix shortcut xmls
@@ -232,7 +232,7 @@ def refresh_paths(notify=False, force=False):
                 
             _id = os.path.basename(saved_path)[:-5]
             skin_path = 'autowidget-{}-path'.format(_id)
-            skin_label = 'autowidget-{}-label'.format(_id)
+            skin_label = 'autowidget-{}-name'.format(_id)
         
             if action == 'random' and len(paths) == 0:
                 paths = _get_random_paths(group, force)
