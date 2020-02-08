@@ -26,7 +26,7 @@ _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 widget_props_pattern = '\w*[.-]*[wW]idget(\w+)[.-]*\w*'
 activate_window_pattern = '[aA]ctivate[wW]indow[(]\w+,(.*)(?:,[rR]eturn)?[)]'
-refresh_quantity = _addon.getSettingInt('service.refresh_quantity')
+# refresh_quantity = _addon.getSettingInt('service.refresh_quantity')
 
 def find_defined_groups():
     groups = []
@@ -217,8 +217,8 @@ def refresh_paths(notify=False, force=False):
         
         for saved in [saved for saved in os.listdir(_addon_path)
                       if saved.endswith('.auto')]:            
-            if processed > refresh_quantity:
-                break
+            # if processed > refresh_quantity:
+                # break
             
             saved_path = os.path.join(_addon_path, saved)
             with open(saved_path, 'r') as f:
