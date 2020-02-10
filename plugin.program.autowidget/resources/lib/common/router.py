@@ -40,6 +40,8 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'path':
         if action == 'random':
             menu.random_path_menu(group)
+        elif action == 'shortcuts':
+            menu.shortcut_menu(group)
         elif action == 'call':
             xbmc.executebuiltin(path)
     elif mode == 'group':

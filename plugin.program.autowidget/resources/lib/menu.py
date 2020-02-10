@@ -54,6 +54,14 @@ def group_menu(group):
                             description='Remove this group definition. Cannot be undone.')
     
     if len(paths) > 0:
+        directory.add_menu_item(title='Shortcuts from {}'.format(group.capitalize()),
+                                params={'mode': 'path',
+                                        'action': 'shortcuts',
+                                        'group': group},
+                                art={'icon': utils.get_art('share-outline.png')},
+                                description='Show a list of shortcuts from the {} group.'
+                                            .format(group.captialize()),
+                                isFolder=True)
         directory.add_menu_item(title='Random Path from {}'.format(group.capitalize()),
                                 params={'mode': 'path',
                                         'action': 'random',
@@ -69,6 +77,10 @@ def group_menu(group):
     
     xbmcplugin.setPluginCategory(_handle, group.capitalize())
     xbmcplugin.setContent(_handle, 'files')
+    
+    
+def shortcut_menu(group):
+    pass
     
     
 def random_path_menu(group):
