@@ -43,6 +43,7 @@ def dispatch(_plugin, _handle, _params):
         elif action == 'shortcuts':
             menu.shortcut_menu(group)
         elif action == 'call':
+            xbmc.executebuiltin('Dialog.Close(busydialog)')
             xbmc.executebuiltin(path)
     elif mode == 'group':
         if action == 'add':

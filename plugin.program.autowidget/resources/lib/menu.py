@@ -60,7 +60,7 @@ def group_menu(group):
                                         'group': group},
                                 art={'icon': utils.get_art('share-outline.png')},
                                 description='Show a list of shortcuts from the {} group.'
-                                            .format(group.captialize()),
+                                            .format(group.capitalize()),
                                 isFolder=True)
         directory.add_menu_item(title='Random Path from {}'.format(group.capitalize()),
                                 params={'mode': 'path',
@@ -80,7 +80,17 @@ def group_menu(group):
     
     
 def shortcut_menu(group):
-    pass
+    paths = path_utils.find_defined_paths(group)
+    
+    for path in paths:
+        directory.add_menu_item(title=path[0],
+                                params={'mode': 'path',
+                                        'action': 'call',
+                                        'path': path[1]},
+                                art={'icon': path[3]})
+
+    xbmcplugin.setPluginCategory(_handle, group.capitalize())
+    xbmcplugin.setContent(_handle, 'files')
     
     
 def random_path_menu(group):
