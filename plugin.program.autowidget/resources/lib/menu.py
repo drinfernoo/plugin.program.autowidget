@@ -94,27 +94,22 @@ def shortcut_menu(group):
     
     
 def random_path_menu(group):
-    not_media = xbmc.getCondVisibility('!Window.IsMedia')
-    select_dialog = xbmc.getCondVisibility('Window.IsActive(dialogselect)')
-    home = xbmc.getCondVisibility('Window.IsActive(home)')
+    window = utils.get_active_window()
     paths = path_utils.find_defined_paths(group)
     
-    if len(paths) > 0 and not home:
-        label = 'following:' if not not_media else '{} group.'.format(group.capitalize())
-        directory.add_menu_item(title='Point a widget at this directory to get a random widget from the {}'
-                                      .format(label),
+    if len(paths) > 0 and window == 'media':
+        directory.add_menu_item(title=('Point a widget at this directory to get'
+                                       ' a random widget from the following:'),
                                 art={'icon': utils.get_art('shuffle.png')},
                                 isFolder=not_media)
-                                
-        if not not_media:
-            directory.add_separator(group)
+        directory.add_separator(group)
     
-            for path in paths:
-                directory.add_menu_item(title=path[0],
-                                        params={'mode': 'path',
-                                                'action': 'call',
-                                                'path': path[1]},
-                                        art={'icon': path[3]})
+        for path in paths:
+            directory.add_menu_item(title=path[0],
+                                    params={'mode': 'path',
+                                            'action': 'call',
+                                            'path': path[1]},
+                                    art={'icon': path[3]})
     if home:
         unpack = utils.get_art('package-variant.png')
         sync = utils.get_art('sync.png')
