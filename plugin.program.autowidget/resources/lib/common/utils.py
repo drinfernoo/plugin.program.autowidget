@@ -28,6 +28,17 @@ def get_art(filename):
     image_path = os.path.join(_art_path, filename)
     
     return image_path if os.path.exists(image_path) else ''
+    
+    
+def get_active_window():
+    if xbmc.getCondVisibility('Window.IsMedia()'):
+        return 'media'
+    elif xbmc.getCondVisibility('Window.IsActive(dialogselect)'):
+        return 'dialog'
+    elif xbmc.getCondVisibility('Window.IsActive(home)'):
+        return 'home'
+    else:
+        pass
 
 
 def clean_old_widgets():

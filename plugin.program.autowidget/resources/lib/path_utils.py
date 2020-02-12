@@ -26,7 +26,6 @@ _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 widget_props_pattern = '\w*[.-]*[wW]idget(\w+)[.-]*\w*'
 activate_window_pattern = '[aA]ctivate[wW]indow[(]\w+,(.*)(?:,[rR]eturn)?[)]'
-# refresh_quantity = _addon.getSettingInt('service.refresh_quantity')
 
 def find_defined_groups():
     groups = []
@@ -64,9 +63,8 @@ def find_defined_paths(group=None):
                 try:
                     path = action.split(',')[1]
                 except:
-                    dialog = xbmcgui.Dialog()
-                    dialog.notification('AutoWidget',
-                                        'Unsupported path in {}: {}'.format(group.capitalize(), action))
+                    utils.log('Unsupported path in {}: {}'
+                              .format(group.capitalize(), action))
                     
                 paths.append((label, action, path, icon))
     else:
@@ -216,10 +214,7 @@ def refresh_paths(notify=False, force=False):
         paths = []
         
         for saved in [saved for saved in os.listdir(_addon_path)
-                      if saved.endswith('.auto')]:            
-            # if processed > refresh_quantity:
-                # break
-            
+                      if saved.endswith('.auto')]:
             saved_path = os.path.join(_addon_path, saved)
             with open(saved_path, 'r') as f:
                 params = f.read().split(',')

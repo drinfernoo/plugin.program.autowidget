@@ -40,8 +40,16 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'path':
         if action == 'random':
             menu.random_path_menu(group)
+        elif action == 'shortcuts':
+            menu.shortcut_menu(group)
         elif action == 'call':
-            xbmc.executebuiltin(path)
+            window = utils.get_active_window()
+            
+            if window == 'home':
+                xbmc.executebuiltin('Dialog.Close(busydialog)')
+            
+            if window != 'dialog':
+                xbmc.executebuiltin(path)
     elif mode == 'group':
         if action == 'add':
             path_utils.edit_group()
