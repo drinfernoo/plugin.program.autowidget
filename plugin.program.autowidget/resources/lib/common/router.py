@@ -29,6 +29,8 @@ def dispatch(_plugin, _handle, _params):
     _handle = int(_handle)
     params = _log_params(_plugin, _handle, _params)
     
+    utils.ensure_addon_data()
+    
     mode = params.get('mode', '')
     action = params.get('action', '')
     group = params.get('group', '')
@@ -69,5 +71,6 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'clean':
         utils.clean_old_widgets()
         utils.clean_old_strings()
-    
-    xbmcplugin.endOfDirectory(_handle)
+    elif mode == 'debug':
+        # xbmc.executebuiltin('RunScript(script.skinshortcuts,type=setProperty&property=widgetAspect&value=Small Landscape&labelID=popular&group=plugin.program.autowidget.1)')
+        pass

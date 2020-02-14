@@ -8,7 +8,6 @@ from resources.lib.common import directory
 from resources.lib.common import utils
 
 _handle = int(sys.argv[1])
-_window = utils.get_active_window()
 
 
 def root_menu():
@@ -17,6 +16,7 @@ def root_menu():
     _tools_menu()
 
     xbmcplugin.setContent(_handle, 'files')
+    xbmcplugin.endOfDirectory(_handle)
 
 
 def group_menu(group):
@@ -74,13 +74,13 @@ def group_menu(group):
     
     xbmcplugin.setPluginCategory(_handle, group.capitalize())
     xbmcplugin.setContent(_handle, 'files')
+    xbmcplugin.endOfDirectory(_handle)
     
     
 def shortcut_menu(group):
-    window = utils.get_active_window()
     paths = manage.find_defined_paths(group)
     
-    if len(paths) > 0 and window == 'media':
+    if len(paths) > 0 and _window == 'media':
         directory.add_menu_item(title=('Point a widget at this directory to get'
                                        ' a random widget from the following:'),
                                 art={'icon': utils.get_art('shuffle.png')},
@@ -96,13 +96,13 @@ def shortcut_menu(group):
 
     xbmcplugin.setPluginCategory(_handle, group.capitalize())
     xbmcplugin.setContent(_handle, 'files')
+    xbmcplugin.endOfDirectory(_handle)
     
     
 def random_path_menu(group):
-    window = utils.get_active_window()
     paths = manage.find_defined_paths(group)
     
-    if len(paths) > 0 and window == 'media':
+    if len(paths) > 0 and _window == 'media':
         directory.add_menu_item(title=('Point a widget at this directory to get'
                                        ' a widget containing the following:'),
                                 art={'icon': utils.get_art('share_outline.png')},
@@ -116,7 +116,7 @@ def random_path_menu(group):
                                         'path': path['path'],
                                         'target': path['type']},
                                 isFolder=False)
-    if window == 'home':
+    if _window == 'home':
         unpack = utils.get_art('package-variant.png')
         sync = utils.get_art('sync.png')
         directory.add_menu_item(title='Initialize Widgets',
@@ -126,26 +126,29 @@ def random_path_menu(group):
     
     xbmcplugin.setPluginCategory(_handle, group.capitalize())
     xbmcplugin.setContent(_handle, 'files')
+    xbmcplugin.endOfDirectory(_handle)
     
     
 def _create_menu():
-    if _window != 'home':
-        return
+    _window = utils.get_active_window()
     
     directory.add_menu_item(title='Create New Widget Group',
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'widget'},
                             art={'icon': utils.get_art('folder-plus-outline.png')},
-                            description='Create a new group of widgets.')
+                            description='Create a new group of widgets.',
+                            isFolder=_window == 'dialog')
                             
     directory.add_menu_item(title='Create New Shortcut Group',
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'shortcut'},
                             art={'icon': utils.get_art('share-outline.png')},
-                            description='Create a new group of shortcuts.')
+                            description='Create a new group of shortcuts.',
+                            isFolder=_window == 'dialog')
     
     
 def _groups_menu():
+    _window = utils.get_active_window()
     if _window != 'home':
         directory.add_separator(title='My Groups', char='/')
     
@@ -161,14 +164,17 @@ def _groups_menu():
     
     
 def _tools_menu():
+    _window = utils.get_active_window()
     if _window != 'home':
         directory.add_separator(title='Tools', char='/')
     
     directory.add_menu_item(title='Force Refresh Widgets',
                             params={'mode': 'force'},
                             art={'icon': utils.get_art('refresh.png')},
-                            description='Force all defined widgets to refresh.')
+                            description='Force all defined widgets to refresh.',
+                            isFolder=_window == 'dialog')
     directory.add_menu_item(title='Clean Old References',
                             params={'mode': 'clean'},
                             art={'icon': utils.get_art('trash-can-outline.png')},
-                            description='Clean old references to widgets that are no longer defined.')
+                            description='Clean old references to widgets that are no longer defined.',
+                            isFolder=_window == 'dialog')

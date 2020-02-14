@@ -35,9 +35,11 @@ def get_art(filename):
     
     
 def get_active_window():
+    xml_file = xbmc.getInfoLabel('Window.Property(xmlfile)')
+
     if xbmc.getCondVisibility('Window.IsMedia()'):
         return 'media'
-    elif xbmc.getCondVisibility('Window.IsActive(dialogselect)'):
+    elif 'dialog' in xml_file:
         return 'dialog'
     elif xbmc.getCondVisibility('Window.IsActive(home)'):
         return 'home'
