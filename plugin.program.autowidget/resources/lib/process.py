@@ -9,13 +9,21 @@ import re
 import time
 import uuid
 
+try:
+    from urllib.parse import parse_qsl
+except ImportError:
+    from urlparse import parse_qsl
+
+from resources.lib import manage
+from resources.lib.common import utils
+
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
-_shortcuts_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
+_shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 widget_props_pattern = '\w*[.-]*[wW]idget(\w+)[.-]*\w*'
-activate_window_pattern = '[aA]ctivate[wW]indow[(]\w+,(.*)(?:,[rR]eturn)?[)]'
+activate_window_pattern = '([aA]ctivate[wW]indow[(]\w+),*(.*?),*([rR]eturn)?[)]'
 
 
 def _get_random_paths(group, force=False, change_sec=3600):
@@ -23,85 +31,66 @@ def _get_random_paths(group, force=False, change_sec=3600):
     now = time.time()
     seed = now - (now % wait_time)
     rand = random.Random(seed)
-    paths = find_defined_paths(group)
+    paths = manage.find_defined_paths(group)
     rand.shuffle(paths)
     
     utils.log('_get_random_paths: {}'.format(paths))
     return paths
     
 
-def _save_path_details(path):
-    split = path.split('\"')[1].split('?')[1]
-    params = dict(parse_qsl(split))
-    action_param = params.get('action', '').replace('\"','')
-    group_param = params.get('group', '').replace('\"','')
+def _save_path_details(convert):
+    match = re.search(activate_window_pattern, convert[3])
+    if not match.group(2):
+        return
+    
+    params = dict(parse_qsl(match.group(2).split('?')[1]))
     id = uuid.uuid4()
     
     path_to_saved = os.path.join(_addon_path, '{}.auto'.format(id))
     
-    with open(path_to_saved, "w") as f:
-        content = '{},{}'.format(action_param, group_param)
-        f.write(content)
+    with open(path_to_saved, 'w') as f:
+        f.write('{}'.format(params))
     
     utils.log('_save_path_details: {}'.format(id))
-    return id
+    return id, match
                 
                 
 def _process_widgets():
-    skin = xbmc.translatePath('special://skin/')
-    skin_id = os.path.basename(os.path.normpath(skin))
-    props_path = os.path.join(_shortcuts_path, '{}.properties'.format(skin_id))
-    
-    if not os.path.exists(props_path):
+    if not os.path.exists(_shortcuts_path):
         return
     
-    with open(props_path, 'r') as f:
-        prop_list = ast.literal_eval(f.read())
-    
-    convert_list = [prop for prop in prop_list
-                    if all(param in prop[3] for param in
-                           ['plugin.program.autowidget',
-                            'mode=path', 'action=random'])]
-    finished_props = [prop for prop in prop_list if prop not in convert_list]
-    
-    for convert in convert_list:
-        menu, group = convert[0:2]
+    for file in os.listdir(_shortcuts_path):
         
-        _id = _save_path_details(convert[3])
-        label_str = '$INFO[Skin.String(autowidget-{}-name)]'.format(_id)
-        path_str = '$INFO[Skin.String(autowidget-{}-path)]'.format(_id)
+        with open(os.path.join(_shortcuts_path, file)) as f:
+            content = f.read()
+            
+        matches = re.findall(activate_window_pattern, content)
+        import web_pdb; web_pdb.set_trace()
+        for match in matches:
+            if all(i in match.group(2) for i in ['plugin.program.autowidget',
+                                          'mode=path',
+                                          'action=random']):
+                _id = _save_path_details(convert)
         
-        # fix shortcut xmls
-        xml_path = os.path.join(_shortcuts_path,
-                                '{}.DATA.xml'.format(menu.replace('.', '-')))
-        shortcuts = ET.parse(xml_path).getroot()
-        for shortcut in shortcuts.findall('shortcut'):
-            action = shortcut.find('action')
-            label = shortcut.find('label')
+        # if not _id:
+            # return
             
-            if action.text.replace('&amp;', '&') in convert[3]:
-                label.text = label_str
-                
-                if re.search(activate_window_pattern, convert[3]):
-                    action.text = re.sub(activate_window_pattern, convert[3],
-                                         path_str)
-                
-        tree = ET.ElementTree(shortcuts)
-        tree.write(xml_path)
+        # label_str = '$INFO[Skin.String(autowidget-{}-name)]'.format(_id)
+        # path_str = '$INFO[Skin.String(autowidget-{}-path)]'.format(_id)
         
-        # fix properties
-        if re.search(activate_window_pattern, convert[3]):
-            convert[3] = re.sub(activate_window_pattern, convert[3], path_str)
-            
-        finished_props.append(convert)
-            
-    with open(props_path, 'w') as f:
-        f.write('{}'.format(finished_props))
+        
+        # path_details = list(_match.groups())
+        # path_details[1] = path_str
+        # final_path = ','.join(path_details) + ')'
+        
+        # prop_list[prop_list.index(convert)][3] = final_path;
+        
+    # with open(props_path, 'w') as f:
+        # f.write('{}'.format(prop_list))
 
 
 def refresh_paths(notify=False, force=False):
     processed = 0
-    utils.ensure_addon_data()
     
     if notify:
         dialog = xbmcgui.Dialog()
@@ -109,36 +98,38 @@ def refresh_paths(notify=False, force=False):
     
     if force:
         _process_widgets()
-        xbmc.executebuiltin('ReloadSkin()')
+        # xbmc.executebuiltin('ReloadSkin()')
     
-    for group in find_defined_groups():
+    for group in manage.find_defined_groups():
         paths = []
+        groupname = group['name'].lower()
+        # saved_path = os.path.join(_addon_path, '{}.group'.format(groupname))
         
         for saved in [saved for saved in os.listdir(_addon_path)
-                      if saved.endswith('.auto')]:
+                      if saved.endswith('.widget')]:
             saved_path = os.path.join(_addon_path, saved)
             with open(saved_path, 'r') as f:
-                params = f.read().split(',')
+                params = ast.literal_eval(f.read())
                 
-            action = params[0]
-            group_param = params[1]
+            action = params['action'].lower()
+            group_param = params['group'].lower()
             
-            if group_param != group:
+            if group_param != groupname:
                 continue
                 
-            _id = os.path.basename(saved_path)[:-5]
+            _id = os.path.basename(saved_path)[:-8]
             skin_path = 'autowidget-{}-path'.format(_id)
             skin_label = 'autowidget-{}-name'.format(_id)
         
             if action == 'random' and len(paths) == 0:
-                paths = _get_random_paths(group, force)
+                paths = _get_random_paths(groupname, force)
         
             if len(paths) > 0:
                 path = paths.pop()
                 xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label,
-                                                                   path[0]))
+                                                                   path['name']))
                 xbmc.executebuiltin('Skin.SetString({},{})'
-                                .format(skin_path, path[2].replace('\"','')))
-                utils.log('{}: {}'.format(skin_label, path[0]))
-                utils.log('{}: {}'.format(skin_path, path[2].replace('\"','')))
+                                .format(skin_path, path['path'].replace('\"','')))
+                utils.log('{}: {}'.format(skin_label, path['name']))
+                utils.log('{}: {}'.format(skin_path, path['path'].replace('\"','')))
                 processed += 1
