@@ -2,7 +2,6 @@ import xbmc
 import xbmcaddon
 
 import random
-import time
 
 from resources.lib import process
 from resources.lib.common import utils

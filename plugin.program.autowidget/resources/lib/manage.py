@@ -10,7 +10,6 @@ try:
 except ImportError:
     from urlparse import parse_qsl
 
-from xml.etree import ElementTree as ET
 import json
 
 from resources.lib.common import utils
@@ -77,7 +76,6 @@ def add_path(group, target):
         
     xbmc.executebuiltin('Container.Refresh()')
         
-    
 
 def get_group(group):
     for defined in find_defined_groups():
@@ -142,7 +140,8 @@ def remove_group(group):
     utils.ensure_addon_data()
     
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', 'Are you sure you want to remove this group? This action [B]cannot[/B] be undone.')
+    choice = dialog.yesno('AutoWidget', ('Are you sure you want to remove this group?'
+                                         ' This action [B]cannot[/B] be undone.'))
     
     if choice:
         filename = '{}.group'.format(group).lower()
@@ -151,17 +150,6 @@ def remove_group(group):
             os.remove(filepath)
         except Exception as e:
             utils.log('{}'.format(e), level=xbmc.LOGERROR)
-            
-        # for file in os.listdir(_addon_path):
-            # savedpath = os.path.join(_addon_path, file)
-            # with open(savedpath, 'r') as f:
-                # content = f.read()
-            
-            # if group in content:
-                # try:
-                    # os.remove(savedpath)
-                # except Exception as e:
-                    # utils.log('{}'.format(e), level=xbmc.LOGERROR)
         
         xbmc.executebuiltin('Container.Update(plugin://plugin.program.autowidget/)')
     else:

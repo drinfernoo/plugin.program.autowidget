@@ -1,14 +1,10 @@
 import xbmc
-import xbmcplugin
 
 import random
-import sys
 
 from resources.lib import manage
 from resources.lib.common import directory
 from resources.lib.common import utils
-
-_handle = int(sys.argv[1])
 
 folder_remove = utils.get_art('folder-remove.png')
 folder = utils.get_art('folder.png')
@@ -28,25 +24,18 @@ remove = utils.get_art('remove.png')
 
 def root_menu():
     _create_menu()
-    _groups_menu()
-    _tools_menu()
 
-    xbmcplugin.setContent(_handle, 'files')
-    xbmcplugin.endOfDirectory(_handle)
+    directory.add_separator(title='My Groups', char='/')
+    _groups_menu()
+
+    directory.add_separator(title='Tools', char='/')
+    _tools_menu()
 
 
 def group_menu(group):
-    _window = utils.get_active_window()
-    target = manage.get_group(group)['type']
-    paths = manage.find_defined_paths(group)
-    
-    _manage_menu(group, target)
-    _paths_menu(group, target, paths)
-    _actions_menu(group, target, paths)
-    
-    xbmcplugin.setPluginCategory(_handle, group.capitalize())
-    xbmcplugin.setContent(_handle, 'files')
-    xbmcplugin.endOfDirectory(_handle)
+    _manage_menu(group)
+    _paths_menu(group)
+    _actions_menu(group)
     
     
 def shortcut_menu(group):
@@ -65,10 +54,6 @@ def shortcut_menu(group):
                                         'action': 'call',
                                         'path': path['action']},
                                 art={'icon': path['thumbnail']})
-
-    xbmcplugin.setPluginCategory(_handle, group.capitalize())
-    xbmcplugin.setContent(_handle, 'files')
-    xbmcplugin.endOfDirectory(_handle)
     
     
 def random_path_menu(group):
@@ -90,39 +75,40 @@ def random_path_menu(group):
                                             'target': path['type']})
     if _window == 'home':
         directory.add_menu_item(title='Initialize Widgets',
-                        params={'mode': 'force'},
-                        art={'icon': unpack, 'thumb': unpack, 'banner': unpack, 'poster': unpack},
-                        description='Initialize this and any other AutoWidgets.')
-    
-    xbmcplugin.setPluginCategory(_handle, group.capitalize())
-    xbmcplugin.setContent(_handle, 'files')
-    xbmcplugin.endOfDirectory(_handle)
+                                params={'mode': 'force'},
+                                art={'icon': unpack, 'thumb': unpack, 'banner': unpack, 'poster': unpack},
+                                description='Initialize this and any other AutoWidgets.')
+
+
+def call_path(path, target):
+    _window = utils.get_active_window()
+
+    if not path.startswith('ActivateWindow') and target:
+        path = 'ActivateWindow({},{},return)'.format(target, path)
+
+    if _window != 'dialog':
+        if _window == 'home':
+            xbmc.executebuiltin('Dialog.Close(busydialog)')
+        xbmc.executebuiltin(path)
     
     
 def _create_menu():
-    _window = utils.get_active_window()
-    
     directory.add_menu_item(title='Create New Widget Group',
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'widget'},
                             art={'icon': folder_add},
                             description='Create a new group of widgets.',
-                            isFolder=_window == 'dialog')
+                            isFolder=False)
                             
     directory.add_menu_item(title='Create New Shortcut Group',
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'shortcut'},
                             art={'icon': share},
                             description='Create a new group of shortcuts.',
-                            isFolder=_window == 'dialog')
+                            isFolder=False)
     
     
 def _groups_menu():
-    _window = utils.get_active_window()
-    
-    if _window != 'home':
-        directory.add_separator(title='My Groups', char='/')
-    
     for group in manage.find_defined_groups():
         group_name = group.get('name', '')
         _type = group.get('type', '')
@@ -137,9 +123,7 @@ def _groups_menu():
     
 def _tools_menu():
     _window = utils.get_active_window()
-    if _window != 'home':
-        directory.add_separator(title='Tools', char='/')
-    
+
     directory.add_menu_item(title='Force Refresh Widgets',
                             params={'mode': 'force'},
                             art={'icon': refresh},
@@ -152,7 +136,9 @@ def _tools_menu():
                             isFolder=_window == 'dialog')
                             
                             
-def _manage_menu(group, target):
+def _manage_menu(group):
+    target = manage.get_group(group)['type']
+
     directory.add_menu_item(title='Add Path',
                             params={'mode': 'manage', 'action': 'add_path',
                                     'group': group, 'target': target},
@@ -166,7 +152,10 @@ def _manage_menu(group, target):
                             description='Remove this group definition. Cannot be undone.')
                             
                             
-def _paths_menu(group, target, paths):
+def _paths_menu(group):
+    target = manage.get_group(group)['type']
+    paths = manage.find_defined_paths(group)
+
     for path in paths:
         widget = target == 'widget'
         directory.add_menu_item(title=path['name'] if widget else path['label'],
@@ -179,17 +168,25 @@ def _paths_menu(group, target, paths):
                                             .format(group.capitalize()))
                                             
                                             
-def _actions_menu(group, target, paths):
+def _actions_menu(group):
     _window = utils.get_active_window()
+    is_media = _window == 'media'
+
+    target = manage.get_group(group)['type']
+    paths = manage.find_defined_paths(group)
+
+    is_widget = target == 'widget'
+    is_shortcut = target == 'shortcut'
+
     params = {'mode': 'path'}
     
     if len(paths) > 0:
-        widget = target == 'widget'
-        if widget:
+
+        if is_widget:
             title = 'Random Path from {}'.format(group.capitalize())
             art = {'icon': shuffle}
             description = 'Use a random path from the {} group.'.format(group.capitalize())
-            if _window == 'media':
+            if is_media:
                 index = random.randrange(len(paths))
                 params.update({'action': 'call',
                                'path': paths[index]['path'],
@@ -197,7 +194,7 @@ def _actions_menu(group, target, paths):
             else:
                 params.update({'action': 'random',
                                'group': group})
-        else:
+        elif is_shortcut:
             title = 'Shortcuts from {}'.format(group.capitalize())
             art = {'icon': share}
             description = 'Show a list of shortcuts from the {} group.'.format(group.capitalize())
@@ -208,9 +205,8 @@ def _actions_menu(group, target, paths):
                                 params=params,
                                 art=art,
                                 description=description,
-                                isFolder=_window != 'widget')
+                                isFolder=not is_widget)
     else:
         directory.add_menu_item(title='No AutoWidgets have been defined for this group.',
                                 art={'icon': alert},
                                 isFolder=True)
-    

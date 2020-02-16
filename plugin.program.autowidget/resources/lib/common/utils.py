@@ -8,6 +8,8 @@ import sys
 
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
+_addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
+_art_path = os.path.join(_addon_root, 'resources', 'media')
 _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
 _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
@@ -27,15 +29,13 @@ def get_skin_string(string):
     
     
 def get_art(filename):
-    _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
-    _art_path = os.path.join(_addon_root, 'resources', 'media')
     image_path = os.path.join(_art_path, filename)
     
     return image_path if os.path.exists(image_path) else ''
     
     
 def get_active_window():
-    xml_file = xbmc.getInfoLabel('Window.Property(xmlfile)')
+    xml_file = xbmc.getInfoLabel('Window.Property(xmlfile)').lower()
 
     if xbmc.getCondVisibility('Window.IsMedia()'):
         return 'media'

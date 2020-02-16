@@ -28,7 +28,8 @@ def _log_params(_plugin, _handle, _params):
 def dispatch(_plugin, _handle, _params):
     _handle = int(_handle)
     params = _log_params(_plugin, _handle, _params)
-    
+    is_dir = False
+
     utils.ensure_addon_data()
     
     mode = params.get('mode', '')
@@ -39,6 +40,7 @@ def dispatch(_plugin, _handle, _params):
     
     if not mode:
         menu.root_menu()
+        is_dir = True
     elif mode == 'manage':
         if action == 'add_group':
             manage.add_group(target)
@@ -50,27 +52,23 @@ def dispatch(_plugin, _handle, _params):
             # manage.remove_path(path)
     elif mode == 'path':
         if action == 'call' and path:
-            window = utils.get_active_window()
-            
-            if window == 'home':
-                xbmc.executebuiltin('Dialog.Close(busydialog)')
-            
-            if not path.startswith('ActivateWindow') and target:
-                path = 'ActivateWindow({},{},return)'.format(target, path)
-            
-            if window != 'dialog':
-                xbmc.executebuiltin(path)
+            menu.call_path(path, target)
+            is_dir = True
         elif action == 'random' and group:
             menu.random_path_menu(group)
+            is_dir = True
         elif action == 'shortcuts' and group:
             menu.shortcut_menu(group)
+            is_dir = True
     elif mode == 'group' and group:
         menu.group_menu(group)
+        is_dir = True
     elif mode == 'force':
         process.refresh_paths(notify=True, force=True)
     elif mode == 'clean':
         utils.clean_old_widgets()
         utils.clean_old_strings()
-    elif mode == 'debug':
-        # xbmc.executebuiltin('RunScript(script.skinshortcuts,type=setProperty&property=widgetAspect&value=Small Landscape&labelID=popular&group=plugin.program.autowidget.1)')
-        pass
+
+    if is_dir:
+        xbmcplugin.setContent(_handle, 'files')
+        xbmcplugin.endOfDirectory(_handle)

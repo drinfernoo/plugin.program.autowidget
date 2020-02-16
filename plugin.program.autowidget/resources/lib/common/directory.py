@@ -13,10 +13,15 @@ except ImportError:
     
     
 def add_separator(title='', char='-'):
+    _window = utils.get_active_window()
     sync = utils.get_art('sync.png')
+
+    if _window != 'media':
+        return
+
     if title:
         split = (len(title) + 2) / 2
-        edge = char * (40 - split)
+        edge = char * int(40 - split)
         add_menu_item(title='{0} {1} {0}'.format(edge,
                                                  string.capwords(title)),
                       art={'icon': sync})
