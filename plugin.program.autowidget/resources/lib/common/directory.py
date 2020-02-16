@@ -1,6 +1,7 @@
 import xbmcgui
 import xbmcplugin
 
+import string
 import sys
 
 try:
@@ -9,13 +10,14 @@ except ImportError:
     from urllib import quote_plus
     
     
-def add_separator(title=''):
+def add_separator(title='', char='-'):
     if title:
         split = (len(title) + 2) / 2
-        edge = '-' * (40 - split)
-        add_menu_item(title='{} {} {}'.format(edge, title.capitalize(), edge))
+        edge = char * (40 - split)
+        add_menu_item(title='{0} {1} {0}'.format(edge,
+                                                 string.capwords(title)))
     else:
-        add_menu_item(title='-' * 80)
+        add_menu_item(title=char * 80)
 
     
 def add_menu_item(title, params=None, description='', art={}, isFolder=False):
@@ -37,8 +39,12 @@ def add_menu_item(title, params=None, description='', art={}, isFolder=False):
 
     # build list item
     item = xbmcgui.ListItem(title)
+    def_art = {'icon': '', 'fanart': ''}
+    
     if art:
-        item.setArt(art)
+        def_art.update(art)
+    
+    item.setArt(art)
     
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
                                 isFolder=isFolder)

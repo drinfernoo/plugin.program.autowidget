@@ -22,6 +22,10 @@ def ensure_addon_data():
         os.makedirs(_addon_path)
     
     
+def get_skin_string(string):
+    return xbmc.getInfoLabel('Skin.String({})'.format(string))
+    
+    
 def get_art(filename):
     _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
     _art_path = os.path.join(_addon_root, 'resources', 'media')
