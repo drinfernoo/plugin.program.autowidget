@@ -9,6 +9,21 @@ from resources.lib.common import utils
 
 _handle = int(sys.argv[1])
 
+folder_remove = utils.get_art('folder-remove.png')
+folder = utils.get_art('folder.png')
+folder_sync = utils.get_art('folder-sync.png')
+folder_shortcut = utils.get_art('folder-shortcut.png')
+share = utils.get_art('share.png')
+shuffle = utils.get_art('shuffle.png')
+alert = utils.get_art('alert.png')
+add = utils.get_art('add.png')
+unpack = utils.get_art('unpack.png')
+sync = utils.get_art('sync.png')
+folder_add = utils.get_art('folder-add.png')
+refresh = utils.get_art('refresh.png')
+trash = utils.get_art('trash.png')
+remove = utils.get_art('remove.png')
+
 
 def root_menu():
     _create_menu()

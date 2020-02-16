@@ -4,6 +4,8 @@ import xbmcplugin
 import string
 import sys
 
+from resources.lib.common import utils
+
 try:
     from urllib.parse import quote_plus
 except ImportError:
@@ -11,13 +13,15 @@ except ImportError:
     
     
 def add_separator(title='', char='-'):
+    sync = utils.get_art('sync.png')
     if title:
         split = (len(title) + 2) / 2
         edge = char * (40 - split)
         add_menu_item(title='{0} {1} {0}'.format(edge,
-                                                 string.capwords(title)))
+                                                 string.capwords(title)),
+                      art={'icon': sync})
     else:
-        add_menu_item(title=char * 80)
+        add_menu_item(title=char * 80, art={'icon': sync})
 
     
 def add_menu_item(title, params=None, description='', art={}, isFolder=False):
