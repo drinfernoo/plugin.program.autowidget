@@ -9,6 +9,8 @@ import re
 import time
 import uuid
 
+from xml.etree import ElementTree
+
 try:
     from urllib.parse import parse_qsl
 except ImportError:
@@ -22,8 +24,8 @@ _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
 _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
-widget_props_pattern = '\w*[.-]*[wW]idget(\w+)[.-]*\w*'
-activate_window_pattern = '([aA]ctivate[wW]indow[(]\w+),*(.*?),*([rR]eturn)?[)]'
+# widget_props_pattern = '\w*[.-]*[wW]idget(\w+)[.-]*\w*'
+activate_window_pattern = '(\w+)*\((\w+\)*),*(.*?\)*),*(return)*\)'
 
 
 def _get_random_paths(group, force=False, change_sec=3600):
@@ -38,55 +40,38 @@ def _get_random_paths(group, force=False, change_sec=3600):
     return paths
     
 
-def _save_path_details(convert):
-    match = re.search(activate_window_pattern, convert[3])
+def _save_path_details(path):
+    match = re.search(activate_window_pattern, path)
     if not match.group(2):
         return
     
     params = dict(parse_qsl(match.group(2).split('?')[1]))
-    id = uuid.uuid4()
+    _id = uuid.uuid4()
     
-    path_to_saved = os.path.join(_addon_path, '{}.auto'.format(id))
+    path_to_saved = os.path.join(_addon_path, '{}.widget'.format(_id))
     
     with open(path_to_saved, 'w') as f:
         f.write('{}'.format(params))
     
-    utils.log('_save_path_details: {}'.format(id))
-    return id, match
+    utils.log('_save_path_details: {}'.format(_id))
+    return _id, match
                 
                 
 def _process_widgets():
     if not os.path.exists(_shortcuts_path):
         return
     
-    for file in os.listdir(_shortcuts_path):
-        
-        with open(os.path.join(_shortcuts_path, file)) as f:
-            content = f.read()
-            
-        matches = re.findall(activate_window_pattern, content)
-        import web_pdb; web_pdb.set_trace()
-        for match in matches:
-            if all(i in match.group(2) for i in ['plugin.program.autowidget',
-                                          'mode=path',
-                                          'action=random']):
-                _id = _save_path_details(convert)
-        
-        # if not _id:
-            # return
-            
-        # label_str = '$INFO[Skin.String(autowidget-{}-name)]'.format(_id)
-        # path_str = '$INFO[Skin.String(autowidget-{}-path)]'.format(_id)
-        
-        
-        # path_details = list(_match.groups())
-        # path_details[1] = path_str
-        # final_path = ','.join(path_details) + ')'
-        
-        # prop_list[prop_list.index(convert)][3] = final_path;
-        
-    # with open(props_path, 'w') as f:
-        # f.write('{}'.format(prop_list))
+    for xml in [x for x in os.listdir(_shortcuts_path)
+                 if not any(i in x for i in ['.properties', '.hash',
+                                             'settings.xml', 'powermenu'])]:
+        xml_path = os.path.join(_shortcuts_path, xml)
+        shortcuts = ElementTree.parse(xml_path).getroot()
+
+        for shortcut in shortcuts.findall('shortcut'):
+            label_node = shortcut.find('label')
+            action_node = shortcut.find('action')
+
+            match = re.search(activate_window_pattern, action_node.text)
 
 
 def refresh_paths(notify=False, force=False):
