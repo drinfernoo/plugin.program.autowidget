@@ -25,8 +25,9 @@ remove = utils.get_art('remove.png')
 def root_menu():
     _create_menu()
 
-    directory.add_separator(title='My Groups', char='/')
-    _groups_menu()
+    if len(manage.find_defined_groups()) > 0:
+        directory.add_separator(title='My Groups', char='/')
+        _groups_menu()
 
     directory.add_separator(title='Tools', char='/')
     _tools_menu()
