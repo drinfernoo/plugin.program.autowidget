@@ -2,7 +2,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
-import ast
+import json
 import os
 import random
 import re
@@ -60,8 +60,8 @@ def _process_widgets():
         return
     
     for xml in [x for x in os.listdir(_shortcuts_path)
-                 if not any(i in x for i in ['.properties', '.hash',
-                                             'settings.xml', 'powermenu'])]:
+                if not any(i in x for i in ['.properties', '.hash',
+                                            'settings.xml', 'powermenu'])]:
         xml_path = os.path.join(_shortcuts_path, xml)
         shortcuts = ElementTree.parse(xml_path).getroot()
 
@@ -97,46 +97,33 @@ def _process_widgets():
             
 
 def refresh_paths(notify=False, force=False):
-    processed = 0
-    
     if notify:
         dialog = xbmcgui.Dialog()
         dialog.notification('AutoWidget', 'Refreshing AutoWidgets')
     
     if force:
         _process_widgets()
-        # xbmc.executebuiltin('ReloadSkin()')
+        xbmc.executebuiltin('ReloadSkin()')
     
-    for group in manage.find_defined_groups():
+    for widget in [x for x in os.listdir(_addon_path) if x.endswith('.widget')]:
+        saved_path = os.path.join(_addon_path, widget)
+        with open(saved_path, 'r') as f:
+            widget_json = json.loads(f.read())
+
         paths = []
-        groupname = group['name'].lower()
-        # saved_path = os.path.join(_addon_path, '{}.group'.format(groupname))
-        
-        for saved in [saved for saved in os.listdir(_addon_path)
-                      if saved.endswith('.widget')]:
-            saved_path = os.path.join(_addon_path, saved)
-            with open(saved_path, 'r') as f:
-                params = ast.literal_eval(f.read())
-                
-            action = params['action'].lower()
-            group_param = params['group'].lower()
-            
-            if group_param != groupname:
-                continue
-                
-            _id = os.path.basename(saved_path)[:-8]
-            skin_path = 'autowidget-{}-path'.format(_id)
-            skin_label = 'autowidget-{}-name'.format(_id)
-        
-            if action == 'random' and len(paths) == 0:
-                paths = _get_random_paths(groupname, force)
-        
-            if len(paths) > 0:
-                path = paths.pop()
-                xbmc.executebuiltin('Skin.SetString({},{})'.format(skin_label,
-                                                                   path['name']))
-                xbmc.executebuiltin('Skin.SetString({},{})'
-                                .format(skin_path, path['path'].replace('\"','')))
-                utils.log('{}: {}'.format(skin_label, path['name']))
-                utils.log('{}: {}'.format(skin_path, path['path'].replace('\"','')))
-                processed += 1
+        group = widget_json['group'].lower()
+        action = widget_json['action'].lower()
+
+        _id = os.path.basename(saved_path)[:-8]
+        label_string = skin_string_pattern.format(_id, 'label')
+        action_string = skin_string_pattern.format(_id, 'action')
+
+        if action == 'random' and len(paths) == 0:
+            paths = _get_random_paths(group, force)
+
+        if len(paths) > 0:
+            path = paths.pop()
+            xbmc.executebuiltin('Skin.SetString({},{})'.format(label_string,
+                                                               path['name']))
+            xbmc.executebuiltin('Skin.SetString({},{})'
+                                .format(action_string, path['path'].replace('\"', '')))
