@@ -26,6 +26,8 @@ _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 # widget_props_pattern = '\w*[.-]*[wW]idget(\w+)[.-]*\w*'
 activate_window_pattern = '(\w+)*\((\w+\)*),*(.*?\)*),*(return)*\)'
+skin_string_pattern = '$INFO[Skin.String(autowidget-{}-{})]'
+path_replace_pattern = '{}({})'
 
 
 def _get_random_paths(group, force=False, change_sec=3600):
@@ -41,11 +43,7 @@ def _get_random_paths(group, force=False, change_sec=3600):
     
 
 def _save_path_details(path):
-    match = re.search(activate_window_pattern, path)
-    if not match.group(2):
-        return
-    
-    params = dict(parse_qsl(match.group(2).split('?')[1]))
+    params = dict(parse_qsl(path.split('?')[1]))
     _id = uuid.uuid4()
     
     path_to_saved = os.path.join(_addon_path, '{}.widget'.format(_id))
@@ -54,7 +52,7 @@ def _save_path_details(path):
         f.write('{}'.format(params))
     
     utils.log('_save_path_details: {}'.format(_id))
-    return _id, match
+    return _id
                 
                 
 def _process_widgets():
@@ -70,9 +68,33 @@ def _process_widgets():
         for shortcut in shortcuts.findall('shortcut'):
             label_node = shortcut.find('label')
             action_node = shortcut.find('action')
-
+            
+            if not action_node.text:
+                continue
+            
             match = re.search(activate_window_pattern, action_node.text)
-
+            groups = list(match.groups())
+            
+            if not groups[2] or not all(i in groups[2] for i in ['plugin.program.autowidget',
+                                                                 'mode=path',
+                                                                 'action=random']):
+                continue
+            
+            _id = _save_path_details(groups[2])
+            
+            label_node.text = skin_string_pattern.format(_id, 'label')
+           
+            # groups[0] = skin_string_pattern.format(_id, 'command')
+            # groups[1] = skin_string_pattern.format(_id, 'target')
+            groups[2] = skin_string_pattern.format(_id, 'action')
+            
+            action_node.text = path_replace_pattern.format(groups[0],
+                                                           ','.join(groups[1:]))
+            
+        utils.prettify(shortcuts)
+        tree = ElementTree.ElementTree(shortcuts)
+        tree.write(xml_path)
+            
 
 def refresh_paths(notify=False, force=False):
     processed = 0

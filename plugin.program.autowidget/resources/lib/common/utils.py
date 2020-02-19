@@ -6,6 +6,9 @@ import os
 import shutil
 import sys
 
+from xml.dom import minidom
+from xml.etree import ElementTree
+
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
@@ -46,6 +49,12 @@ def get_active_window():
     else:
         pass
 
+        
+def prettify(elem):
+    rough_string = ElementTree.tostring(elem, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="\t")
+    
 
 def clean_old_widgets():
     w = 0
