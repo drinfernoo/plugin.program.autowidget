@@ -69,10 +69,11 @@ def add_path(group, target):
 
     with open(filename, 'r') as f:
         group_json = json.loads(f.read())
-        group_json['paths'].append(path_def)
+
+    group_json['paths'].append(path_def)
     
     with open(filename, 'w') as f:
-        f.write(json.dumps(group_json))
+        f.write(json.dumps(group_json, indent=4))
         
     xbmc.executebuiltin('Container.Refresh()')
         
@@ -100,8 +101,6 @@ def find_defined_groups():
     
 def find_defined_paths(group=None):
     paths = []
-    filename = ''
-        
     if group:
         filename = '{}.group'.format(group)
         path = os.path.join(_addon_path, filename)
@@ -126,7 +125,7 @@ def add_group(target):
     if group:
         filename = os.path.join(_addon_path, '{}.group'.format(group.lower()))
         group_def = {'name': group, 'type': target, 'paths': []}
-        group_json = json.dumps(group_def)
+        group_json = json.dumps(group_def, indent=4)
     
         with open(filename, 'w+') as f:
             f.write(group_json)
