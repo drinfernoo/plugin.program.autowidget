@@ -179,7 +179,7 @@ def _actions_menu(group):
     is_shortcut = target == 'shortcut'
 
     params = {'mode': 'path'}
-    
+
     if len(paths) > 0:
 
         if is_widget:
@@ -205,8 +205,8 @@ def _actions_menu(group):
                                 params=params,
                                 art=art,
                                 description=description,
-                                isFolder=not is_widget)
+                                isFolder=not is_media)
     else:
         directory.add_menu_item(title='No AutoWidgets have been defined for this group.',
                                 art={'icon': alert},
-                                isFolder=True)
+                                isFolder=not is_media)
