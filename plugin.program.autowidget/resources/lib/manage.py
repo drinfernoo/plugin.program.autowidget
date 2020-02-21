@@ -2,6 +2,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
+import json
 import os
 import time
 
@@ -9,8 +10,6 @@ try:
     from urllib.parse import parse_qsl
 except ImportError:
     from urlparse import parse_qsl
-
-import json
 
 from resources.lib.common import utils
 
@@ -125,10 +124,9 @@ def add_group(target):
     if group:
         filename = os.path.join(_addon_path, '{}.group'.format(group.lower()))
         group_def = {'name': group, 'type': target, 'paths': []}
-        group_json = json.dumps(group_def, indent=4)
     
         with open(filename, 'w+') as f:
-            f.write(group_json)
+            f.write(json.dumps(group_def, indent=4))
             
         xbmc.executebuiltin('Container.Refresh()')
     else:

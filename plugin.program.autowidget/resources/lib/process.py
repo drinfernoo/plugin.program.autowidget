@@ -26,7 +26,8 @@ _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 # widget_props_pattern = '\w*[.-]*[wW]idget(\w+)[.-]*\w*'
 activate_window_pattern = '(\w+)*\((\w+\)*),*(.*?\)*),*(return)*\)'
-skin_string_pattern = '$INFO[Skin.String(autowidget-{}-{})]'
+skin_string_info_pattern = '$INFO[Skin.String(autowidget-{}-{})]'
+skin_string_pattern = 'autowidget-{}-{}'
 path_replace_pattern = '{}({})'
 
 
@@ -43,13 +44,14 @@ def _get_random_paths(group, force=False, change_sec=3600):
     
 
 def _save_path_details(path):
-    params = dict(parse_qsl(path.split('?')[1]))
+    params = dict(parse_qsl(path.split('?')[1].replace('\"', '')))
     _id = uuid.uuid4()
     
     path_to_saved = os.path.join(_addon_path, '{}.widget'.format(_id))
+    params.update({'id': '{}'.format(_id)})
     
     with open(path_to_saved, 'w') as f:
-        f.write('{}'.format(params))
+        f.write(json.dumps(params, indent=4))
     
     utils.log('_save_path_details: {}'.format(_id))
     return _id
