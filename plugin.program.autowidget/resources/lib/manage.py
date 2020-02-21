@@ -2,6 +2,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
+import ast
 import json
 import os
 import time
@@ -16,6 +17,11 @@ from resources.lib.common import utils
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 
+widget_strings = ['autoWidget-{}', 'autoWidgetType-{}', 'autoWidgetName-{}',
+                  'autoWidgetTarget-{}', 'autoWidgetPath-{}']
+
+shortcut_strings = ['autoLabel-{}', 'autoAction-{}', 'autoList-{}',
+                    'autoType-{}', 'autoThumbnail-{}']
 
 def add_path(group, target):
     path_def = {}
@@ -25,7 +31,6 @@ def add_path(group, target):
               '&showNone=False'
               '&skinWidget=autoWidget-{0}'
               '&skinWidgetType=autoWidgetType-{0}'
-              '&skinWidgetName=autoWidgetName-{0}'
               '&skinWidgetTarget=autoWidgetTarget-{0}'
               '&skinWidgetPath=autoWidgetPath-{0})').format(group)
     
@@ -33,7 +38,6 @@ def add_path(group, target):
                 'type=shortcuts'
                 '&custom=True'
                 '&showNone=False'
-                '&skinLabel=autoLabel-{0}'
                 '&skinAction=autoAction-{0}'
                 '&skinList=autoList-{0}'
                 '&skinType=autoType-{0}'
@@ -42,27 +46,39 @@ def add_path(group, target):
     if target == 'widget':
         path = utils.get_skin_string('autoWidgetPath-{}'.format(group))
         xbmc.executebuiltin(widget, wait=True)
-        
         while path == utils.get_skin_string('autoWidgetPath-{}'.format(group)):
             time.sleep(1)
         
-        path_def.update({'widget': utils.get_skin_string('autoWidget-{}'.format(group)),
-                         'type': utils.get_skin_string('autoWidgetType-{}'.format(group)),
-                         'name': utils.get_skin_string('autoWidgetName-{}'.format(group)),
-                         'target': utils.get_skin_string('autoWidgetTarget-{}'.format(group)),
-                         'path': utils.get_skin_string('autoWidgetPath-{}'.format(group))})
+        name = utils.get_skin_string('autoWidgetName-{}'.format(group))
+        xbmc.executebuiltin('Skin.SetString(autoWidgetName-{})'.format(group), wait=True)
+        while name == utils.get_skin_string('autoWidgetName-{}'.format(group)):
+            time.sleep(1)
+        
+        path_def.update({'widget': utils.get_skin_string(widget_strings[0].format(group)),
+                         'type': utils.get_skin_string(widget_strings[1].format(group)),
+                         'name': utils.get_skin_string(widget_strings[2].format(group)),
+                         'target': utils.get_skin_string(widget_strings[3].format(group)),
+                         'path': utils.get_skin_string(widget_strings[4].format(group))})
+        for label in widget_strings:
+            xbmc.executebuiltin('Skin.Reset({})'.format(label.format(group)))
     elif target == 'shortcut':
         action = utils.get_skin_string('autoAction-{}'.format(group))
         xbmc.executebuiltin(shortcut, wait=True)
-        
         while action == utils.get_skin_string('autoAction-{}'.format(group)):
             time.sleep(1)
+            
+        label = utils.get_skin_string('autoLabel-{}'.format(group))
+        xbmc.executebuiltin('Skin.SetString(autoLabel-{})'.format(group), wait=True)
+        while label == utils.get_skin_string('autoLabel-{}'.format(group)):
+            time.sleep(1)
         
-        path_def.update({'label': utils.get_skin_string('autoLabel-{}'.format(group)),
-                         'action': utils.get_skin_string('autoAction-{}'.format(group)),
-                         'list': utils.get_skin_string('autoList-{}'.format(group)),
-                         'type': utils.get_skin_string('autoType-{}'.format(group)),
-                         'thumbnail': utils.get_skin_string('autoThumbnail-{}'.format(group))})
+        path_def.update({'label': utils.get_skin_string(shortcut_strings[0].format(group)),
+                         'action': utils.get_skin_string(shortcut_strings[1].format(group)),
+                         'list': utils.get_skin_string(shortcut_strings[2].format(group)),
+                         'type': utils.get_skin_string(shortcut_strings[3].format(group)),
+                         'thumbnail': utils.get_skin_string(shortcut_strings[4].format(group))})
+        for label in shortcut_strings:
+            xbmc.executebuiltin('Skin.Reset({})'.format(label.format(group)))
                           
     filename = os.path.join(_addon_path, '{}.group'.format(group))
 
