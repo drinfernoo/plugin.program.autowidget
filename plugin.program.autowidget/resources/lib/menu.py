@@ -127,6 +127,12 @@ def _groups_menu():
                                 description='View the "{}" group.'
                                             .format(group_name),
                                 art={'icon': folder_shortcut if _type == 'shortcut' else folder_sync},
+                                cm=[('Remove Group',
+                                    ('RunPlugin('
+                                     'plugin://plugin.program.autowidget/'
+                                     '?mode=manage'
+                                     '&action=remove_group'
+                                     '&group={})').format(group_name))],
                                 isFolder=True)
     
     
@@ -165,16 +171,39 @@ def _paths_menu(group):
     target = manage.get_group(group)['type']
     paths = manage.find_defined_paths(group)
 
-    for path in paths:
+    for idx, path in enumerate(paths):
         widget = target == 'widget'
-        directory.add_menu_item(title=path['name'] if widget else path['label'],
+        path_name = path['name'] if widget else path['label']
+        
+        cm = [('Remove Path', ('RunPlugin(plugin://plugin.program.autowidget/'
+                                         '?mode=manage'
+                                         '&action=remove_path'
+                                         '&group={}'
+                                         '&path={})').format(group, path_name))]
+        if idx > 0:
+            cm.append(('Shift Path Up', ('RunPlugin('
+                                         'plugin://plugin.program.autowidget/'
+                                         '?mode=manage'
+                                         '&action=shift_path'
+                                         '&target=up'
+                                         '&group={}'
+                                         '&path={})').format(group, path_name)))
+        if idx < len(paths) - 1:
+            cm.append(('Shift Path Down', ('RunPlugin('
+                                           'plugin://plugin.program.autowidget/'
+                                           '?mode=manage'
+                                           '&action=shift_path'
+                                           '&target=down'
+                                           '&group={}'
+                                           '&path={})').format(group, path_name)))
+        
+        directory.add_menu_item(title=path_name,
                                 params={'mode': 'path',
                                         'action': 'call',
                                         'path': path['path'] if widget else path['action'],
                                         'target': path['type'] if widget else ''},
-                                art={'icon': share},
-                                description='Show a list of shortcuts from the {} group.'
-                                            .format(group.capitalize()))
+                                art={'icon': path.get('thumbnail', '') or share},
+                                cm=cm)
                                             
                                             
 def _actions_menu(group):

@@ -92,6 +92,60 @@ def add_path(group, target):
         
     xbmc.executebuiltin('Container.Refresh()')
         
+       
+def remove_path(group, path):
+    utils.ensure_addon_data()
+    
+    dialog = xbmcgui.Dialog()
+    choice = dialog.yesno('AutoWidget', ('Are you sure you want to remove this path?'
+                                         ' This action [COLOR firebrick][B]cannot[/B][/COLOR] be undone.'))
+    
+    if choice:
+        group_def = get_group(group)
+    
+        filename = os.path.join(_addon_path, '{}.group'.format(group_def['name']))
+        with open(filename, 'r') as f:
+            group_json = json.loads(f.read())
+    
+        paths = group_json['paths']
+        for path_json in paths:
+            if path_json.get('name', '') == path or path.json.get('label', '') == path:
+                group_json['paths'].remove(path_json)
+                
+        with open(filename, 'w') as f:
+            f.write(json.dumps(group_json, indent=4))
+            
+        xbmc.executebuiltin('Container.Refresh()'.format(group))
+    else:
+        dialog.notification('AutoWidget', 'Removal cancelled.')
+        
+        
+def shift_path(group, path, target):
+    utils.ensure_addon_data()
+    
+    group_def = get_group(group)
+    
+    filename = os.path.join(_addon_path, '{}.group'.format(group_def['name']))
+    with open(filename, 'r') as f:
+        group_json = json.loads(f.read())
+
+    paths = group_json['paths']
+    for idx, path_json in enumerate(paths):
+        if path_json.get('name', '') == path or path_json.get('label', '') == path:
+            if target == 'up' and idx > 0:
+                temp = paths[idx - 1]
+                group_json['paths'][idx - 1] = paths[idx]
+                group_json['paths'][idx] = temp
+            elif target == 'down' and idx < len(paths) - 1:
+                temp = paths[idx + 1]
+                group_json['paths'][idx + 1] = paths[idx]
+                group_json['paths'][idx] = temp
+            
+    with open(filename, 'w') as f:
+        f.write(json.dumps(group_json, indent=4))
+        
+    xbmc.executebuiltin('Container.Refresh()'.format(group))
+        
 
 def get_group(group):
     for defined in find_defined_groups():
