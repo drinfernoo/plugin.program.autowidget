@@ -6,8 +6,13 @@ import os
 import shutil
 import sys
 
+from xml.dom import minidom
+from xml.etree import ElementTree
+
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
+_addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
+_art_path = os.path.join(_addon_root, 'resources', 'media')
 _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
 _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
@@ -22,24 +27,34 @@ def ensure_addon_data():
         os.makedirs(_addon_path)
     
     
+def get_skin_string(string):
+    return xbmc.getInfoLabel('Skin.String({})'.format(string))
+    
+    
 def get_art(filename):
-    _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
-    _art_path = os.path.join(_addon_root, 'resources', 'media')
     image_path = os.path.join(_art_path, filename)
     
     return image_path if os.path.exists(image_path) else ''
     
     
 def get_active_window():
+    xml_file = xbmc.getInfoLabel('Window.Property(xmlfile)').lower()
+
     if xbmc.getCondVisibility('Window.IsMedia()'):
         return 'media'
-    elif xbmc.getCondVisibility('Window.IsActive(dialogselect)'):
+    elif 'dialog' in xml_file:
         return 'dialog'
     elif xbmc.getCondVisibility('Window.IsActive(home)'):
         return 'home'
     else:
         pass
 
+        
+def prettify(elem):
+    rough_string = ElementTree.tostring(elem, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="\t")
+    
 
 def clean_old_widgets():
     w = 0
