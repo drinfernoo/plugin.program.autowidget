@@ -138,7 +138,7 @@ def remove_group(group):
     
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno('AutoWidget', ('Are you sure you want to remove this group?'
-                                         ' This action [B]cannot[/B] be undone.'))
+                                         ' This action [COLOR firebrick][B]cannot[/B][/COLOR] be undone.'))
     
     if choice:
         filename = '{}.group'.format(group).lower()
@@ -150,4 +150,4 @@ def remove_group(group):
         
         xbmc.executebuiltin('Container.Update(plugin://plugin.program.autowidget/)')
     else:
-        dialog.notification('AutoWidget', 'Cannot create a group with no name.')
+        dialog.notification('AutoWidget', 'Removal cancelled.')

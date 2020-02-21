@@ -29,7 +29,7 @@ def add_separator(title='', char='-'):
         add_menu_item(title=char * 80, art={'icon': sync})
 
     
-def add_menu_item(title, params=None, description='', art={}, isFolder=False):
+def add_menu_item(title, params=None, description='', art=None, isFolder=False):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
     _params = sys.argv[2][1:]
