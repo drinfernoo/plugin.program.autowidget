@@ -35,7 +35,12 @@ def root_menu():
 
 def group_menu(group):
     _manage_menu(group)
-    _paths_menu(group)
+    
+    if len(manage.find_defined_paths(group)) > 0:
+        directory.add_separator(title='Paths', char='/')
+        _paths_menu(group)
+    
+    directory.add_separator(title='Actions', char='/')
     _actions_menu(group)
     
     
@@ -82,31 +87,34 @@ def random_path_menu(group):
 
 
 def call_path(path, target):
-    _window = utils.get_active_window()
-
+    window = utils.get_active_window()
+            
+    if window == 'home':
+        xbmc.executebuiltin('Dialog.Close(busydialog)')
+    
     if not path.startswith('ActivateWindow') and target:
         path = 'ActivateWindow({},{},return)'.format(target, path)
-
-    if _window != 'dialog':
-        if _window == 'home':
-            xbmc.executebuiltin('Dialog.Close(busydialog)')
+    
+    if window != 'dialog':
         xbmc.executebuiltin(path)
     
     
 def _create_menu():
+    _window = utils.get_active_window()
+    
     directory.add_menu_item(title='Create New Widget Group',
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'widget'},
                             art={'icon': folder_add},
                             description='Create a new group of widgets.',
-                            isFolder=False)
+                            isFolder=_window == 'dialog')
                             
     directory.add_menu_item(title='Create New Shortcut Group',
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'shortcut'},
                             art={'icon': share},
                             description='Create a new group of shortcuts.',
-                            isFolder=False)
+                            isFolder=_window == 'dialog')
     
     
 def _groups_menu():
@@ -182,7 +190,6 @@ def _actions_menu(group):
     params = {'mode': 'path'}
 
     if len(paths) > 0:
-
         if is_widget:
             title = 'Random Path from {}'.format(group.capitalize())
             art = {'icon': shuffle}

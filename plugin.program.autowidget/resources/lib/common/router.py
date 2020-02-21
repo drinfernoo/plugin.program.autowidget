@@ -53,7 +53,6 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'path':
         if action == 'call' and path:
             menu.call_path(path, target)
-            is_dir = True
         elif action == 'random' and group:
             menu.random_path_menu(group)
             is_dir = True
