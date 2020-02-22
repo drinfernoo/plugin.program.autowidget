@@ -77,6 +77,9 @@ def _process_widgets():
                 continue
             
             match = re.search(activate_window_pattern, action_node.text)
+            if not match:
+                continue
+            
             groups = list(match.groups())
             
             if not groups[2] or not all(i in groups[2] for i in ['plugin.program.autowidget',
