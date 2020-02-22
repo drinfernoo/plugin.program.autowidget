@@ -82,17 +82,23 @@ def add_path(group, target):
                           
     filename = os.path.join(_addon_path, '{}.group'.format(group))
 
-    with open(filename, 'r') as f:
-        group_json = json.loads(f.read())
-
+    group_json = get_group(group)
     group_json['paths'].append(path_def)
     
     with open(filename, 'w') as f:
         f.write(json.dumps(group_json, indent=4))
         
     xbmc.executebuiltin('Container.Refresh()')
-        
-       
+    
+   
+def add_path_to_group(label, path, icon):
+    path_def = {'label': label,
+                'action': path,
+                'list': '',
+                'type': '',
+                'thumbnail': icon}
+                
+
 def remove_path(group, path):
     utils.ensure_addon_data()
     

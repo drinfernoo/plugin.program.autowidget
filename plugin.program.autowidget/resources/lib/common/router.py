@@ -37,6 +37,8 @@ def dispatch(_plugin, _handle, _params):
     group = params.get('group', '')
     path = params.get('path', '')
     target = params.get('target', '')
+    label = params.get('label', '')
+    icon = params.get('icon', '')
     
     if not mode:
         menu.root_menu()
@@ -48,6 +50,8 @@ def dispatch(_plugin, _handle, _params):
             manage.remove_group(group)
         elif action == 'add_path' and group and target:
             manage.add_path(group, target)
+        elif action == 'add_path_to_group':
+            manage.add_path_to_group(label, path, icon)
         elif action == 'remove_path' and group and path:
             manage.remove_path(group, path)
         elif action == 'shift_path' and group and path and target:
