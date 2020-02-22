@@ -2,6 +2,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
+import ast
 import json
 import os
 import random
@@ -23,6 +24,8 @@ _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
 _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
+_skin = xbmc.translatePath('special://skin/')
+_skin_name = os.path.basename(os.path.normpath(_skin))
 
 activate_window_pattern = '(\w+)*\((\w+\)*),*(.*?\)*),*(return)*\)'
 skin_string_pattern = 'autowidget-{}-{}'
@@ -123,6 +126,29 @@ def _process_shortcuts():
         tree = ElementTree.ElementTree(shortcuts)
         tree.write(xml_path)
 
+    return processed
+        
+        
+def _process_properties():
+    processed = 0
+
+    if not os.path.exists(_shortcuts_path):
+        return
+        
+    props_path = os.path.join(_shortcuts_path,
+                              '{}.properties'.format(_skin_name))
+    with open(props_path, 'r') as f:
+        props = ast.literal_eval(f.read())
+        
+    for prop in props:
+        match = re.search(activate_window_pattern, prop[3])
+        if match:
+            groups = match.groups()
+            if all(i in groups[2] for i in ['plugin.program.autowidget',
+                                            'mode=path',
+                                            'action=random']):
+                utils.log('{}'.format(groups))
+                
     return processed
 
 
