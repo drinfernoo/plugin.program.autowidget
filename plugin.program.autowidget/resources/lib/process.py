@@ -39,7 +39,6 @@ def _get_random_paths(group, force=False, change_sec=3600):
     paths = manage.find_defined_paths(group)
     rand.shuffle(paths)
     
-    utils.log('_get_random_paths: {}'.format(paths))
     return paths
     
 
@@ -53,11 +52,25 @@ def _save_path_details(path):
     with open(path_to_saved, 'w') as f:
         f.write(json.dumps(params, indent=4))
     
-    utils.log('_save_path_details: {}'.format(_id))
-    return _id
+    return params
+    
+    
+def _update_strings(_id, label, action):
+    label_string = skin_string_pattern.format(_id, 'label')
+    action_string = skin_string_pattern.format(_id, 'action')
+    
+    utils.log('Setting {} to {}'.format(label_string, label))
+    utils.log('Setting {} to {}'.format(action_string, action))
+    xbmc.executebuiltin('Skin.SetString({},{})'.format(label_string, label))
+    xbmc.executebuiltin('Skin.SetString({},{})'.format(action_string, action))
                 
                 
 def _process_widgets():
+    converted = _process_shortcuts()
+    return converted
+                
+                
+def _process_shortcuts():
     processed = 0
 
     if not os.path.exists(_shortcuts_path):
@@ -87,7 +100,8 @@ def _process_widgets():
                                                                  'action=random']):
                 continue
             
-            _id = _save_path_details(groups[2])
+            details = _save_path_details(groups[2])
+            _id = details['id']
             label_node.text = skin_string_info_pattern.format(_id, 'label')
            
             # groups[0] = skin_string_pattern.format(_id, 'command')
@@ -96,6 +110,13 @@ def _process_widgets():
             
             action_node.text = path_replace_pattern.format(groups[0],
                                                            ','.join(groups[1:]))
+            
+            if details['action'] == 'random':
+                paths = _get_random_paths(details['group'], force=True)
+
+            if paths:
+                path = paths.pop()
+                _update_strings(_id, path['name'], path['path'])
                                                            
             processed += 1
             
@@ -103,17 +124,19 @@ def _process_widgets():
         tree = ElementTree.ElementTree(shortcuts)
         tree.write(xml_path)
         
-        if processed > 0:
+    return processed
             xbmc.executebuiltin('ReloadSkin()')
             
 
 def refresh_paths(notify=False, force=False):
+    processed = 0
+    
     if notify:
         dialog = xbmcgui.Dialog()
         dialog.notification('AutoWidget', 'Refreshing AutoWidgets')
     
     if force:
-        _process_widgets()
+        processed = _process_widgets()
     
     for group_def in manage.find_defined_groups():
         paths = []
@@ -123,22 +146,17 @@ def refresh_paths(notify=False, force=False):
             with open(saved_path, 'r') as f:
                 widget_json = json.loads(f.read())
 
-            if group_def['name'] != widget_json['group']:                
-                continue
+            if group_def['name'] == widget_json['group']:
+                _id = widget_json['id']
+                group = widget_json['group'].lower().replace('\"', '')
+                action = widget_json['action'].lower()
                 
-            group = widget_json['group'].lower().replace('\"', '')
-            action = widget_json['action'].lower()
+                if action == 'random' and len(paths) == 0:
+                    paths = _get_random_paths(group, force)
 
-            _id = widget_json['id']
-            label_string = skin_string_pattern.format(_id, 'label')
-            action_string = skin_string_pattern.format(_id, 'action')
-            
-            if action == 'random' and len(paths) == 0:
-                paths = _get_random_paths(group, force)
-
-            if paths:
-                path = paths.pop()
-                xbmc.executebuiltin('Skin.SetString({},{})'.format(label_string,
-                                                                   path['name']))
-                xbmc.executebuiltin('Skin.SetString({},{})'
-                                    .format(action_string, path['path']))
+                if paths:
+                    path = paths.pop()
+                    _update_strings(_id, path['name'], path['path'])
+    
+    if processed > 0:
+        xbmc.executebuiltin('ReloadSkin()')
