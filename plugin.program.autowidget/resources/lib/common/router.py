@@ -48,8 +48,10 @@ def dispatch(_plugin, _handle, _params):
             manage.remove_group(group)
         elif action == 'add_path' and group and target:
             manage.add_path(group, target)
-        # elif action == 'remove_path' and path:
-            # manage.remove_path(path)
+        elif action == 'remove_path' and group and path:
+            manage.remove_path(group, path)
+        elif action == 'shift_path' and group and path and target:
+            manage.shift_path(group, path, target)
     elif mode == 'path':
         if action == 'call' and path:
             menu.call_path(path, target)
