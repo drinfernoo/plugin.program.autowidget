@@ -6,20 +6,20 @@ from resources.lib import manage
 from resources.lib.common import directory
 from resources.lib.common import utils
 
-folder_remove = utils.get_art('folder-remove.png')
+add = utils.get_art('add.png')
+alert = utils.get_art('alert.png')
 folder = utils.get_art('folder.png')
-folder_sync = utils.get_art('folder-sync.png')
+folder_add = utils.get_art('folder-add.png')
+folder_remove = utils.get_art('folder-remove.png')
 folder_shortcut = utils.get_art('folder-shortcut.png')
+folder_sync = utils.get_art('folder-sync.png')
+refresh = utils.get_art('refresh.png')
+remove = utils.get_art('remove.png')
 share = utils.get_art('share.png')
 shuffle = utils.get_art('shuffle.png')
-alert = utils.get_art('alert.png')
-add = utils.get_art('add.png')
-unpack = utils.get_art('unpack.png')
 sync = utils.get_art('sync.png')
-folder_add = utils.get_art('folder-add.png')
-refresh = utils.get_art('refresh.png')
 trash = utils.get_art('trash.png')
-remove = utils.get_art('remove.png')
+unpack = utils.get_art('unpack.png')
 
 
 def root_menu():
@@ -92,8 +92,11 @@ def call_path(path, target):
     if window == 'home':
         xbmc.executebuiltin('Dialog.Close(busydialog)')
     
-    if not path.startswith('ActivateWindow') and target:
-        path = 'ActivateWindow({},{},return)'.format(target, path)
+    if not path.startswith('ActivateWindow'):
+        if window == 'media':
+            xbmc.executebuiltin('Container.Update({})'.format(path))
+        elif target:
+            path = 'ActivateWindow({},{},return)'.format(target, path)
     
     if window != 'dialog':
         xbmc.executebuiltin(path)
