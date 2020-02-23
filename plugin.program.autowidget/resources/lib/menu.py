@@ -1,4 +1,5 @@
 import xbmc
+import xbmcaddon
 
 import random
 
@@ -20,6 +21,8 @@ shuffle = utils.get_art('shuffle.png')
 sync = utils.get_art('sync.png')
 trash = utils.get_art('trash.png')
 unpack = utils.get_art('unpack.png')
+
+_addon = xbmcaddon.Addon()
 
 
 def root_menu():
@@ -131,7 +134,7 @@ def _groups_menu():
                                 description=_addon.getLocalizedString(32019)
                                             .format(group_name),
                                 art={'icon': folder_shortcut if _type == 'shortcut' else folder_sync},
-                                cm=[(32023,
+                                cm=[(_addon.getLocalizedString(32023),
                                     ('RunPlugin('
                                      'plugin://plugin.program.autowidget/'
                                      '?mode=manage'

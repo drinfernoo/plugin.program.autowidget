@@ -105,9 +105,9 @@ def add_path_to_group(label, path, icon, groupname=None):
     if groupname:
         index = names.index(groupname) + 2
     
-    new_widget = xbmcgui.ListItem(32015)
+    new_widget = xbmcgui.ListItem(_addon.getLocalizedString(32015))
     new_widget.setArt({'icon': folder_add})
-    new_shortcut = xbmcgui.ListItem(32016)
+    new_shortcut = xbmcgui.ListItem(_addon.getLocalizedString(32017))
     new_shortcut.setArt({'icon': share})
     options = [new_widget, new_shortcut]
     for group in groups:

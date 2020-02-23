@@ -23,6 +23,9 @@ def add_separator(title='', char='-'):
         return
 
     if title:
+        if isinstance(title, int):
+            title = _addon.getLocalizedString(title)
+            
         split = (len(title) + 2) / 2
         edge = char * int(40 - split)
         add_menu_item(title='{0} {1} {0}'.format(edge,
