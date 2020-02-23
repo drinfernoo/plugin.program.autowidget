@@ -29,7 +29,8 @@ def add_separator(title='', char='-'):
         add_menu_item(title=char * 80, art={'icon': sync})
 
     
-def add_menu_item(title, params=None, description='', cm=None, art=None, isFolder=False):
+def add_menu_item(title, params=None, description='', cm=None, art=None,
+                  is_folder=False):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
     _params = sys.argv[2][1:]
@@ -61,4 +62,4 @@ def add_menu_item(title, params=None, description='', cm=None, art=None, isFolde
     item.addContextMenuItems(def_cm)
     
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
-                                isFolder=isFolder)
+                                isFolder=is_folder)
