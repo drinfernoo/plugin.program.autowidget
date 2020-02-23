@@ -1,4 +1,4 @@
-import xbmc
+import xbmcaddon
 import xbmcgui
 import xbmcplugin
 
@@ -12,6 +12,8 @@ try:
 except ImportError:
     from urllib import quote_plus
     
+_addon = xbmcaddon.Addon()
+
     
 def add_separator(title='', char='-'):
     _window = utils.get_active_window()
@@ -49,18 +51,22 @@ def add_menu_item(title, params=None, description='', cm=None, art=None,
             _plugin += '&{0}={1}'.format(param, _param)
 
     if isinstance(title, int):
-        title = xbmc.getLocalizedString(title)
-
-    # build list item
-    item = xbmcgui.ListItem(title)
-    def_art = {'icon': '', 'fanart': ''}
-    def_cm = []
+        title = _addon.getLocalizedString(title)
+    if isinstance(description, int):
+        description = _addon.getLocalizedString(description)
     
+    def_art = {'icon': '', 'fanart': ''}
     if art:
         def_art.update(art)
-        
+    
+    def_cm = []    
     if cm:
         def_cm.extend(cm)
+        
+    # build list item
+    item = xbmcgui.ListItem(title)
+    
+    
     
     item.setArt(def_art)
     item.addContextMenuItems(def_cm)

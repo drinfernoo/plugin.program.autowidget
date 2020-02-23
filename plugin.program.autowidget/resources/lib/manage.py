@@ -105,9 +105,9 @@ def add_path_to_group(label, path, icon, groupname=None):
     if groupname:
         index = names.index(groupname) + 2
     
-    new_widget = xbmcgui.ListItem('Create New Widget Group')
+    new_widget = xbmcgui.ListItem(32015)
     new_widget.setArt({'icon': folder_add})
-    new_shortcut = xbmcgui.ListItem('Create New Shortcut Group')
+    new_shortcut = xbmcgui.ListItem(32016)
     new_shortcut.setArt({'icon': share})
     options = [new_widget, new_shortcut]
     for group in groups:
@@ -120,7 +120,7 @@ def add_path_to_group(label, path, icon, groupname=None):
                            useDetails=True)
     
     if choice < 0:
-        dialog.notification('AutoWidget', 'Addition cancelled.')
+        dialog.notification('AutoWidget', _addon.getLocalizedString(32034))
     elif choice == 0:
         name = add_group('widget')
         add_path_to_group(label, path, icon, name)
@@ -150,8 +150,7 @@ def remove_path(group, path):
     utils.ensure_addon_data()
     
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', ('Are you sure you want to remove this path?'
-                                         ' This action [COLOR firebrick][B]cannot[/B][/COLOR] be undone.'))
+    choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32035))
     
     if choice:
         group_def = get_group(group)
@@ -170,7 +169,7 @@ def remove_path(group, path):
             
         xbmc.executebuiltin('Container.Refresh()'.format(group))
     else:
-        dialog.notification('AutoWidget', 'Removal cancelled.')
+        dialog.notification('AutoWidget', _addon.getLocalizedString(32036))
         
         
 def shift_path(group, path, target):
@@ -242,7 +241,7 @@ def find_defined_paths(group=None):
 
 def add_group(target):
     dialog = xbmcgui.Dialog()
-    group = dialog.input(heading='Name for Group') or ''
+    group = dialog.input(heading=_addon.getLocalizedString(32037)) or ''
     
     if group:
         filename = os.path.join(_addon_path, '{}.group'.format(group.lower()))
@@ -253,7 +252,7 @@ def add_group(target):
             
         xbmc.executebuiltin('Container.Refresh()')
     else:
-        dialog.notification('AutoWidget', 'Cannot create a group with no name.')
+        dialog.notification('AutoWidget', _addon.getLocalizedString(32038))
     
     return group
         
@@ -262,8 +261,7 @@ def remove_group(group):
     utils.ensure_addon_data()
     
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', ('Are you sure you want to remove this group?'
-                                         ' This action [COLOR firebrick][B]cannot[/B][/COLOR] be undone.'))
+    choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32039))
     
     if choice:
         filename = '{}.group'.format(group).lower()
@@ -275,4 +273,4 @@ def remove_group(group):
         
         xbmc.executebuiltin('Container.Update(plugin://plugin.program.autowidget/)')
     else:
-        dialog.notification('AutoWidget', 'Removal cancelled.')
+        dialog.notification('AutoWidget', _addon.getLocalizedString(32040))

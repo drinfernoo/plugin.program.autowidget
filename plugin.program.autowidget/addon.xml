@@ -14,7 +14,7 @@
     <extension point="kodi.context.item">
         <menu id="kodi.core.main">
             <item library="context.py">
-                <label>Add to AutoWidget</label>
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
                 <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
             </item>
         </menu>
@@ -22,16 +22,11 @@
     
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB"></description>
-        <language></language>
         <platform>all</platform>
         <license>LGPL-3.0</license>
-        <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
-        <email></email>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news></news>
-        <disclaimer></disclaimer>
         <assets>
             <icon>icon.png</icon>
         </assets>

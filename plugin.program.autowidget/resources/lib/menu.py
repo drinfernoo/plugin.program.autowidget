@@ -26,10 +26,10 @@ def root_menu():
     _create_menu()
 
     if len(manage.find_defined_groups()) > 0:
-        directory.add_separator(title='My Groups', char='/')
+        directory.add_separator(title=32007, char='/')
         _groups_menu()
 
-    directory.add_separator(title='Tools', char='/')
+    directory.add_separator(title=32008, char='/')
     _tools_menu()
 
 
@@ -37,10 +37,10 @@ def group_menu(group):
     _manage_menu(group)
     
     if len(manage.find_defined_paths(group)) > 0:
-        directory.add_separator(title='Paths', char='/')
+        directory.add_separator(title=32009, char='/')
         _paths_menu(group)
     
-    directory.add_separator(title='Actions', char='/')
+    directory.add_separator(title=32010, char='/')
     _actions_menu(group)
     
     
@@ -49,8 +49,7 @@ def shortcut_menu(group):
     paths = manage.find_defined_paths(group)
     
     if len(paths) > 0 and _window == 'media':
-        directory.add_menu_item(title=('Point a widget at this directory to get'
-                                       ' a random widget from the following:'),
+        directory.add_menu_item(title=32011,
                                 art={'icon': folder_shortcut})
         directory.add_separator(group)
     
@@ -67,8 +66,7 @@ def random_path_menu(group):
     paths = manage.find_defined_paths(group)
     
     if len(paths) > 0 and _window == 'media':
-        directory.add_menu_item(title=('Point a widget at this directory to get'
-                                       ' a widget containing the following:'),
+        directory.add_menu_item(title=32012,
                                 art={'icon': folder_sync})
         directory.add_separator(group)
     
@@ -80,10 +78,13 @@ def random_path_menu(group):
                                             'path': path['path'],
                                             'target': path['type']})
     if _window == 'home':
-        directory.add_menu_item(title='Initialize Widgets',
+        directory.add_menu_item(title=32013,
                                 params={'mode': 'force'},
-                                art={'icon': unpack, 'thumb': unpack, 'banner': unpack, 'poster': unpack},
-                                description='Initialize this and any other AutoWidgets.')
+                                art={'icon': unpack,
+                                     'thumb': unpack,
+                                     'banner': unpack,
+                                     'poster': unpack},
+                                description=32014)
 
 
 def call_path(path, target):
@@ -105,18 +106,18 @@ def call_path(path, target):
 def _create_menu():
     _window = utils.get_active_window()
     
-    directory.add_menu_item(title='Create New Widget Group',
+    directory.add_menu_item(title=32015,
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'widget'},
                             art={'icon': folder_add},
-                            description='Create a new group of widgets.',
+                            description=32016,
                             isFolder=_window == 'dialog')
                             
-    directory.add_menu_item(title='Create New Shortcut Group',
+    directory.add_menu_item(title=32017,
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'shortcut'},
                             art={'icon': share},
-                            description='Create a new group of shortcuts.',
+                            description=32018,
                             isFolder=_window == 'dialog')
     
     
@@ -127,10 +128,10 @@ def _groups_menu():
         directory.add_menu_item(title=group_name.capitalize(),
                                 params={'mode': 'group',
                                         'group': group_name},
-                                description='View the "{}" group.'
+                                description=_addon.getLocalizedString(32019)
                                             .format(group_name),
                                 art={'icon': folder_shortcut if _type == 'shortcut' else folder_sync},
-                                cm=[('Remove Group',
+                                cm=[(32023,
                                     ('RunPlugin('
                                      'plugin://plugin.program.autowidget/'
                                      '?mode=manage'
@@ -142,10 +143,10 @@ def _groups_menu():
 def _tools_menu():
     _window = utils.get_active_window()
 
-    directory.add_menu_item(title='Force Refresh Widgets',
+    directory.add_menu_item(title=32006,
                             params={'mode': 'force'},
                             art={'icon': refresh},
-                            description='Force all defined widgets to refresh.',
+                            description=32020,
                             isFolder=_window == 'dialog')
     # directory.add_menu_item(title='Clean Old References',
                             # params={'mode': 'clean'},
@@ -157,17 +158,18 @@ def _tools_menu():
 def _manage_menu(group):
     target = manage.get_group(group)['type']
 
-    directory.add_menu_item(title='Add Path',
+    directory.add_menu_item(title=32021,
                             params={'mode': 'manage', 'action': 'add_path',
                                     'group': group, 'target': target},
-                            art={'icon': add})
+                            art={'icon': add},
+                            description=32022)
     
-    directory.add_menu_item(title='Remove Group',
+    directory.add_menu_item(title=32023,
                             params={'mode': 'manage',
                                     'action': 'remove_group',
                                     'group': group},
                             art={'icon': remove},
-                            description='Remove this group definition. Cannot be undone.')
+                            description=32024)
                             
                             
 def _paths_menu(group):
@@ -178,27 +180,28 @@ def _paths_menu(group):
         widget = target == 'widget'
         path_name = path['name'] if widget else path['label']
         
-        cm = [('Remove Path', ('RunPlugin(plugin://plugin.program.autowidget/'
-                                         '?mode=manage'
-                                         '&action=remove_path'
-                                         '&group={}'
-                                         '&path={})').format(group, path_name))]
+        cm = [(_addon.getLocalizedString(32025), ('RunPlugin('
+                                                  'plugin://plugin.program.autowidget/'
+                                                  '?mode=manage'
+                                                  '&action=remove_path'
+                                                  '&group={}'
+                                                  '&path={})').format(group, path_name))]
         if idx > 0:
-            cm.append(('Shift Path Up', ('RunPlugin('
-                                         'plugin://plugin.program.autowidget/'
-                                         '?mode=manage'
-                                         '&action=shift_path'
-                                         '&target=up'
-                                         '&group={}'
-                                         '&path={})').format(group, path_name)))
+            cm.append((_addon.getLocalizedString(32026), ('RunPlugin('
+                                                          'plugin://plugin.program.autowidget/'
+                                                          '?mode=manage'
+                                                          '&action=shift_path'
+                                                          '&target=up'
+                                                          '&group={}'
+                                                          '&path={})').format(group, path_name)))
         if idx < len(paths) - 1:
-            cm.append(('Shift Path Down', ('RunPlugin('
-                                           'plugin://plugin.program.autowidget/'
-                                           '?mode=manage'
-                                           '&action=shift_path'
-                                           '&target=down'
-                                           '&group={}'
-                                           '&path={})').format(group, path_name)))
+            cm.append((_addon.getLocalizedString(32027), ('RunPlugin('
+                                                          'plugin://plugin.program.autowidget/'
+                                                          '?mode=manage'
+                                                          '&action=shift_path'
+                                                          '&target=down'
+                                                          '&group={}'
+                                                          '&path={})').format(group, path_name)))
         
         directory.add_menu_item(title=path_name,
                                 params={'mode': 'path',
@@ -223,9 +226,9 @@ def _actions_menu(group):
 
     if len(paths) > 0:
         if is_widget:
-            title = 'Random Path from {}'.format(group.capitalize())
+            title = _addon.getLocalizedString(32028).format(group.capitalize())
             art = {'icon': shuffle}
-            description = 'Use a random path from the {} group.'.format(group.capitalize())
+            description = _addon.getLocalizedString(32029).format(group.capitalize())
             if is_media:
                 index = random.randrange(len(paths))
                 params.update({'action': 'call',
@@ -235,9 +238,9 @@ def _actions_menu(group):
                 params.update({'action': 'random',
                                'group': group})
         elif is_shortcut:
-            title = 'Shortcuts from {}'.format(group.capitalize())
+            title = _addon.getLocalizedString(32030).format(group.capitalize())
             art = {'icon': share}
-            description = 'Show a list of shortcuts from the {} group.'.format(group.capitalize())
+            description = _addon.getLocalizedString(32031).format(group.capitalize())
             params.update({'action': 'shortcuts',
                            'group': group})
         
@@ -247,6 +250,6 @@ def _actions_menu(group):
                                 description=description,
                                 isFolder=not is_media)
     else:
-        directory.add_menu_item(title='No AutoWidgets have been defined for this group.',
+        directory.add_menu_item(title=32032,
                                 art={'icon': alert},
                                 isFolder=not is_media)

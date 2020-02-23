@@ -125,7 +125,7 @@ def refresh_paths(notify=False, force=False):
 
     if notify:
         dialog = xbmcgui.Dialog()
-        dialog.notification('AutoWidget', 'Refreshing AutoWidgets')
+        dialog.notification('AutoWidget', _addon.getLocalisedString(32033))
 
     if force:
         processed = _process_shortcuts()
