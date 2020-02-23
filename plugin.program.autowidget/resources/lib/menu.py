@@ -57,10 +57,11 @@ def shortcut_menu(group):
         directory.add_separator(group)
     
     for path in paths:
+        action = path['list'] or path['action']
         directory.add_menu_item(title=path['label'],
                                 params={'mode': 'path',
                                         'action': 'call',
-                                        'path': path['action']},
+                                        'path': action},
                                 art={'icon': path['thumbnail']})
     
     
@@ -95,6 +96,9 @@ def call_path(path, target):
             
     if window == 'home':
         xbmc.executebuiltin('Dialog.Close(busydialog)')
+    
+    if not target:
+        target = 'Videos'
     
     if not path.startswith('ActivateWindow'):
         if window == 'media':
@@ -206,10 +210,12 @@ def _paths_menu(group):
                                                           '&group={}'
                                                           '&path={})').format(group, path_name)))
         
+        action = path['path'] if widget else path['list'] or path['action']
+        
         directory.add_menu_item(title=path_name,
                                 params={'mode': 'path',
                                         'action': 'call',
-                                        'path': path['path'] if widget else path['action'],
+                                        'path': action,
                                         'target': path['type'] if widget else ''},
                                 art={'icon': path.get('thumbnail', '') or share},
                                 cm=cm)
