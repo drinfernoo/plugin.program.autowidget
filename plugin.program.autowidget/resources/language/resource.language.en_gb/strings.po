@@ -1,7 +1,7 @@
 # Kodi Media Center language file
 # Addon Name: AutoWidget
 # Addon id: plugin.program.autowidget
-# Addon Provider: 
+# Addon Provider: drinfernoo
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Addons\n"
@@ -19,9 +19,29 @@ msgstr ""
 #This is a comment
 
 msgctxt "#32000"
-msgid "Example"
+msgid "General"
 msgstr ""
 
 msgctxt "#32001"
-msgid "Debug"
+msgid "Widgets"
+msgstr ""
+
+msgctxt "#32002"
+msgid "Shortcuts"
+msgstr ""
+
+msgctxt "#32003"
+msgid "Add to AutoWidget Group"
+msgstr ""
+
+msgctxt "#32004"
+msgid "Show 'Add to AutoWidget Group' on Context Menu (Requires a Reboot)"
+msgstr ""
+
+msgctxt "#32005"
+msgid "Hours to refresh widgets"
+msgstr ""
+
+msgctxt "#32006"
+msgid "Force Refresh Widgets"
 msgstr ""

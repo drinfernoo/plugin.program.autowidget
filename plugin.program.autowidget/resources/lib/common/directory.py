@@ -1,4 +1,4 @@
-import xbmc
+import xbmcaddon
 import xbmcgui
 import xbmcplugin
 
@@ -49,7 +49,7 @@ def add_menu_item(title, params=None, description='', cm=None, art=None,
             _plugin += '&{0}={1}'.format(param, _param)
 
     if isinstance(title, int):
-        title = xbmc.getLocalizedString(title)
+        title = xbmcaddon.Addon().getLocalizedString(title)
 
     # build list item
     item = xbmcgui.ListItem(title)
