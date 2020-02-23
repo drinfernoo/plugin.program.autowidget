@@ -11,6 +11,15 @@
     
     <extension point="xbmc.service" library="service.py" />
     
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>Add to AutoWidget</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
         <description lang="en_GB"></description>

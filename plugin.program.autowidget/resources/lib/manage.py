@@ -22,77 +22,130 @@ widget_strings = ['autoWidget-{}', 'autoWidgetType-{}', 'autoWidgetName-{}',
 
 shortcut_strings = ['autoLabel-{}', 'autoAction-{}', 'autoList-{}',
                     'autoType-{}', 'autoThumbnail-{}']
+                    
+folder_add = utils.get_art('folder-add.png')
+folder_shortcut = utils.get_art('folder-shortcut.png')
+folder_sync = utils.get_art('folder-sync.png')
+share = utils.get_art('share.png')
 
-def add_path(group, target):
-    path_def = {}
+
+def add_path(group, target, path_def=None):
+    if not path_def:
+        path_def = {}
     
-    widget = ('RunScript(script.skinshortcuts,'
-              'type=widgets'
-              '&showNone=False'
-              '&skinWidget=autoWidget-{0}'
-              '&skinWidgetType=autoWidgetType-{0}'
-              '&skinWidgetTarget=autoWidgetTarget-{0}'
-              '&skinWidgetPath=autoWidgetPath-{0})').format(group)
-    
-    shortcut = ('RunScript(script.skinshortcuts,'
-                'type=shortcuts'
-                '&custom=True'
-                '&showNone=False'
-                '&skinAction=autoAction-{0}'
-                '&skinList=autoList-{0}'
-                '&skinType=autoType-{0}'
-                '&skinThumbnail=autoThumbnail-{0})').format(group)
-                
-    if target == 'widget':
-        path = utils.get_skin_string('autoWidgetPath-{}'.format(group))
-        xbmc.executebuiltin(widget, wait=True)
-        while path == utils.get_skin_string('autoWidgetPath-{}'.format(group)):
-            time.sleep(1)
+        widget = ('RunScript(script.skinshortcuts,'
+                  'type=widgets'
+                  '&showNone=False'
+                  '&skinWidget=autoWidget-{0}'
+                  '&skinWidgetType=autoWidgetType-{0}'
+                  '&skinWidgetTarget=autoWidgetTarget-{0}'
+                  '&skinWidgetPath=autoWidgetPath-{0})').format(group)
         
-        name = utils.get_skin_string('autoWidgetName-{}'.format(group))
-        xbmc.executebuiltin('Skin.SetString(autoWidgetName-{})'.format(group), wait=True)
-        while name == utils.get_skin_string('autoWidgetName-{}'.format(group)):
-            time.sleep(1)
-        
-        path_def.update({'widget': utils.get_skin_string(widget_strings[0].format(group)),
-                         'type': utils.get_skin_string(widget_strings[1].format(group)),
-                         'name': utils.get_skin_string(widget_strings[2].format(group)),
-                         'target': utils.get_skin_string(widget_strings[3].format(group)),
-                         'path': utils.get_skin_string(widget_strings[4].format(group))})
-        for label in widget_strings:
-            xbmc.executebuiltin('Skin.Reset({})'.format(label.format(group)))
-    elif target == 'shortcut':
-        action = utils.get_skin_string('autoAction-{}'.format(group))
-        xbmc.executebuiltin(shortcut, wait=True)
-        while action == utils.get_skin_string('autoAction-{}'.format(group)):
-            time.sleep(1)
+        shortcut = ('RunScript(script.skinshortcuts,'
+                    'type=shortcuts'
+                    '&custom=True'
+                    '&showNone=False'
+                    '&skinAction=autoAction-{0}'
+                    '&skinList=autoList-{0}'
+                    '&skinType=autoType-{0}'
+                    '&skinThumbnail=autoThumbnail-{0})').format(group)
+                    
+        if target == 'widget':
+            path = utils.get_skin_string('autoWidgetPath-{}'.format(group))
+            xbmc.executebuiltin(widget, wait=True)
+            while path == utils.get_skin_string('autoWidgetPath-{}'.format(group)):
+                time.sleep(1)
             
-        label = utils.get_skin_string('autoLabel-{}'.format(group))
-        xbmc.executebuiltin('Skin.SetString(autoLabel-{})'.format(group), wait=True)
-        while label == utils.get_skin_string('autoLabel-{}'.format(group)):
-            time.sleep(1)
-        
-        path_def.update({'label': utils.get_skin_string(shortcut_strings[0].format(group)),
-                         'action': utils.get_skin_string(shortcut_strings[1].format(group)),
-                         'list': utils.get_skin_string(shortcut_strings[2].format(group)),
-                         'type': utils.get_skin_string(shortcut_strings[3].format(group)),
-                         'thumbnail': utils.get_skin_string(shortcut_strings[4].format(group))})
-        for label in shortcut_strings:
-            xbmc.executebuiltin('Skin.Reset({})'.format(label.format(group)))
+            name = utils.get_skin_string('autoWidgetName-{}'.format(group))
+            xbmc.executebuiltin('Skin.SetString(autoWidgetName-{})'.format(group), wait=True)
+            while name == utils.get_skin_string('autoWidgetName-{}'.format(group)):
+                time.sleep(1)
+            
+            path_def.update({'widget': utils.get_skin_string(widget_strings[0].format(group)),
+                             'type': utils.get_skin_string(widget_strings[1].format(group)),
+                             'name': utils.get_skin_string(widget_strings[2].format(group)),
+                             'target': utils.get_skin_string(widget_strings[3].format(group)),
+                             'path': utils.get_skin_string(widget_strings[4].format(group))})
+            for label in widget_strings:
+                xbmc.executebuiltin('Skin.Reset({})'.format(label.format(group)))
+        elif target == 'shortcut':
+            action = utils.get_skin_string('autoAction-{}'.format(group))
+            xbmc.executebuiltin(shortcut, wait=True)
+            while action == utils.get_skin_string('autoAction-{}'.format(group)):
+                time.sleep(1)
+                
+            label = utils.get_skin_string('autoLabel-{}'.format(group))
+            xbmc.executebuiltin('Skin.SetString(autoLabel-{})'.format(group), wait=True)
+            while label == utils.get_skin_string('autoLabel-{}'.format(group)):
+                time.sleep(1)
+            
+            path_def.update({'label': utils.get_skin_string(shortcut_strings[0].format(group)),
+                             'action': utils.get_skin_string(shortcut_strings[1].format(group)),
+                             'list': utils.get_skin_string(shortcut_strings[2].format(group)),
+                             'type': utils.get_skin_string(shortcut_strings[3].format(group)),
+                             'thumbnail': utils.get_skin_string(shortcut_strings[4].format(group))})
+            for label in shortcut_strings:
+                xbmc.executebuiltin('Skin.Reset({})'.format(label.format(group)))
                           
     filename = os.path.join(_addon_path, '{}.group'.format(group))
 
-    with open(filename, 'r') as f:
-        group_json = json.loads(f.read())
-
+    group_json = get_group(group)
     group_json['paths'].append(path_def)
     
     with open(filename, 'w') as f:
         f.write(json.dumps(group_json, indent=4))
         
     xbmc.executebuiltin('Container.Refresh()')
+    
+   
+def add_path_to_group(label, path, icon, groupname=None):
+    groups = find_defined_groups();
+    names = [group['name'] for group in groups]
+    index = -1
+    if groupname:
+        index = names.index(groupname) + 2
+    
+    new_widget = xbmcgui.ListItem('Create New Widget Group')
+    new_widget.setArt({'icon': folder_add})
+    new_shortcut = xbmcgui.ListItem('Create New Shortcut Group')
+    new_shortcut.setArt({'icon': share})
+    options = [new_widget, new_shortcut]
+    for group in groups:
+        item = xbmcgui.ListItem(group['name'])
+        item.setArt({'icon': folder_sync if group['type'] == 'widget' else folder_shortcut})
+        options.append(item)
+    
+    dialog = xbmcgui.Dialog()
+    choice = dialog.select('Choose a Group', options, preselect=index,
+                           useDetails=True)
+    
+    if choice < 0:
+        dialog.notification('AutoWidget', 'Addition cancelled.')
+    elif choice == 0:
+        name = add_group('widget')
+        add_path_to_group(label, path, icon, name)
+    elif choice == 1:
+        name = add_group('shortcut')
+        add_path_to_group(label, path, icon, name)
+    else:
+        group = groups[choice - 2]
         
-       
+        if group['type'] == 'shortcut':
+            path_def = {'label': label,
+                        'action': path,
+                        'list': '',
+                        'type': '',
+                        'thumbnail': icon}
+        elif group['type'] == 'widget':
+            path_def = {'widget': '',
+                        'path': path,
+                        'type': '',
+                        'target': '',
+                        'name': label}
+                        
+        add_path(group['name'], group['type'], path_def)
+                
+
 def remove_path(group, path):
     utils.ensure_addon_data()
     
@@ -109,7 +162,7 @@ def remove_path(group, path):
     
         paths = group_json['paths']
         for path_json in paths:
-            if path_json.get('name', '') == path or path.json.get('label', '') == path:
+            if path_json.get('name', '') == path or path_json.get('label', '') == path:
                 group_json['paths'].remove(path_json)
                 
         with open(filename, 'w') as f:
@@ -201,6 +254,8 @@ def add_group(target):
         xbmc.executebuiltin('Container.Refresh()')
     else:
         dialog.notification('AutoWidget', 'Cannot create a group with no name.')
+    
+    return group
         
 
 def remove_group(group):
