@@ -1,3 +1,4 @@
+import xbmc
 import xbmcgui
 import xbmcplugin
 
@@ -46,6 +47,9 @@ def add_menu_item(title, params=None, description='', cm=None, art=None,
             # build URI to send to router
             _param = quote_plus(params.get(param, ''))
             _plugin += '&{0}={1}'.format(param, _param)
+
+    if isinstance(title, int):
+        title = xbmc.getLocalizedString(title)
 
     # build list item
     item = xbmcgui.ListItem(title)
