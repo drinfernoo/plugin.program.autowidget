@@ -45,3 +45,139 @@ msgstr ""
 msgctxt "#32006"
 msgid "Force Refresh Widgets"
 msgstr ""
+
+msgctxt "#32007"
+msgid "My Groups"
+msgstr ""
+
+msgctxt "#32008"
+msgid "Tools"
+msgstr ""
+
+msgctxt "#32009"
+msgid "Paths"
+msgstr ""
+
+msgctxt "#32010"
+msgid "Actions"
+msgstr ""
+
+msgctxt "#32011"
+msgid "Point a widget at this directory to get a widget containing the following:"
+msgstr ""
+
+msgctxt "#32012"
+msgid "Point a widget at this directory to get a random widget from the following:"
+msgstr ""
+
+msgctxt "#32013"
+msgid "Initialize Widgets"
+msgstr ""
+
+msgctxt "#32014"
+msgid "Initialize this and any other AutoWidgets."
+msgstr ""
+
+msgctxt "#32015"
+msgid "Create New Widget Group"
+msgstr ""
+
+msgctxt "#32016"
+msgid "Create a new group of widgets."
+msgstr ""
+
+msgctxt "#32017"
+msgid "Create New Shortcut Group"
+msgstr ""
+
+msgctxt "#32018"
+msgid "Create a new group of shortcuts."
+msgstr ""
+
+msgctxt "#32019"
+msgid "View the "{}" group."
+msgstr ""
+
+msgctxt "#32020"
+msgid "Force all defined widgets to refresh."
+msgstr ""
+
+msgctxt "#32021"
+msgid "Add Path"
+msgstr ""
+
+msgctxt "#32022"
+msgid "Add a New Path to This Group."
+msgstr ""
+
+msgctxt "#32023"
+msgid "Remove Group"
+msgstr ""
+
+msgctxt "#32024"
+msgid "Remove this group definition. Cannot be undone."
+msgstr ""
+
+msgctxt "#32025"
+msgid "Remove Path"
+msgstr ""
+
+msgctxt "#32026"
+msgid "Shift Path Up"
+msgstr ""
+
+msgctxt "#32027"
+msgid "Shift Path Down"
+msgstr ""
+
+msgctxt "#32028"
+msgid "Random Path from {}"
+msgstr ""
+
+msgctxt "#32029"
+msgid "Use a random path from the {} group."
+msgstr ""
+
+msgctxt "#32030"
+msgid "Shortcuts from {}"
+msgstr ""
+
+msgctxt "#32031"
+msgid "Show a list of shortcuts from the {} group."
+msgstr ""
+
+msgctxt "#32032"
+msgid "No AutoWidgets have been defined for this group."
+msgstr ""
+
+msgctxt "#32033"
+msgid "Refreshing AutoWidgets"
+msgstr ""
+
+msgctxt "#32034"
+msgid "Addition cancelled."
+msgstr ""
+
+msgctxt "#32035"
+msgid "Are you sure you want to remove this path? This action [COLOR firebrick][B]cannot[/B][/COLOR] be undone."
+msgstr ""
+
+msgctxt "#32036"
+msgid "Removal cancelled."
+msgstr ""
+
+msgctxt "#32037"
+msgid "Name for Group"
+msgstr ""
+
+msgctxt "#32038"
+msgid "Cannot create a group with no name."
+msgstr ""
+
+msgctxt "#32039"
+msgid "Are you sure you want to remove this group? This action [COLOR firebrick][B]cannot[/B][/COLOR] be undone."
+msgstr ""
+
+msgctxt "#32040"
+msgid "Removal cancelled."
+msgstr ""
