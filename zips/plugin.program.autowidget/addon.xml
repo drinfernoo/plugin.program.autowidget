@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.164" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.192" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -28,5 +28,20 @@
         </assets>
     </extension>
 </addon>
+/addon>
+ension>
+</addon>
+n.program.autowidget/</source>
+        <news></news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+</news>
+        <disclaimer></disclaimer>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
     </extension>
 </addon>
