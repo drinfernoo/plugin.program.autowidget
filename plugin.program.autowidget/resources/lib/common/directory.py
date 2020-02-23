@@ -33,7 +33,7 @@ def add_separator(title='', char='-'):
 
     
 def add_menu_item(title, params=None, description='', cm=None, art=None,
-                  is_folder=False):
+                  isFolder=False):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
     _params = sys.argv[2][1:]
@@ -66,10 +66,8 @@ def add_menu_item(title, params=None, description='', cm=None, art=None,
     # build list item
     item = xbmcgui.ListItem(title)
     
-    
-    
     item.setArt(def_art)
     item.addContextMenuItems(def_cm)
     
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
-                                isFolder=is_folder)
+                                isFolder=isFolder)
