@@ -3,14 +3,13 @@
     <category label="General">
         <!-- Widgets -->
         <setting label="Widgets" type="lsep" />
-        <setting label="Show 'Add to Group' on Context Menu (Requires a Reboot)" type="bool" id="context.autowidget" default="false" />
+        <setting label="Show 'Add to AutoWidget Group' on Context Menu (Requires a Reboot)" type="bool" id="context.autowidget" default="false" />
         <setting label="Hours to refresh widgets" type="slider" id="service.refresh_duration" default="2" range="0.5,0.5,12" option="float" />
-        <!-- <setting label="How many widgets to refresh" type="slider" id="service.refresh_quantity" default="4" range="1,1,16" option="int" /> -->
         
         <!-- Shortcuts -->
         <setting label="Shortcuts" type="lsep" />
         <setting label="Force Refresh Widgets" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=force)" option="close" />
-        <setting label="Clean Old References" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clean)" option="close" />
+        <!-- <setting label="Clean Old References" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clean)" option="close" /> -->
     </category>
 </settings>
 

@@ -147,11 +147,11 @@ def _tools_menu():
                             art={'icon': refresh},
                             description='Force all defined widgets to refresh.',
                             isFolder=_window == 'dialog')
-    directory.add_menu_item(title='Clean Old References',
-                            params={'mode': 'clean'},
-                            art={'icon': trash},
-                            description='Clean old references to widgets that are no longer defined.',
-                            isFolder=_window == 'dialog')
+    # directory.add_menu_item(title='Clean Old References',
+                            # params={'mode': 'clean'},
+                            # art={'icon': trash},
+                            # description='Clean old references to widgets that are no longer defined.',
+                            # isFolder=_window == 'dialog')
                             
                             
 def _manage_menu(group):
