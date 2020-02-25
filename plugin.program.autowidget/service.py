@@ -1,21 +1,30 @@
 import xbmc
 import xbmcaddon
+import xbmcgui
 
-import time
+import random
 
-from resources.lib import path_utils
+from resources.lib import process
+from resources.lib.common import utils
 
-_addon = xbmcaddon.Addon()
 _monitor = xbmc.Monitor()
-xbmc.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
+_addon = xbmcaddon.Addon()
+refresh_duration = _addon.getSettingNumber('service.refresh_duration')
 
-wait_time = int(_addon.getSetting('service.wait_time'))
+utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
+
+utils.ensure_addon_data()
+process.refresh_paths()
+
+if _addon.getSettingBool('context.autowidget'):
+        xbmcgui.Window(10000).setProperty('context.autowidget', 'True')
 
 while not _monitor.abortRequested():
+    sleep_mins = (45 + int(random.random() * 30)) * 60
     try:
-        if _monitor.waitForAbort(wait_time):
+        if _monitor.waitForAbort(sleep_mins * refresh_duration):
             break
-        
-        path_utils.inject_paths()
+            
+        process.refresh_paths(notify=True)
     except Exception as e:
-        xbmc.log('{}'.format(e), level=xbmc.LOGERROR)
+        utils.log('{}'.format(e), level=xbmc.LOGERROR)

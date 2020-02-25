@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-    <setting id="service.wait_time" type="slider" label="Seconds between refresh" option="int" range="10,5,60" default="30" />
-    <!-- <setting type="action" label="Force refresh" action="RunPlugin('plugin://plugin.program.autowidget/?mode=force')" /> -->
+    <category label="$ADDON[plugin.program.autowidget 32000]">
+        <!-- Widgets -->
+        <setting label="$ADDON[plugin.program.autowidget 32001]" type="lsep" />
+        <!-- <setting label="$ADDON[plugin.program.autowidget 32004]" type="bool" id="context.autowidget" default="false" /> -->
+        <setting label="$ADDON[plugin.program.autowidget 32005]" type="slider" id="service.refresh_duration" default="2" range="0.5,0.5,12" option="float" />
+        
+        <!-- Shortcuts -->
+        <setting label="$ADDON[plugin.program.autowidget 32002]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 32006]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=force)" option="close" />
+        <!-- <setting label="Clean Old References" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clean)" option="close" /> -->
+    </category>
 </settings>
 

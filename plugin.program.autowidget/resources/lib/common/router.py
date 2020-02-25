@@ -1,67 +1,79 @@
 import xbmc
 import xbmcplugin
 
-import six
 import sys
 
-if six.PY3:
+try:
     from urllib.parse import parse_qsl
-elif six.PY2:
+except ImportError:
     from urlparse import parse_qsl
     
+from resources.lib import menu
+from resources.lib import manage
+from resources.lib import process
+from resources.lib.common import utils
 
-class Router:
-    def __init__(self):
-        self.route = None
-        self.params = {}
-        
-    def _log_params(self, _plugin, _handle, _params):
-        self.params = dict(parse_qsl(_params))
-        
-        logstring = '{0} ({1}): '.format(_plugin, _handle)
-        for param in self.params:
-            logstring += '[ {0}: {1} ] '.format(param, self.params[param])
 
-        xbmc.log(logstring, level=xbmc.LOGNOTICE)
+def _log_params(_plugin, _handle, _params):
+    params = dict(parse_qsl(_params))
+    
+    logstring = ''
+    for param in params:
+        logstring += '[ {0}: {1} ] '.format(param, params[param])
 
-        return self.params
-        
-    def dispatch(self, _plugin, _handle, _params):
-        _handle = int(_handle)
-        self._log_params(_plugin, _handle, _params)
-        
-        mode = self.params.get('mode', '')
-        
-        if not mode:
-            from resources.lib import menu
-            menu.root()
-            
-        elif mode == 'path':
-            action = self.params.get('action', '')
-            group = self.params.get('group', '')
-            
-            if action == 'random':
-                pass
-                # path = path_utils.get_random_path(group)
-                
-        elif mode == 'group':
-            action = self.params.get('action', '')
-            
-            if action == 'add':
-                from resources.lib import path_utils
-                path_utils.add_group()
-            elif action == 'view':
-                from resources.lib import menu
-                
-                group = self.params.get('group', '')
-                menu.show_group(group)
-            elif action == 'edit':
-                from resources.lib import window
-                
-                group = self.params.get('group', '')
-                window.show_window(group)
-        elif mode == 'force':
-            from resources.lib import path_utils
-            path_utils.inject_paths()
-        
+    utils.log(logstring, level=xbmc.LOGNOTICE)
+
+    return params
+    
+def dispatch(_plugin, _handle, _params):
+    _handle = int(_handle)
+    params = _log_params(_plugin, _handle, _params)
+    is_dir = False
+
+    utils.ensure_addon_data()
+    
+    mode = params.get('mode', '')
+    action = params.get('action', '')
+    group = params.get('group', '')
+    path = params.get('path', '')
+    target = params.get('target', '')
+    label = params.get('label', '')
+    icon = params.get('icon', '')
+    
+    if not mode:
+        menu.root_menu()
+        is_dir = True
+    elif mode == 'manage':
+        if action == 'add_group':
+            manage.add_group(target)
+        elif action == 'remove_group' and group:
+            manage.remove_group(group)
+        elif action == 'add_path' and group and target:
+            manage.add_path(group, target)
+        elif action == 'add_path_to_group':
+            manage.add_path_to_group(label, path, icon)
+        elif action == 'remove_path' and group and path:
+            manage.remove_path(group, path)
+        elif action == 'shift_path' and group and path and target:
+            manage.shift_path(group, path, target)
+    elif mode == 'path':
+        if action == 'call' and path:
+            menu.call_path(path, target)
+        elif action == 'random' and group:
+            menu.random_path_menu(group)
+            is_dir = True
+        elif action == 'shortcuts' and group:
+            menu.shortcut_menu(group)
+            is_dir = True
+    elif mode == 'group' and group:
+        menu.group_menu(group)
+        is_dir = True
+    elif mode == 'force':
+        process.refresh_paths(notify=True, force=True)
+    elif mode == 'clean':
+        utils.clean_old_widgets()
+        utils.clean_old_strings()
+
+    if is_dir:
+        xbmcplugin.setContent(_handle, 'files')
         xbmcplugin.endOfDirectory(_handle)
