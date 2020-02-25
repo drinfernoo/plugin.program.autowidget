@@ -57,11 +57,11 @@ def shortcut_menu(group):
         directory.add_separator(group)
     
     for path in paths:
-        action = path['list'] or path['action']
         directory.add_menu_item(title=path['label'],
                                 params={'mode': 'path',
                                         'action': 'call',
-                                        'path': action},
+                                        'path': path['action'],
+                                        'target': 'shortcut'},
                                 art={'icon': path['thumbnail']})
     
     
@@ -80,7 +80,7 @@ def random_path_menu(group):
                                     params={'mode': 'path',
                                             'action': 'call',
                                             'path': path['path'],
-                                            'target': path['type']})
+                                            'target': 'widget'})
     if _window == 'home':
         directory.add_menu_item(title=32013,
                                 params={'mode': 'force'},
@@ -183,42 +183,20 @@ def _paths_menu(group):
     target = manage.get_group(group)['type']
     paths = manage.find_defined_paths(group)
 
-    for idx, path in enumerate(paths):
-        widget = target == 'widget'
-        path_name = path['name'] if widget else path['label']
-        
-        cm = [(_addon.getLocalizedString(32025), ('RunPlugin('
-                                                  'plugin://plugin.program.autowidget/'
-                                                  '?mode=manage'
-                                                  '&action=remove_path'
-                                                  '&group={}'
-                                                  '&path={})').format(group, path_name))]
-        if idx > 0:
-            cm.append((_addon.getLocalizedString(32026), ('RunPlugin('
-                                                          'plugin://plugin.program.autowidget/'
-                                                          '?mode=manage'
-                                                          '&action=shift_path'
-                                                          '&target=up'
-                                                          '&group={}'
-                                                          '&path={})').format(group, path_name)))
-        if idx < len(paths) - 1:
-            cm.append((_addon.getLocalizedString(32027), ('RunPlugin('
-                                                          'plugin://plugin.program.autowidget/'
-                                                          '?mode=manage'
-                                                          '&action=shift_path'
-                                                          '&target=down'
-                                                          '&group={}'
-                                                          '&path={})').format(group, path_name)))
-        
-        action = path['path'] if widget else path['list'] or path['action']
+    for idx, path in enumerate(paths):            
+        path_name = path['name'] if target == 'widget' else path['label']
+        action = path['path'] if target == 'widget' else path['action']
         
         directory.add_menu_item(title=path_name,
                                 params={'mode': 'path',
                                         'action': 'call',
                                         'path': action,
-                                        'target': path['type'] if widget else ''},
+                                        'target': target},
                                 art={'icon': path.get('thumbnail', '') or share},
-                                cm=cm)
+                                cm=_create_context_items(group,
+                                                         path_name,
+                                                         idx,
+                                                         len(paths)))
                                             
                                             
 def _actions_menu(group):
@@ -262,3 +240,28 @@ def _actions_menu(group):
         directory.add_menu_item(title=32032,
                                 art={'icon': alert},
                                 isFolder=not is_media)
+                                
+
+def _create_context_items(group, path_name, idx, length):
+    cm = [(_addon.getLocalizedString(32025), ('RunPlugin('
+                                              'plugin://plugin.program.autowidget/'
+                                              '?mode=manage'
+                                              '&action=remove_path'
+                                              '&group={}'
+                                              '&path={})').format(group, path_name))]
+    if idx > 0:
+        cm.append((_addon.getLocalizedString(32026), ('RunPlugin('
+                                                      'plugin://plugin.program.autowidget/'
+                                                      '?mode=manage'
+                                                      '&action=shift_path'
+                                                      '&target=up'
+                                                      '&group={}'
+                                                      '&path={})').format(group, path_name)))
+    if idx < length - 1:
+        cm.append((_addon.getLocalizedString(32027), ('RunPlugin('
+                                                      'plugin://plugin.program.autowidget/'
+                                                      '?mode=manage'
+                                                      '&action=shift_path'
+                                                      '&target=down'
+                                                      '&group={}'
+                                                      '&path={})').format(group, path_name)))
