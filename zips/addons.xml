@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<addons><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="1.0.0">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon></addons>
