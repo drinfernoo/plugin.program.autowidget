@@ -3,7 +3,7 @@
     <category label="$ADDON[plugin.program.autowidget 32000]">
         <!-- Widgets -->
         <setting label="$ADDON[plugin.program.autowidget 32001]" type="lsep" />
-        <setting label="$ADDON[plugin.program.autowidget 32004]" type="bool" id="context.autowidget" default="false" />
+        <!-- <setting label="$ADDON[plugin.program.autowidget 32004]" type="bool" id="context.autowidget" default="false" /> -->
         <setting label="$ADDON[plugin.program.autowidget 32005]" type="slider" id="service.refresh_duration" default="2" range="0.5,0.5,12" option="float" />
         
         <!-- Shortcuts -->
