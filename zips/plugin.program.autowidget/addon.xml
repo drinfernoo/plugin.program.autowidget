@@ -38,3 +38,8 @@
         </assets>
     </extension>
 </addon>
+   <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
