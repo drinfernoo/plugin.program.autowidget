@@ -71,7 +71,7 @@ def root_menu():
 
 
 def group_menu(group):
-    target = manage.get_group(group)['type']
+    target = manage.get_group_by_name(group)['type']
 
     directory.add_menu_item(title=32021,
                             params={'mode': 'manage', 'action': 'add_path',
@@ -87,9 +87,9 @@ def group_menu(group):
                             description=32024)
     
     # //// PATHS ////
-    if len(manage.find_defined_paths(group)) > 0:
+    paths = manage.find_defined_paths(group)
+    if paths:
         directory.add_separator(title=32009, char='/')
-        paths = manage.find_defined_paths(group)
 
         for idx, path in enumerate(paths):            
             path_name = path['name'] if target == 'widget' else path['label']
@@ -191,19 +191,19 @@ def shortcut_menu(group):
 
 def call_path(path, target):
     window = utils.get_active_window()
-            
+    
     if window == 'home':
         xbmc.executebuiltin('Dialog.Close(busydialog)')
     
     if not target:
         target = 'Videos'
     
-    if not path.startswith('ActivateWindow'):
+    if not any(i in path for i in ['ActivateWindow', 'RunPlugin']):
         if window == 'media':
             xbmc.executebuiltin('Container.Update({})'.format(path))
         elif target:
             path = 'ActivateWindow({},{},return)'.format(target, path)
-    
+            
     if window != 'dialog':
         xbmc.executebuiltin(path)
                                                             
@@ -231,3 +231,5 @@ def _create_context_items(group, path_name, idx, length):
                                                       '&target=down'
                                                       '&group={}'
                                                       '&path={})').format(group, path_name)))
+                                                      
+    return cm

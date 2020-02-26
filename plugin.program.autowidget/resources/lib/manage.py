@@ -89,7 +89,7 @@ def add_path(group, target, path_def=None):
                           
     filename = os.path.join(_addon_path, '{}.group'.format(group))
 
-    group_json = get_group(group)
+    group_json = get_group_by_name(group)
     group_json['paths'].append(path_def)
     
     with open(filename, 'w') as f:
@@ -97,53 +97,32 @@ def add_path(group, target, path_def=None):
         
     xbmc.executebuiltin('Container.Refresh()')
     
-   
-def add_path_to_group(label, path, icon, groupname=None):
-    groups = find_defined_groups();
-    names = [group['name'] for group in groups]
-    index = -1
-    if groupname:
-        index = names.index(groupname) + 2
     
-    new_widget = xbmcgui.ListItem(_addon.getLocalizedString(32015))
-    new_widget.setArt({'icon': folder_add})
-    new_shortcut = xbmcgui.ListItem(_addon.getLocalizedString(32017))
-    new_shortcut.setArt({'icon': share})
-    options = [new_widget, new_shortcut]
-    for group in groups:
-        item = xbmcgui.ListItem(group['name'])
-        item.setArt({'icon': folder_sync if group['type'] == 'widget' else folder_shortcut})
-        options.append(item)
+def add_path_from_context(groupname, labels):
+    group = get_group_by_name(groupname)
     
-    dialog = xbmcgui.Dialog()
-    choice = dialog.select('Choose a Group', options, preselect=index,
-                           useDetails=True)
+    if labels['path'].startswith('addons://user/'):
+        labels['path'].replace('user/', '')
     
-    if choice < 0:
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32034))
-    elif choice == 0:
-        name = add_group('widget')
-        add_path_to_group(label, path, icon, name)
-    elif choice == 1:
-        name = add_group('shortcut')
-        add_path_to_group(label, path, icon, name)
-    else:
-        group = groups[choice - 2]
-        
-        if group['type'] == 'shortcut':
-            path_def = {'label': label,
-                        'action': path,
-                        'list': '',
-                        'type': '',
-                        'thumbnail': icon}
-        elif group['type'] == 'widget':
-            path_def = {'widget': '',
-                        'path': path,
-                        'type': '',
-                        'target': '',
-                        'name': label}
-                        
-        add_path(group['name'], group['type'], path_def)
+    if group['type'] == 'shortcut':
+        path_def = {'label': labels['label'],
+                    'list': labels['path'],
+                    'type': 'Added from Context',
+                    'thumbnail': labels['icon']}
+        utils.log(labels['is_folder'])
+        if labels['is_folder']:
+            path_def['action'] = 'ActivateWindow({},\"{}\",return)'.format(labels['content'],
+                                                                            labels['path'])
+        else:
+            path_def['action'] = 'RunPlugin(\"{}\")'.format(labels['path'])
+    elif group['type'] == 'widget':
+        path_def = {'widget': 'Addon',
+                    'path': labels['path'],
+                    'type': labels['content'],
+                    'target': xbmc.getLocalizedString(labels['window']),
+                    'name': labels['label']}
+                    
+    add_path(groupname, group['type'], path_def)
                 
 
 def remove_path(group, path):
@@ -153,7 +132,7 @@ def remove_path(group, path):
     choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32035))
     
     if choice:
-        group_def = get_group(group)
+        group_def = get_group_by_name(group)
     
         filename = os.path.join(_addon_path, '{}.group'.format(group_def['name']))
         with open(filename, 'r') as f:
@@ -175,7 +154,7 @@ def remove_path(group, path):
 def shift_path(group, path, target):
     utils.ensure_addon_data()
     
-    group_def = get_group(group)
+    group_def = get_group_by_name(group)
     
     filename = os.path.join(_addon_path, '{}.group'.format(group_def['name']))
     with open(filename, 'r') as f:
@@ -199,7 +178,7 @@ def shift_path(group, path, target):
     xbmc.executebuiltin('Container.Refresh()'.format(group))
         
 
-def get_group(group):
+def get_group_by_name(group):
     for defined in find_defined_groups():
         if defined.get('name', '') == group:
             return defined
