@@ -71,8 +71,7 @@ def _process_shortcuts():
         return
 
     for xml in [x for x in os.listdir(_shortcuts_path)
-                if not any(i in x for i in ['.properties', '.hash',
-                                            'settings.xml', 'powermenu'])]:
+                if x.endswith('.DATA.xml') and 'powermenu' not in x]:
         xml_path = os.path.join(_shortcuts_path, xml)
         shortcuts = ElementTree.parse(xml_path).getroot()
 
