@@ -26,7 +26,13 @@
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news></news>
+        <news>
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release</news>
         <assets>
             <icon>icon.png</icon>
         </assets>
