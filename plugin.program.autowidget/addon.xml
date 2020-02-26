@@ -15,7 +15,7 @@
         <menu id="kodi.core.main">
             <item library="context.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
             </item>
         </menu>
     </extension>
