@@ -27,6 +27,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.0.3
+ - Fix shortcuts and widgets added from context menu
 1.0.2
  - Fix crash from non-XML files
 1.0.1
