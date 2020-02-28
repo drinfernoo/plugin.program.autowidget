@@ -65,7 +65,7 @@ def add_path(group, target, path_def=None):
                              'type': utils.get_skin_string('autoWidgetType-{}'.format(group)),
                              'name': label,
                              'target': utils.get_skin_string('autoWidgetTarget-{}'.format(group)),
-                             'path': path})
+                             'path': utils.get_skin_string('autoWidgetPath-{}'.format(group))})
         elif target == 'shortcut':
             action = utils.get_skin_string('autoAction-{}'.format(group))
             xbmc.executebuiltin(shortcut, wait=True)
@@ -76,7 +76,7 @@ def add_path(group, target, path_def=None):
             label = xbmcgui.Dialog().input(heading='Shortcut Label', defaultt=name)
             
             path_def.update({'label': label,
-                             'action': action,
+                             'action': utils.get_skin_string('autoAction-{}'.format(group)),
                              'list': utils.get_skin_string('autoList-{}'.format(group)),
                              'type': utils.get_skin_string('autoType-{}'.format(group)),
                              'thumbnail': utils.get_skin_string('autoThumbnail-{}'.format(group))})
