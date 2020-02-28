@@ -15,7 +15,7 @@
         <menu id="kodi.core.main">
             <item library="context.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(10000).Property(context.autowidget))</visible>
             </item>
         </menu>
     </extension>
@@ -41,7 +41,8 @@
 1.0.1
  - Fix crash from non-existent context menu setting
 1.0.0
- - First stable release</news>
+ - First stable release
+        </news>
         <assets>
             <icon>icon.png</icon>
         </assets>
