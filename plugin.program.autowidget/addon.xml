@@ -2,7 +2,7 @@
 <addon id="plugin.program.autowidget" name="AutoWidget" version="CURRENT_VERSION" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
+        <import addon="script.skinshortcuts" version="1.0.19" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -27,6 +27,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.0.5
+ - Raise required Skin Shortcuts version to  1.0.19
 1.0.4
  - Allow custom labels
  - Add removal notifications    
