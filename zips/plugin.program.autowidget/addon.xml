@@ -38,7 +38,10 @@
         </assets>
     </extension>
 </addon>
-   <assets>
+ontext menu setting
+1.0.0
+ - First stable release</news>
+        <assets>
             <icon>icon.png</icon>
         </assets>
     </extension>
