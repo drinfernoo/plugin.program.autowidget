@@ -16,8 +16,8 @@ utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
 utils.ensure_addon_data()
 process.refresh_paths()
 
-# if _addon.getSettingBool('context.autowidget'):
-        # xbmcgui.Window(10000).setProperty('context.autowidget', 'True')
+if _addon.getSettingBool('context.autowidget'):
+        xbmcgui.Window(10000).setProperty('context.autowidget', 'True')
 
 while not _monitor.abortRequested():
     sleep_mins = (45 + int(random.random() * 30)) * 60
