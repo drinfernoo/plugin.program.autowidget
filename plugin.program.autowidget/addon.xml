@@ -27,6 +27,9 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
 1.0.3
  - Fix shortcuts and widgets added from context menu
 1.0.2
