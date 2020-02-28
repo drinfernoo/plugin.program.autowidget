@@ -140,6 +140,7 @@ def remove_path(group, path):
         for path_json in paths:
             if path_json.get('name', '') == path or path_json.get('label', '') == path:
                 group_json['paths'].remove(path_json)
+                dialog.notification('AutoWidget', '{} removed.'.format(path_json['name']))
                 
         with open(filename, 'w') as f:
             f.write(json.dumps(group_json, indent=4))
@@ -247,6 +248,8 @@ def remove_group(group):
             os.remove(filepath)
         except Exception as e:
             utils.log('{}'.format(e), level=xbmc.LOGERROR)
+            
+        dialog.notification('AutoWidget', '{} removed.'.format(group))
         
         xbmc.executebuiltin('Container.Update(plugin://plugin.program.autowidget/)')
     else:
