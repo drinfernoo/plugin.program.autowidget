@@ -27,6 +27,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.0.7
+ - Fix context menu option not showing
 1.0.6
  - Fix paths not saving
 1.0.5
