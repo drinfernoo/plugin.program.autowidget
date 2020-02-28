@@ -27,6 +27,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.0.6
+ - Fix paths not saving
 1.0.5
  - Raise required Skin Shortcuts version to  1.0.19
 1.0.4
