@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.235" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.257" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -32,7 +32,19 @@
         </assets>
     </extension>
 </addon>
-claimer>
+9
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
         <assets>
             <icon>icon.png</icon>
         </assets>
