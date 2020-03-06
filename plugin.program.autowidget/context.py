@@ -62,7 +62,10 @@ if __name__ == '__main__':
               'is_folder': xbmc.getCondVisibility('Container.ListItem.IsFolder'),
               'content': 'videos',
               'window': xbmcgui.getCurrentWindowId()}
-              
+    
+    labels['label'] = xbmcgui.Dialog().input(heading='Label',
+                                             defaultt=labels['label'])
+    
     group = _group_dialog(labels['is_folder'])
     if group:
         manage.add_path_from_context(group['name'], labels)
