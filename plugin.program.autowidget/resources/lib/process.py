@@ -60,8 +60,8 @@ def _update_strings(_id, label, action):
 
     utils.log('Setting {} to {}'.format(label_string, label))
     utils.log('Setting {} to {}'.format(action_string, action))
-    xbmc.executebuiltin('Skin.SetString({},{})'.format(label_string, label))
-    xbmc.executebuiltin('Skin.SetString({},{})'.format(action_string, action))
+    utils.set_skin_string(label_string, label)
+    utils.set_skin_string(action_string, action)
 
 
 def _process_shortcuts():
