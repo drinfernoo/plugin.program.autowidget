@@ -140,7 +140,7 @@ def remove_path(group, path):
         for path_json in paths:
             if path_json.get('name', '') == path or path_json.get('label', '') == path:
                 group_json['paths'].remove(path_json)
-                dialog.notification('AutoWidget', '{} removed.'.format(path_json['name']))
+                dialog.notification('AutoWidget', '{} removed.'.format(path))
                 
         with open(filename, 'w') as f:
             f.write(json.dumps(group_json, indent=4))
