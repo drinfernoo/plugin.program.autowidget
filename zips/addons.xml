@@ -1,116 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<addons><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.158">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.148">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.90">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.144">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.106">
+<addons><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.120">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -134,1858 +23,9 @@
         <disclaimer />
         <assets>
             <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.57">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.94">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.134">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.104">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.82">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
         </assets>
     </extension>
 </addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.184">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.67">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.140">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.53">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.243">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.194">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>Add to AutoWidget</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.128">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.71">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.154">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.60">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.51">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.116">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.287">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" version="1.0.19" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(10000).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news>
-1.0.7
- - Fix context menu option not showing
-1.0.6
- - Fix paths not saving
-1.0.5
- - Raise required Skin Shortcuts version to  1.0.19
-1.0.4
- - Allow custom labels
- - Add removal notifications    
-1.0.3
- - Fix shortcuts and widgets added from context menu
-1.0.2
- - Fix crash from non-XML files
-1.0.1
- - Fix crash from non-existent context menu setting
-1.0.0
- - First stable release
-        </news>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.218">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.63">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.190">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.178">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.166">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.269">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.220">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.200">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.182">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.122">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.96">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.192">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.222">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.230">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.49">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.142">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.130">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.204">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.118">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.265">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.55">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.47">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.289">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" version="1.0.19" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(10000).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news>
-1.0.7
- - Fix context menu option not showing
-1.0.6
- - Fix paths not saving
-1.0.5
- - Raise required Skin Shortcuts version to  1.0.19
-1.0.4
- - Allow custom labels
- - Add removal notifications    
-1.0.3
- - Fix shortcuts and widgets added from context menu
-1.0.2
- - Fix crash from non-XML files
-1.0.1
- - Fix crash from non-existent context menu setting
-1.0.0
- - First stable release
-        </news>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.261">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.78">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.247">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.102">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.216">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.188">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>Add to AutoWidget</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.198">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>Add to AutoWidget</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.164">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.282">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" version="1.0.19" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(10000).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news>
-1.0.6
- - Fix paths not saving
-1.0.5
- - Raise required Skin Shortcuts version to  1.0.19
-1.0.4
- - Allow custom labels
- - Add removal notifications    
-1.0.3
- - Fix shortcuts and widgets added from context menu
-1.0.2
- - Fix crash from non-XML files
-1.0.1
- - Fix crash from non-existent context menu setting
-1.0.0
- - First stable release
-        </news>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.210">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.84">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.74">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.80">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.59">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.120">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.174">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.253">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.176">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.114">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.126">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.251">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.168">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -2045,7 +85,65 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.65">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.126">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.261">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.84">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -2072,88 +170,39 @@
             <fanart>resources/fanart.jpg</fanart>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.132">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.259">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
         <import addon="script.skinshortcuts" />
     </requires>
+    
     <extension library="main.py" point="xbmc.python.pluginsource">
         <provides>executable</provides>
     </extension>
+    
     <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
         <platform>all</platform>
         <license>LGPL-3.0</license>
-        <forum />
         <website>https://www.github.com/drinfernoo/</website>
-        <email />
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news />
-        <disclaimer />
         <assets>
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.92">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.170">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.112">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.102">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -2207,7 +256,39 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.206">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.257">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.200">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -2265,7 +346,147 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.88">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.176">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.100">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.114">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.182">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.245">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.96">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -2292,117 +513,7 @@
             <fanart>resources/fanart.jpg</fanart>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.110">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.138">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.136">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.152">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.214">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.206">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -2462,7 +573,34 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.124">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.71">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.122">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -2488,7 +626,62 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.257">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.88">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.144">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.269">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -2557,7 +750,7 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.172">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.188">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -2567,7 +760,16 @@
         <provides>executable</provides>
     </extension>
     
+    <extension library="service.py" point="xbmc.service" />
     
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>Add to AutoWidget</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
     
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
@@ -2613,7 +815,67 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.69">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.168">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.212">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.80">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -2640,7 +902,95 @@
             <fanart>resources/fanart.jpg</fanart>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.45">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.142">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.218">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.170">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.55">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -2665,6 +1015,170 @@
         <assets>
             <icon>resources/icon.png</icon>
             <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.282">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" version="1.0.19" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(10000).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news>
+1.0.6
+ - Fix paths not saving
+1.0.5
+ - Raise required Skin Shortcuts version to  1.0.19
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.154">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.134">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.249">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.178">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
         </assets>
     </extension>
 </addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.98">
@@ -2694,6 +1208,605 @@
             <fanart>resources/fanart.jpg</fanart>
         </assets>
     </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.104">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.166">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.190">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.287">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" version="1.0.19" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(10000).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news>
+1.0.7
+ - Fix context menu option not showing
+1.0.6
+ - Fix paths not saving
+1.0.5
+ - Raise required Skin Shortcuts version to  1.0.19
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.112">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.247">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.116">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.49">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.57">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.63">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.174">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.78">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.220">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.130">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.138">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.186">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.253">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.202">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>Add to AutoWidget</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.210">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.230">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
 </addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.146">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
@@ -2705,6 +1818,476 @@
     </extension>
     
     <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.265">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.53">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.291">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(10000).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news>
+1.0.7
+ - Fix context menu option not showing
+1.0.6
+ - Fix paths not saving
+1.0.5
+ - Raise required Skin Shortcuts version to  1.0.19
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.132">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.222">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.76">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.110">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.74">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.172">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.45">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.69">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.148">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.289">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" version="1.0.19" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(10000).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news>
+1.0.7
+ - Fix context menu option not showing
+1.0.6
+ - Fix paths not saving
+1.0.5
+ - Raise required Skin Shortcuts version to  1.0.19
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.65">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.194">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>Add to AutoWidget</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
     
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
@@ -2754,7 +2337,7 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.263">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.235">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -2786,7 +2369,7 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.245">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.251">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -2818,39 +2401,33 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.259">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.118">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
         <import addon="script.skinshortcuts" />
     </requires>
-    
     <extension library="main.py" point="xbmc.python.pluginsource">
         <provides>executable</provides>
     </extension>
-    
     <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
         <platform>all</platform>
         <license>LGPL-3.0</license>
+        <forum />
         <website>https://www.github.com/drinfernoo/</website>
+        <email />
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news />
+        <disclaimer />
         <assets>
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.160">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.140">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -2874,6 +2451,235 @@
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news />
         <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.128">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.204">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.86">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.214">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.82">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.59">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.106">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.243">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <website>https://www.github.com/drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
         <assets>
             <icon>icon.png</icon>
         </assets>
@@ -2906,7 +2712,7 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.76">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.47">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -2933,34 +2739,7 @@
             <fanart>resources/fanart.jpg</fanart>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.86">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    <extension library="service.py" point="xbmc.service" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB" />
-        <language />
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <forum />
-        <website>https://www.github.com/drinfernoo/</website>
-        <email />
-        <source />
-        <news />
-        <disclaimer />
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.186">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.136">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -2988,7 +2767,62 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.202">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.192">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.51">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.198">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -3025,39 +2859,7 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.235">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
-    </requires>
-    
-    <extension library="main.py" point="xbmc.python.pluginsource">
-        <provides>executable</provides>
-    </extension>
-    
-    <extension library="service.py" point="xbmc.service" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <platform>all</platform>
-        <license>LGPL-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news />
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.100">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.124">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -3083,7 +2885,62 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.212">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.160">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.67">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.216">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -3115,7 +2972,89 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.249">
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.92">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.164">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.94">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.263">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -3143,6 +3082,116 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.60">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.90">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    <extension library="service.py" point="xbmc.service" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source />
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.152">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon><addon id="plugin.program.autowidget" name="AutoWidget" provider-name="drinfernoo" version="0.0.158">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
+    </requires>
+    
+    <extension library="main.py" point="xbmc.python.pluginsource">
+        <provides>executable</provides>
+    </extension>
+    
+    <extension library="service.py" point="xbmc.service" />
+    
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB" />
+        <language />
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum />
+        <website>https://www.github.com/drinfernoo/</website>
+        <email />
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news />
+        <disclaimer />
         <assets>
             <icon>icon.png</icon>
         </assets>
