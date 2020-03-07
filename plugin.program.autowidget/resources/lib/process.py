@@ -108,7 +108,7 @@ def _process_shortcuts():
 
                 if paths:
                     path = paths.pop()
-                    _update_strings(_id, path['name'], path['path'])
+                    _update_strings(_id, path['label'], path['path'])
 
             processed += 1
 
@@ -148,7 +148,7 @@ def refresh_paths(notify=False, force=False):
 
                 if paths:
                     path = paths.pop()
-                    _update_strings(_id, path['name'], path['path'])
+                    _update_strings(_id, path['label'], path['path'])
 
     if processed > 0:
         xbmc.executebuiltin('ReloadSkin()')

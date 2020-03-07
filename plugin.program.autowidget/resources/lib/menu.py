@@ -73,11 +73,11 @@ def root_menu():
 def group_menu(group):
     target = manage.get_group_by_name(group)['type']
 
-    directory.add_menu_item(title=32021,
-                            params={'mode': 'manage', 'action': 'add_path',
-                                    'group': group, 'target': target},
-                            art={'icon': add},
-                            description=32022)
+    # directory.add_menu_item(title=32021,
+                            # params={'mode': 'manage', 'action': 'add_path',
+                                    # 'group': group, 'target': target},
+                            # art={'icon': add},
+                            # description=32022)
     
     directory.add_menu_item(title=32023,
                             params={'mode': 'manage',
@@ -91,18 +91,15 @@ def group_menu(group):
     if paths:
         directory.add_separator(title=32009, char='/')
 
-        for idx, path in enumerate(paths):            
-            path_name = path['name'] if target == 'widget' else path['label']
-            action = path['path'] if target == 'widget' else path['action']
-            
-            directory.add_menu_item(title=path_name,
+        for idx, path in enumerate(paths):
+            directory.add_menu_item(title=path['label'],
                                     params={'mode': 'path',
                                             'action': 'call',
-                                            'path': action,
-                                            'target': target},
-                                    art={'icon': path.get('thumbnail', '') or share},
+                                            'group': group,
+                                            'path': path['label']},
+                                    art={'icon': path.get('icon', '') or share},
                                     cm=_create_context_items(group,
-                                                             path_name,
+                                                             path['label'],
                                                              idx,
                                                              len(paths)))
                                                 
@@ -152,7 +149,7 @@ def random_path_menu(group):
         
             for path in paths:
                 if _window != 'home':
-                    directory.add_menu_item(title=path['name'],
+                    directory.add_menu_item(title=path['label'],
                                             params={'mode': 'path',
                                                     'action': 'call',
                                                     'path': path['path'],
@@ -184,19 +181,17 @@ def shortcut_menu(group):
         directory.add_menu_item(title=path['label'],
                                 params={'mode': 'path',
                                         'action': 'call',
-                                        'path': path['action'],
-                                        'target': 'shortcut'},
+                                        'group': group,
+                                        'path': path['label']},
                                 art={'icon': path['thumbnail']})
 
 
-def call_path(path, target):
+def call_path(group, path):
+    path_def = manage.get_path_by_name(group, path)
     window = utils.get_active_window()
     
     if window == 'home':
         xbmc.executebuiltin('Dialog.Close(busydialog)')
-    
-    if not target:
-        target = 'Videos'
     
     if not any(i in path for i in ['ActivateWindow', 'RunPlugin']):
         if window == 'media':
@@ -204,8 +199,8 @@ def call_path(path, target):
         elif target:
             path = 'ActivateWindow({},{},return)'.format(target, path)
             
-    if window != 'dialog':
-        xbmc.executebuiltin(path)
+    # if window != 'dialog':
+        # xbmc.executebuiltin(path)
                                                             
 
 def _create_context_items(group, path_name, idx, length):
