@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.49" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.158" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
         <import addon="script.skinshortcuts" />
     </requires>
+    
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>executable</provides>
     </extension>
+    
     <extension point="xbmc.service" library="service.py" />
+    
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
         <description lang="en_GB"></description>
@@ -18,17 +20,6 @@
         <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
         <email></email>
-        <source></source>
-        <news></news>
-        <disclaimer></disclaimer>
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-        </assets>
-    </extension>
-</addon>
-b.com/drinfernoo/</website>
-        <email></email>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news></news>
         <disclaimer></disclaimer>
@@ -37,6 +28,19 @@ b.com/drinfernoo/</website>
         </assets>
     </extension>
 </addon>
+.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news></news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+rsion to  1.0.19
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
 1.0.2
  - Fix crash from non-XML files
 1.0.1
@@ -46,6 +50,10 @@ b.com/drinfernoo/</website>
         </news>
         <assets>
             <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+n>icon.png</icon>
         </assets>
     </extension>
 </addon>
