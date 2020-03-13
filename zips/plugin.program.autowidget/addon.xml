@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.128" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.49" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -18,25 +18,20 @@
         <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
         <email></email>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <source></source>
         <news></news>
         <disclaimer></disclaimer>
         <assets>
-            <icon>icon.png</icon>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
         </assets>
     </extension>
 </addon>
-n.program.autowidget/</source>
+b.com/drinfernoo/</website>
+        <email></email>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news></news>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-ets>
-    </extension>
-</addon>
-claimer>
+        <disclaimer></disclaimer>
         <assets>
             <icon>icon.png</icon>
         </assets>
@@ -51,10 +46,6 @@ claimer>
         </news>
         <assets>
             <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-n>icon.png</icon>
         </assets>
     </extension>
 </addon>
