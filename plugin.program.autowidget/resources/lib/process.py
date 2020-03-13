@@ -54,14 +54,20 @@ def _save_path_details(path):
     return params
 
 
-def _update_strings(_id, label, action):
+def _update_strings(_id, path_def):
+    label = path_def['label']
+    action = path_def['path']
+    target = path_def['window']
     label_string = skin_string_pattern.format(_id, 'label')
     action_string = skin_string_pattern.format(_id, 'action')
+    target_string = skin_string_pattern.format(_id, 'target')
 
     utils.log('Setting {} to {}'.format(label_string, label))
     utils.log('Setting {} to {}'.format(action_string, action))
+    utils.log('Setting {} to {}'.format(target_string, target))
     utils.set_skin_string(label_string, label)
     utils.set_skin_string(action_string, action)
+    utils.set_skin_string(target_string, target)
 
 
 def _process_shortcuts():
@@ -101,7 +107,7 @@ def _process_shortcuts():
             label_node.text = skin_string_info_pattern.format(_id, 'label')
 
             # groups[0] = skin_string_pattern.format(_id, 'command')
-            # groups[1] = skin_string_pattern.format(_id, 'target')
+            groups[1] = skin_string_info_pattern.format(_id, 'target')
             groups[2] = skin_string_info_pattern.format(_id, 'action')
 
             action_node.text = path_replace_pattern.format(groups[0],
@@ -112,7 +118,7 @@ def _process_shortcuts():
 
                 if paths:
                     path = paths.pop()
-                    _update_strings(_id, path['label'], path['path'])
+                    _update_strings(_id, path)
 
             processed += 1
 
@@ -152,7 +158,7 @@ def refresh_paths(notify=False, force=False):
 
                 if paths:
                     path = paths.pop()
-                    _update_strings(_id, path['label'], path['path'])
+                    _update_strings(_id, path)
 
     if processed > 0:
         xbmc.executebuiltin('ReloadSkin()')
