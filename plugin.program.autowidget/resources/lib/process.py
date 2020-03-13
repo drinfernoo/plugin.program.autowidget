@@ -25,8 +25,8 @@ _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
 _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 activate_window_pattern = '(\w+)*\((\w+\)*),*(.*?\)*),*(return)*\)'
-skin_string_info_pattern = '$INFO[Skin.String(autowidget-{}-{})]'
 skin_string_pattern = 'autowidget-{}-{}'
+skin_string_info_pattern = '$INFO[Skin.String({})]'.format(skin_string_pattern)
 path_replace_pattern = '{}({})'
 
 
@@ -73,7 +73,11 @@ def _process_shortcuts():
     for xml in [x for x in os.listdir(_shortcuts_path)
                 if x.endswith('.DATA.xml') and 'powermenu' not in x]:
         xml_path = os.path.join(_shortcuts_path, xml)
-        shortcuts = ElementTree.parse(xml_path).getroot()
+        
+        try:
+            shortcuts = ElementTree.parse(xml_path).getroot()
+        except ParseError:
+            utils.log('Unable to parse: {}'.format(xml))
 
         for shortcut in shortcuts.findall('shortcut'):
             label_node = shortcut.find('label')
