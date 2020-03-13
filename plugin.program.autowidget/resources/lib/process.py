@@ -162,3 +162,5 @@ def refresh_paths(notify=False, force=False):
 
     if processed > 0:
         xbmc.executebuiltin('ReloadSkin()')
+    else:
+        xbmc.executebuiltin(xbmc.executebuiltin('UpdateLibrary(Video,UpdateWidgets,true)'))
