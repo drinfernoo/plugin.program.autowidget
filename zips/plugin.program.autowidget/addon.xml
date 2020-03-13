@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.158" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.216" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -11,31 +11,30 @@
     
     <extension point="xbmc.service" library="service.py" />
     
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB"></description>
-        <language></language>
         <platform>all</platform>
         <license>LGPL-3.0</license>
-        <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
-        <email></email>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news></news>
-        <disclaimer></disclaimer>
         <assets>
             <icon>icon.png</icon>
         </assets>
     </extension>
 </addon>
-.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news></news>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-rsion to  1.0.19
+- Fix paths not saving
+1.0.5
+ - Raise required Skin Shortcuts version to  1.0.19
 1.0.4
  - Allow custom labels
  - Add removal notifications    
@@ -50,10 +49,6 @@ rsion to  1.0.19
         </news>
         <assets>
             <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-n>icon.png</icon>
         </assets>
     </extension>
 </addon>
