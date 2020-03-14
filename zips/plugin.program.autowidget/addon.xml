@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.202" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.188" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -32,18 +32,6 @@
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news></news>
         <disclaimer></disclaimer>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-1.0.2
- - Fix crash from non-XML files
-1.0.1
- - Fix crash from non-existent context menu setting
-1.0.0
- - First stable release
-        </news>
         <assets>
             <icon>icon.png</icon>
         </assets>
