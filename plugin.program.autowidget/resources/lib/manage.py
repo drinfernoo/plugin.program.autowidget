@@ -114,6 +114,23 @@ def shift_path(group, path, target):
         f.write(json.dumps(group_json, indent=4))
         
     xbmc.executebuiltin('Container.Refresh()'.format(group))
+    
+    
+def edit_dialog(group, path):
+    utils.ensure_addon_data()
+    
+    dialog = xbmcgui.Dialog()
+    group_def = get_group_by_name(group)
+    path_def = get_path_by_name(group, path)
+    
+    options = []
+    
+    for key in path_def.keys():
+        options.append('{}: {}'.format(key, path_def[key]))
+        
+    idx = dialog.select('Edit Path', options)
+    key = options[idx].split(':')[0]
+    edit_path(group, path, key)
         
         
 def edit_path(group, path, target):

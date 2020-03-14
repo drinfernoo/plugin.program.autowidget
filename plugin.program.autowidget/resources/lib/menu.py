@@ -208,27 +208,12 @@ def _create_context_items(group, path_name, idx, length):
                                               '&action=remove_path'
                                               '&group={}'
                                               '&path={})').format(group, path_name)),
-          ('Edit Label', ('RunPlugin('
-                          'plugin://plugin.program.autowidget/'
-                          '?mode=manage'
-                          '&action=edit_path'
-                          '&group={}'
-                          '&path={}'
-                          '&target=label)').format(group, path_name)),
           ('Edit Path', ('RunPlugin('
                          'plugin://plugin.program.autowidget/'
                          '?mode=manage'
                          '&action=edit_path'
                          '&group={}'
-                         '&path={}'
-                         '&target=path)').format(group, path_name)),
-          ('Edit Icon', ('RunPlugin('
-                         'plugin://plugin.program.autowidget/'
-                         '?mode=manage'
-                         '&action=edit_path'
-                         '&group={}'
-                         '&path={}'
-                         '&target=icon)').format(group, path_name))]
+                         '&path={})').format(group, path_name))]
     if idx > 0:
         cm.append((_addon.getLocalizedString(32026), ('RunPlugin('
                                                       'plugin://plugin.program.autowidget/'
