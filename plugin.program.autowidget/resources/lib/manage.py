@@ -23,10 +23,15 @@ folder_sync = utils.get_art('folder-sync.png')
 share = utils.get_art('share.png')
 
 
-def write_path(group_def, path_def):
+def write_path(group_def, path_def, update=''):
     filename = os.path.join(_addon_path, '{}.group'.format(group_def['name']))
 
-    group_def['paths'].append(path_def)
+    if update:
+        for path in group_def['paths']:
+            if path['label'] == update:
+                group_def['paths'][group_def['paths'].index(path)] = path_def
+    else:
+        group_def['paths'].append(path_def)
 
     with open(filename, 'w') as f:
         f.write(json.dumps(group_def, indent=4))
@@ -91,18 +96,43 @@ def shift_path(group, path, target):
 
     paths = group_json['paths']
     for idx, path_json in enumerate(paths):
-        if path_json.get('name', '') == path or path_json.get('label', '') == path:
+        if path_json['label'] == path:
             if target == 'up' and idx > 0:
                 temp = paths[idx - 1]
-                group_json['paths'][idx - 1] = paths[idx]
-                group_json['paths'][idx] = temp
-            elif target == 'down' and idx < len(paths) - 1:
+                paths[idx - 1] = path_json
+                paths[idx] = temp
+            elif target == 'down' and idx < len(paths) - 1: 
                 temp = paths[idx + 1]
-                group_json['paths'][idx + 1] = paths[idx]
-                group_json['paths'][idx] = temp
+                paths[idx + 1] = path_json
+                paths[idx] = temp
+            
+            break
+                
+    group_json['paths'] = paths
             
     with open(filename, 'w') as f:
         f.write(json.dumps(group_json, indent=4))
+        
+    xbmc.executebuiltin('Container.Refresh()'.format(group))
+        
+        
+def edit_path(group, path, target):
+    utils.ensure_addon_data()
+    
+    dialog = xbmcgui.Dialog()
+    group_def = get_group_by_name(group)
+    path_def = get_path_by_name(group, path)
+    
+    if target == 'icon':
+        value = dialog.browse(2, 'Select Icon', 'files', mask='.jpg|.png',
+                              useThumbs=True, defaultt=path_def[target])
+    else:
+        value = dialog.input(heading=target,
+                                       defaultt=path_def[target])
+                                                  
+    path_def[target] = value
+        
+    write_path(group_def, path_def, update=path)
         
     xbmc.executebuiltin('Container.Refresh()'.format(group))
         

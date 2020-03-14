@@ -54,6 +54,8 @@ def dispatch(_plugin, _handle, _params):
             manage.remove_path(group, path)
         elif action == 'shift_path' and group and path and target:
             manage.shift_path(group, path, target)
+        elif action == 'edit_path' and group and path and target:
+            manage.edit_path(group, path, target)
     elif mode == 'path':
         if action == 'call' and group and path:
             menu.call_path(group, path)
