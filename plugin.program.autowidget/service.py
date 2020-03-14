@@ -13,7 +13,6 @@ refresh_duration = _addon.getSettingNumber('service.refresh_duration')
 
 utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
 
-utils.ensure_addon_data()
 process.refresh_paths()
 
 if _addon.getSettingBool('context.autowidget'):

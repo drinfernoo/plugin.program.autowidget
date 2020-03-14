@@ -56,6 +56,8 @@ def _group_dialog(is_folder, groupname=None):
 
 
 if __name__ == '__main__':
+    utils.ensure_addon_data()
+
     labels = {'label': xbmc.getInfoLabel('ListItem.Label'),
               'path': xbmc.getInfoLabel('ListItem.FolderPath'),
               'icon': xbmc.getInfoLabel('ListItem.Icon'),

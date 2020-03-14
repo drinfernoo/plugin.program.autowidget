@@ -10,6 +10,7 @@ from xml.dom import minidom
 from xml.etree import ElementTree
 
 _addon = xbmcaddon.Addon()
+_addon_id = _addon.getAddonInfo('id')
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
 _art_path = os.path.join(_addon_root, 'resources', 'media')
@@ -18,15 +19,16 @@ _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 
 def log(msg, level=xbmc.LOGDEBUG):
-    msg = '{}: {}'.format(sys.argv[0], msg)
+    msg = '{}: {}'.format(_addon_id, msg)
     xbmc.log(msg, level)
 
 
 def ensure_addon_data():
-    if not os.path.exists(_addon_path):
-        os.makedirs(_addon_path)
-    
-    
+    for path in [_addon_path, _shortcuts_path]:
+        if not os.path.exists(path):
+            os.makedirs(path)
+
+
 def set_skin_string(string, value):
     xbmc.executebuiltin('Skin.SetString({},{})'.format(string, value))
     
@@ -62,7 +64,7 @@ def prettify(elem):
 
 def parse_path(path):
     pass
-
+    
 
 # def clean_old_widgets():
     # w = 0

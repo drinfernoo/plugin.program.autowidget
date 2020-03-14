@@ -72,10 +72,7 @@ def _update_strings(_id, path_def):
 
 def _process_shortcuts():
     processed = 0
-
-    if not os.path.exists(_shortcuts_path):
-        return
-
+    
     for xml in [x for x in os.listdir(_shortcuts_path)
                 if x.endswith('.DATA.xml') and 'powermenu' not in x]:
         xml_path = os.path.join(_shortcuts_path, xml)
@@ -131,6 +128,7 @@ def _process_shortcuts():
 
 def refresh_paths(notify=False, force=False):
     processed = 0
+    utils.ensure_addon_data()
 
     if notify:
         dialog = xbmcgui.Dialog()
