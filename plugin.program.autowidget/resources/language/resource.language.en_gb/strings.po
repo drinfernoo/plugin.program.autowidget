@@ -181,3 +181,7 @@ msgstr ""
 msgctxt "#32040"
 msgid "Removal cancelled."
 msgstr ""
+
+msgctxt "#32041"
+msgid "Enable Path Refreshing Service (Requires a Reboot)"
+msgstr ""
