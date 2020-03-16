@@ -71,10 +71,19 @@ def _update_strings(_id, path_def):
     utils.set_skin_string(label_string, label)
     utils.set_skin_string(action_string, action)
     utils.set_skin_string(target_string, target)
+    
+    
+def _convert_widgets():
+    converted = _convert_shortcuts()
+    
+    if converted == 0:
+        converted = _convert_properties()
+    
+    return converted
 
 
-def _process_shortcuts():
-    processed = 0
+def _convert_shortcuts():
+    converted = 0
     
     for xml in [x for x in os.listdir(_shortcuts_path)
                 if x.endswith('.DATA.xml') and 'powermenu' not in x]:
@@ -120,17 +129,17 @@ def _process_shortcuts():
                     path = paths.pop()
                     _update_strings(_id, path)
 
-            processed += 1
+            converted += 1
 
         utils.prettify(shortcuts)
         tree = ElementTree.ElementTree(shortcuts)
         tree.write(xml_path)
 
-    return processed
+    return converted
         
         
-def _process_properties():
-    processed = 0
+def _convert_properties():
+    converted = 0
 
     if not os.path.exists(_shortcuts_path):
         return
@@ -149,11 +158,11 @@ def _process_properties():
                                             'action=random']):
                 utils.log('{}'.format(groups))
                 
-    return processed
+    return converted
 
 
 def refresh_paths(notify=False, force=False):
-    processed = 0
+    converted = 0
     utils.ensure_addon_data()
 
     if notify:
@@ -161,7 +170,7 @@ def refresh_paths(notify=False, force=False):
         dialog.notification('AutoWidget', _addon.getLocalizedString(32033))
 
     if force:
-        processed = _process_shortcuts()
+        converted = _convert_widgets()
 
     for group_def in manage.find_defined_groups():
         paths = []
@@ -184,7 +193,7 @@ def refresh_paths(notify=False, force=False):
                     path = paths.pop()
                     _update_strings(_id, path)
 
-    if processed > 0:
+    if converted > 0:
         xbmc.executebuiltin('ReloadSkin()')
     else:
         xbmc.executebuiltin('UpdateLibrary(Video,UpdateWidgets,true)')

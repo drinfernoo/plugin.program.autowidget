@@ -4,7 +4,7 @@ import xbmcgui
 
 import random
 
-from resources.lib import process
+from resources.lib import convert
 from resources.lib.common import utils
 
 _properties = ['context.autowidget']
@@ -46,7 +46,7 @@ class AutoWidgetService(xbmc.Monitor):
                     break
 
                 if self.refresh_enabled:
-                    process.refresh_paths(notify=True)
+                    convert.refresh_paths(notify=True)
                 else:
                     utils.log('+++++ AUTOWIDGET SERVICE NOT ENABLED +++++', level=xbmc.LOGNOTICE)
         except Exception as e:
