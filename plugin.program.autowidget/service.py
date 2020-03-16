@@ -7,56 +7,51 @@ import random
 from resources.lib import process
 from resources.lib.common import utils
 
-_addon = xbmcaddon.Addon()
-
-properties = ['context.autowidget']
-refresh_enabled = _addon.getSettingBool('service.refresh_enabled')
-refresh_duration = _addon.getSettingNumber('service.refresh_duration')
+_properties = ['context.autowidget']
 
 
-class PropertiesUpdater(xbmc.Monitor):
-    
+class AutoWidgetService(xbmc.Monitor):
+
     def __init__(self):
-        utils.log('+++++ STARTING AUTOWIDGET PROPERTY MONITOR +++++',
-                  level=xbmc.LOGNOTICE)
+        utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
         self._update_properties()
-    
+        self._update_widgets()
+
     def onSettingsChanged(self):
         self._update_properties()
-            
-    def _update_properties(self):
-        for property in properties:
-            self.toggle_property(property)
-            
-    def toggle_property(self, property, window=10000):
-        value = _addon.getSetting(property)
-        utils.log('{} = {}'.format(property, value))
 
-        if value == 'true':
-            xbmcgui.Window(window).setProperty(property, value)
-            utils.log('Property {} set to {} on {}'.format(property, value,
-                                                           window))
-        elif value == 'false':
-            xbmcgui.Window(window).clearProperty(property)
-            utils.log('Property {} cleared from {}'.format(property, window))
+    def _reload_settings(self):
+        self.refresh_enabled = self._addon.getSettingBool('service.refresh_enabled')
+        self.refresh_duration = self._addon.getSettingNumber('service.refresh_duration')
 
+    def _update_properties(self, window=10000):
+        self._addon = xbmcaddon.Addon()
 
-_monitor = xbmc.Monitor()
-_properties_monitor = PropertiesUpdater()
+        for property in _properties:
+            utils.log('{}: {}'.format(property, xbmcaddon.Addon().getSetting(property)))
+            if self._addon.getSetting(property) == 'true':
+                xbmcgui.Window(window).setProperty(property, 'true')
+                utils.log('Property {0} set'.format(property))
+            else:
+                xbmcgui.Window(window).clearProperty(property)
+                utils.log('Property {0} cleared'.format(property))
 
-if refresh_enabled:
-    utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
+        self._reload_settings()
 
-    process.refresh_paths()
-    while not _monitor.abortRequested():
-        sleep_mins = (45 + int(random.random() * 30)) * 60
+    def _update_widgets(self):
         try:
-            if _monitor.waitForAbort(sleep_mins * refresh_duration):
-                break
-                
-            process.refresh_paths(notify=True)
+            while not self.abortRequested():
+                delay = (45 + int(random.random() * 30)) * 60 
+                if self.waitForAbort(delay * self.refresh_duration):
+                    break
+
+                if self.refresh_enabled:
+                    process.refresh_paths(notify=True)
+                else:
+                    utils.log('+++++ AUTOWIDGET SERVICE NOT ENABLED +++++', level=xbmc.LOGNOTICE)
         except Exception as e:
             utils.log(e, level=xbmc.LOGERROR)
-else:
-    utils.log('+++++ AUTOWIDGET SERVICE NOT ENABLED +++++', level=xbmc.LOGNOTICE)
-    
+
+
+_monitor = AutoWidgetService()
+_monitor.waitForAbort()
