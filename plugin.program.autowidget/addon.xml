@@ -2,7 +2,6 @@
 <addon id="plugin.program.autowidget" name="AutoWidget" version="CURRENT_VERSION" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" version="1.0.19" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">

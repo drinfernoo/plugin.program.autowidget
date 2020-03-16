@@ -25,8 +25,8 @@ _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
 _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 
 activate_window_pattern = '(\w+)*\((\w+\)*),*(.*?\)*),*(return)*\)'
-skin_string_info_pattern = '$INFO[Skin.String(autowidget-{}-{})]'
 skin_string_pattern = 'autowidget-{}-{}'
+skin_string_info_pattern = '$INFO[Skin.String({})]'.format(skin_string_pattern)
 path_replace_pattern = '{}({})'
 
 
@@ -54,26 +54,33 @@ def _save_path_details(path):
     return params
 
 
-def _update_strings(_id, label, action):
+def _update_strings(_id, path_def):
+    label = path_def['label']
+    action = path_def['path']
+    target = path_def['window']
     label_string = skin_string_pattern.format(_id, 'label')
     action_string = skin_string_pattern.format(_id, 'action')
+    target_string = skin_string_pattern.format(_id, 'target')
 
     utils.log('Setting {} to {}'.format(label_string, label))
     utils.log('Setting {} to {}'.format(action_string, action))
-    xbmc.executebuiltin('Skin.SetString({},{})'.format(label_string, label))
-    xbmc.executebuiltin('Skin.SetString({},{})'.format(action_string, action))
+    utils.log('Setting {} to {}'.format(target_string, target))
+    utils.set_skin_string(label_string, label)
+    utils.set_skin_string(action_string, action)
+    utils.set_skin_string(target_string, target)
 
 
 def _process_shortcuts():
     processed = 0
-
-    if not os.path.exists(_shortcuts_path):
-        return
-
+    
     for xml in [x for x in os.listdir(_shortcuts_path)
                 if x.endswith('.DATA.xml') and 'powermenu' not in x]:
         xml_path = os.path.join(_shortcuts_path, xml)
-        shortcuts = ElementTree.parse(xml_path).getroot()
+        
+        try:
+            shortcuts = ElementTree.parse(xml_path).getroot()
+        except ParseError:
+            utils.log('Unable to parse: {}'.format(xml))
 
         for shortcut in shortcuts.findall('shortcut'):
             label_node = shortcut.find('label')
@@ -97,7 +104,7 @@ def _process_shortcuts():
             label_node.text = skin_string_info_pattern.format(_id, 'label')
 
             # groups[0] = skin_string_pattern.format(_id, 'command')
-            # groups[1] = skin_string_pattern.format(_id, 'target')
+            groups[1] = skin_string_info_pattern.format(_id, 'target')
             groups[2] = skin_string_info_pattern.format(_id, 'action')
 
             action_node.text = path_replace_pattern.format(groups[0],
@@ -108,7 +115,7 @@ def _process_shortcuts():
 
                 if paths:
                     path = paths.pop()
-                    _update_strings(_id, path['name'], path['path'])
+                    _update_strings(_id, path)
 
             processed += 1
 
@@ -121,6 +128,7 @@ def _process_shortcuts():
 
 def refresh_paths(notify=False, force=False):
     processed = 0
+    utils.ensure_addon_data()
 
     if notify:
         dialog = xbmcgui.Dialog()
@@ -148,7 +156,9 @@ def refresh_paths(notify=False, force=False):
 
                 if paths:
                     path = paths.pop()
-                    _update_strings(_id, path['name'], path['path'])
+                    _update_strings(_id, path)
 
     if processed > 0:
         xbmc.executebuiltin('ReloadSkin()')
+    else:
+        xbmc.executebuiltin('UpdateLibrary(Video,UpdateWidgets,true)')
