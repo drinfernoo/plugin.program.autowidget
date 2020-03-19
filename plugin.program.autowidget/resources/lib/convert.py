@@ -31,6 +31,7 @@ activate_window_pattern = '(\w+)*\((\w+\)*),*(.*?\)*),*(return)*\)'
 skin_string_pattern = 'autowidget-{}-{}'
 skin_string_info_pattern = '$INFO[Skin.String({})]'.format(skin_string_pattern)
 path_replace_pattern = '{}({})'
+widget_param_pattern = '^(?:\w+)(\W\w+)?$'
 
 
 def _get_random_paths(group, force=False, change_sec=3600):
@@ -74,10 +75,7 @@ def _update_strings(_id, path_def):
     
     
 def _convert_widgets():
-    converted = _convert_shortcuts()
-    
-    if converted == 0:
-        converted = _convert_properties()
+    converted = _convert_shortcuts() + _convert_properties()
     
     return converted
 
@@ -122,13 +120,6 @@ def _convert_shortcuts():
             action_node.text = path_replace_pattern.format(groups[0],
                                                            ','.join(groups[1:]))
 
-            if details['action'] == 'random':
-                paths = _get_random_paths(details['group'], force=True)
-
-                if paths:
-                    path = paths.pop()
-                    _update_strings(_id, path)
-
             converted += 1
 
         utils.prettify(shortcuts)
@@ -141,23 +132,43 @@ def _convert_shortcuts():
 def _convert_properties():
     converted = 0
 
-    if not os.path.exists(_shortcuts_path):
-        return
-        
     props_path = os.path.join(_shortcuts_path,
                               '{}.properties'.format(_skin_name))
     with open(props_path, 'r') as f:
-        props = ast.literal_eval(f.read())
-        
+        content = ast.literal_eval(f.read())
+    
+    props = [x for x in content if all(i in x[3]
+                                       for i in ['plugin.program.autowidget',
+                                                 'mode=path', 'action=random'])]
     for prop in props:
-        match = re.search(activate_window_pattern, prop[3])
-        if match:
-            groups = match.groups()
-            if all(i in groups[2] for i in ['plugin.program.autowidget',
-                                            'mode=path',
-                                            'action=random']):
-                utils.log('{}'.format(groups))
-                
+        prop_index = content.index(prop)
+        suffix = re.search(widget_param_pattern, prop[2])
+        if not suffix:
+            continue
+            
+        details = _save_path_details(prop[3])
+        _id = details['id']
+        prop[3] = skin_string_info_pattern.format(_id, 'action')
+        content[prop_index] = prop
+        
+        params = [x for x in content if x[:2] == prop[:2]
+                  and re.search(widget_param_pattern,
+                                x[2]).groups() == suffix.groups()]
+        for param in params:
+            param_index = content.index(param)
+            norm = param[2].lower()
+            if 'name' in norm and not 'sort' in norm:
+                param[3] = skin_string_info_pattern.format(_id, 'label')
+            elif 'target' in norm:
+                param[3] = skin_string_info_pattern.format(_id, 'target')
+            
+            content[param_index] = param
+        
+        converted += 1
+        
+    with open(props_path, 'w') as f:
+        f.write('{}'.format(content))
+        
     return converted
 
 
@@ -195,5 +206,3 @@ def refresh_paths(notify=False, force=False):
 
     if converted > 0:
         xbmc.executebuiltin('ReloadSkin()')
-    else:
-        xbmc.executebuiltin('UpdateLibrary(Video,UpdateWidgets,true)')
