@@ -1,13 +1,7 @@
 # AutoWidget
 
 AutoWidget is a program add-on for Kodi, designed to give a more dynamic
-and interesting experience to using skin widgets. It relies on Skin Shortcuts
-to create groups of widget and shortcut paths, which are cycled and displayed
-automatically at runtime.
-
-AutoWidget **requires** v1.0.19 of Skin Shortcuts at minimum to function
-correctly. Be advised, you **must** install [Marcelveldt's BETA Repository](https://github.com/kodi-community-addons/repository.marcelveldt) prior
-to istalling AutoWidget, or it **will not** install.
+and interesting experience to using skin widgets. 
 
 ## Steps to Install
 
