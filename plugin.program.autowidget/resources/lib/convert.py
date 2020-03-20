@@ -153,7 +153,8 @@ def _convert_properties():
         
         params = [x for x in content if x[:2] == prop[:2]
                   and re.search(widget_param_pattern,
-                                x[2]).groups() == suffix.groups()]
+                                x[2]) and re.search(widget_param_pattern,
+                                                    x[2]).groups() == suffix.groups()]
         for param in params:
             param_index = content.index(param)
             norm = param[2].lower()
