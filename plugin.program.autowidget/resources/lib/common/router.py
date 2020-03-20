@@ -10,7 +10,7 @@ except ImportError:
     
 from resources.lib import menu
 from resources.lib import manage
-from resources.lib import process
+from resources.lib import convert
 from resources.lib.common import utils
 
 
@@ -72,7 +72,7 @@ def dispatch(_plugin, _handle, _params):
         menu.group_menu(group)
         is_dir = True
     elif mode == 'force':
-        process.refresh_paths(notify=True, force=True)
+        convert.refresh_paths(notify=True, force=True)
     elif mode == 'clean':
         utils.clean_old_widgets()
         utils.clean_old_strings()
