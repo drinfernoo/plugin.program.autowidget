@@ -35,11 +35,11 @@ msgid "Add to AutoWidget Group"
 msgstr ""
 
 msgctxt "#32004"
-msgid "Show 'Add to AutoWidget Group' on Context Menu (Requires a Reboot)"
+msgid "Show 'Add to AutoWidget Group' on Context Menu"
 msgstr ""
 
 msgctxt "#32005"
-msgid "Hours to refresh widgets"
+msgid "Hours between widget refreshes"
 msgstr ""
 
 msgctxt "#32006"
@@ -180,4 +180,8 @@ msgstr ""
 
 msgctxt "#32040"
 msgid "Removal cancelled."
+msgstr ""
+
+msgctxt "#32041"
+msgid "Enable Path Refreshing Service"
 msgstr ""

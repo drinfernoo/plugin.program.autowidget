@@ -56,13 +56,15 @@ def _group_dialog(is_folder, groupname=None):
 
 
 if __name__ == '__main__':
+    utils.ensure_addon_data()
+
     labels = {'label': xbmc.getInfoLabel('ListItem.Label'),
               'path': xbmc.getInfoLabel('ListItem.FolderPath'),
               'icon': xbmc.getInfoLabel('ListItem.Icon'),
               'is_folder': xbmc.getCondVisibility('Container.ListItem.IsFolder'),
-              'content': 'videos',
+              'content': xbmc.getInfoLabel('Container.Content'),
               'window': xbmcgui.getCurrentWindowId()}
-              
+    
     group = _group_dialog(labels['is_folder'])
     if group:
-        manage.add_path_from_context(group['name'], labels)
+        manage.add_path(group, labels)

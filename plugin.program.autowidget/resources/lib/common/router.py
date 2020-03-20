@@ -10,7 +10,7 @@ except ImportError:
     
 from resources.lib import menu
 from resources.lib import manage
-from resources.lib import process
+from resources.lib import convert
 from resources.lib.common import utils
 
 
@@ -50,15 +50,18 @@ def dispatch(_plugin, _handle, _params):
             manage.remove_group(group)
         elif action == 'add_path' and group and target:
             manage.add_path(group, target)
-        elif action == 'add_path_to_group':
-            manage.add_path_to_group(label, path, icon)
         elif action == 'remove_path' and group and path:
             manage.remove_path(group, path)
         elif action == 'shift_path' and group and path and target:
             manage.shift_path(group, path, target)
+        elif action == 'edit_path':
+            if group and path and target:
+                manage.edit_path(group, path, target)
+            elif group and path:
+                manage.edit_dialog(group, path)
     elif mode == 'path':
-        if action == 'call' and path:
-            menu.call_path(path, target)
+        if action == 'call' and group and path:
+            menu.call_path(group, path)
         elif action == 'random' and group:
             menu.random_path_menu(group)
             is_dir = True
@@ -69,7 +72,7 @@ def dispatch(_plugin, _handle, _params):
         menu.group_menu(group)
         is_dir = True
     elif mode == 'force':
-        process.refresh_paths(notify=True, force=True)
+        convert.refresh_paths(notify=True, force=True)
     elif mode == 'clean':
         utils.clean_old_widgets()
         utils.clean_old_strings()
