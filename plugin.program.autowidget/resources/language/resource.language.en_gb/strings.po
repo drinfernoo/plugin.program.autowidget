@@ -185,3 +185,7 @@ msgstr ""
 msgctxt "#32041"
 msgid "Enable Path Refreshing Service"
 msgstr ""
+
+msgctxt "#32042"
+msgid "Show 'Refreshing Paths' Notification"
+msgstr ""

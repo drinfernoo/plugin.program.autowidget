@@ -6,6 +6,7 @@
         <setting label="$ADDON[plugin.program.autowidget 32004]" type="bool" id="context.autowidget" default="true" />
         <setting label="$ADDON[plugin.program.autowidget 32041]" type="bool" id="service.refresh_enabled" default="true" />
         <setting label="$ADDON[plugin.program.autowidget 32005]" type="slider" id="service.refresh_duration" default="2" range="0.5,0.5,12" option="float" visible="eq(-1,true)" />
+        <setting label="$ADDON[plugin.program.autowidget 32042]" type="bool" id="service.refresh_notification" default="true" />
         
         <!-- Shortcuts -->
         <setting label="$ADDON[plugin.program.autowidget 32002]" type="lsep" />

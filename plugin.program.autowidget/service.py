@@ -23,6 +23,7 @@ class AutoWidgetService(xbmc.Monitor):
     def _reload_settings(self):
         self.refresh_enabled = self._addon.getSettingBool('service.refresh_enabled')
         self.refresh_duration = self._addon.getSettingNumber('service.refresh_duration')
+        self.refresh_notification = self._addon.getSettingBool('service.refresh_notification')
 
     def _update_properties(self, window=10000):
         self._addon = xbmcaddon.Addon()
@@ -46,7 +47,7 @@ class AutoWidgetService(xbmc.Monitor):
                     break
 
                 if self.refresh_enabled:
-                    convert.refresh_paths(notify=True)
+                    convert.refresh_paths(notify=self.refresh_notification)
                 else:
                     utils.log('+++++ AUTOWIDGET SERVICE NOT ENABLED +++++', level=xbmc.LOGNOTICE)
         except Exception as e:
