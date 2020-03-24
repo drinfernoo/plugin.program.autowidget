@@ -26,6 +26,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.1.1
+ - Add setting to disable notification
 1.1.0
  - Remove Skin Shortcuts dependency
  - Expand context menu options
