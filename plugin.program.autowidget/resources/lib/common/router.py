@@ -29,6 +29,7 @@ def dispatch(_plugin, _handle, _params):
     _handle = int(_handle)
     params = _log_params(_plugin, _handle, _params)
     is_dir = False
+    is_type = 'files'
 
     utils.ensure_addon_data()
     
@@ -64,9 +65,11 @@ def dispatch(_plugin, _handle, _params):
             menu.call_path(group, path)
         elif action == 'random' and group:
             menu.random_path_menu(group)
+            is_type = 'videos'
             is_dir = True
         elif action == 'shortcuts' and group:
             menu.shortcut_menu(group)
+            is_type = 'videos'
             is_dir = True
     elif mode == 'group' and group:
         menu.group_menu(group)
@@ -78,5 +81,5 @@ def dispatch(_plugin, _handle, _params):
         utils.clean_old_strings()
 
     if is_dir:
-        xbmcplugin.setContent(_handle, 'files')
+        xbmcplugin.setContent(_handle, is_type)
         xbmcplugin.endOfDirectory(_handle)
