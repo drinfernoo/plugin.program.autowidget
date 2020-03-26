@@ -97,7 +97,7 @@ def group_menu(group):
                                             'action': 'call',
                                             'group': group,
                                             'path': path['label']},
-                                    art={'icon': path.get('icon', '') or share},
+                                    art=path['art'],
                                     cm=_create_context_items(group,
                                                              path['label'],
                                                              idx,
@@ -184,7 +184,7 @@ def shortcut_menu(group):
                                         'action': 'call',
                                         'group': group,
                                         'path': path['label']},
-                                art={'icon': path['icon']})
+                                art=path['art'])
 
 
 def call_path(group, path):

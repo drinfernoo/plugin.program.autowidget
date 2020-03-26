@@ -23,7 +23,7 @@ from resources.lib.common import utils
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
-_shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
+_shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile')) if _shortcuts else None
 _skin = xbmc.translatePath('special://skin/')
 _skin_name = os.path.basename(os.path.normpath(_skin))
 
@@ -83,6 +83,9 @@ def _convert_widgets():
 def _convert_shortcuts():
     converted = 0
     
+    if not _shortcuts_path:
+        return converted
+    
     for xml in [x for x in os.listdir(_shortcuts_path)
                 if x.endswith('.DATA.xml') and 'powermenu' not in x]:
         xml_path = os.path.join(_shortcuts_path, xml)
@@ -131,6 +134,9 @@ def _convert_shortcuts():
         
 def _convert_properties():
     converted = 0
+
+    if not _shortcuts_path:
+        return converted
 
     props_path = os.path.join(_shortcuts_path,
                               '{}.properties'.format(_skin_name))

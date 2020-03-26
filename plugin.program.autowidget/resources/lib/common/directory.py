@@ -58,7 +58,7 @@ def add_menu_item(title, params=None, description='', cm=None, art=None,
     if isinstance(description, int):
         description = _addon.getLocalizedString(description)
     
-    def_art = {'icon': '', 'fanart': ''}
+    def_art = {}
     if art:
         def_art.update(art)
     

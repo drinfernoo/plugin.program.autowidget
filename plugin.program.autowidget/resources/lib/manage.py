@@ -41,10 +41,14 @@ def add_path(group_def, labels):
     target = 'folder' if labels['is_folder'] else group_def['type']
     window = xbmc.getLocalizedString(labels['window'])
     
+    art = {'icon': labels['icon']}
+    art.update({i: '' for i in ['thumb', 'poster', 'fanart', 'landscape',
+                                'banner', 'clearlogo', 'clearart']})
+    
     path_def = {'type': labels['content'],
                 'path': labels['path'],
                 'label': labels['label'],
-                'icon': labels['icon'],
+                'art': art,
                 'target': target,
                 'window': window}
 
@@ -129,6 +133,9 @@ def edit_dialog(group, path):
         options.append('{}: {}'.format(key, path_def[key]))
         
     idx = dialog.select('Edit Path', options)
+    if idx < 0:
+        return
+    
     key = options[idx].split(':')[0]
     edit_path(group, path, key)
         
@@ -140,14 +147,29 @@ def edit_path(group, path, target):
     group_def = get_group_by_name(group)
     path_def = get_path_by_name(group, path)
     
-    if target == 'icon':
-        value = dialog.browse(2, 'Select Icon', 'files', mask='.jpg|.png',
-                              useThumbs=True, defaultt=path_def[target])
+    if target == 'art':
+        names = []
+        types = []
+        for art in path_def['art'].keys():
+            item = xbmcgui.ListItem('{}: {}'.format(art, path_def['art'][art]))
+            item.setArt({'icon': path_def['art'][art]})
+            names.append(art)
+            types.append(item)
+    
+        idx = dialog.select('Select Art Type', types, useDetails=True)
+        if idx < 0:
+            return
+            
+        name = names[idx]
+            
+        value = dialog.browse(2, 'Select {}'.format(name.capitalize()),
+                              'files', mask='.jpg|.png', useThumbs=True,
+                              defaultt=path_def['art'][name])
+        path_def['art'][name] = value
     else:
-        value = dialog.input(heading=target,
-                                       defaultt=path_def[target])
-                                                  
-    path_def[target] = value
+        value = dialog.input(heading=target.capitalize(),
+                             defaultt=path_def[target])
+        path_def[target] = value
         
     write_path(group_def, path_def, update=path)
         
