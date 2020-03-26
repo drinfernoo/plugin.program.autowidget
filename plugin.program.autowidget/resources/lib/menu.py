@@ -184,10 +184,8 @@ def shortcut_menu(group):
 
 def call_path(group, path):
     path_def = manage.get_path_by_name(group, path)
-    window = utils.get_active_window()
     
-    if window == 'home':
-        xbmc.executebuiltin('Dialog.Close(busydialog)')
+    xbmc.executebuiltin('Dialog.Close(busydialog)')
         
     if path_def['target'] == 'shortcut':
         xbmc.executebuiltin('RunPlugin({})'.format(path_def['path']))
