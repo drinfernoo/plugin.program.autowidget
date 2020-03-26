@@ -46,18 +46,26 @@ def root_menu():
             group_name = group['name']
             _type = group['type']
             
+            cm = [(_addon.getLocalizedString(32023),
+                  ('RunPlugin('
+                   'plugin://plugin.program.autowidget/'
+                   '?mode=manage'
+                   '&action=remove_group'
+                   '&group={})').format(group_name)),
+                  ('Rename Group',
+                  ('RunPlugin('
+                   'plugin://plugin.program.autowidget/'
+                   '?mode=manage'
+                   '&action=rename_group'
+                   '&group={})').format(group_name))]
+            
             directory.add_menu_item(title=group_name.capitalize(),
                                     params={'mode': 'group',
                                             'group': group_name},
                                     description=_addon.getLocalizedString(32019)
                                                 .format(group_name),
                                     art={'icon': folder_shortcut if _type == 'shortcut' else folder_sync},
-                                    cm=[(_addon.getLocalizedString(32023),
-                                        ('RunPlugin('
-                                         'plugin://plugin.program.autowidget/'
-                                         '?mode=manage'
-                                         '&action=remove_group'
-                                         '&group={})').format(group_name))],
+                                    cm=cm,
                                     isFolder=True)
 
     # //// TOOLS ////
@@ -72,19 +80,6 @@ def root_menu():
 
 def group_menu(group):
     target = manage.get_group_by_name(group)['type']
-
-    # directory.add_menu_item(title=32021,
-                            # params={'mode': 'manage', 'action': 'add_path',
-                                    # 'group': group, 'target': target},
-                            # art={'icon': add},
-                            # description=32022)
-    
-    directory.add_menu_item(title=32023,
-                            params={'mode': 'manage',
-                                    'action': 'remove_group',
-                                    'group': group},
-                            art={'icon': remove},
-                            description=32024)
     
     # //// PATHS ////
     paths = manage.find_defined_paths(group)
