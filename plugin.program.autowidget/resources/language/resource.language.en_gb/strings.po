@@ -151,7 +151,7 @@ msgid "No AutoWidgets have been defined for this group."
 msgstr ""
 
 msgctxt "#32033"
-msgid "Refreshing AutoWidgets"
+msgid "Refreshing widgets..."
 msgstr ""
 
 msgctxt "#32034"
