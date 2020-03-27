@@ -11,7 +11,6 @@ add = utils.get_art('add.png')
 alert = utils.get_art('alert.png')
 folder = utils.get_art('folder.png')
 folder_add = utils.get_art('folder-add.png')
-folder_remove = utils.get_art('folder-remove.png')
 folder_shortcut = utils.get_art('folder-shortcut.png')
 folder_sync = utils.get_art('folder-sync.png')
 refresh = utils.get_art('refresh.png')
@@ -19,7 +18,6 @@ remove = utils.get_art('remove.png')
 share = utils.get_art('share.png')
 shuffle = utils.get_art('shuffle.png')
 sync = utils.get_art('sync.png')
-trash = utils.get_art('trash.png')
 unpack = utils.get_art('unpack.png')
 
 _addon = xbmcaddon.Addon()
@@ -29,13 +27,13 @@ def root_menu():
     directory.add_menu_item(title=32015,
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'widget'},
-                            art={'icon': folder_add},
+                            art=folder_add,
                             description=32016)
                             
     directory.add_menu_item(title=32017,
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'shortcut'},
-                            art={'icon': share},
+                            art=folder_shortcut,
                             description=32018)
                             
     if len(manage.find_defined_groups()) > 0:
@@ -64,7 +62,7 @@ def root_menu():
                                             'group': group_name},
                                     description=_addon.getLocalizedString(32019)
                                                 .format(group_name),
-                                    art={'icon': folder_shortcut if _type == 'shortcut' else folder_sync},
+                                    art=folder_shortcut if _type == 'shortcut' else folder_sync,
                                     cm=cm,
                                     isFolder=True)
 
@@ -73,7 +71,7 @@ def root_menu():
 
     directory.add_menu_item(title=32006,
                             params={'mode': 'force'},
-                            art={'icon': refresh},
+                            art=refresh,
                             description=32020,
                             isFolder=False)
 
@@ -111,13 +109,13 @@ def group_menu(group):
     if len(paths) > 0:
         if is_widget:
             title = _addon.getLocalizedString(32028).format(groupname)
-            art = {'icon': shuffle}
+            art = shuffle
             description = _addon.getLocalizedString(32029).format(groupname)
             
             params.update({'action': 'random'})
         elif is_shortcut:
             title = _addon.getLocalizedString(32030).format(groupname)
-            art = {'icon': share}
+            art = share
             description = _addon.getLocalizedString(32031).format(groupname)
             params.update({'action': 'shortcuts'})
         
@@ -128,7 +126,7 @@ def group_menu(group):
                                 isFolder=True)
     else:
         directory.add_menu_item(title=32032,
-                                art={'icon': alert},
+                                art=alert,
                                 isFolder=True)
 
 
@@ -139,7 +137,7 @@ def random_path_menu(group):
     if len(paths) > 0:
         if _window != 'home':
             directory.add_menu_item(title=32012,
-                                    art={'icon': folder_sync})
+                                    art=folder_sync)
             directory.add_separator(group, char='/')
         
             for path in paths:
@@ -149,18 +147,16 @@ def random_path_menu(group):
                                                     'action': 'call',
                                                     'group': group,
                                                     'path': path['label'],
-                                                    'target': 'widget'})
+                                                    'target': 'widget'},
+                                            art=path['art'])
         else:
             directory.add_menu_item(title=32013,
                                     params={'mode': 'force'},
-                                    art={'icon': unpack,
-                                         'thumb': unpack,
-                                         'banner': unpack,
-                                         'poster': unpack},
+                                    art=unpack,
                                     description=32014)
     else:
         directory.add_menu_item(title=32032,
-                                art={'icon': alert},
+                                art=alert,
                                 isFolder=True)
                                 
     
@@ -170,7 +166,7 @@ def shortcut_menu(group):
     
     if len(paths) > 0 and _window != 'home':
         directory.add_menu_item(title=32011,
-                                art={'icon': folder_shortcut})
+                                art=folder_shortcut)
         directory.add_separator(group, char='/')
     
     for path in paths:
@@ -188,10 +184,20 @@ def call_path(group, path):
     xbmc.executebuiltin('Dialog.Close(busydialog)')
         
     if path_def['target'] == 'shortcut':
-        xbmc.executebuiltin('RunPlugin({})'.format(path_def['path']))
-    else:
+        if path_def['is_folder'] == 0:
+            if path_def['type'] == 'addons':
+                xbmc.executebuiltin('ActivateWindow({},{},return)'.format(path_def['window'],
+                                                                          path_def['path']))
+            else:
+                xbmc.executebuiltin('RunPlugin({})'.format(path_def['path']))
+        else:
+            xbmc.executebuiltin('ActivateWindow({},{},return)'.format(path_def['window'],
+                                                                      path_def['path']))
+    elif path_def['target'] == 'widget':
         xbmc.executebuiltin('ActivateWindow({},{},return)'.format(path_def['window'],
-                                                                 path_def['path']))
+                                                                  path_def['path']))
+    elif path_def['target'] == 'settings':
+        xbmc.executebuiltin('Addon.OpenSettings({})'.format(path_def['path'].replace('plugin://', '')))
 
 
 def _create_context_items(group, path_name, idx, length):

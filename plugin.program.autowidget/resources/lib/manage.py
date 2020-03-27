@@ -2,10 +2,8 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
-import ast
 import json
 import os
-import time
 
 try:
     from urllib.parse import parse_qsl
@@ -21,6 +19,7 @@ folder_add = utils.get_art('folder-add.png')
 folder_shortcut = utils.get_art('folder-shortcut.png')
 folder_sync = utils.get_art('folder-sync.png')
 share = utils.get_art('share.png')
+folder_settings = utils.get_art('folder-settings.png')
 
 
 def write_path(group_def, path_def=None, update=''):
@@ -38,19 +37,13 @@ def write_path(group_def, path_def=None, update=''):
     
     
 def add_path(group_def, labels):
-    target = 'folder' if labels['is_folder'] else group_def['type']
-    window = xbmc.getLocalizedString(labels['window'])
-    
-    art = {'icon': labels['icon']}
-    art.update({i: '' for i in ['thumb', 'poster', 'fanart', 'landscape',
-                                'banner', 'clearlogo', 'clearart']})
-    
     path_def = {'type': labels['content'],
-                'path': labels['path'],
+                'path': labels['path'].replace('addons://user/', 'plugin://'),
                 'label': labels['label'],
-                'art': art,
-                'target': target,
-                'window': window}
+                'art': labels['art'],
+                'target': labels['target'],
+                'window': labels['window'],
+                'is_folder': labels['is_folder']}
 
     if group_def['type'] == 'shortcut':
         path_def['label'] = xbmcgui.Dialog().input(heading='Shortcut Label',
@@ -129,8 +122,13 @@ def edit_dialog(group, path):
     
     options = []
     
-    for key in path_def.keys():
-        options.append('{}: {}'.format(key, path_def[key]))
+    for key in sorted(path_def.keys()):
+        if key == 'art':
+            art = path_def['art']
+            arts = ['[COLOR {}]{}[/COLOR]'.format('firebrick' if art[i] == '' else 'lawngreen', i.capitalize()) for i in sorted(art.keys())]
+            options.append('{}: {}'.format(key, ' / '.join(arts)))
+        else:
+            options.append('{}: {}'.format(key, path_def[key]))
         
     idx = dialog.select('Edit Path', options)
     if idx < 0:
@@ -150,7 +148,7 @@ def edit_path(group, path, target):
     if target == 'art':
         names = []
         types = []
-        for art in path_def['art'].keys():
+        for art in sorted(path_def['art'].keys()):
             item = xbmcgui.ListItem('{}: {}'.format(art, path_def['art'][art]))
             item.setArt({'icon': path_def['art'][art]})
             names.append(art)
@@ -204,7 +202,7 @@ def get_path_by_name(group, path):
             return defined
     
     
-def find_defined_groups():
+def find_defined_groups(_type=''):
     groups = []
     
     for filename in [x for x in os.listdir(_addon_path) if x.endswith('.group')]:
@@ -213,7 +211,11 @@ def find_defined_groups():
         with open(path, 'r') as f:
             group_json = json.loads(f.read())
         
-        groups.append(group_json)
+        if _type:
+            if group_json['type'] == _type:
+                groups.append(group_json)
+        else:
+            groups.append(group_json)
 
     return groups
     
@@ -274,3 +276,75 @@ def remove_group(group, over=False):
         xbmc.executebuiltin('Container.Update(plugin://plugin.program.autowidget/)')
     else:
         dialog.notification('AutoWidget', _addon.getLocalizedString(32040))
+
+
+def add_as(path, is_folder):
+    types = ['Shortcut', 'Widget', 'Settings']
+    
+    if is_folder:
+        types = types[:2]
+    else:
+        if path.startswith('addons://user'):
+            pass
+        else:
+            types = [types[0]]
+
+    options = []
+    for type in types:
+        li = xbmcgui.ListItem(type)
+        
+        icon = ''
+        if type == 'Shortcut':
+            icon = folder_shortcut
+        elif type == 'Widget':
+            icon = folder_sync
+        elif type == 'Settings':
+            icon = folder_settings
+            
+        li.setArt(icon)
+        options.append(li)
+    
+    dialog = xbmcgui.Dialog()
+    idx = dialog.select('Add as', options, useDetails=True)
+    
+    return types[idx].lower()
+
+
+def group_dialog(_type, groupname=None):
+    _type = 'shortcut' if _type == 'settings' else _type
+    groups = manage.find_defined_groups(_type)
+    names = [group['name'] for group in groups]
+    
+    index = -1
+    options = []
+    offset = 1
+    
+    if _type == 'widget':
+        new_widget = xbmcgui.ListItem(_addon.getLocalizedString(32015))
+        new_widget.setArt(folder_add)
+        options.append(new_widget)
+    else:
+        new_shortcut = xbmcgui.ListItem(_addon.getLocalizedString(32017))
+        new_shortcut.setArt(share)
+        options.append(new_shortcut)
+        
+    if groupname:
+        index = names.index(groupname) + 1
+    
+    for group in groups:
+        item = xbmcgui.ListItem(group['name'])
+        item.setArt(folder_sync if group['type'] == 'widget' else folder_shortcut)
+        options.append(item)
+    
+    dialog = xbmcgui.Dialog()
+    choice = dialog.select('Choose a Group', options, preselect=index,
+                           useDetails=True)
+    
+    if choice < 0:
+        dialog.notification('AutoWidget', _addon.getLocalizedString(32034))
+    elif (choice, _type) == (0, 'widget'):
+        return _group_dialog(_type, manage.add_group('widget'))
+    elif choice == 0:
+        return _group_dialog(_type, manage.add_group('shortcut'))
+    else:
+        return groups[choice - offset]
