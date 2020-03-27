@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.339" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.53" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.skinshortcuts" />
     </requires>
-    
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>executable</provides>
     </extension>
-    
     <extension point="xbmc.service" library="service.py" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(10000).Property(context.autowidget))</visible>
-            </item>
-        </menu>
-    </extension>
-    
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB"></description>
+        <language></language>
         <platform>all</platform>
         <license>LGPL-3.0</license>
+        <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <email></email>
+        <source></source>
+        <news></news>
+        <disclaimer></disclaimer>
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>
+widget/</source>
         <news>
 1.1.2
  - Add art editing for paths
