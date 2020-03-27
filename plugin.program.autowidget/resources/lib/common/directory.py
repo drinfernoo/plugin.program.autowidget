@@ -30,9 +30,9 @@ def add_separator(title='', char='-'):
         edge = char * int(40 - split)
         add_menu_item(title='{0} {1} {0}'.format(edge,
                                                  string.capwords(title)),
-                      art={'icon': sync})
+                      art=sync)
     else:
-        add_menu_item(title=char * 80, art={'icon': sync})
+        add_menu_item(title=char * 80, art=sync)
 
     
 def add_menu_item(title, params=None, description='', cm=None, art=None,

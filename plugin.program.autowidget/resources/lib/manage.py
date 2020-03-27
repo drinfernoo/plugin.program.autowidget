@@ -21,6 +21,7 @@ folder_add = utils.get_art('folder-add.png')
 folder_shortcut = utils.get_art('folder-shortcut.png')
 folder_sync = utils.get_art('folder-sync.png')
 share = utils.get_art('share.png')
+folder_settings = utils.get_art('folder-settings.png')
 
 
 def write_path(group_def, path_def=None, update=''):
@@ -38,19 +39,13 @@ def write_path(group_def, path_def=None, update=''):
     
     
 def add_path(group_def, labels):
-    target = 'folder' if labels['is_folder'] else group_def['type']
-    window = xbmc.getLocalizedString(labels['window'])
-    
-    art = {'icon': labels['icon']}
-    art.update({i: '' for i in ['thumb', 'poster', 'fanart', 'landscape',
-                                'banner', 'clearlogo', 'clearart']})
-    
     path_def = {'type': labels['content'],
-                'path': labels['path'],
+                'path': labels['path'].replace('addons://user/', 'plugin://'),
                 'label': labels['label'],
-                'art': art,
-                'target': target,
-                'window': window}
+                'art': labels['art'],
+                'target': labels['target'],
+                'window': labels['window'],
+                'is_folder': labels['is_folder']}
 
     if group_def['type'] == 'shortcut':
         path_def['label'] = xbmcgui.Dialog().input(heading='Shortcut Label',
@@ -129,8 +124,13 @@ def edit_dialog(group, path):
     
     options = []
     
-    for key in path_def.keys():
-        options.append('{}: {}'.format(key, path_def[key]))
+    for key in sorted(path_def.keys()):
+        if key == 'art':
+            art = path_def['art']
+            arts = ['[COLOR {}]{}[/COLOR]'.format('firebrick' if art[i] == '' else 'lawngreen', i.capitalize()) for i in sorted(art.keys())]
+            options.append('{}: {}'.format(key, ' / '.join(arts)))
+        else:
+            options.append('{}: {}'.format(key, path_def[key]))
         
     idx = dialog.select('Edit Path', options)
     if idx < 0:
@@ -150,7 +150,7 @@ def edit_path(group, path, target):
     if target == 'art':
         names = []
         types = []
-        for art in path_def['art'].keys():
+        for art in sorted(path_def['art'].keys()):
             item = xbmcgui.ListItem('{}: {}'.format(art, path_def['art'][art]))
             item.setArt({'icon': path_def['art'][art]})
             names.append(art)

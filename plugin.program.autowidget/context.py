@@ -10,6 +10,7 @@ from resources.lib.common import utils
 _addon = xbmcaddon.Addon()
 
 folder_add = utils.get_art('folder-add.png')
+folder_settings = utils.get_art('folder-settings.png')
 folder_shortcut = utils.get_art('folder-shortcut.png')
 folder_sync = utils.get_art('folder-sync.png')
 share = utils.get_art('share.png')
@@ -25,9 +26,10 @@ def _group_dialog(is_folder, groupname=None):
     
     if is_folder:
         new_widget = xbmcgui.ListItem(_addon.getLocalizedString(32015))
-        new_widget.setArt({'icon': folder_add})
+        new_widget.setArt(folder_add)
         options.append(new_widget)
         offset = 2
+        new_shortcut.setArt(share)
         
     if groupname:
         index = names.index(groupname) + offset
@@ -38,7 +40,7 @@ def _group_dialog(is_folder, groupname=None):
     
     for group in groups:
         item = xbmcgui.ListItem(group['name'])
-        item.setArt({'icon': folder_sync if group['type'] == 'widget' else folder_shortcut})
+        item.setArt(folder_sync if group['type'] == 'widget' else folder_shortcut)
         options.append(item)
     
     dialog = xbmcgui.Dialog()
@@ -60,10 +62,18 @@ if __name__ == '__main__':
 
     labels = {'label': xbmc.getInfoLabel('ListItem.Label'),
               'path': xbmc.getInfoLabel('ListItem.FolderPath'),
-              'icon': xbmc.getInfoLabel('ListItem.Icon'),
               'is_folder': xbmc.getCondVisibility('Container.ListItem.IsFolder'),
-              'content': xbmc.getInfoLabel('Container.Content'),
-              'window': xbmcgui.getCurrentWindowId()}
+              'content': xbmc.getInfoLabel('Container.Content')}
+              
+    art = {'icon': xbmc.getInfoLabel('ListItem.Icon'),
+           'thumb': xbmc.getInfoLabel('ListItem.Thumb'),
+           'poster': xbmc.getInfoLabel('ListItem.Art(poster)'),
+           'fanart': xbmc.getInfoLabel('ListItem.Art(fanart)'),
+           'banner': xbmc.getInfoLabel('ListItem.Art(banner)'),
+           'landscape': xbmc.getInfoLabel('ListItem.Art(landscape)'),
+           'clearlogo': xbmc.getInfoLabel('ListItem.Art(clearlogo)'),
+           'clearart': xbmc.getInfoLabel('ListItem.Art(clearart)')}
+    labels['art'] = art
     
     group = _group_dialog(labels['is_folder'])
     if group:
