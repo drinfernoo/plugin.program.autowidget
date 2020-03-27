@@ -14,8 +14,11 @@ _addon_id = _addon.getAddonInfo('id')
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
 _art_path = os.path.join(_addon_root, 'resources', 'media')
-_shortcuts = xbmcaddon.Addon('script.skinshortcuts')
-_shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
+if xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
+    _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
+    _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
+else:
+    _shortcuts_path = ''
 
 
 def log(msg, level=xbmc.LOGDEBUG):
@@ -25,8 +28,9 @@ def log(msg, level=xbmc.LOGDEBUG):
 
 def ensure_addon_data():
     for path in [_addon_path, _shortcuts_path]:
-        if not os.path.exists(path):
-            os.makedirs(path)
+        if path:
+            if not os.path.exists(path):
+                os.makedirs(path)
 
 
 def set_skin_string(string, value):
