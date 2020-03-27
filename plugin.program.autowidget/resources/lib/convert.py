@@ -22,8 +22,11 @@ from resources.lib.common import utils
 
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
-_shortcuts = xbmcaddon.Addon('script.skinshortcuts')
-_shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
+if xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
+    _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
+    _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
+else:
+    _shortcuts_path = ''
 _skin = xbmc.translatePath('special://skin/')
 _skin_name = os.path.basename(os.path.normpath(_skin))
 
@@ -74,7 +77,14 @@ def _update_strings(_id, path_def):
     utils.set_skin_string(target_string, target)
     
     
-def _convert_widgets():
+def _convert_widgets(notify=False):
+    dialog = xbmcgui.Dialog()
+    
+    if not _shortcuts_path:
+        dialog.notification('AutoWidget', 'Skipping widget conversion...')
+        return 0
+    
+    dialog.notification('AutoWidget', 'Converting new widgets...')
     converted = _convert_shortcuts() + _convert_properties()
     
     return converted
@@ -177,13 +187,13 @@ def refresh_paths(notify=False, force=False):
     converted = 0
     utils.ensure_addon_data()
 
+    if force:
+        converted = _convert_widgets(notify)
+
     if notify:
         dialog = xbmcgui.Dialog()
         dialog.notification('AutoWidget', _addon.getLocalizedString(32033))
-
-    if force:
-        converted = _convert_widgets()
-
+    
     for group_def in manage.find_defined_groups():
         paths = []
 
