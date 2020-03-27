@@ -184,10 +184,20 @@ def call_path(group, path):
     xbmc.executebuiltin('Dialog.Close(busydialog)')
         
     if path_def['target'] == 'shortcut':
-        xbmc.executebuiltin('RunPlugin({})'.format(path_def['path']))
-    else:
+        if path_def['is_folder'] == 0:
+            if path_def['type'] == 'addons':
+                xbmc.executebuiltin('ActivateWindow({},{},return)'.format(path_def['window'],
+                                                                          path_def['path']))
+            else:
+                xbmc.executebuiltin('RunPlugin({})'.format(path_def['path']))
+        else:
+            xbmc.executebuiltin('ActivateWindow({},{},return)'.format(path_def['window'],
+                                                                      path_def['path']))
+    elif path_def['target'] == 'widget':
         xbmc.executebuiltin('ActivateWindow({},{},return)'.format(path_def['window'],
-                                                                 path_def['path']))
+                                                                  path_def['path']))
+    elif path_def['target'] == 'settings':
+        xbmc.executebuiltin('Addon.OpenSettings({})'.format(path_def['path'].replace('plugin://', '')))
 
 
 def _create_context_items(group, path_name, idx, length):
