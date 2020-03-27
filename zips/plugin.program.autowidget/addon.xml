@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="1.2.0" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="1.1.2" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
     </requires>
@@ -26,11 +26,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-1.2.0
- - Better handling of art
- - Better add-on art added
- - Redesigned path addition dialog
- - Settings shortcuts added
 1.1.2
  - Add art editing for paths
  - Add group renaming
@@ -56,6 +51,15 @@
  - Fix crash from non-XML files
 1.0.1
  - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+
 1.0.0
  - First stable release
         </news>
