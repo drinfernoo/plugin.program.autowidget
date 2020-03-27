@@ -312,7 +312,7 @@ def add_as(path, is_folder):
 
 def group_dialog(_type, groupname=None):
     _type = 'shortcut' if _type == 'settings' else _type
-    groups = manage.find_defined_groups(_type)
+    groups = find_defined_groups(_type)
     names = [group['name'] for group in groups]
     
     index = -1
@@ -343,8 +343,8 @@ def group_dialog(_type, groupname=None):
     if choice < 0:
         dialog.notification('AutoWidget', _addon.getLocalizedString(32034))
     elif (choice, _type) == (0, 'widget'):
-        return _group_dialog(_type, manage.add_group('widget'))
+        return _group_dialog(_type, add_group('widget'))
     elif choice == 0:
-        return _group_dialog(_type, manage.add_group('shortcut'))
+        return _group_dialog(_type, add_group('shortcut'))
     else:
         return groups[choice - offset]
