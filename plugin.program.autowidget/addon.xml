@@ -26,6 +26,10 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.2.5
+ - Update some skin localizations
+ - Add more widget artwork
+ - Update documentation
 1.2.3
  - Fix paths made from add-on browser
  - Add ability to set plot
