@@ -38,10 +38,10 @@ def write_path(group_def, path_def=None, update=''):
     
 def add_path(group_def, labels):
     if group_def['type'] == 'shortcut':
-        labels['label'] = xbmcgui.Dialog().input(heading='Shortcut Label',
+        labels['label'] = xbmcgui.Dialog().input(heading=_addon.getLocalizedString(32043),
                                                  defaultt=labels['label'])
     elif group_def['type'] == 'widget':
-        labels['label'] = xbmcgui.Dialog().input(heading='Widget Label',
+        labels['label'] = xbmcgui.Dialog().input(heading=_addon.getLocalizedString(32044),
                                                  defaultt=labels['label'])
 
     write_path(group_def, labels)
@@ -64,7 +64,7 @@ def remove_path(group, path):
         for path_json in paths:
             if path_json.get('name', '') == path or path_json.get('label', '') == path:
                 group_json['paths'].remove(path_json)
-                dialog.notification('AutoWidget', '{} removed.'.format(path))
+                dialog.notification('AutoWidget', _addon.getLocalizedString(32045).format(path))
                 
         with open(filename, 'w') as f:
             f.write(json.dumps(group_json, indent=4))
@@ -124,7 +124,7 @@ def edit_dialog(group, path):
         else:
             options.append('{}: {}'.format(key, path_def[key]))
         
-    idx = dialog.select('Edit Path', options)
+    idx = dialog.select(_addon.getLocalizedString(32048), options)
     if idx < 0:
         return
     
@@ -153,16 +153,16 @@ def edit_path(group, path, target):
             options.append(item)
             
         if target == 'art':
-            idx = dialog.select('Select Art Type', options, useDetails=True)
+            idx = dialog.select(_addon.getLocalizedString(32046), options, useDetails=True)
         elif target == 'info':
-            idx = dialog.select('Select InfoLabel', options)
+            idx = dialog.select(_addon.getLocalizedString(32047), options)
             
         if idx < 0:
             return
         name = names[idx]
         
         if target == 'art':
-            value = dialog.browse(2, 'Select {}'.format(name.capitalize()),
+            value = dialog.browse(2, _addon.getLocalizedString(32049).format(name.capitalize()),
                                  'files', mask='.jpg|.png', useThumbs=True,
                                  defaultt=_def[name])
         elif target == 'info':
@@ -187,7 +187,7 @@ def rename_group(group):
     group_def = get_group_by_name(group)
     
     old_name = group_def['name']
-    new_name = dialog.input(heading='Rename {}'.format(old_name),
+    new_name = dialog.input(heading=_addon.getLocalizedString(32050).format(old_name),
                             defaultt=old_name)
     
     if new_name:
@@ -278,7 +278,7 @@ def remove_group(group, over=False):
         except Exception as e:
             utils.log('{}'.format(e), level=xbmc.LOGERROR)
             
-        dialog.notification('AutoWidget', '{} removed.'.format(group))
+        dialog.notification('AutoWidget', _addon.getLocalizedString(32045).format(group))
         
         xbmc.executebuiltin('Container.Update(plugin://plugin.program.autowidget/)')
     else:
@@ -286,7 +286,8 @@ def remove_group(group, over=False):
 
 
 def add_as(path, is_folder):
-    types = ['Shortcut', 'Widget', 'Settings']
+    types = [_addon.getLocalizedString(32051), _addon.getLocalizedString(32052),
+             _addon.getLocalizedString(32053)]
     
     if is_folder:
         types = types[:2]
@@ -301,11 +302,11 @@ def add_as(path, is_folder):
         li = xbmcgui.ListItem(type)
         
         icon = ''
-        if type == 'Shortcut':
+        if type == _addon.getLocalizedString(32051):
             icon = folder_shortcut
-        elif type == 'Widget':
+        elif type == _addon.getLocalizedString(32052):
             icon = folder_sync
-        elif type == 'Settings':
+        elif type == _addon.getLocalizedString(32053):
             icon = folder_settings
             
         li.setArt(icon)
@@ -344,7 +345,7 @@ def group_dialog(_type, groupname=None):
         options.append(item)
     
     dialog = xbmcgui.Dialog()
-    choice = dialog.select('Choose a Group', options, preselect=index,
+    choice = dialog.select(_addon.getLocalizedString(32054), options, preselect=index,
                            useDetails=True)
     
     if choice < 0:
