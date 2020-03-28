@@ -28,13 +28,13 @@ def root_menu():
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'widget'},
                             art=folder_add,
-                            description=32016)
+                            info={'plot': _addon.getLocalizedString(32016)})
                             
     directory.add_menu_item(title=32017,
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'shortcut'},
                             art=folder_shortcut,
-                            description=32018)
+                            info={'plot': _addon.getLocalizedString(32018)})
                             
     if len(manage.find_defined_groups()) > 0:
         # //// MY GROUPS ////
@@ -60,8 +60,8 @@ def root_menu():
             directory.add_menu_item(title=group_name.capitalize(),
                                     params={'mode': 'group',
                                             'group': group_name},
-                                    description=_addon.getLocalizedString(32019)
-                                                .format(group_name),
+                                    info={'plot': _addon.getLocalizedString(32019)
+                                                        .format(group_name)},
                                     art=folder_shortcut if _type == 'shortcut' else folder_sync,
                                     cm=cm,
                                     isFolder=True)
@@ -72,7 +72,7 @@ def root_menu():
     directory.add_menu_item(title=32006,
                             params={'mode': 'force'},
                             art=refresh,
-                            description=32020,
+                            info={'plot': _addon.getLocalizedString(32020)},
                             isFolder=False)
 
 
@@ -122,7 +122,7 @@ def group_menu(group):
         directory.add_menu_item(title=title,
                                 params=params,
                                 art=art,
-                                description=description,
+                                info={'plot': description},
                                 isFolder=True)
     else:
         directory.add_menu_item(title=32032,
@@ -153,7 +153,7 @@ def random_path_menu(group):
             directory.add_menu_item(title=32013,
                                     params={'mode': 'force'},
                                     art=unpack,
-                                    description=32014)
+                                    info={'plot': _addon.getLocalizedString(32014)})
     else:
         directory.add_menu_item(title=32032,
                                 art=alert,
@@ -175,7 +175,8 @@ def shortcut_menu(group):
                                         'action': 'call',
                                         'group': group,
                                         'path': path['label']},
-                                art=path['art'])
+                                art=path['art'],
+                                info=path['info'])
 
 
 def call_path(group, path):

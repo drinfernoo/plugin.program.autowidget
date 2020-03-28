@@ -28,6 +28,8 @@ if __name__ == '__main__':
            'clearart': xbmc.getInfoLabel('ListItem.Art(clearart)')}
     labels['art'] = art
     
+    labels['info'] = {'plot': xbmc.getInfoLabel('ListItem.Plot')}
+    
     window = 'files'
     if any(i in labels['path'].lower() for i in ['addon', 'addons']):
         window = 'addonbrowser'
