@@ -185,11 +185,14 @@ def call_path(group, path):
         
     if path_def['target'] == 'shortcut':
         if path_def['is_folder'] == 0:
-            if path_def['type'] == 'addons':
+            if path_def['content'] == 'addons':
                 xbmc.executebuiltin('ActivateWindow({},{},return)'.format(path_def['window'],
                                                                           path_def['path']))
             else:
-                xbmc.executebuiltin('RunPlugin({})'.format(path_def['path']))
+                if path_def['path'] == 'addons://install/':
+                    xbmc.executebuiltin('InstallFromZip')
+                else:
+                    xbmc.executebuiltin('RunPlugin({})'.format(path_def['path']))
         else:
             xbmc.executebuiltin('ActivateWindow({},{},return)'.format(path_def['window'],
                                                                       path_def['path']))

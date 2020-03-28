@@ -37,22 +37,14 @@ def write_path(group_def, path_def=None, update=''):
     
     
 def add_path(group_def, labels):
-    path_def = {'type': labels['content'],
-                'path': labels['path'].replace('addons://user/', 'plugin://'),
-                'label': labels['label'],
-                'art': labels['art'],
-                'target': labels['target'],
-                'window': labels['window'],
-                'is_folder': labels['is_folder']}
-
     if group_def['type'] == 'shortcut':
-        path_def['label'] = xbmcgui.Dialog().input(heading='Shortcut Label',
+        labels['label'] = xbmcgui.Dialog().input(heading='Shortcut Label',
                                                  defaultt=labels['label'])
     elif group_def['type'] == 'widget':
-        path_def['label'] = xbmcgui.Dialog().input(heading='Widget Label',
-                                                   defaultt=labels['label'])
+        labels['label'] = xbmcgui.Dialog().input(heading='Widget Label',
+                                                 defaultt=labels['label'])
 
-    write_path(group_def, path_def)
+    write_path(group_def, labels)
 
 
 def remove_path(group, path):
