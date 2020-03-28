@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.152" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.255" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.skinshortcuts" />
@@ -11,27 +11,38 @@
     
     <extension point="xbmc.service" library="service.py" />
     
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB"></description>
-        <language></language>
         <platform>all</platform>
         <license>LGPL-3.0</license>
-        <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
-        <email></email>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news></news>
-        <disclaimer></disclaimer>
         <assets>
             <icon>icon.png</icon>
         </assets>
     </extension>
 </addon>
-    </extension>
-</addon>
-widget/</source>
-        <news>
+ - Settings shortcuts added
+1.1.2
+ - Add art editing for paths
+ - Add group renaming
+1.1.1
+ - Add setting to disable notification
+1.1.0
+ - Remove Skin Shortcuts dependency
+ - Expand context menu options
+ - Add support for skins with "basic" Skin Shortcuts integration
+ - Add setting to pause AutoWidget's service
 1.0.7
  - Fix context menu option not showing
 1.0.6
@@ -45,17 +56,6 @@ widget/</source>
  - Fix shortcuts and widgets added from context menu
 1.0.2
  - Fix crash from non-XML files
-1.0.1
- - Fix crash from non-existent context menu setting
-1.0.0
- - First stable release
-        </news>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-crash from non-XML files
 1.0.1
  - Fix crash from non-existent context menu setting
 1.0.0
