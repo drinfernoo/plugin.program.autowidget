@@ -76,9 +76,6 @@ def dispatch(_plugin, _handle, _params):
         is_dir = True
     elif mode == 'force':
         convert.refresh_paths(notify=True, force=True)
-    elif mode == 'clean':
-        utils.clean_old_widgets()
-        utils.clean_old_strings()
 
     if is_dir:
         xbmcplugin.setContent(_handle, is_type)
