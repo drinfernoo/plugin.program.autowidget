@@ -72,6 +72,9 @@
         </news>
         <assets>
             <icon>icon.png</icon>
+            <fanart>fanart.png</fanart>
+            <poster>poster.png</poster>
+            <banner>banner.png</banner>
         </assets>
     </extension>
 </addon>
