@@ -26,6 +26,9 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.2.3
+ - Fix paths made from add-on browser
+ - Add ability to set plot
 1.2.2
  - Fix group dialog calls
 1.2.1
