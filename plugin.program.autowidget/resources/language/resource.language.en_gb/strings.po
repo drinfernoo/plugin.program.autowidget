@@ -189,3 +189,55 @@ msgstr ""
 msgctxt "#32042"
 msgid "Show 'Refreshing Paths' Notification"
 msgstr ""
+
+msgctxt "#32043"
+msgid "Shortcut Label"
+msgstr ""
+
+msgctxt "#32044"
+msgid "Widget Label"
+msgstr ""
+
+msgctxt "#32045"
+msgid "{} removed."
+msgstr ""
+
+msgctxt "#32046"
+msgid "Select Art Type"
+msgstr ""
+
+msgctxt "#32047"
+msgid "Select InfoLabel"
+msgstr ""
+
+msgctxt "#32048"
+msgid "Edit Path"
+msgstr ""
+
+msgctxt "#32049"
+msgid "Select {}"
+msgstr ""
+
+msgctxt "#32050"
+msgid "Rename {}"
+msgstr ""
+
+msgctxt "#32051"
+msgid "Shortcut"
+msgstr ""
+
+msgctxt "#32052"
+msgid "Widget"
+msgstr ""
+
+msgctxt "#32053"
+msgid "Settings"
+msgstr ""
+
+msgctxt "#32054"
+msgid "Choose a Group"
+msgstr ""
+
+msgctxt "#32055"
+msgid "Rename Group"
+msgstr ""

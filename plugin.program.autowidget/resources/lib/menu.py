@@ -50,7 +50,7 @@ def root_menu():
                    '?mode=manage'
                    '&action=remove_group'
                    '&group={})').format(group_name)),
-                  ('Rename Group',
+                  (_addon.getLocalizedString(32055),
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'
@@ -205,33 +205,37 @@ def call_path(group, path):
 
 
 def _create_context_items(group, path_name, idx, length):
-    cm = [(_addon.getLocalizedString(32025), ('RunPlugin('
-                                              'plugin://plugin.program.autowidget/'
-                                              '?mode=manage'
-                                              '&action=remove_path'
-                                              '&group={}'
-                                              '&path={})').format(group, path_name)),
-          ('Edit Path', ('RunPlugin('
-                         'plugin://plugin.program.autowidget/'
-                         '?mode=manage'
-                         '&action=edit_path'
-                         '&group={}'
-                         '&path={})').format(group, path_name))]
+    cm = [(_addon.getLocalizedString(32025),
+          ('RunPlugin('
+           'plugin://plugin.program.autowidget/'
+           '?mode=manage'
+           '&action=remove_path'
+           '&group={}'
+           '&path={})').format(group, path_name)),
+          (_addon.getLocalizedString(32048),
+          ('RunPlugin('
+           'plugin://plugin.program.autowidget/'
+           '?mode=manage'
+           '&action=edit_path'
+           '&group={}'
+           '&path={})').format(group, path_name))]
     if idx > 0:
-        cm.append((_addon.getLocalizedString(32026), ('RunPlugin('
-                                                      'plugin://plugin.program.autowidget/'
-                                                      '?mode=manage'
-                                                      '&action=shift_path'
-                                                      '&target=up'
-                                                      '&group={}'
-                                                      '&path={})').format(group, path_name)))
+        cm.append((_addon.getLocalizedString(32026),
+                  ('RunPlugin('
+                   'plugin://plugin.program.autowidget/'
+                   '?mode=manage'
+                   '&action=shift_path'
+                   '&target=up'
+                   '&group={}'
+                   '&path={})').format(group, path_name)))
     if idx < length - 1:
-        cm.append((_addon.getLocalizedString(32027), ('RunPlugin('
-                                                      'plugin://plugin.program.autowidget/'
-                                                      '?mode=manage'
-                                                      '&action=shift_path'
-                                                      '&target=down'
-                                                      '&group={}'
-                                                      '&path={})').format(group, path_name)))
+        cm.append((_addon.getLocalizedString(32027),
+                  ('RunPlugin('
+                   'plugin://plugin.program.autowidget/'
+                   '?mode=manage'
+                   '&action=shift_path'
+                   '&target=down'
+                   '&group={}'
+                   '&path={})').format(group, path_name)))
                                                       
     return cm
