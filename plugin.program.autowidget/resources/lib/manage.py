@@ -37,22 +37,14 @@ def write_path(group_def, path_def=None, update=''):
     
     
 def add_path(group_def, labels):
-    path_def = {'type': labels['content'],
-                'path': labels['path'].replace('addons://user/', 'plugin://'),
-                'label': labels['label'],
-                'art': labels['art'],
-                'target': labels['target'],
-                'window': labels['window'],
-                'is_folder': labels['is_folder']}
-
     if group_def['type'] == 'shortcut':
-        path_def['label'] = xbmcgui.Dialog().input(heading='Shortcut Label',
+        labels['label'] = xbmcgui.Dialog().input(heading='Shortcut Label',
                                                  defaultt=labels['label'])
     elif group_def['type'] == 'widget':
-        path_def['label'] = xbmcgui.Dialog().input(heading='Widget Label',
-                                                   defaultt=labels['label'])
+        labels['label'] = xbmcgui.Dialog().input(heading='Widget Label',
+                                                 defaultt=labels['label'])
 
-    write_path(group_def, path_def)
+    write_path(group_def, labels)
 
 
 def remove_path(group, path):
@@ -127,6 +119,8 @@ def edit_dialog(group, path):
             art = path_def['art']
             arts = ['[COLOR {}]{}[/COLOR]'.format('firebrick' if art[i] == '' else 'lawngreen', i.capitalize()) for i in sorted(art.keys())]
             options.append('{}: {}'.format(key, ' / '.join(arts)))
+        elif key == 'info':
+            options.append('{}: {}'.format(key, ', '.join(sorted(path_def[key].keys()))))
         else:
             options.append('{}: {}'.format(key, path_def[key]))
         
@@ -141,36 +135,49 @@ def edit_dialog(group, path):
 def edit_path(group, path, target):
     utils.ensure_addon_data()
     
+    updated = False
     dialog = xbmcgui.Dialog()
     group_def = get_group_by_name(group)
     path_def = get_path_by_name(group, path)
     
-    if target == 'art':
+    if target in ['art', 'info']:
         names = []
-        types = []
-        for art in sorted(path_def['art'].keys()):
-            item = xbmcgui.ListItem('{}: {}'.format(art, path_def['art'][art]))
-            item.setArt({'icon': path_def['art'][art]})
-            names.append(art)
-            types.append(item)
-    
-        idx = dialog.select('Select Art Type', types, useDetails=True)
+        options = []
+        _def = path_def[target]
+        
+        for key in sorted(_def.keys()):
+            item = xbmcgui.ListItem('{}: {}'.format(key, _def[key]))
+            if target == 'art':
+                item.setArt({'icon': _def[key]})
+            names.append(key)
+            options.append(item)
+            
+        if target == 'art':
+            idx = dialog.select('Select Art Type', options, useDetails=True)
+        elif target == 'info':
+            idx = dialog.select('Select InfoLabel', options)
+            
         if idx < 0:
             return
-            
         name = names[idx]
-            
-        value = dialog.browse(2, 'Select {}'.format(name.capitalize()),
-                              'files', mask='.jpg|.png', useThumbs=True,
-                              defaultt=path_def['art'][name])
-        path_def['art'][name] = value
         
-        write_path(group_def, path_def, update=path)
-        xbmc.executebuiltin('Container.Refresh()')
+        if target == 'art':
+            value = dialog.browse(2, 'Select {}'.format(name.capitalize()),
+                                 'files', mask='.jpg|.png', useThumbs=True,
+                                 defaultt=_def[name])
+        elif target == 'info':
+            value = dialog.input(heading=name.capitalize(),
+                                 defaultt=_def[name])
+        _def[name] = value
+        
+        updated = True
     else:
         value = dialog.input(heading=target.capitalize(),
                              defaultt=path_def[target])
         path_def[target] = value
+        updated = True
+        
+    if updated:
         write_path(group_def, path_def, update=path)
         xbmc.executebuiltin('Container.Refresh()')
     

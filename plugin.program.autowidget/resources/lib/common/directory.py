@@ -35,7 +35,7 @@ def add_separator(title='', char='-'):
         add_menu_item(title=char * 80, art=sync)
 
     
-def add_menu_item(title, params=None, description='', cm=None, art=None,
+def add_menu_item(title, params=None, info=None, cm=None, art=None,
                   isFolder=False):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
@@ -55,8 +55,6 @@ def add_menu_item(title, params=None, description='', cm=None, art=None,
 
     if isinstance(title, int):
         title = _addon.getLocalizedString(title)
-    if isinstance(description, int):
-        description = _addon.getLocalizedString(description)
     
     def_art = {}
     if art:
@@ -71,6 +69,8 @@ def add_menu_item(title, params=None, description='', cm=None, art=None,
     
     item.setArt(def_art)
     item.addContextMenuItems(def_cm)
+    
+    item.setInfo('video', info)
     
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
                                 isFolder=isFolder)
