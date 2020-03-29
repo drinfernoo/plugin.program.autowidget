@@ -109,12 +109,12 @@ def shift_path(group_id, path_id, target):
     xbmc.executebuiltin('Container.Refresh()')
     
     
-def edit_dialog(group, path):
+def edit_dialog(group_id, path_id):
     utils.ensure_addon_data()
     
     dialog = xbmcgui.Dialog()
-    group_def = get_group_by_name(group)
-    path_def = get_path_by_name(group, path)
+    group_def = get_group_by_id(group_id)
+    path_def = get_path_by_id(path_id, group_id)
     
     options = []
     
@@ -133,16 +133,16 @@ def edit_dialog(group, path):
         return
     
     key = options[idx].split(':')[0]
-    edit_path(group, path, key)
+    edit_path(group_id, path_id, key)
         
         
-def edit_path(group, path, target):
+def edit_path(group_id, path_id, target):
     utils.ensure_addon_data()
     
     updated = False
     dialog = xbmcgui.Dialog()
-    group_def = get_group_by_name(group)
-    path_def = get_path_by_name(group, path)
+    group_def = get_group_by_id(group_id)
+    path_def = get_path_by_id(path_id, group_id)
     
     if target in ['art', 'info']:
         names = []
@@ -182,7 +182,7 @@ def edit_path(group, path, target):
         updated = True
         
     if updated:
-        write_path(group_def, path_def, update=path)
+        write_path(group_def, path_def, update=path_id)
         xbmc.executebuiltin('Container.Refresh()')
     
     
