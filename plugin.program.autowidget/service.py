@@ -5,6 +5,7 @@ import xbmcgui
 import random
 
 from resources.lib import convert
+from resources.lib import manage
 from resources.lib.common import utils
 
 _properties = ['context.autowidget', 'context.advanced']
@@ -41,6 +42,8 @@ class AutoWidgetService(xbmc.Monitor):
         self._reload_settings()
 
     def _update_widgets(self):
+        manage.migrate_json()
+        
         try:
             while not self.abortRequested():
                 delay = (45 + int(random.random() * 30)) * 60 

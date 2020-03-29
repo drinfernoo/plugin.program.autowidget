@@ -397,3 +397,35 @@ def group_dialog(_type, group_id=None):
         return group_dialog(_type, add_group('shortcut'))
     else:
         return groups[choice - offset]
+
+
+def migrate_json():
+    for group_def in find_defined_groups():
+        group_name = group_def['name']
+        if 'id' not in group_def:
+            group_def['id'] = utils.get_valid_filename('{}-{}'
+                                                       .format(group_def['name'],
+                                                               time.time())
+                                                       .lower())
+                                                       
+        for path_def in group_def['paths']:
+            if 'id' not in path_def:
+                path_def['id'] = utils.get_valid_filename('{}-{}'
+                                                          .format(path_def['label'],
+                                                                  time.time())
+                                                          .lower())
+                                                          
+        write_path(group_def)
+        old_file = os.path.join(_addon_path, '{}.group'.format(group_name).lower())
+        if os.path.exists(old_file):
+            os.remove(old_file)
+                                                          
+        for widget in [x for x in os.listdir(_addon_path) if x.endswith('.widget')]:
+            with open(os.path.join(_addon_path, widget), 'r') as f:
+                widget_def = json.loads(f.read())
+            
+            if widget_def['group'] == group_name:
+                widget_def['group'] = group_def['id']
+                
+            with open(os.path.join(_addon_path, widget), 'w') as f:
+                f.write(json.dumps(widget_def, indent=4))
