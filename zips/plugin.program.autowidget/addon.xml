@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.67" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.86" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -27,8 +27,18 @@
         </assets>
     </extension>
 </addon>
-     <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news>
+n.program.autowidget/</source>
+        <news></news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+ets>
+    </extension>
+</addon>
+asic" Skin Shortcuts integration
+ - Add setting to pause AutoWidget's service
 1.0.7
  - Fix context menu option not showing
 1.0.6
@@ -67,6 +77,9 @@ ed Skin Shortcuts version to  1.0.19
         </news>
         <assets>
             <icon>icon.png</icon>
+            <fanart>fanart.png</fanart>
+            <poster>poster.png</poster>
+            <banner>banner.png</banner>
         </assets>
     </extension>
 </addon>
