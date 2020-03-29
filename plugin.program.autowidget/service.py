@@ -7,7 +7,7 @@ import random
 from resources.lib import convert
 from resources.lib.common import utils
 
-_properties = ['context.autowidget']
+_properties = ['context.autowidget', 'context.advanced']
 _player = xbmc.Player()
 
 class AutoWidgetService(xbmc.Monitor):

@@ -23,7 +23,7 @@ msgid "General"
 msgstr ""
 
 msgctxt "#32001"
-msgid "Widgets"
+msgid "Path Service"
 msgstr ""
 
 msgctxt "#32002"
@@ -240,4 +240,24 @@ msgstr ""
 
 msgctxt "#32055"
 msgid "Rename Group"
+msgstr ""
+
+msgctxt "#32056"
+msgid "Management"
+msgstr ""
+
+msgctxt "#32057"
+msgid "Show Advanced Editing Options"
+msgstr ""
+
+msgctxt "#32058"
+msgid "Changing of any of the advanced options may cause paths to [COLOR firebrick]no longer[/COLOR] function correctly. This message will only be shown once."
+msgstr ""
+
+msgctxt "#32059"
+msgid "[COLOR firebrick][B]Continue[/B][/COLOR]"
+msgstr ""
+
+msgctxt "#32060"
+msgid "[COLOR lawngreen][B]Disable[/B][/COLOR]"
 msgstr ""

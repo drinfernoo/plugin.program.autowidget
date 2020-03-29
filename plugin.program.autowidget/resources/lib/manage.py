@@ -22,6 +22,8 @@ folder_sync = utils.get_art('folder-sync.png')
 share = utils.get_art('share.png')
 folder_settings = utils.get_art('folder-settings.png')
 
+advanced_context = _addon.getSettingBool('context.advanced')
+
 
 def write_path(group_def, path_def=None, update=''):
     filename = os.path.join(_addon_path, '{}.group'.format(group_def['id']))
@@ -117,16 +119,34 @@ def edit_dialog(group_id, path_id):
     path_def = get_path_by_id(path_id, group_id)
     
     options = []
+    if _addon.getSettingBool('context.advanced') and not _addon.getSettingBool('context.warning'):
+        choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32058),
+                              yeslabel=_addon.getLocalizedString(32059),
+                              nolabel=_addon.getLocalizedString(32060))
+        utils.log(choice)
+        if choice < 1:
+            _addon.setSetting('context.advanced', 'false')
+            _addon.setSetting('context.warning', 'true')
+        elif choice == 1:
+            _addon.setSetting('context.warning', 'true')
     
-    for key in sorted(path_def.keys()):
+    warn = ['content', 'id', 'is_folder', 'target', 'window']
+    keys = sorted(path_def.keys()) if _addon.getSettingBool('context.advanced') else [i for i in sorted(path_def.keys()) if i not in warn]
+    
+    for key in keys:
+        if key in warn:
+            label = '[COLOR goldenrod]{}[/COLOR]'.format(key)
+        else:
+            label = key
+            
         if key == 'art':
             art = path_def['art']
             arts = ['[COLOR {}]{}[/COLOR]'.format('firebrick' if art[i] == '' else 'lawngreen', i.capitalize()) for i in sorted(art.keys())]
-            options.append('{}: {}'.format(key, ' / '.join(arts)))
+            options.append('{}: {}'.format(label, ' / '.join(arts)))
         elif key == 'info':
-            options.append('{}: {}'.format(key, ', '.join(sorted(path_def[key].keys()))))
+            options.append('{}: {}'.format(label, ', '.join(sorted(path_def[key].keys()))))
         else:
-            options.append('{}: {}'.format(key, path_def[key]))
+            options.append('{}: {}'.format(label, path_def[key]))
         
     idx = dialog.select(_addon.getLocalizedString(32048), options)
     if idx < 0:
@@ -211,11 +231,6 @@ def get_group_by_id(group_id):
         return group_def
         
     return None
-
-# def get_path_by_name(group, path):
-    # for defined in find_defined_paths(group):
-        # if defined.get('label', '') == path:
-            # return defined
             
             
 def get_path_by_id(path_id, group_id=None):
