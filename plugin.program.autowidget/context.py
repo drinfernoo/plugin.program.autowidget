@@ -12,9 +12,7 @@ if __name__ == '__main__':
               'content': xbmc.getInfoLabel('Container.Content')}
               
     path = xbmc.getInfoLabel('ListItem.FolderPath')
-    if not any(path.startswith(i) for i in ['addons://user/', 'addons://repos/',
-                                            'addons://outdated/',
-                                            'addons://install/']):
+    if path != 'addons://user/':
         path = path.replace('addons://user/', 'plugin://')
     labels['path'] = path
               
