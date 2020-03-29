@@ -71,10 +71,10 @@
  - First stable release
         </news>
         <assets>
-            <icon>icon.png</icon>
-            <fanart>fanart.png</fanart>
-            <poster>poster.png</poster>
-            <banner>banner.png</banner>
+            <icon>resources/media/sync.png</icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
 </addon>
