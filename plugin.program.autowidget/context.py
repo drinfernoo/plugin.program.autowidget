@@ -42,6 +42,6 @@ if __name__ == '__main__':
     _type = manage.add_as(labels['path'], labels['is_folder'])
     if _type:
         labels['target'] = _type
-        group = manage.group_dialog(_type)
-        if group:
-            manage.add_path(group, labels)
+        group_def = manage.group_dialog(_type)
+        if group_def:
+            manage.add_path(group_def, labels)

@@ -37,12 +37,12 @@ path_replace_pattern = '{}({})'
 widget_param_pattern = '^(?:\w+)(\W\w+)?$'
 
 
-def _get_random_paths(group, force=False, change_sec=3600):
+def _get_random_paths(group_id, force=False, change_sec=3600):
     wait_time = 5 if force else change_sec
     now = time.time()
     seed = now - (now % wait_time)
     rand = random.Random(seed)
-    paths = manage.find_defined_paths(group)
+    paths = manage.find_defined_paths(group_id)
     rand.shuffle(paths)
 
     return paths
@@ -203,13 +203,13 @@ def refresh_paths(notify=False, force=False):
             with open(saved_path, 'r') as f:
                 widget_json = json.loads(f.read())
 
-            if group_def['name'] == widget_json['group']:
+            if group_def['id'] == widget_json['group']:
                 _id = widget_json['id']
-                group = widget_json['group'].lower().replace('\"', '')
+                group_id = widget_json['group']
                 action = widget_json['action'].lower()
 
                 if action == 'random' and len(paths) == 0:
-                    paths = _get_random_paths(group, force)
+                    paths = _get_random_paths(group_id, force)
 
                 if paths:
                     path = paths.pop()

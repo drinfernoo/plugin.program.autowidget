@@ -4,6 +4,7 @@ import xbmcgui
 
 import json
 import os
+import time
 
 try:
     from urllib.parse import parse_qsl
@@ -23,11 +24,11 @@ folder_settings = utils.get_art('folder-settings.png')
 
 
 def write_path(group_def, path_def=None, update=''):
-    filename = os.path.join(_addon_path, '{}.group'.format(group_def['name'].lower()))
+    filename = os.path.join(_addon_path, '{}.group'.format(group_def['id']))
 
     if update and path_def:
         for path in group_def['paths']:
-            if path['label'] == update:
+            if path['id'] == update:
                 group_def['paths'][group_def['paths'].index(path)] = path_def
     elif path_def:
         group_def['paths'].append(path_def)
@@ -43,49 +44,52 @@ def add_path(group_def, labels):
     elif group_def['type'] == 'widget':
         labels['label'] = xbmcgui.Dialog().input(heading=_addon.getLocalizedString(32044),
                                                  defaultt=labels['label'])
-
+    
+    labels['id'] = utils.get_valid_filename('{}-{}'.format(labels['label'], time.time()).lower())
+    
     write_path(group_def, labels)
 
 
-def remove_path(group, path):
+def remove_path(group_id, path_id):
     utils.ensure_addon_data()
     
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32035))
     
     if choice:
-        group_def = get_group_by_name(group)
+        group_def = get_group_by_id(group_id)
     
-        filename = os.path.join(_addon_path, '{}.group'.format(group_def['name']))
+        filename = os.path.join(_addon_path, '{}.group'.format(group_def['id']))
         with open(filename, 'r') as f:
-            group_json = json.loads(f.read())
+            group_def = json.loads(f.read())
     
-        paths = group_json['paths']
-        for path_json in paths:
-            if path_json.get('name', '') == path or path_json.get('label', '') == path:
-                group_json['paths'].remove(path_json)
-                dialog.notification('AutoWidget', _addon.getLocalizedString(32045).format(path))
+        paths = group_def['paths']
+        for path_def in paths:
+            if path_def.get['id'] == path_id:
+                path_name = path_def['name']
+                group_def['paths'].remove(path_def)
+                dialog.notification('AutoWidget', _addon.getLocalizedString(32045).format(path_name))
                 
         with open(filename, 'w') as f:
-            f.write(json.dumps(group_json, indent=4))
+            f.write(json.dumps(group_def, indent=4))
             
-        xbmc.executebuiltin('Container.Refresh()'.format(group))
+        xbmc.executebuiltin('Container.Refresh()')
     else:
         dialog.notification('AutoWidget', _addon.getLocalizedString(32036))
         
         
-def shift_path(group, path, target):
+def shift_path(group_id, path_id, target):
     utils.ensure_addon_data()
     
-    group_def = get_group_by_name(group)
+    group_def = get_group_by_id(group_id)
     
-    filename = os.path.join(_addon_path, '{}.group'.format(group_def['name']))
+    filename = os.path.join(_addon_path, '{}.group'.format(group_def['id']))
     with open(filename, 'r') as f:
         group_json = json.loads(f.read())
 
     paths = group_json['paths']
     for idx, path_json in enumerate(paths):
-        if path_json['label'] == path:
+        if path_json['id'] == path_id:
             if target == 'up' and idx > 0:
                 temp = paths[idx - 1]
                 paths[idx - 1] = path_json
@@ -102,7 +106,7 @@ def shift_path(group, path, target):
     with open(filename, 'w') as f:
         f.write(json.dumps(group_json, indent=4))
         
-    xbmc.executebuiltin('Container.Refresh()'.format(group))
+    xbmc.executebuiltin('Container.Refresh()')
     
     
 def edit_dialog(group, path):
@@ -182,9 +186,9 @@ def edit_path(group, path, target):
         xbmc.executebuiltin('Container.Refresh()')
     
     
-def rename_group(group):
+def rename_group(group_id):
     dialog = xbmcgui.Dialog()
-    group_def = get_group_by_name(group)
+    group_def = get_group_by_id(group_id)
     
     old_name = group_def['name']
     new_name = dialog.input(heading=_addon.getLocalizedString(32050).format(old_name),
@@ -193,19 +197,30 @@ def rename_group(group):
     if new_name:
         group_def['name'] = new_name
         write_path(group_def)
-        remove_group(group, over=True)
         xbmc.executebuiltin('Container.Refresh()')
+            
+            
+def get_group_by_id(group_id):
+    filename = '{}.group'.format(group_id)
+    path = os.path.join(_addon_path, filename)
     
+    if os.path.exists(path):
+        with open(path, 'r') as f:
+            group_def = json.loads(f.read())
+        
+        return group_def
+        
+    return None
 
-def get_group_by_name(group):
-    for defined in find_defined_groups():
-        if defined.get('name', '') == group:
-            return defined
-
-
-def get_path_by_name(group, path):
-    for defined in find_defined_paths(group):
-        if defined.get('label', '') == path:
+# def get_path_by_name(group, path):
+    # for defined in find_defined_paths(group):
+        # if defined.get('label', '') == path:
+            # return defined
+            
+            
+def get_path_by_id(path_id, group_id=None):
+    for defined in find_defined_paths(group_id):
+        if defined.get('id', '') == path_id:
             return defined
     
     
@@ -227,10 +242,10 @@ def find_defined_groups(_type=''):
     return groups
     
     
-def find_defined_paths(group=None):
+def find_defined_paths(group_id=None):
     paths = []
-    if group:
-        filename = '{}.group'.format(group)
+    if group_id:
+        filename = '{}.group'.format(group_id)
         path = os.path.join(_addon_path, filename)
         
         if os.path.exists(path):
@@ -240,18 +255,23 @@ def find_defined_paths(group=None):
             return group_json['paths']
     else:
         for group in find_defined_groups():
-            paths.append(find_defined_paths(group.get('name', '')))
+            paths.append(find_defined_paths(group_id=group.get['id']))
     
     return paths
     
 
 def add_group(target):
     dialog = xbmcgui.Dialog()
-    group = dialog.input(heading=_addon.getLocalizedString(32037)) or ''
+    group_name = dialog.input(heading=_addon.getLocalizedString(32037))
+    group_id = ''
     
-    if group:
-        filename = os.path.join(_addon_path, '{}.group'.format(group.lower()))
-        group_def = {'name': group, 'type': target, 'paths': []}
+    if group_name:
+        group_id = utils.get_valid_filename('{}-{}'.format(group_name, time.time()).lower())
+        filename = os.path.join(_addon_path, '{}.group'.format(group_id))
+        group_def = {'name': group_name,
+                     'type': target,
+                     'paths': [],
+                     'id': group_id}
     
         with open(filename, 'w+') as f:
             f.write(json.dumps(group_def, indent=4))
@@ -260,25 +280,28 @@ def add_group(target):
     else:
         dialog.notification('AutoWidget', _addon.getLocalizedString(32038))
     
-    return group
+    return group_id
         
 
-def remove_group(group, over=False):
+def remove_group(group_id, over=False):
     utils.ensure_addon_data()
+    
+    group_def = get_group_by_id(group_id)
+    group_name = group_def['name']
     
     dialog = xbmcgui.Dialog()
     if not over:
         choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32039))
     
     if over or choice:
-        filename = '{}.group'.format(group).lower()
+        filename = '{}.group'.format(group_id)
         filepath = os.path.join(_addon_path, filename)
         try:
             os.remove(filepath)
         except Exception as e:
             utils.log('{}'.format(e), level=xbmc.LOGERROR)
             
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32045).format(group))
+        dialog.notification('AutoWidget', _addon.getLocalizedString(32045).format(group_name))
         
         xbmc.executebuiltin('Container.Update(plugin://plugin.program.autowidget/)')
     else:
@@ -320,10 +343,11 @@ def add_as(path, is_folder):
     return types[idx].lower()
 
 
-def group_dialog(_type, groupname=None):
+def group_dialog(_type, group_id=None):
     _type = 'shortcut' if _type == 'settings' else _type
     groups = find_defined_groups(_type)
     names = [group['name'] for group in groups]
+    ids = [group['id'] for group in groups]
     
     index = -1
     options = []
@@ -338,8 +362,8 @@ def group_dialog(_type, groupname=None):
         new_shortcut.setArt(share)
         options.append(new_shortcut)
         
-    if groupname:
-        index = names.index(groupname) + 1
+    if group_id:
+        index = ids.index(group_id) + 1
     
     for group in groups:
         item = xbmcgui.ListItem(group['name'])

@@ -3,6 +3,7 @@ import xbmcaddon
 import xbmcgui
 
 import os
+import re
 import shutil
 import sys
 
@@ -73,3 +74,8 @@ def prettify(elem):
     rough_string = ElementTree.tostring(elem, 'utf-8')
     reparsed = minidom.parseString(rough_string)
     return reparsed.toprettyxml(indent="\t")
+
+
+def get_valid_filename(s):
+    s = str(s).strip().replace(' ', '_')
+    return re.sub(r'(?u)[^-\w.]', '', s)
