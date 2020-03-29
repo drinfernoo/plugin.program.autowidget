@@ -314,6 +314,8 @@ def add_as(path, is_folder):
     
     dialog = xbmcgui.Dialog()
     idx = dialog.select('Add as', options, useDetails=True)
+    if idx < 0:
+        return ''
     
     return types[idx].lower()
 

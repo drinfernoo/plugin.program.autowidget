@@ -42,7 +42,8 @@ if __name__ == '__main__':
     labels['window'] = window
     
     _type = manage.add_as(labels['path'], labels['is_folder'])
-    labels['target'] = _type
-    group = manage.group_dialog(_type)
-    if group:
-        manage.add_path(group, labels)
+    if _type:
+        labels['target'] = _type
+        group = manage.group_dialog(_type)
+        if group:
+            manage.add_path(group, labels)
