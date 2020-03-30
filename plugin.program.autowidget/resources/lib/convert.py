@@ -75,7 +75,7 @@ def _update_strings(_id, path_def, setting=None):
         current = utils.get_skin_string(setting)
         if _id not in current:
             return
-            
+        
         if '?' in action:
             action = '{}&id={}'.format(action, _id)
         elif action.endswith('/'):
@@ -135,6 +135,9 @@ def _convert_skin_strings(converted):
             continue
         
         details = _save_path_details(setting.text, converted, setting=setting.get('id'))
+        if not details:
+            continue
+            
         _id = details['id']
         
         converted.append(_id)
@@ -170,6 +173,9 @@ def _convert_shortcuts(converted):
                 continue
 
             details = _save_path_details(groups[2], converted)
+            if not details:
+                continue
+                
             _id = details['id']
             label_node.text = skin_string_info_pattern.format(_id, 'label')
 
@@ -250,7 +256,7 @@ def _convert_properties(converted):
 
 
 def refresh_paths(notify=False, force=False):
-    converted = 0
+    converted = []
     utils.ensure_addon_data()
 
     if force:
