@@ -2,6 +2,7 @@ import xbmc
 import xbmcaddon
 
 import random
+import uuid
 
 from resources.lib import manage
 from resources.lib.common import directory
@@ -78,6 +79,8 @@ def root_menu():
 
 
 def group_menu(group_id):
+    _id = uuid.uuid4()
+    
     group = manage.get_group_by_id(group_id)
     if not group:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
@@ -109,7 +112,7 @@ def group_menu(group_id):
     # //// ACTIONS ////
     directory.add_separator(title=32010, char='/')
 
-    params = {'mode': 'path', 'group': group_id}
+    params = {'mode': 'path', 'group': group_id, 'id': '{}'.format(_id)}
 
     if len(paths) > 0:
         if is_widget:
@@ -137,6 +140,7 @@ def group_menu(group_id):
 
 def random_path_menu(group_id):
     _window = utils.get_active_window()
+    
     group = manage.get_group_by_id(group_id)
     if not group:
         utils.log('\"Random Path from {}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
