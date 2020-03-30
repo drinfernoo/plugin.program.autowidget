@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.168" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.57" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
         <import addon="script.skinshortcuts" />
     </requires>
-    
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>executable</provides>
     </extension>
-    
     <extension point="xbmc.service" library="service.py" />
-    
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
         <description lang="en_GB"></description>
@@ -20,22 +18,32 @@
         <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
         <email></email>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <source></source>
         <news></news>
         <disclaimer></disclaimer>
         <assets>
-            <icon>icon.png</icon>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
         </assets>
     </extension>
 </addon>
-site>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news></news>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
+autowidget/</source>
+        <news>
+1.2.5
+ - Update some skin localizations
+ - Add more widget artwork
+ - Update documentation
+1.2.3
+ - Fix paths made from add-on browser
+ - Add ability to set plot
+1.2.2
+ - Fix group dialog calls
+1.2.1
+ - Fix imports
+1.2.0
+ - Better handling of art
+ - Better add-on art added
+ - Redesigned path addition dialog
  - Settings shortcuts added
 1.1.2
  - Add art editing for paths
@@ -66,24 +74,10 @@ site>
  - First stable release
         </news>
         <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-ntext menu setting
-1.0.0
- - First stable release
-        </news>
-        <assets>
-            <icon>icon.png</icon>
-            <fanart>fanart.png</fanart>
-            <poster>poster.png</poster>
-            <banner>banner.png</banner>
-        </assets>
-    </extension>
-</addon>
-n>
-media/banner/sync.png</banner>
+            <icon>resources/media/sync.png</icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
 </addon>
