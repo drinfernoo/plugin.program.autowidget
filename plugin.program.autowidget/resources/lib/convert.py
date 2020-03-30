@@ -27,8 +27,10 @@ if xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
     _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 else:
     _shortcuts_path = ''
-_skin = xbmc.translatePath('special://skin/')
-_skin_name = os.path.basename(os.path.normpath(_skin))
+_skin_root = xbmc.translatePath('special://skin/')
+_skin_id = os.path.basename(os.path.normpath(_skin_path))
+_skin = xbmcaddon.Addon(_skin_id)
+_skin_path = xbmc.translatePath(_skin.getAddonInfo('profile'))
 
 activate_window_pattern = '(\w+)*\((\w+\)*),*(.*?\)*),*(return)*\)'
 skin_string_pattern = 'autowidget-{}-{}'
@@ -80,12 +82,11 @@ def _update_strings(_id, path_def):
 def _convert_widgets(notify=False):
     dialog = xbmcgui.Dialog()
     
-    if not _shortcuts_path:
-        dialog.notification('AutoWidget', 'Skipping widget conversion...')
-        return 0
+    converted = _convert_skin_strings()
     
-    dialog.notification('AutoWidget', 'Converting new widgets...')
-    converted = _convert_shortcuts() + _convert_properties()
+    if _shortcuts_path:    
+        dialog.notification('AutoWidget', 'Converting new widgets...')
+        converted += _convert_shortcuts() + _convert_properties()
     
     return converted
 
@@ -137,13 +138,13 @@ def _convert_shortcuts():
         tree.write(xml_path)
 
     return converted
-        
+
         
 def _convert_properties():
     converted = 0
 
     props_path = os.path.join(_shortcuts_path,
-                              '{}.properties'.format(_skin_name))
+                              '{}.properties'.format(_skin_id))
     with open(props_path, 'r') as f:
         content = ast.literal_eval(f.read())
     
@@ -180,6 +181,35 @@ def _convert_properties():
     with open(props_path, 'w') as f:
         f.write('{}'.format(content))
         
+    return converted
+
+
+def _convert_skin_strings():
+    converted = 0
+    
+    xml_path = os.path.join(_skin_path, 'settings.xml')
+    try:
+        settings = ElementTree.parse(xml_path).getroot()
+    except ParseError:
+        utils.log('Unable to parse: {}/settings.xml'.format(_skin_id))
+        
+    for setting in settings.findall('setting'):
+        if not setting.text or not all(i in setting.text
+                                       for i in ['plugin.program.autowidget',
+                                                 'mode=path',
+                                                 'action=random']):
+            continue
+            
+        details = _save_path_details(setting.text)
+        _id = details['id']
+        setting.text = skin_string_info_pattern.format(_id, 'label')
+        
+        converted += 1
+
+    utils.prettify(settings)
+    tree = ElementTree.ElementTree(settings)
+    tree.write(xml_path)
+    
     return converted
 
 
