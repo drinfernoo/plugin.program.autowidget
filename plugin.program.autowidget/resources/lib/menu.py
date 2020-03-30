@@ -79,6 +79,10 @@ def root_menu():
 
 def group_menu(group_id):
     group = manage.get_group_by_id(group_id)
+    if not group:
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
+        return        
+    
     group_type = group['type']
     group_name = group['name']
     is_widget = group_type == 'widget'
@@ -134,6 +138,10 @@ def group_menu(group_id):
 def random_path_menu(group_id):
     _window = utils.get_active_window()
     group = manage.get_group_by_id(group_id)
+    if not group:
+        utils.log('\"Random Path from {}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
+        return
+    
     group_name = group.get('name', '')
     paths = manage.find_defined_paths(group_id)
     
@@ -165,6 +173,10 @@ def random_path_menu(group_id):
 def shortcut_menu(group_id):
     _window = utils.get_active_window()
     group = manage.get_group_by_id(group_id)
+    if not group:
+        utils.log('\"Shortcuts from {}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
+        return
+        
     group_name = group.get('name', '')
     paths = manage.find_defined_paths(group_id)
     

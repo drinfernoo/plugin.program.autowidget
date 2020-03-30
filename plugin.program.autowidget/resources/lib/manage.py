@@ -59,15 +59,15 @@ def remove_path(group_id, path_id):
     choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32035))
     
     if choice:
-        group_def = get_group_by_id(group_id)
+        group = get_group_by_id(group_id)
     
-        filename = os.path.join(_addon_path, '{}.group'.format(group_def['id']))
+        filename = os.path.join(_addon_path, '{}.group'.format(group['id']))
         with open(filename, 'r') as f:
             group_def = json.loads(f.read())
     
         paths = group_def['paths']
         for path_def in paths:
-            if path_def.get['id'] == path_id:
+            if path_def['id'] == path_id:
                 path_name = path_def['name']
                 group_def['paths'].remove(path_def)
                 dialog.notification('AutoWidget', _addon.getLocalizedString(32045).format(path_name))
@@ -83,15 +83,15 @@ def remove_path(group_id, path_id):
 def shift_path(group_id, path_id, target):
     utils.ensure_addon_data()
     
-    group_def = get_group_by_id(group_id)
+    group = get_group_by_id(group_id)
     
-    filename = os.path.join(_addon_path, '{}.group'.format(group_def['id']))
+    filename = os.path.join(_addon_path, '{}.group'.format(group['id']))
     with open(filename, 'r') as f:
-        group_json = json.loads(f.read())
+        group_def = json.loads(f.read())
 
-    paths = group_json['paths']
-    for idx, path_json in enumerate(paths):
-        if path_json['id'] == path_id:
+    paths = group_def['paths']
+    for idx, path_def in enumerate(paths):
+        if path_def['id'] == path_id:
             if target == 'up' and idx > 0:
                 temp = paths[idx - 1]
                 paths[idx - 1] = path_json
@@ -103,10 +103,10 @@ def shift_path(group_id, path_id, target):
             
             break
                 
-    group_json['paths'] = paths
+    group_def['paths'] = paths
             
     with open(filename, 'w') as f:
-        f.write(json.dumps(group_json, indent=4))
+        f.write(json.dumps(group_def, indent=4))
         
     xbmc.executebuiltin('Container.Refresh()')
     
@@ -115,7 +115,6 @@ def edit_dialog(group_id, path_id):
     utils.ensure_addon_data()
     
     dialog = xbmcgui.Dialog()
-    group_def = get_group_by_id(group_id)
     path_def = get_path_by_id(path_id, group_id)
     
     options = []
