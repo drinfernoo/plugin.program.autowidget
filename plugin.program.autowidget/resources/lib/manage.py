@@ -281,7 +281,7 @@ def add_group(target):
                      'paths': [],
                      'id': group_id,
                      'info': {'plot': ''},
-                     'art': folder_sync if target == 'widget' else folder_share,
+                     'art': folder_sync if target == 'widget' else folder_shortcut,
                      'version': _addon_version}
     
         with open(filename, 'w+') as f:
@@ -498,7 +498,7 @@ def migrate_json():
         if 'info' not in group_def:
             group_def['info'] = {'plot': ''}
         if 'art' not in group_def:
-            group_def['art'] = folder_sync if group_def['type'] == 'widget' else folder_share
+            group_def['art'] = folder_sync if group_def['type'] == 'widget' else folder_shortcut
         if 'version' not in group_def:
             group_def['version'] = _addon_version
         for path_def in group_def['paths']:
