@@ -150,7 +150,7 @@ def random_path_menu(group_id):
     paths = manage.find_defined_paths(group_id)
     
     if len(paths) > 0:
-        if _window != 'home':
+        if _window == 'media':
             directory.add_menu_item(title=32012,
                                     art=folder_sync)
             directory.add_separator(group_name, char='/')
