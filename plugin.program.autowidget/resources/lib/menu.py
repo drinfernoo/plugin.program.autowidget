@@ -2,6 +2,7 @@ import xbmc
 import xbmcaddon
 
 import random
+import uuid
 
 from resources.lib import manage
 from resources.lib.common import directory
@@ -42,27 +43,27 @@ def root_menu():
         
         for group in manage.find_defined_groups():
             group_name = group['name']
-            _type = group['type']
+            group_id = group['id']
+            group_type = group['type']
             
             cm = [(_addon.getLocalizedString(32023),
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'
                    '&action=remove_group'
-                   '&group={})').format(group_name)),
-                  ('Rename Group',
+                   '&group={})').format(group_id)),
+                  (_addon.getLocalizedString(32061),
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'
-                   '&action=rename_group'
-                   '&group={})').format(group_name))]
+                   '&action=edit_group'
+                   '&group={})').format(group_id))]
             
-            directory.add_menu_item(title=group_name.capitalize(),
+            directory.add_menu_item(title=group_name,
                                     params={'mode': 'group',
-                                            'group': group_name},
-                                    info={'plot': _addon.getLocalizedString(32019)
-                                                        .format(group_name)},
-                                    art=folder_shortcut if _type == 'shortcut' else folder_sync,
+                                            'group': group_id},
+                                    info=group.get('info'),
+                                    art=group.get('art') or (folder_shortcut if group_type == 'shortcut' else folder_sync),
                                     cm=cm,
                                     isFolder=True)
 
@@ -76,11 +77,21 @@ def root_menu():
                             isFolder=False)
 
 
-def group_menu(group):
-    target = manage.get_group_by_name(group)['type']
+def group_menu(group_id):
+    _id = uuid.uuid4()
+    
+    group = manage.get_group_by_id(group_id)
+    if not group:
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
+        return        
+    
+    group_type = group['type']
+    group_name = group['name']
+    is_widget = group_type == 'widget'
+    is_shortcut = group_type == 'shortcut'
     
     # //// PATHS ////
-    paths = manage.find_defined_paths(group)
+    paths = manage.find_defined_paths(group_id)
     if paths:
         directory.add_separator(title=32009, char='/')
 
@@ -88,35 +99,32 @@ def group_menu(group):
             directory.add_menu_item(title=path['label'],
                                     params={'mode': 'path',
                                             'action': 'call',
-                                            'group': group,
-                                            'path': path['label']},
-                                    art=path['art'],
-                                    cm=_create_context_items(group,
-                                                             path['label'],
+                                            'group': group_id,
+                                            'path': path['id']},
+                                    info=path.get('info'),
+                                    art=path.get('art') or (folder_shortcut if is_shortcut else folder_sync),
+                                    cm=_create_context_items(group_id,
+                                                             path['id'],
                                                              idx,
                                                              len(paths)))
                                                 
     
     # //// ACTIONS ////
     directory.add_separator(title=32010, char='/')
-    
-    is_widget = target == 'widget'
-    is_shortcut = target == 'shortcut'
 
-    params = {'mode': 'path', 'group': group}
-    groupname = group.capitalize()
+    params = {'mode': 'path', 'group': group_id, 'id': '{}'.format(_id)}
 
     if len(paths) > 0:
         if is_widget:
-            title = _addon.getLocalizedString(32028).format(groupname)
+            title = _addon.getLocalizedString(32028).format(_id)
             art = shuffle
-            description = _addon.getLocalizedString(32029).format(groupname)
+            description = _addon.getLocalizedString(32029).format(group_name)
             
             params.update({'action': 'random'})
         elif is_shortcut:
-            title = _addon.getLocalizedString(32030).format(groupname)
+            title = _addon.getLocalizedString(32030).format(group_name)
             art = share
-            description = _addon.getLocalizedString(32031).format(groupname)
+            description = _addon.getLocalizedString(32031).format(group_name)
             params.update({'action': 'shortcuts'})
         
         directory.add_menu_item(title=title,
@@ -130,25 +138,32 @@ def group_menu(group):
                                 isFolder=True)
 
 
-def random_path_menu(group):
+def random_path_menu(group_id):
     _window = utils.get_active_window()
-    paths = manage.find_defined_paths(group)
+    
+    group = manage.get_group_by_id(group_id)
+    if not group:
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
+        return
+    
+    group_name = group.get('name', '')
+    paths = manage.find_defined_paths(group_id)
     
     if len(paths) > 0:
-        if _window != 'home':
+        if _window == 'media':
             directory.add_menu_item(title=32012,
                                     art=folder_sync)
-            directory.add_separator(group, char='/')
+            directory.add_separator(group_name, char='/')
         
             for path in paths:
                 if _window != 'home':
                     directory.add_menu_item(title=path['label'],
                                             params={'mode': 'path',
                                                     'action': 'call',
-                                                    'group': group,
-                                                    'path': path['label'],
-                                                    'target': 'widget'},
-                                            art=path['art'])
+                                                    'group': group_id,
+                                                    'path': path['id']},
+                                            art=path.get('art'),
+                                            info=path.get('info'))
         else:
             directory.add_menu_item(title=32013,
                                     params={'mode': 'force'},
@@ -160,27 +175,33 @@ def random_path_menu(group):
                                 isFolder=True)
                                 
     
-def shortcut_menu(group):
+def shortcut_menu(group_id):
     _window = utils.get_active_window()
-    paths = manage.find_defined_paths(group)
+    group = manage.get_group_by_id(group_id)
+    if not group:
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
+        return
+        
+    group_name = group.get('name', '')
+    paths = manage.find_defined_paths(group_id)
     
     if len(paths) > 0 and _window != 'home':
         directory.add_menu_item(title=32011,
                                 art=folder_shortcut)
-        directory.add_separator(group, char='/')
+        directory.add_separator(group_name, char='/')
     
     for path in paths:
         directory.add_menu_item(title=path['label'],
                                 params={'mode': 'path',
                                         'action': 'call',
-                                        'group': group,
-                                        'path': path['label']},
-                                art=path['art'],
-                                info=path['info'])
+                                        'group': group_id,
+                                        'path': path['id']},
+                                art=path.get('art'),
+                                info=path.get('info'))
 
 
-def call_path(group, path):
-    path_def = manage.get_path_by_name(group, path)
+def call_path(group_id, path_id):
+    path_def = manage.get_path_by_id(path_id, group_id=group_id)
     
     xbmc.executebuiltin('Dialog.Close(busydialog)')
         
@@ -204,34 +225,38 @@ def call_path(group, path):
         xbmc.executebuiltin('Addon.OpenSettings({})'.format(path_def['path'].replace('plugin://', '')))
 
 
-def _create_context_items(group, path_name, idx, length):
-    cm = [(_addon.getLocalizedString(32025), ('RunPlugin('
-                                              'plugin://plugin.program.autowidget/'
-                                              '?mode=manage'
-                                              '&action=remove_path'
-                                              '&group={}'
-                                              '&path={})').format(group, path_name)),
-          ('Edit Path', ('RunPlugin('
-                         'plugin://plugin.program.autowidget/'
-                         '?mode=manage'
-                         '&action=edit_path'
-                         '&group={}'
-                         '&path={})').format(group, path_name))]
+def _create_context_items(group_id, path_id, idx, length):
+    cm = [(_addon.getLocalizedString(32025),
+          ('RunPlugin('
+           'plugin://plugin.program.autowidget/'
+           '?mode=manage'
+           '&action=remove_path'
+           '&group={}'
+           '&path={})').format(group_id, path_id)),
+          (_addon.getLocalizedString(32048),
+          ('RunPlugin('
+           'plugin://plugin.program.autowidget/'
+           '?mode=manage'
+           '&action=edit_path'
+           '&group={}'
+           '&path={})').format(group_id, path_id))]
     if idx > 0:
-        cm.append((_addon.getLocalizedString(32026), ('RunPlugin('
-                                                      'plugin://plugin.program.autowidget/'
-                                                      '?mode=manage'
-                                                      '&action=shift_path'
-                                                      '&target=up'
-                                                      '&group={}'
-                                                      '&path={})').format(group, path_name)))
+        cm.append((_addon.getLocalizedString(32026),
+                  ('RunPlugin('
+                   'plugin://plugin.program.autowidget/'
+                   '?mode=manage'
+                   '&action=shift_path'
+                   '&target=up'
+                   '&group={}'
+                   '&path={})').format(group_id, path_id)))
     if idx < length - 1:
-        cm.append((_addon.getLocalizedString(32027), ('RunPlugin('
-                                                      'plugin://plugin.program.autowidget/'
-                                                      '?mode=manage'
-                                                      '&action=shift_path'
-                                                      '&target=down'
-                                                      '&group={}'
-                                                      '&path={})').format(group, path_name)))
+        cm.append((_addon.getLocalizedString(32027),
+                  ('RunPlugin('
+                   'plugin://plugin.program.autowidget/'
+                   '?mode=manage'
+                   '&action=shift_path'
+                   '&target=down'
+                   '&group={}'
+                   '&path={})').format(group_id, path_id)))
                                                       
     return cm

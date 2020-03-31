@@ -12,9 +12,7 @@ if __name__ == '__main__':
               'content': xbmc.getInfoLabel('Container.Content')}
               
     path = xbmc.getInfoLabel('ListItem.FolderPath')
-    if not any(path.startswith(i) for i in ['addons://user/', 'addons://repos/',
-                                            'addons://outdated/',
-                                            'addons://install/']):
+    if path != 'addons://user/':
         path = path.replace('addons://user/', 'plugin://')
     labels['path'] = path
               
@@ -42,7 +40,8 @@ if __name__ == '__main__':
     labels['window'] = window
     
     _type = manage.add_as(labels['path'], labels['is_folder'])
-    labels['target'] = _type
-    group = manage.group_dialog(_type)
-    if group:
-        manage.add_path(group, labels)
+    if _type:
+        labels['target'] = _type
+        group_def = manage.group_dialog(_type)
+        if group_def:
+            manage.add_path(group_def, labels)

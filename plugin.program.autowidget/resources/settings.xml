@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
     <category label="$ADDON[plugin.program.autowidget 32000]">
-        <!-- Widgets -->
-        <setting label="$ADDON[plugin.program.autowidget 32001]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 32056]" type="lsep" />
         <setting label="$ADDON[plugin.program.autowidget 32004]" type="bool" id="context.autowidget" default="true" />
-        <setting label="$ADDON[plugin.program.autowidget 32041]" type="bool" id="service.refresh_enabled" default="true" />
-        <setting label="$ADDON[plugin.program.autowidget 32005]" type="slider" id="service.refresh_duration" default="2" range="0.5,0.5,12" option="float" visible="eq(-1,true)" />
-        <setting label="$ADDON[plugin.program.autowidget 32042]" type="bool" id="service.refresh_notification" default="true" visible="eq(-2,true)"/>
+        <setting label="$ADDON[plugin.program.autowidget 32057]" type="bool" id="context.advanced" default="false" />
+        <setting type="bool" id="context.warning" default="false" visible="false" />
+    
+        <!-- Path Service -->
+        <setting label="$ADDON[plugin.program.autowidget 32001]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 32041]" type="enum" id="service.refresh_enabled" default="0" values="Always|While Nothing Playing|Never" />
+        <setting label="$ADDON[plugin.program.autowidget 32005]" type="slider" id="service.refresh_duration" default="2" range="0.5,0.5,12" option="float" visible="lt(-1,2)" />
+        <setting label="$ADDON[plugin.program.autowidget 32042]" type="enum" id="service.refresh_notification" default="1" values="Always|While Nothing Playing|Never" visible="lt(-2,2)" />
         
         <!-- Shortcuts -->
         <setting label="$ADDON[plugin.program.autowidget 32002]" type="lsep" />
         <setting label="$ADDON[plugin.program.autowidget 32006]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=force)" option="close" />
-        <!-- <setting label="Clean Old References" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clean)" option="close" /> -->
     </category>
 </settings>
 

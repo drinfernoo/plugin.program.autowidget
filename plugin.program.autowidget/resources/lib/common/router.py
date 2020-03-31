@@ -47,8 +47,11 @@ def dispatch(_plugin, _handle, _params):
             manage.add_group(target)
         elif action == 'remove_group' and group:
             manage.remove_group(group)
-        elif action == 'rename_group' and group:
-            manage.rename_group(group)
+        elif action == 'edit_group':
+            if group and not target:
+                manage.edit_group_dialog(group)
+            elif group and target:
+                manage.edit_group(group, target)
         elif action == 'add_path' and group and target:
             manage.add_path(group, target)
         elif action == 'remove_path' and group and path:
@@ -76,9 +79,6 @@ def dispatch(_plugin, _handle, _params):
         is_dir = True
     elif mode == 'force':
         convert.refresh_paths(notify=True, force=True)
-    elif mode == 'clean':
-        utils.clean_old_widgets()
-        utils.clean_old_strings()
 
     if is_dir:
         xbmcplugin.setContent(_handle, is_type)
