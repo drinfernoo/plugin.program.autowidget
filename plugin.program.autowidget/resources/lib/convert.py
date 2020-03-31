@@ -22,6 +22,8 @@ from resources.lib.common import utils
 
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
+_addon_version = _addon.getAddonInfo('version')
+
 if xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
     _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
     _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
@@ -58,13 +60,15 @@ def _save_path_details(params, converted, setting='', label_setting=''):
     path_to_saved = os.path.join(_addon_path, '{}.widget'.format(_id))
 
     if setting:
-        params.update({'setting': setting})
+        params['setting'] = setting
     if label_setting:
-        params.update({'label_setting': label_setting})
+        params['label_setting'] = label_setting
         
     for param in params:
         if params[param].endswith(',return)'):
             return
+            
+    params['version'] = _addon_version
 
     with open(path_to_saved, 'w') as f:
         f.write(json.dumps(params, indent=4))

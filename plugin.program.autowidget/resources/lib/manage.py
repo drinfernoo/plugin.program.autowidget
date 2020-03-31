@@ -15,6 +15,7 @@ from resources.lib.common import utils
 
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
+_addon_version = _addon.getAddonInfo('version')
 
 folder_add = utils.get_art('folder-add.png')
 folder_shortcut = utils.get_art('folder-shortcut.png')
@@ -48,6 +49,7 @@ def add_path(group_def, labels):
                                                  defaultt=labels['label'])
     
     labels['id'] = utils.get_valid_filename('{}-{}'.format(labels['label'], time.time()).lower())
+    labels['version'] = _addon_version
     
     write_path(group_def, labels)
 
@@ -279,7 +281,8 @@ def add_group(target):
                      'paths': [],
                      'id': group_id,
                      'info': {'plot': ''},
-                     'art': folder_sync if target == 'widget' else folder_share}
+                     'art': folder_sync if target == 'widget' else folder_share,
+                     'version': _addon_version}
     
         with open(filename, 'w+') as f:
             f.write(json.dumps(group_def, indent=4))
@@ -496,13 +499,16 @@ def migrate_json():
             group_def['info'] = {'plot': ''}
         if 'art' not in group_def:
             group_def['art'] = folder_sync if group_def['type'] == 'widget' else folder_share
+        if 'version' not in group_def:
+            group_def['version'] = _addon_version
         for path_def in group_def['paths']:
             if 'id' not in path_def:
                 path_def['id'] = utils.get_valid_filename('{}-{}'
                                                           .format(path_def['label'],
                                                                   time.time())
                                                           .lower())
-
+            if 'version' not in path_def:
+                path_def['version'] = _addon_version
         write_path(group_def)
         old_file = os.path.join(_addon_path, '{}.group'.format(group_name).lower())
         if os.path.exists(old_file):
@@ -514,6 +520,8 @@ def migrate_json():
             
             if widget_def['group'] == group_name:
                 widget_def['group'] = group_def['id']
+            if 'version' not in widget_def:
+                widget_def['version'] = _addon_version
                 
             with open(os.path.join(_addon_path, widget), 'w') as f:
                 f.write(json.dumps(widget_def, indent=4))
