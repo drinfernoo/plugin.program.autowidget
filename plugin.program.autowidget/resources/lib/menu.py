@@ -116,7 +116,7 @@ def group_menu(group_id):
 
     if len(paths) > 0:
         if is_widget:
-            title = _addon.getLocalizedString(32028).format(group_name)
+            title = 'Random Path ({})'.format(_id)
             art = shuffle
             description = _addon.getLocalizedString(32029).format(group_name)
             

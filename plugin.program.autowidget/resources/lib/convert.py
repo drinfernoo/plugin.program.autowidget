@@ -50,9 +50,7 @@ def _get_random_paths(group_id, force=False, change_sec=3600):
     return paths
 
 
-def _save_path_details(path, converted, setting=''):
-    params = dict(parse_qsl(path.split('?')[1].replace('\"', '')))
-
+def _save_path_details(params, converted, setting='', label_setting=''):
     _id = params['id']
     if _id in converted:
         return
@@ -61,6 +59,8 @@ def _save_path_details(path, converted, setting=''):
 
     if setting:
         params.update({'setting': setting})
+    if label_setting:
+        params.update({'label_setting': label_setting})
         
     for param in params:
         if params[param].endswith(',return)'):
@@ -72,7 +72,8 @@ def _save_path_details(path, converted, setting=''):
     return params
 
 
-def _update_strings(_id, path_def, setting=None):
+def _update_strings(_id, path_def, setting=None, label_setting=None):
+    label = path_def['label']
     action = path_def['path']
     
     if setting:
@@ -86,11 +87,14 @@ def _update_strings(_id, path_def, setting=None):
             action = '{}?id={}'.format(action, _id)
         else:
             action = '{}/?id={}'.format(action, _id)
+            
+        if label_setting:
+            utils.log('Setting {} to {}'.format(label_setting, label))
+            utils.set_skin_string(label_setting, label)
         
         utils.log('Setting {} to {}'.format(setting, action))
         utils.set_skin_string(setting, action)
-    elif not setting:
-        label = path_def['label']
+    else:
         target = path_def['window']
         label_string = skin_string_pattern.format(_id, 'label')
         action_string = skin_string_pattern.format(_id, 'action')
@@ -138,7 +142,13 @@ def _convert_skin_strings(converted):
                                                  'action=random']):
             continue
 
-        details = _save_path_details(setting.text, converted, setting=setting.get('id'))
+        params = dict(parse_qsl(setting.text.split('?')[1].replace('\"', '')))
+        for new_setting in settings.findall('setting'):
+            if 'Random Path ({})'.format(params['id']) in new_setting.text:
+                label_setting = new_setting.get('id')
+        
+        details = _save_path_details(params, converted, setting=setting.get('id'), label_setting=label_setting)
+        
         if not details:
             continue
             
@@ -176,7 +186,8 @@ def _convert_shortcuts(converted):
                 'plugin.program.autowidget', 'mode=path', 'action=random']):
                 continue
 
-            details = _save_path_details(groups[2], converted)
+            params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
+            details = _save_path_details(params, converted)
             if not details:
                 continue
                 
@@ -226,10 +237,11 @@ def _convert_properties(converted):
             if not groups[2] or not all(i in groups[2] for i in ['plugin.program.autowidget', 'mode=path', 'action=random']):
                 continue
         
-            details = _save_path_details(groups[2], converted)
+            params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
         else:
-            details = _save_path_details(prop[3], converted)
-            
+            params = dict(parse_qsl(prop[3].split('?')[1].replace('\"', '')))
+        
+        details = _save_path_details(params, converted)
         if not details:
             continue
         
@@ -282,13 +294,14 @@ def refresh_paths(notify=False, force=False):
                 group_id = widget_json['group']
                 action = widget_json['action'].lower()
                 setting = widget_json.get('setting')
+                label_setting = widget_json.get('label_setting')
 
                 if action == 'random' and len(paths) == 0:
                     paths = _get_random_paths(group_id, force)
 
                 if paths:
                     path_def = paths.pop()
-                    _update_strings(_id, path_def, setting)
+                    _update_strings(_id, path_def, setting, label_setting)
 
     if len(converted) > 0:
         xbmc.executebuiltin('ReloadSkin()')
