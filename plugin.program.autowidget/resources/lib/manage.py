@@ -492,14 +492,17 @@ def migrate_json():
                                                        .format(group_def['name'],
                                                                time.time())
                                                        .lower())
-                                                       
+        if 'info' not in group_def:
+            group_def['info'] = {'plot': ''}
+        if 'art' not in group_def:
+            group_def['art'] = folder_sync if group_def['type'] == 'widget' else folder_share
         for path_def in group_def['paths']:
             if 'id' not in path_def:
                 path_def['id'] = utils.get_valid_filename('{}-{}'
                                                           .format(path_def['label'],
                                                                   time.time())
                                                           .lower())
-                                                          
+
         write_path(group_def)
         old_file = os.path.join(_addon_path, '{}.group'.format(group_name).lower())
         if os.path.exists(old_file):
