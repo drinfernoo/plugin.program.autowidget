@@ -15,6 +15,7 @@ from resources.lib.common import utils
 
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
+_addon_version = _addon.getAddonInfo('version')
 
 folder_add = utils.get_art('folder-add.png')
 folder_shortcut = utils.get_art('folder-shortcut.png')
@@ -48,13 +49,12 @@ def add_path(group_def, labels):
                                                  defaultt=labels['label'])
     
     labels['id'] = utils.get_valid_filename('{}-{}'.format(labels['label'], time.time()).lower())
+    labels['version'] = _addon_version
     
     write_path(group_def, labels)
 
 
 def remove_path(group_id, path_id):
-    utils.ensure_addon_data()
-    
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32035))
     
@@ -68,7 +68,7 @@ def remove_path(group_id, path_id):
         paths = group_def['paths']
         for path_def in paths:
             if path_def['id'] == path_id:
-                path_name = path_def['name']
+                path_name = path_def['label']
                 group_def['paths'].remove(path_def)
                 dialog.notification('AutoWidget', _addon.getLocalizedString(32045).format(path_name))
                 
@@ -81,8 +81,6 @@ def remove_path(group_id, path_id):
         
         
 def shift_path(group_id, path_id, target):
-    utils.ensure_addon_data()
-    
     group = get_group_by_id(group_id)
     
     filename = os.path.join(_addon_path, '{}.group'.format(group['id']))
@@ -112,8 +110,6 @@ def shift_path(group_id, path_id, target):
     
     
 def edit_dialog(group_id, path_id):
-    utils.ensure_addon_data()
-    
     dialog = xbmcgui.Dialog()
     path_def = get_path_by_id(path_id, group_id)
     
@@ -156,8 +152,6 @@ def edit_dialog(group_id, path_id):
         
         
 def edit_path(group_id, path_id, target):
-    utils.ensure_addon_data()
-    
     updated = False
     dialog = xbmcgui.Dialog()
     group_def = get_group_by_id(group_id)
@@ -285,7 +279,10 @@ def add_group(target):
         group_def = {'name': group_name,
                      'type': target,
                      'paths': [],
-                     'id': group_id}
+                     'id': group_id,
+                     'info': {'plot': ''},
+                     'art': folder_sync if target == 'widget' else folder_shortcut,
+                     'version': _addon_version}
     
         with open(filename, 'w+') as f:
             f.write(json.dumps(group_def, indent=4))
@@ -298,8 +295,6 @@ def add_group(target):
         
 
 def remove_group(group_id, over=False):
-    utils.ensure_addon_data()
-    
     group_def = get_group_by_id(group_id)
     group_name = group_def['name']
     
@@ -320,6 +315,100 @@ def remove_group(group_id, over=False):
         xbmc.executebuiltin('Container.Update(plugin://plugin.program.autowidget/)')
     else:
         dialog.notification('AutoWidget', _addon.getLocalizedString(32040))
+        
+        
+def edit_group_dialog(group_id):
+    dialog = xbmcgui.Dialog()
+    group_def = get_group_by_id(group_id)
+    
+    options = []
+    if _addon.getSettingBool('context.advanced') and not _addon.getSettingBool('context.warning'):
+        choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32058),
+                              yeslabel=_addon.getLocalizedString(32059),
+                              nolabel=_addon.getLocalizedString(32060))
+        utils.log(choice)
+        if choice < 1:
+            _addon.setSetting('context.advanced', 'false')
+            _addon.setSetting('context.warning', 'true')
+        elif choice == 1:
+            _addon.setSetting('context.warning', 'true')
+    
+    warn = ['type', 'id']
+    keys = sorted(group_def.keys()) if _addon.getSettingBool('context.advanced') else [i for i in sorted(group_def.keys()) if i not in warn]
+    
+    for key in keys:
+        if key == 'paths':
+            continue
+    
+        if key in warn:
+            label = '[COLOR goldenrod]{}[/COLOR]'.format(key)
+        else:
+            label = key
+            
+        if key == 'art':
+            art = group_def['art']
+            arts = ['[COLOR {}]{}[/COLOR]'.format('firebrick' if art[i] == '' else 'lawngreen', i.capitalize()) for i in sorted(art.keys())]
+            options.append('{}: {}'.format(label, ' / '.join(arts)))
+        elif key == 'info':
+            options.append('{}: {}'.format(label, ', '.join(sorted(group_def[key].keys()))))
+        else:
+            options.append('{}: {}'.format(label, group_def[key]))
+        
+    idx = dialog.select(_addon.getLocalizedString(32048), options)
+    if idx < 0:
+        return
+    
+    key = options[idx].split(':')[0]
+    edit_group(group_id, key)
+    
+    
+def edit_group(group_id, target):
+    updated = False
+    dialog = xbmcgui.Dialog()
+    group_def = get_group_by_id(group_id)
+    
+    if target in ['art', 'info']:
+        names = []
+        options = []
+        _def = group_def[target]
+        
+        for key in sorted(_def.keys()):
+            item = xbmcgui.ListItem('{}: {}'.format(key, _def[key]))
+            if target == 'art':
+                item.setArt({'icon': _def[key]})
+            names.append(key)
+            options.append(item)
+            
+        if target == 'art':
+            idx = dialog.select(_addon.getLocalizedString(32046), options, useDetails=True)
+        elif target == 'info':
+            idx = dialog.select(_addon.getLocalizedString(32047), options)
+            
+        if idx < 0:
+            return
+        name = names[idx]
+        
+        if target == 'art':
+            value = dialog.browse(2, _addon.getLocalizedString(32049).format(name.capitalize()),
+                                 'files', mask='.jpg|.png', useThumbs=True,
+                                 defaultt=_def[name])
+        elif target == 'info':
+            value = dialog.input(heading=name.capitalize(),
+                                 defaultt=_def[name])
+        _def[name] = value
+        
+        updated = True
+    elif target == 'name':
+        rename_group(group_id)
+    else:
+        value = dialog.input(heading=target.capitalize(),
+                             defaultt=group_def[target])
+        group_def[target] = value
+        updated = True
+        
+    if updated:
+        write_path(group_def)
+        xbmc.executebuiltin('Container.Refresh()')
 
 
 def add_as(path, is_folder):
@@ -406,14 +495,20 @@ def migrate_json():
                                                        .format(group_def['name'],
                                                                time.time())
                                                        .lower())
-                                                       
+        if 'info' not in group_def:
+            group_def['info'] = {'plot': ''}
+        if 'art' not in group_def:
+            group_def['art'] = folder_sync if group_def['type'] == 'widget' else folder_shortcut
+        if 'version' not in group_def:
+            group_def['version'] = _addon_version
         for path_def in group_def['paths']:
             if 'id' not in path_def:
                 path_def['id'] = utils.get_valid_filename('{}-{}'
                                                           .format(path_def['label'],
                                                                   time.time())
                                                           .lower())
-                                                          
+            if 'version' not in path_def:
+                path_def['version'] = _addon_version
         write_path(group_def)
         old_file = os.path.join(_addon_path, '{}.group'.format(group_name).lower())
         if os.path.exists(old_file):
@@ -425,6 +520,8 @@ def migrate_json():
             
             if widget_def['group'] == group_name:
                 widget_def['group'] = group_def['id']
+            if 'version' not in widget_def:
+                widget_def['version'] = _addon_version
                 
             with open(os.path.join(_addon_path, widget), 'w') as f:
                 f.write(json.dumps(widget_def, indent=4))

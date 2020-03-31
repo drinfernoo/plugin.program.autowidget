@@ -22,13 +22,17 @@ from resources.lib.common import utils
 
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
+_addon_version = _addon.getAddonInfo('version')
+
 if xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
     _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
     _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 else:
     _shortcuts_path = ''
-_skin = xbmc.translatePath('special://skin/')
-_skin_name = os.path.basename(os.path.normpath(_skin))
+_skin_root = xbmc.translatePath('special://skin/')
+_skin_id = os.path.basename(os.path.normpath(_skin_root))
+_skin = xbmcaddon.Addon(_skin_id)
+_skin_path = xbmc.translatePath(_skin.getAddonInfo('profile'))
 
 activate_window_pattern = '(\w+)*\((\w+\)*),*(.*?\)*),*(return)*\)'
 skin_string_pattern = 'autowidget-{}-{}'
@@ -48,12 +52,23 @@ def _get_random_paths(group_id, force=False, change_sec=3600):
     return paths
 
 
-def _save_path_details(path):
-    params = dict(parse_qsl(path.split('?')[1].replace('\"', '')))
-    _id = uuid.uuid4()
-
+def _save_path_details(params, converted, setting='', label_setting=''):
+    _id = params['id']
+    if _id in converted:
+        return
+    
     path_to_saved = os.path.join(_addon_path, '{}.widget'.format(_id))
-    params.update({'id': '{}'.format(_id)})
+
+    if setting:
+        params['setting'] = setting
+    if label_setting:
+        params['label_setting'] = label_setting
+        
+    for param in params:
+        if params[param].endswith(',return)'):
+            return
+            
+    params['version'] = _addon_version
 
     with open(path_to_saved, 'w') as f:
         f.write(json.dumps(params, indent=4))
@@ -61,38 +76,94 @@ def _save_path_details(path):
     return params
 
 
-def _update_strings(_id, path_def):
+def _update_strings(_id, path_def, setting=None, label_setting=None):
     label = path_def['label']
     action = path_def['path']
-    target = path_def['window']
-    label_string = skin_string_pattern.format(_id, 'label')
-    action_string = skin_string_pattern.format(_id, 'action')
-    target_string = skin_string_pattern.format(_id, 'target')
+    
+    if setting:
+        current = utils.get_skin_string(setting)
+        if _id not in current:
+            return
+        
+        if '?' in action:
+            action = '{}&id={}'.format(action, _id)
+        elif action.endswith('/'):
+            action = '{}?id={}'.format(action, _id)
+        else:
+            action = '{}/?id={}'.format(action, _id)
+            
+        if label_setting:
+            utils.log('Setting {} to {}'.format(label_setting, label))
+            utils.set_skin_string(label_setting, label)
+        
+        utils.log('Setting {} to {}'.format(setting, action))
+        utils.set_skin_string(setting, action)
+    else:
+        target = path_def['window']
+        label_string = skin_string_pattern.format(_id, 'label')
+        action_string = skin_string_pattern.format(_id, 'action')
+        target_string = skin_string_pattern.format(_id, 'target')
 
-    utils.log('Setting {} to {}'.format(label_string, label))
-    utils.log('Setting {} to {}'.format(action_string, action))
-    utils.log('Setting {} to {}'.format(target_string, target))
-    utils.set_skin_string(label_string, label)
-    utils.set_skin_string(action_string, action)
-    utils.set_skin_string(target_string, target)
+        utils.log('Setting {} to {}'.format(label_string, label))
+        utils.log('Setting {} to {}'.format(action_string, action))
+        utils.log('Setting {} to {}'.format(target_string, target))
+        utils.set_skin_string(label_string, label)
+        utils.set_skin_string(action_string, action)
+        utils.set_skin_string(target_string, target)
     
     
 def _convert_widgets(notify=False):
     dialog = xbmcgui.Dialog()
     
-    if not _shortcuts_path:
-        dialog.notification('AutoWidget', 'Skipping widget conversion...')
-        return 0
+    converted = []
     
-    dialog.notification('AutoWidget', 'Converting new widgets...')
-    converted = _convert_shortcuts() + _convert_properties()
+    converted.extend(_convert_skin_strings(converted))
+    
+    if _shortcuts_path:    
+        dialog.notification('AutoWidget', _addon.getLocalizedString(32062))
+        converted.extend(_convert_shortcuts(converted))
+        converted.extend(_convert_properties(converted))
+    
+    utils.log('{}'.format(converted), xbmc.LOGNOTICE)
+    return converted
+    
+    
+def _convert_skin_strings(converted):
+    xml_path = os.path.join(_skin_path, 'settings.xml')
+    if not os.path.exists(xml_path):
+        return converted
+    
+    try:
+        settings = ElementTree.parse(xml_path).getroot()
+    except ParseError:
+        utils.log('Unable to parse: {}/settings.xml'.format(_skin_id))
+    ids = []
+        
+    for setting in settings.findall('setting'):
+        if not setting.text or not all(i in setting.text
+                                       for i in ['plugin.program.autowidget',
+                                                 'mode=path',
+                                                 'action=random']):
+            continue
+
+        params = dict(parse_qsl(setting.text.split('?')[1].replace('\"', '')))
+        for new_setting in settings.findall('setting'):
+            if 'Random Path ({})'.format(params['id']) in new_setting.text:
+                label_setting = new_setting.get('id')
+        
+        details = _save_path_details(params, converted, setting=setting.get('id'), label_setting=label_setting)
+        
+        if not details:
+            continue
+            
+        _id = details['id']
+        
+        converted.append(_id)
     
     return converted
 
 
-def _convert_shortcuts():
-    converted = 0
-    
+def _convert_shortcuts(converted):    
     for xml in [x for x in os.listdir(_shortcuts_path)
                 if x.endswith('.DATA.xml') and 'powermenu' not in x]:
         xml_path = os.path.join(_shortcuts_path, xml)
@@ -119,7 +190,11 @@ def _convert_shortcuts():
                 'plugin.program.autowidget', 'mode=path', 'action=random']):
                 continue
 
-            details = _save_path_details(groups[2])
+            params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
+            details = _save_path_details(params, converted)
+            if not details:
+                continue
+                
             _id = details['id']
             label_node.text = skin_string_info_pattern.format(_id, 'label')
 
@@ -130,20 +205,21 @@ def _convert_shortcuts():
             action_node.text = path_replace_pattern.format(groups[0],
                                                            ','.join(groups[1:]))
 
-            converted += 1
+            converted.append(_id)
 
         utils.prettify(shortcuts)
         tree = ElementTree.ElementTree(shortcuts)
         tree.write(xml_path)
 
     return converted
-        
-        
-def _convert_properties():
-    converted = 0
 
+        
+def _convert_properties(converted):
     props_path = os.path.join(_shortcuts_path,
-                              '{}.properties'.format(_skin_name))
+                              '{}.properties'.format(_skin_id))
+    if not os.path.exists(props_path):
+        return converted
+        
     with open(props_path, 'r') as f:
         content = ast.literal_eval(f.read())
     
@@ -155,8 +231,24 @@ def _convert_properties():
         suffix = re.search(widget_param_pattern, prop[2])
         if not suffix:
             continue
-            
-        details = _save_path_details(prop[3])
+        
+        if 'ActivateWindow' in prop[3]:
+            match = re.search(activate_window_pattern, prop[3])
+            if not match:
+                continue
+                
+            groups = list(match.groups())
+            if not groups[2] or not all(i in groups[2] for i in ['plugin.program.autowidget', 'mode=path', 'action=random']):
+                continue
+        
+            params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
+        else:
+            params = dict(parse_qsl(prop[3].split('?')[1].replace('\"', '')))
+        
+        details = _save_path_details(params, converted)
+        if not details:
+            continue
+        
         _id = details['id']
         prop[3] = skin_string_info_pattern.format(_id, 'action')
         content[prop_index] = prop
@@ -175,7 +267,7 @@ def _convert_properties():
             
             content[param_index] = param
         
-        converted += 1
+        converted.append(_id)
         
     with open(props_path, 'w') as f:
         f.write('{}'.format(content))
@@ -184,9 +276,8 @@ def _convert_properties():
 
 
 def refresh_paths(notify=False, force=False):
-    converted = 0
-    utils.ensure_addon_data()
-
+    converted = []
+    
     if force:
         converted = _convert_widgets(notify)
 
@@ -197,8 +288,7 @@ def refresh_paths(notify=False, force=False):
     for group_def in manage.find_defined_groups():
         paths = []
 
-        for widget in [x for x in os.listdir(_addon_path) if x.endswith(
-                '.widget')]:
+        for widget in [x for x in os.listdir(_addon_path) if x.endswith('.widget')]:
             saved_path = os.path.join(_addon_path, widget)
             with open(saved_path, 'r') as f:
                 widget_json = json.loads(f.read())
@@ -207,13 +297,15 @@ def refresh_paths(notify=False, force=False):
                 _id = widget_json['id']
                 group_id = widget_json['group']
                 action = widget_json['action'].lower()
+                setting = widget_json.get('setting')
+                label_setting = widget_json.get('label_setting')
 
                 if action == 'random' and len(paths) == 0:
                     paths = _get_random_paths(group_id, force)
 
                 if paths:
-                    path = paths.pop()
-                    _update_strings(_id, path)
+                    path_def = paths.pop()
+                    _update_strings(_id, path_def, setting, label_setting)
 
-    if converted > 0:
+    if len(converted) > 0:
         xbmc.executebuiltin('ReloadSkin()')

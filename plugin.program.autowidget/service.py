@@ -15,6 +15,7 @@ class AutoWidgetService(xbmc.Monitor):
 
     def __init__(self):
         utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
+        utils.ensure_addon_data()
         self._update_properties()
         self._update_widgets()
 

@@ -2,6 +2,7 @@ import xbmc
 import xbmcaddon
 
 import random
+import uuid
 
 from resources.lib import manage
 from resources.lib.common import directory
@@ -51,19 +52,18 @@ def root_menu():
                    '?mode=manage'
                    '&action=remove_group'
                    '&group={})').format(group_id)),
-                  (_addon.getLocalizedString(32055),
+                  (_addon.getLocalizedString(32061),
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'
-                   '&action=rename_group'
+                   '&action=edit_group'
                    '&group={})').format(group_id))]
             
             directory.add_menu_item(title=group_name,
                                     params={'mode': 'group',
                                             'group': group_id},
-                                    info={'plot': _addon.getLocalizedString(32019)
-                                                        .format(group_name)},
-                                    art=folder_shortcut if group_type == 'shortcut' else folder_sync,
+                                    info=group.get('info'),
+                                    art=group.get('art') or (folder_shortcut if group_type == 'shortcut' else folder_sync),
                                     cm=cm,
                                     isFolder=True)
 
@@ -78,6 +78,8 @@ def root_menu():
 
 
 def group_menu(group_id):
+    _id = uuid.uuid4()
+    
     group = manage.get_group_by_id(group_id)
     if not group:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
@@ -99,7 +101,8 @@ def group_menu(group_id):
                                             'action': 'call',
                                             'group': group_id,
                                             'path': path['id']},
-                                    art=path['art'],
+                                    info=path.get('info'),
+                                    art=path.get('art') or (folder_shortcut if is_shortcut else folder_sync),
                                     cm=_create_context_items(group_id,
                                                              path['id'],
                                                              idx,
@@ -109,11 +112,11 @@ def group_menu(group_id):
     # //// ACTIONS ////
     directory.add_separator(title=32010, char='/')
 
-    params = {'mode': 'path', 'group': group_id}
+    params = {'mode': 'path', 'group': group_id, 'id': '{}'.format(_id)}
 
     if len(paths) > 0:
         if is_widget:
-            title = _addon.getLocalizedString(32028).format(group_name)
+            title = _addon.getLocalizedString(32028).format(_id)
             art = shuffle
             description = _addon.getLocalizedString(32029).format(group_name)
             
@@ -137,16 +140,17 @@ def group_menu(group_id):
 
 def random_path_menu(group_id):
     _window = utils.get_active_window()
+    
     group = manage.get_group_by_id(group_id)
     if not group:
-        utils.log('\"Random Path from {}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
         return
     
     group_name = group.get('name', '')
     paths = manage.find_defined_paths(group_id)
     
     if len(paths) > 0:
-        if _window != 'home':
+        if _window == 'media':
             directory.add_menu_item(title=32012,
                                     art=folder_sync)
             directory.add_separator(group_name, char='/')
@@ -158,7 +162,8 @@ def random_path_menu(group_id):
                                                     'action': 'call',
                                                     'group': group_id,
                                                     'path': path['id']},
-                                            art=path['art'])
+                                            art=path.get('art'),
+                                            info=path.get('info'))
         else:
             directory.add_menu_item(title=32013,
                                     params={'mode': 'force'},
@@ -174,7 +179,7 @@ def shortcut_menu(group_id):
     _window = utils.get_active_window()
     group = manage.get_group_by_id(group_id)
     if not group:
-        utils.log('\"Shortcuts from {}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
         return
         
     group_name = group.get('name', '')
@@ -191,8 +196,8 @@ def shortcut_menu(group_id):
                                         'action': 'call',
                                         'group': group_id,
                                         'path': path['id']},
-                                art=path['art'],
-                                info=path['info'])
+                                art=path.get('art'),
+                                info=path.get('info'))
 
 
 def call_path(group_id, path_id):

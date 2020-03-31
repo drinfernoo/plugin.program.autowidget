@@ -52,7 +52,8 @@ def get_art(filename):
            'poster': poster_path if os.path.exists(poster_path) else '',
            'fanart': fanart_path if os.path.exists(fanart_path) else '',
            'landscape': fanart_path if os.path.exists(fanart_path) else '',
-           'banner': banner_path if os.path.exists(banner_path) else ''}
+           'banner': banner_path if os.path.exists(banner_path) else '',
+           'thumb': icon_path if os.path.exists(icon_path) else ''}
     
     return art
     
