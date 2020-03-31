@@ -131,7 +131,7 @@ msgid "Shift Path Down"
 msgstr ""
 
 msgctxt "#32028"
-msgid "Random Path from {}"
+msgid "Random Path ({})"
 msgstr ""
 
 msgctxt "#32029"
@@ -260,4 +260,12 @@ msgstr ""
 
 msgctxt "#32060"
 msgid "[COLOR lawngreen][B]Disable[/B][/COLOR]"
+msgstr ""
+
+msgctxt "#32061"
+msgid "Edit Group"
+msgstr ""
+
+msgctxt "#32062"
+msgid "Converting new widgets..."
 msgstr ""

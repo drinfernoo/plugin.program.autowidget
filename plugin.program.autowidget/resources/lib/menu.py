@@ -52,7 +52,7 @@ def root_menu():
                    '?mode=manage'
                    '&action=remove_group'
                    '&group={})').format(group_id)),
-                  ('Edit Group',
+                  (_addon.getLocalizedString(32061),
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'
@@ -116,7 +116,7 @@ def group_menu(group_id):
 
     if len(paths) > 0:
         if is_widget:
-            title = 'Random Path ({})'.format(_id)
+            title = _addon.getLocalizedString(32028).format(_id)
             art = shuffle
             description = _addon.getLocalizedString(32029).format(group_name)
             
@@ -143,7 +143,7 @@ def random_path_menu(group_id):
     
     group = manage.get_group_by_id(group_id)
     if not group:
-        utils.log('\"Random Path from {}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
         return
     
     group_name = group.get('name', '')
@@ -179,7 +179,7 @@ def shortcut_menu(group_id):
     _window = utils.get_active_window()
     group = manage.get_group_by_id(group_id)
     if not group:
-        utils.log('\"Shortcuts from {}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
         return
         
     group_name = group.get('name', '')
