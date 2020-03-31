@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.112" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.196" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.module.six" />
         <import addon="script.skinshortcuts" />
     </requires>
+    
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>executable</provides>
     </extension>
+    
     <extension point="xbmc.service" library="service.py" />
+    
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>Add to AutoWidget</label>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+            </item>
+        </menu>
+    </extension>
+    
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
         <description lang="en_GB"></description>
@@ -26,42 +37,32 @@
         </assets>
     </extension>
 </addon>
-autowidget/</source>
-        <news>
-1.2.5
- - Update some skin localizations
- - Add more widget artwork
- - Update documentation
-1.2.3
- - Fix paths made from add-on browser
- - Add ability to set plot
-1.2.2
- - Fix group dialog calls
-1.2.1
- - Fix imports
-1.2.0
- - Better handling of art
- - Better add-on art added
- - Redesigned path addition dialog
- - Settings shortcuts added
-1.1.2
- - Add art editing for paths
- - Add group renaming
-1.1.1
- - Add setting to disable notification
-1.1.0
- - Remove Skin Shortcuts dependency
- - Expand context menu options
- - Add support for skins with "basic" Skin Shortcuts integration
- - Add setting to pause AutoWidget's service
-1.0.7
- - Fix context menu option not showing
-1.0.6
- - Fix paths not saving
-1.0.5
- - Raise required Skin Shortcuts version to  1.0.19
-1.0.4
- - Allow custom labels
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+hortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+stom labels
  - Add removal notifications    
 1.0.3
  - Fix shortcuts and widgets added from context menu
