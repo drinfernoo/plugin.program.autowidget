@@ -61,6 +61,10 @@ def _save_path_details(path, converted, setting=''):
 
     if setting:
         params.update({'setting': setting})
+        
+    for param in params:
+        if params[param].endswith(',return)'):
+            return
 
     with open(path_to_saved, 'w') as f:
         f.write(json.dumps(params, indent=4))
@@ -133,7 +137,7 @@ def _convert_skin_strings(converted):
                                                  'mode=path',
                                                  'action=random']):
             continue
-        
+
         details = _save_path_details(setting.text, converted, setting=setting.get('id'))
         if not details:
             continue
@@ -257,8 +261,7 @@ def _convert_properties(converted):
 
 def refresh_paths(notify=False, force=False):
     converted = []
-    utils.ensure_addon_data()
-
+    
     if force:
         converted = _convert_widgets(notify)
 
