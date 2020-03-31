@@ -52,19 +52,18 @@ def root_menu():
                    '?mode=manage'
                    '&action=remove_group'
                    '&group={})').format(group_id)),
-                  (_addon.getLocalizedString(32055),
+                  ('Edit Group',
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'
-                   '&action=rename_group'
+                   '&action=edit_group'
                    '&group={})').format(group_id))]
             
             directory.add_menu_item(title=group_name,
                                     params={'mode': 'group',
                                             'group': group_id},
-                                    info={'plot': _addon.getLocalizedString(32019)
-                                                        .format(group_name)},
-                                    art=folder_shortcut if group_type == 'shortcut' else folder_sync,
+                                    info=group.get('info'),
+                                    art=group.get('art') or (folder_shortcut if group_type == 'shortcut' else folder_sync),
                                     cm=cm,
                                     isFolder=True)
 
@@ -102,7 +101,8 @@ def group_menu(group_id):
                                             'action': 'call',
                                             'group': group_id,
                                             'path': path['id']},
-                                    art=path['art'],
+                                    info=path.get('info'),
+                                    art=path.get('art') or (folder_shortcut if is_shortcut else folder_sync),
                                     cm=_create_context_items(group_id,
                                                              path['id'],
                                                              idx,
@@ -162,7 +162,8 @@ def random_path_menu(group_id):
                                                     'action': 'call',
                                                     'group': group_id,
                                                     'path': path['id']},
-                                            art=path['art'])
+                                            art=path.get('art'),
+                                            info=path.get('info'))
         else:
             directory.add_menu_item(title=32013,
                                     params={'mode': 'force'},
@@ -195,8 +196,8 @@ def shortcut_menu(group_id):
                                         'action': 'call',
                                         'group': group_id,
                                         'path': path['id']},
-                                art=path['art'],
-                                info=path['info'])
+                                art=path.get('art'),
+                                info=path.get('info'))
 
 
 def call_path(group_id, path_id):

@@ -277,7 +277,9 @@ def add_group(target):
         group_def = {'name': group_name,
                      'type': target,
                      'paths': [],
-                     'id': group_id}
+                     'id': group_id,
+                     'info': {'plot': ''},
+                     'art': folder_sync if target == 'widget' else folder_share}
     
         with open(filename, 'w+') as f:
             f.write(json.dumps(group_def, indent=4))
@@ -310,6 +312,100 @@ def remove_group(group_id, over=False):
         xbmc.executebuiltin('Container.Update(plugin://plugin.program.autowidget/)')
     else:
         dialog.notification('AutoWidget', _addon.getLocalizedString(32040))
+        
+        
+def edit_group_dialog(group_id):
+    dialog = xbmcgui.Dialog()
+    group_def = get_group_by_id(group_id)
+    
+    options = []
+    if _addon.getSettingBool('context.advanced') and not _addon.getSettingBool('context.warning'):
+        choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32058),
+                              yeslabel=_addon.getLocalizedString(32059),
+                              nolabel=_addon.getLocalizedString(32060))
+        utils.log(choice)
+        if choice < 1:
+            _addon.setSetting('context.advanced', 'false')
+            _addon.setSetting('context.warning', 'true')
+        elif choice == 1:
+            _addon.setSetting('context.warning', 'true')
+    
+    warn = ['type', 'id']
+    keys = sorted(group_def.keys()) if _addon.getSettingBool('context.advanced') else [i for i in sorted(group_def.keys()) if i not in warn]
+    
+    for key in keys:
+        if key == 'paths':
+            continue
+    
+        if key in warn:
+            label = '[COLOR goldenrod]{}[/COLOR]'.format(key)
+        else:
+            label = key
+            
+        if key == 'art':
+            art = group_def['art']
+            arts = ['[COLOR {}]{}[/COLOR]'.format('firebrick' if art[i] == '' else 'lawngreen', i.capitalize()) for i in sorted(art.keys())]
+            options.append('{}: {}'.format(label, ' / '.join(arts)))
+        elif key == 'info':
+            options.append('{}: {}'.format(label, ', '.join(sorted(group_def[key].keys()))))
+        else:
+            options.append('{}: {}'.format(label, group_def[key]))
+        
+    idx = dialog.select(_addon.getLocalizedString(32048), options)
+    if idx < 0:
+        return
+    
+    key = options[idx].split(':')[0]
+    edit_group(group_id, key)
+    
+    
+def edit_group(group_id, target):
+    updated = False
+    dialog = xbmcgui.Dialog()
+    group_def = get_group_by_id(group_id)
+    
+    if target in ['art', 'info']:
+        names = []
+        options = []
+        _def = group_def[target]
+        
+        for key in sorted(_def.keys()):
+            item = xbmcgui.ListItem('{}: {}'.format(key, _def[key]))
+            if target == 'art':
+                item.setArt({'icon': _def[key]})
+            names.append(key)
+            options.append(item)
+            
+        if target == 'art':
+            idx = dialog.select(_addon.getLocalizedString(32046), options, useDetails=True)
+        elif target == 'info':
+            idx = dialog.select(_addon.getLocalizedString(32047), options)
+            
+        if idx < 0:
+            return
+        name = names[idx]
+        
+        if target == 'art':
+            value = dialog.browse(2, _addon.getLocalizedString(32049).format(name.capitalize()),
+                                 'files', mask='.jpg|.png', useThumbs=True,
+                                 defaultt=_def[name])
+        elif target == 'info':
+            value = dialog.input(heading=name.capitalize(),
+                                 defaultt=_def[name])
+        _def[name] = value
+        
+        updated = True
+    elif target == 'name':
+        rename_group(group_id)
+    else:
+        value = dialog.input(heading=target.capitalize(),
+                             defaultt=group_def[target])
+        group_def[target] = value
+        updated = True
+        
+    if updated:
+        write_path(group_def)
+        xbmc.executebuiltin('Container.Refresh()')
 
 
 def add_as(path, is_folder):
