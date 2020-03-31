@@ -53,8 +53,6 @@ def add_path(group_def, labels):
 
 
 def remove_path(group_id, path_id):
-    utils.ensure_addon_data()
-    
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32035))
     
@@ -81,8 +79,6 @@ def remove_path(group_id, path_id):
         
         
 def shift_path(group_id, path_id, target):
-    utils.ensure_addon_data()
-    
     group = get_group_by_id(group_id)
     
     filename = os.path.join(_addon_path, '{}.group'.format(group['id']))
@@ -112,8 +108,6 @@ def shift_path(group_id, path_id, target):
     
     
 def edit_dialog(group_id, path_id):
-    utils.ensure_addon_data()
-    
     dialog = xbmcgui.Dialog()
     path_def = get_path_by_id(path_id, group_id)
     
@@ -156,8 +150,6 @@ def edit_dialog(group_id, path_id):
         
         
 def edit_path(group_id, path_id, target):
-    utils.ensure_addon_data()
-    
     updated = False
     dialog = xbmcgui.Dialog()
     group_def = get_group_by_id(group_id)
@@ -298,8 +290,6 @@ def add_group(target):
         
 
 def remove_group(group_id, over=False):
-    utils.ensure_addon_data()
-    
     group_def = get_group_by_id(group_id)
     group_name = group_def['name']
     
