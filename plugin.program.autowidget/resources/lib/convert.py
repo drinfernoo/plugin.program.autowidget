@@ -197,7 +197,6 @@ def _convert_shortcuts(converted):
             _id = details['id']
             label_node.text = skin_string_info_pattern.format(_id, 'label')
 
-            # groups[0] = skin_string_pattern.format(_id, 'command')
             groups[1] = skin_string_info_pattern.format(_id, 'target')
             groups[2] = skin_string_info_pattern.format(_id, 'action')
 
