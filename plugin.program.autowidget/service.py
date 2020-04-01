@@ -6,6 +6,7 @@ import random
 
 from resources.lib import convert
 from resources.lib import manage
+from resources.lib.common import migrate
 from resources.lib.common import utils
 
 _properties = ['context.autowidget']
@@ -15,6 +16,7 @@ class AutoWidgetService(xbmc.Monitor):
     def __init__(self):
         utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
         utils.ensure_addon_data()
+        migrate.migrate_groups()
         self._update_properties()
         self._update_widgets()
 

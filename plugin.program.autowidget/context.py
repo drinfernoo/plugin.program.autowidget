@@ -1,6 +1,7 @@
 import xbmc
 
 from resources.lib import manage
+from resources.lib.common import migrate
 from resources.lib.common import utils
 
 _windows = {'programs':     ['program', 'script'],
@@ -47,6 +48,7 @@ def _get_window(labels):
 
 if __name__ == '__main__':
     utils.ensure_addon_data()
+    migrate.migrate_groups()
 
     labels = {'label': xbmc.getInfoLabel('ListItem.Label'),
               'is_folder': xbmc.getCondVisibility('Container.ListItem.IsFolder'),

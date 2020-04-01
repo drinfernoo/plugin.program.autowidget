@@ -12,6 +12,7 @@ from resources.lib import edit
 from resources.lib import menu
 from resources.lib import manage
 from resources.lib import convert
+from resources.lib.common import migrate
 from resources.lib.common import utils
 
 
@@ -33,6 +34,7 @@ def dispatch(_plugin, _handle, _params):
     is_type = 'files'
 
     utils.ensure_addon_data()
+    migrate.migrate_groups()
     
     mode = params.get('mode', '')
     action = params.get('action', '')
