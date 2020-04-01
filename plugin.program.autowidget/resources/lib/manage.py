@@ -4,6 +4,7 @@ import xbmcgui
 
 import json
 import os
+import re
 import time
 
 try:
@@ -125,7 +126,7 @@ def edit_dialog(group_id, path_id):
         elif choice == 1:
             _addon.setSetting('context.warning', 'true')
     
-    warn = ['content', 'id', 'is_folder', 'target', 'window']
+    warn = ['content', 'id', 'is_folder', 'target', 'window', 'version']
     keys = sorted(path_def.keys()) if _addon.getSettingBool('context.advanced') else [i for i in sorted(path_def.keys()) if i not in warn]
     
     for key in keys:
@@ -153,14 +154,18 @@ def edit_dialog(group_id, path_id):
     
     
     key = options[idx].split(':')[0]
-    edit_path(group_id, path_id, key)
+    edit_path(group_id, path_id, key, warn)
         
         
-def edit_path(group_id, path_id, target):
+def edit_path(group_id, path_id, target, warn):
     updated = False
     dialog = xbmcgui.Dialog()
     group_def = get_group_by_id(group_id)
     path_def = get_path_by_id(path_id, group_id)
+    
+    color = re.match('\[COLOR \w+\](\w+)\[\/COLOR\]', target)
+    if color:
+        target = color.group(1)
     
     if target in ['art', 'info']:
         names = []
@@ -192,6 +197,11 @@ def edit_path(group_id, path_id, target):
                                  defaultt=_def[name])
         _def[name] = value
         
+        updated = True
+    elif target in warn:
+        value = dialog.input(heading=_addon.getLocalizedString(32063).format(target.capitalize()),
+                             defaultt=path_def[target])
+        path_def[target] = value
         updated = True
     else:
         value = dialog.input(heading=target.capitalize(),
@@ -338,7 +348,7 @@ def edit_group_dialog(group_id):
         elif choice == 1:
             _addon.setSetting('context.warning', 'true')
     
-    warn = ['type', 'id']
+    warn = ['type', 'id',  'version']
     keys = sorted(group_def.keys()) if _addon.getSettingBool('context.advanced') else [i for i in sorted(group_def.keys()) if i not in warn]
     
     for key in keys:
@@ -368,13 +378,17 @@ def edit_group_dialog(group_id):
         return
     
     key = options[idx].split(':')[0]
-    edit_group(group_id, key)
+    edit_group(group_id, key, warn)
     
     
-def edit_group(group_id, target):
+def edit_group(group_id, target, warn):
     updated = False
     dialog = xbmcgui.Dialog()
     group_def = get_group_by_id(group_id)
+    
+    color = re.match('\[COLOR \w+\](\w+)\[\/COLOR\]', target)
+    if color:
+        target = color.group(1)
     
     if target in ['art', 'info']:
         names = []
@@ -409,6 +423,11 @@ def edit_group(group_id, target):
         updated = True
     elif target == 'name':
         rename_group(group_id)
+    elif target in warn:
+        value = dialog.input(heading=_addon.getLocalizedString(32063).format(target.capitalize()),
+                             defaultt=group_def[target])
+        group_def[target] = value
+        updated = True
     else:
         value = dialog.input(heading=target.capitalize(),
                              defaultt=group_def[target])
