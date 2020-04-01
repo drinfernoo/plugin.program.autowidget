@@ -42,7 +42,7 @@ def root_menu():
         directory.add_separator(title=32007, char='/')
         
         for group in manage.find_defined_groups():
-            group_name = group['name']
+            group_name = group['label']
             group_id = group['id']
             group_type = group['type']
             
@@ -50,7 +50,7 @@ def root_menu():
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'
-                   '&action=edit_group'
+                   '&action=edit'
                    '&group={})').format(group_id))]
             
             directory.add_menu_item(title=group_name,
@@ -80,7 +80,7 @@ def group_menu(group_id):
         return        
     
     group_type = group['type']
-    group_name = group['name']
+    group_name = group['label']
     is_widget = group_type == 'widget'
     is_shortcut = group_type == 'shortcut'
     
@@ -140,7 +140,7 @@ def random_path_menu(group_id):
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
         return
     
-    group_name = group.get('name', '')
+    group_name = group.get('label', '')
     paths = manage.find_defined_paths(group_id)
     
     if len(paths) > 0:
@@ -176,7 +176,7 @@ def shortcut_menu(group_id):
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id), level=xbmc.LOGERROR)
         return
         
-    group_name = group.get('name', '')
+    group_name = group.get('label', '')
     paths = manage.find_defined_paths(group_id)
     
     if len(paths) > 0 and _window != 'home':
@@ -196,6 +196,8 @@ def shortcut_menu(group_id):
 
 def call_path(group_id, path_id):
     path_def = manage.get_path_by_id(path_id, group_id=group_id)
+    if not path_def:
+        return
     
     xbmc.executebuiltin('Dialog.Close(busydialog)')
         
@@ -220,18 +222,11 @@ def call_path(group_id, path_id):
 
 
 def _create_context_items(group_id, path_id, idx, length):
-    cm = [(_addon.getLocalizedString(32025),
+    cm = [(_addon.getLocalizedString(32048),
           ('RunPlugin('
            'plugin://plugin.program.autowidget/'
            '?mode=manage'
-           '&action=remove_path'
-           '&group={}'
-           '&path={})').format(group_id, path_id)),
-          (_addon.getLocalizedString(32048),
-          ('RunPlugin('
-           'plugin://plugin.program.autowidget/'
-           '?mode=manage'
-           '&action=edit_path'
+           '&action=edit'
            '&group={}'
            '&path={})').format(group_id, path_id))]
     if idx > 0:
