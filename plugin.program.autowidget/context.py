@@ -3,6 +3,47 @@ import xbmc
 from resources.lib import manage
 from resources.lib.common import utils
 
+_windows = {'programs':     ['program', 'script'],
+            'addonbrowser': ['addon',   'addons'],
+            'music':        ['audio',   'music'],
+            'pictures':     ['image',   'picture'],
+            'videos':       ['video',   'videos']}
+
+
+def _get_path(labels):
+    _path = xbmc.getInfoLabel('ListItem.FolderPath')
+    if _path != 'addons://user/':
+        _path = _path.replace('addons://user/', 'plugin://')
+    labels['path'] = _path
+    
+    return labels
+    
+    
+def _get_art(labels):
+    labels['art'] = {i: xbmc.getInfoLabel('ListItem.Art({})'.format(i))
+                        for i in ['poster', 'fanart', 'banner', 'landscape',
+                                  'clearlogo', 'clearart']}
+    labels['art'].update({i: xbmc.getInfoLabel('ListItem.{}'
+                                               .format(i.capitalize()))
+                             for i in ['icon', 'thumb']})
+                             
+    return labels
+    
+    
+def _get_info(labels):
+    labels['info'] = {'plot': xbmc.getInfoLabel('ListItem.Plot')}
+    
+    return labels
+    
+
+def _get_window(labels):
+    _path = labels['path'].lower()
+    for _key in _windows:
+        if any(i in _path for i in _windows[_key]):
+            labels['window'] = _key
+            
+    return labels
+    
 
 if __name__ == '__main__':
     utils.ensure_addon_data()
@@ -11,37 +52,9 @@ if __name__ == '__main__':
               'is_folder': xbmc.getCondVisibility('Container.ListItem.IsFolder'),
               'content': xbmc.getInfoLabel('Container.Content')}
               
-    path = xbmc.getInfoLabel('ListItem.FolderPath')
-    if path != 'addons://user/':
-        path = path.replace('addons://user/', 'plugin://')
-    labels['path'] = path
-              
-    art = {'icon': xbmc.getInfoLabel('ListItem.Icon'),
-           'thumb': xbmc.getInfoLabel('ListItem.Thumb'),
-           'poster': xbmc.getInfoLabel('ListItem.Art(poster)'),
-           'fanart': xbmc.getInfoLabel('ListItem.Art(fanart)'),
-           'banner': xbmc.getInfoLabel('ListItem.Art(banner)'),
-           'landscape': xbmc.getInfoLabel('ListItem.Art(landscape)'),
-           'clearlogo': xbmc.getInfoLabel('ListItem.Art(clearlogo)'),
-           'clearart': xbmc.getInfoLabel('ListItem.Art(clearart)')}
-    labels['art'] = art
+    labels = _get_path(labels)
+    labels = _get_art(labels)
+    labels = _get_info(labels)
+    labels = _get_window(labels)
     
-    labels['info'] = {'plot': xbmc.getInfoLabel('ListItem.Plot')}
-    
-    window = 'files'
-    if any(i in labels['path'].lower() for i in ['addon', 'addons']):
-        window = 'addonbrowser'
-    elif any(i in labels['path'].lower() for i in ['audio', 'music']):
-        window = 'music'
-    elif any(i in labels['path'].lower() for i in ['image', 'picture']):
-        window = 'pictures'
-    elif any(i in labels['path'].lower() for i in ['video', 'videos']):
-        window = 'videos'
-    labels['window'] = window
-    
-    _type = manage.add_as(labels['path'], labels['is_folder'])
-    if _type:
-        labels['target'] = _type
-        group_def = manage.group_dialog(_type)
-        if group_def:
-            manage.add_path(group_def, labels)
+    manage.add_from_context(labels)
