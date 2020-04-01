@@ -124,7 +124,6 @@ def _convert_widgets(notify=False):
         converted.extend(_convert_shortcuts(converted))
         converted.extend(_convert_properties(converted))
     
-    utils.log('{}'.format(converted), xbmc.LOGNOTICE)
     return converted
     
     
@@ -137,29 +136,29 @@ def _convert_skin_strings(converted):
         settings = ElementTree.parse(xml_path).getroot()
     except ParseError:
         utils.log('Unable to parse: {}/settings.xml'.format(_skin_id))
-    ids = []
-        
-    for setting in settings.findall('setting'):
-        if not setting.text or not all(i in setting.text
-                                       for i in ['plugin.program.autowidget',
-                                                 'mode=path',
-                                                 'action=random']):
-            continue
-
-        params = dict(parse_qsl(setting.text.split('?')[1].replace('\"', '')))
-        for new_setting in settings.findall('setting'):
-            if 'Random Path ({})'.format(params['id']) in new_setting.text:
-                label_setting = new_setting.get('id')
-        
-        details = _save_path_details(params, converted, setting=setting.get('id'), label_setting=label_setting)
-        
-        if not details:
-            continue
-            
-        _id = details['id']
-        
-        converted.append(_id)
     
+    settings = [i for i in settings.findall('setting') if i.text]
+    path_settings = [i for i in settings if all(j in i.text
+                                            for j in ['plugin.program.autowidget',
+                                                      'mode=path',
+                                                      'action=random'])]
+    label_settings = [i for i in settings if 'Random Path' in i.text]
+    
+    for path in path_settings:
+        path_id = path.get('id')
+        params = dict(parse_qsl(path.text.split('?')[1].replace('\"', '')))
+        
+        label_setting = ''
+        for label in label_settings:
+            if params.get('id') in label.text:
+                label_id = label.get('id')
+    
+        details = _save_path_details(params, converted, setting=path_id,
+                                     label_setting=label_id)
+        if details:
+            _id = details['id']
+            converted.append(_id)
+
     return converted
 
 
