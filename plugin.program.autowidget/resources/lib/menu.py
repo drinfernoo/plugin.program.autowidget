@@ -46,13 +46,7 @@ def root_menu():
             group_id = group['id']
             group_type = group['type']
             
-            cm = [(_addon.getLocalizedString(32023),
-                  ('RunPlugin('
-                   'plugin://plugin.program.autowidget/'
-                   '?mode=manage'
-                   '&action=remove_group'
-                   '&group={})').format(group_id)),
-                  (_addon.getLocalizedString(32061),
+            cm = [(_addon.getLocalizedString(32061),
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'

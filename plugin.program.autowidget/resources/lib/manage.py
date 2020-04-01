@@ -40,7 +40,7 @@ def write_path(group_def, path_def=None, update=''):
         f.write(json.dumps(group_def, indent=4))
     
     
-def add_path(group_def, labels):
+def _add_path(group_def, labels):
     if group_def['type'] == 'shortcut':
         labels['label'] = xbmcgui.Dialog().input(heading=_addon.getLocalizedString(32043),
                                                  defaultt=labels['label'])
@@ -142,10 +142,15 @@ def edit_dialog(group_id, path_id):
             options.append('{}: {}'.format(label, ', '.join(sorted(path_def[key].keys()))))
         else:
             options.append('{}: {}'.format(label, path_def[key]))
-        
+    
+    options.append('[COLOR firebrick]{}[/COLOR]'.format(_addon.getLocalizedString(32025)))
     idx = dialog.select(_addon.getLocalizedString(32048), options)
     if idx < 0:
         return
+    elif idx == len(options) - 1:
+        remove_path(group_id, path_id)
+        return
+    
     
     key = options[idx].split(':')[0]
     edit_path(group_id, path_id, key)
@@ -353,9 +358,13 @@ def edit_group_dialog(group_id):
             options.append('{}: {}'.format(label, ', '.join(sorted(group_def[key].keys()))))
         else:
             options.append('{}: {}'.format(label, group_def[key]))
-        
+    
+    options.append('[COLOR firebrick]{}[/COLOR]'.format(_addon.getLocalizedString(32023)))
     idx = dialog.select(_addon.getLocalizedString(32048), options)
     if idx < 0:
+        return
+    elif idx == len(options) - 1:
+        remove_group(group_id)
         return
     
     key = options[idx].split(':')[0]
@@ -411,7 +420,16 @@ def edit_group(group_id, target):
         xbmc.executebuiltin('Container.Refresh()')
 
 
-def add_as(path, is_folder):
+def add_from_context(labels):
+    _type = _add_as(labels['path'], labels['is_folder'])
+    if _type:
+        labels['target'] = _type
+        group_def = _group_dialog(_type)
+        if group_def:
+            _add_path(group_def, labels)
+
+
+def _add_as(path, is_folder):
     types = [_addon.getLocalizedString(32051), _addon.getLocalizedString(32052),
              _addon.getLocalizedString(32053)]
     
@@ -446,7 +464,7 @@ def add_as(path, is_folder):
     return types[idx].lower()
 
 
-def group_dialog(_type, group_id=None):
+def _group_dialog(_type, group_id=None):
     _type = 'shortcut' if _type == 'settings' else _type
     groups = find_defined_groups(_type)
     names = [group['name'] for group in groups]
@@ -480,8 +498,8 @@ def group_dialog(_type, group_id=None):
     if choice < 0:
         dialog.notification('AutoWidget', _addon.getLocalizedString(32034))
     elif (choice, _type) == (0, 'widget'):
-        return group_dialog(_type, add_group('widget'))
+        return _group_dialog(_type, add_group('widget'))
     elif choice == 0:
-        return group_dialog(_type, add_group('shortcut'))
+        return _group_dialog(_type, add_group('shortcut'))
     else:
         return groups[choice - offset]
