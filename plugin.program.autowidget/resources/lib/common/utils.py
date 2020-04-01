@@ -51,9 +51,11 @@ def get_art(filename):
     art = {'icon': icon_path if os.path.exists(icon_path) else '',
            'poster': poster_path if os.path.exists(poster_path) else '',
            'fanart': fanart_path if os.path.exists(fanart_path) else '',
-           'landscape': fanart_path if os.path.exists(fanart_path) else '',
+           'landscape': '',
            'banner': banner_path if os.path.exists(banner_path) else '',
-           'thumb': icon_path if os.path.exists(icon_path) else ''}
+           'thumb': '',
+           'clearart': '',
+           'clearlogo': ''}
     
     return art
     
@@ -74,7 +76,7 @@ def get_active_window():
 def prettify(elem):
     rough_string = ElementTree.tostring(elem, 'utf-8')
     reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="\t")
+    return reparsed.toprettyxml(indent='\t')
 
 
 def get_valid_filename(s):
