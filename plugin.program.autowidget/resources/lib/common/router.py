@@ -8,9 +8,11 @@ try:
 except ImportError:
     from urlparse import parse_qsl
     
+from resources.lib import edit
 from resources.lib import menu
 from resources.lib import manage
 from resources.lib import convert
+from resources.lib.common import migrate
 from resources.lib.common import utils
 
 
@@ -32,6 +34,7 @@ def dispatch(_plugin, _handle, _params):
     is_type = 'files'
 
     utils.ensure_addon_data()
+    migrate.migrate_groups()
     
     mode = params.get('mode', '')
     action = params.get('action', '')
@@ -45,24 +48,15 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'manage':
         if action == 'add_group':
             manage.add_group(target)
-        elif action == 'remove_group' and group:
-            manage.remove_group(group)
-        elif action == 'edit_group':
-            if group and not target:
-                manage.edit_group_dialog(group)
-            elif group and target:
-                manage.edit_group(group, target)
         elif action == 'add_path' and group and target:
             manage.add_path(group, target)
-        elif action == 'remove_path' and group and path:
-            manage.remove_path(group, path)
         elif action == 'shift_path' and group and path and target:
-            manage.shift_path(group, path, target)
-        elif action == 'edit_path':
-            if group and path and not target:
-                manage.edit_dialog(group, path)
-            elif group and path and target:
-                manage.edit_path(group, path, target)
+            edit.shift_path(group, path, target)
+        elif action == 'edit':
+            if not path:
+                edit.edit_dialog(group)
+            else:
+                edit.edit_dialog(group, path)
     elif mode == 'path':
         if action == 'call' and group and path:
             menu.call_path(group, path)
