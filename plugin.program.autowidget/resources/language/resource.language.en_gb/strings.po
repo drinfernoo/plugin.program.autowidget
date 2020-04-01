@@ -269,3 +269,7 @@ msgstr ""
 msgctxt "#32062"
 msgid "Converting new widgets..."
 msgstr ""
+
+msgctxt "#32063"
+msgid "{} is an [COLOR goldenrod]advanced parameter[/COLOR]. Change at your [COLOR firebrick]own risk[/COLOR]."
+msgstr ""
