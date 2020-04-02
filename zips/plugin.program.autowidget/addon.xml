@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.400" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.206" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -14,7 +15,7 @@
         <menu id="kodi.core.main">
             <item library="context.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
             </item>
         </menu>
     </extension>
@@ -25,13 +26,13 @@
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news>
-1.2.5
- - Update some skin localizations
- - Add more widget artwork
- - Update documentation
-1.2.3
- - Fix paths made from add-on browser
+        <news></news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+de from add-on browser
  - Add ability to set plot
 1.2.2
  - Fix group dialog calls
