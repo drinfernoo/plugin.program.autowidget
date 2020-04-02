@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.206" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.317" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -15,7 +14,7 @@
         <menu id="kodi.core.main">
             <item library="context.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(10000).Property(context.autowidget))</visible>
             </item>
         </menu>
     </extension>
@@ -26,33 +25,7 @@
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news></news>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-de from add-on browser
- - Add ability to set plot
-1.2.2
- - Fix group dialog calls
-1.2.1
- - Fix imports
-1.2.0
- - Better handling of art
- - Better add-on art added
- - Redesigned path addition dialog
- - Settings shortcuts added
-1.1.2
- - Add art editing for paths
- - Add group renaming
-1.1.1
- - Add setting to disable notification
-1.1.0
- - Remove Skin Shortcuts dependency
- - Expand context menu options
- - Add support for skins with "basic" Skin Shortcuts integration
- - Add setting to pause AutoWidget's service
+        <news>
 1.0.7
  - Fix context menu option not showing
 1.0.6
@@ -72,10 +45,7 @@ de from add-on browser
  - First stable release
         </news>
         <assets>
-            <icon>resources/media/sync.png</icon>
-            <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
+            <icon>icon.png</icon>
         </assets>
     </extension>
 </addon>
