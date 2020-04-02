@@ -26,6 +26,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.3.4
+ - Add proper migration from old JSON to current
 1.3.3
  - Rewrite editor dialog
  - Fix path conversion for skin string paths
