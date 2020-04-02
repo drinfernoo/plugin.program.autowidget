@@ -6,6 +6,7 @@ import os
 import re
 import shutil
 import sys
+import time
 
 from xml.dom import minidom
 from xml.etree import ElementTree
@@ -82,6 +83,10 @@ def prettify(elem):
 def get_valid_filename(s):
     s = str(s).strip().replace(' ', '_')
     return re.sub(r'(?u)[^-\w.]', '', s)
+    
+    
+def get_unique_id(key):
+    return get_valid_filename('{}-{}'.format(key, time.time()).lower())
 
 
 def remove_file(file):
