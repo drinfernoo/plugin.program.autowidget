@@ -26,6 +26,9 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.3.3
+ - Rewrite editor dialog
+ - Fix path conversion for skin string paths
 1.3.2
  - Fixes and cleanup in editor dialog
 1.3.1
