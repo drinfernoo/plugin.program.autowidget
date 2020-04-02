@@ -5,7 +5,6 @@ import xbmcgui
 import json
 import os
 import re
-import time
 
 try:
     from urllib.parse import parse_qsl
@@ -191,7 +190,7 @@ def add_group(target):
     group_id = ''
     
     if group_name:
-        group_id = utils.get_valid_filename('{}-{}'.format(group_name, time.time()).lower())
+        group_id = utils.get_unique_id(group_name)
         filename = os.path.join(_addon_path, '{}.group'.format(group_id))
         group_def = {'label': group_name,
                      'type': target,
@@ -219,7 +218,7 @@ def _add_path(group_def, labels):
         labels['label'] = xbmcgui.Dialog().input(heading=_addon.getLocalizedString(32044),
                                                  defaultt=labels['label'])
     
-    labels['id'] = utils.get_valid_filename('{}-{}'.format(labels['label'], time.time()).lower())
+    labels['id'] = utils.get_unique_id(labels['label'])
     labels['version'] = _addon_version
     
     write_path(group_def, labels)
