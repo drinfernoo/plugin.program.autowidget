@@ -82,3 +82,10 @@ def prettify(elem):
 def get_valid_filename(s):
     s = str(s).strip().replace(' ', '_')
     return re.sub(r'(?u)[^-\w.]', '', s)
+
+
+def remove_file(file):
+    try:
+        os.remove(file)
+    except Exception as e:
+        utils.log('{}'.format(e), level=xbmc.LOGERROR)

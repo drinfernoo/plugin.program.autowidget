@@ -148,7 +148,7 @@ def _convert_skin_strings(converted):
         path_id = path.get('id')
         params = dict(parse_qsl(path.text.split('?')[1].replace('\"', '')))
         
-        label_setting = ''
+        label_id = ''
         for label in label_settings:
             if params.get('id') in label.text:
                 label_id = label.get('id')
