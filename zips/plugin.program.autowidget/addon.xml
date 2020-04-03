@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="1.0.0" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="1.0.5" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
+        <import addon="script.skinshortcuts" version="1.0.19" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -15,7 +15,7 @@
         <menu id="kodi.core.main">
             <item library="context.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
             </item>
         </menu>
     </extension>
@@ -26,13 +26,26 @@
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news></news>
+        <news>
+1.0.5
+ - Raise required Skin Shortcuts version to  1.0.19
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release</news>
         <assets>
             <icon>icon.png</icon>
         </assets>
     </extension>
 </addon>
-- Fix paths not saving
+ot saving
 1.0.5
  - Raise required Skin Shortcuts version to  1.0.19
 1.0.4
@@ -52,13 +65,7 @@
         </assets>
     </extension>
 </addon>
-hs
- - Add group renaming
-1.1.1
- - Add setting to disable notification
-1.1.0
- - Remove Skin Shortcuts dependency
- - Expand context menu options
+ext menu options
  - Add support for skins with "basic" Skin Shortcuts integration
  - Add setting to pause AutoWidget's service
 1.0.7
@@ -87,9 +94,7 @@ hs
         </assets>
     </extension>
 </addon>
-   <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
+banner>
         </assets>
     </extension>
 </addon>
