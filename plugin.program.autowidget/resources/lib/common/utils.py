@@ -103,11 +103,21 @@ def open_file(file):
         except Exception as e:
             utils.log('Could not read from {}: {}'.format(file, e),
                       level=xbmc.LOGERROR)
+    try:
+        content = content.decode('utf-8')
+    except UnicodeDecodeError:
+        pass
+        
     return content
                       
 
 def write_file(file, content):
     if os.path.exists(file):
+        try:
+            content = content.encode('utf-8')
+        except UnicodeEncodeError:
+            pass
+        
         with open(file, 'w') as f:
             try:
                 f.write(content)
