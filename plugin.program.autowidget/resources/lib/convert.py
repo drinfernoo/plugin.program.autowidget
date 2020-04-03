@@ -71,7 +71,11 @@ def _save_path_details(params, converted, setting='', label_setting=''):
     params['version'] = _addon_version
 
     with open(path_to_saved, 'w') as f:
-        f.write(json.dumps(params, indent=4))
+        try:
+            f.write(json.dumps(params, indent=4))
+        except Exception as e:
+            utils.log('{} couldn\'t be written to: {}'.format(path_to_saved, e)
+                      level=xbmc.LOGERROR)
 
     return params
 
@@ -207,7 +211,11 @@ def _convert_shortcuts(converted):
 
         utils.prettify(shortcuts)
         tree = ElementTree.ElementTree(shortcuts)
-        tree.write(xml_path)
+        try:
+            tree.write(xml_path)
+        except:
+            utils.log('{} couldn\'t be written to: {}'.format(xml_path, e)
+                      level=xbmc.LOGERROR)
 
     return converted
 
@@ -219,7 +227,11 @@ def _convert_properties(converted):
         return converted
         
     with open(props_path, 'r') as f:
-        content = ast.literal_eval(f.read())
+        try:
+            content = ast.literal_eval(f.read())
+        except Exception as e:
+            utils.log('{} is invalid, this is an error!'.format(props_path),
+                      level=xbmc.LOGERROR)
     
     props = [x for x in content if all(i in x[3]
                                        for i in ['plugin.program.autowidget',
@@ -268,7 +280,11 @@ def _convert_properties(converted):
         converted.append(_id)
         
     with open(props_path, 'w') as f:
-        f.write('{}'.format(content))
+        try:
+            f.write('{}'.format(content))
+        except Exception as e:
+            utils.log('{} couldn\'t be written to: {}'.format(props_path, e)
+                      level=xbmc.LOGERROR)
         
     return converted
 
@@ -289,14 +305,18 @@ def refresh_paths(notify=False, force=False):
         for widget in [x for x in os.listdir(_addon_path) if x.endswith('.widget')]:
             saved_path = os.path.join(_addon_path, widget)
             with open(saved_path, 'r') as f:
-                widget_json = json.loads(f.read())
+                try:
+                    widget_def = json.loads(f.read()) 
+                except ValueError:
+                    utils.log('{} is invalid, this is an error!'.format(i),
+                              level=xbmc.LOGERROR)
 
-            if group_def['id'] == widget_json['group']:
-                _id = widget_json['id']
-                group_id = widget_json['group']
-                action = widget_json['action'].lower()
-                setting = widget_json.get('setting')
-                label_setting = widget_json.get('label_setting')
+            if group_def['id'] == widget_def['group']:
+                _id = widget_def['id']
+                group_id = widget_def['group']
+                action = widget_def['action'].lower()
+                setting = widget_def.get('setting')
+                label_setting = widget_def.get('label_setting')
 
                 if action == 'random' and len(paths) == 0:
                     paths = _get_random_paths(group_id, force)

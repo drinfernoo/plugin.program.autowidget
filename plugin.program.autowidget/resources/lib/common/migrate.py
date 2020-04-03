@@ -43,7 +43,10 @@ def migrate_groups():
     migrated_groups = []
     for file in [i for i in os.listdir(_addon_path) if i.endswith('.group')]:
         with open(os.path.join(_addon_path, file), 'r') as f:
-            group_def = json.loads(f.read())
+            try:
+                group_def = json.loads(f.read()) 
+            except ValueError:
+                utils.log('{} is invalid, this is an error!'.format(i), level=xbmc.LOGERROR)
             
         if 'label' not in group_def:
             if 'name' in group_def:
@@ -104,8 +107,12 @@ def migrate_groups():
         manage.write_path(group_def)
         
     for file in [i for i in os.listdir(_addon_path) if i.endswith('.widget')]:
-        with open(os.path.join(_addon_path, file), 'r') as f:
-            widget_def = json.loads(f.read()) 
+        widget_path = os.path.join(_addon_data, file)
+        with open(widget_path, 'r') as f:
+            try:
+                widget_def = json.loads(f.read()) 
+            except ValueError:
+                utils.log('{} is invalid, this is an error!'.format(i), level=xbmc.LOGERROR)
             
         if 'version' not in widget_def:
             widget_def['version'] = _addon_version
@@ -113,6 +120,10 @@ def migrate_groups():
             for group in migrated_groups:
                 if group[0] == widget_def['group']:
                     widget_def['group'] = group[1]
-            
-        with open(os.path.join(_addon_path, file), 'w') as f:
-            f.write(json.dumps(widget_def, indent=4))
+        
+        with open(widget_path, 'w') as f:
+            try:
+                f.write(json.dumps(widget_def, indent=4))
+            except Exception as e:
+                utils.log('{} couldn\'t be written to: {}'.format(widget_path, e)
+                          level=xbmc.LOGERROR)
