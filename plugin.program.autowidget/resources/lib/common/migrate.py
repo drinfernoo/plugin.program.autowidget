@@ -43,7 +43,10 @@ def migrate_groups():
     migrated_groups = []
     for file in [i for i in os.listdir(_addon_path) if i.endswith('.group')]:
         group_path = os.path.join(_addon_path, file)
-        group_def = json.loads(utils.open_file(group_path))
+        try:
+            group_def = json.loads(utils.open_file(group_path))
+        except ValueError:
+            utils.log('Unable to parse: {}'.format(group_path))
             
         if 'label' not in group_def:
             if 'name' in group_def:
@@ -105,7 +108,10 @@ def migrate_groups():
         
     for file in [i for i in os.listdir(_addon_path) if i.endswith('.widget')]:
         widget_path = os.path.join(_addon_data, file)
-        widget_def = json.loads(utils.open_file(widget_path)) 
+        try:
+            widget_def = json.loads(utils.open_file(widget_path))
+        except ValueError:
+            utils.log('Unable to parse: {}'.format(widget_path))
             
         if 'version' not in widget_def:
             widget_def['version'] = _addon_version
@@ -114,4 +120,7 @@ def migrate_groups():
                 if group[0] == widget_def['group']:
                     widget_def['group'] = group[1]
         
-        utils.write_file(widget_path, json.dumps(widget_def, indent=4))
+        try:
+            utils.write_file(widget_path, json.dumps(widget_def, indent=4))
+        except Exception as e:
+            utils.log('Unable to convert to JSON: {}'.format(widget_path))

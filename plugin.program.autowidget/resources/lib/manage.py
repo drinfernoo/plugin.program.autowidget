@@ -34,7 +34,10 @@ def write_path(group_def, path_def=None, update=''):
     elif path_def:
         group_def['paths'].append(path_def)
 
-    utils.write_file(filename, json.dumps(group_def, indent=4))
+    try:
+        utils.write_file(filename, json.dumps(group_def, indent=4))
+    except Exception as e:
+        utils.log('Unable to convert to JSON: {}'.format(filename))
 
 
 def get_group_by_id(group_id):
@@ -44,7 +47,10 @@ def get_group_by_id(group_id):
     filename = '{}.group'.format(group_id)
     path = os.path.join(_addon_path, filename)
     
-    group_def = json.loads(utils.open_file(path)) 
+    try:
+        group_def = json.loads(utils.open_file(path))
+    except ValueError:
+        utils.log('Unable to parse: {}'.format(path))
     
     return group_def
 
@@ -64,7 +70,10 @@ def find_defined_groups(_type=''):
     for filename in [x for x in os.listdir(_addon_path) if x.endswith('.group')]:
         path = os.path.join(_addon_path, filename)
         
-        group_def = json.loads(utils.open_file(path)) 
+        try:
+            group_def = json.loads(utils.open_file(path))
+        except ValueError:
+            utils.log('Unable to parse: {}'.format(path))
         
         if _type:
             if group_def['type'] == _type:
@@ -81,7 +90,10 @@ def find_defined_paths(group_id=None):
         filename = '{}.group'.format(group_id)
         path = os.path.join(_addon_path, filename)
         
-        group_def = json.loads(utils.open_file(path)) 
+        try:
+            group_def = json.loads(utils.open_file(path))
+        except ValueError:
+            utils.log('Unable to parse: {}'.format(path))
         
         return group_def['paths']
     else:
@@ -192,7 +204,10 @@ def add_group(target):
                      'art': folder_sync if target == 'widget' else folder_shortcut,
                      'version': _addon_version}
     
-        utils.write_file(filename, json.dumps(group_def, indent=4))
+        try:
+            utils.write_file(filename, json.dumps(group_def, indent=4))
+        except Exception as e:
+            utils.log('Unable to convert to JSON: {}'.format(filename))
             
         xbmc.executebuiltin('Container.Refresh()')
     else:
