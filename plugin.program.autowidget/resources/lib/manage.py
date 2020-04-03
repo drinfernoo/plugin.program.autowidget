@@ -35,9 +35,9 @@ def write_path(group_def, path_def=None, update=''):
         group_def['paths'].append(path_def)
 
     try:
-        utils.write_file(filename, json.dumps(group_def, indent=4))
+        utils.write_json(filename, group_def)
     except Exception as e:
-        utils.log('Unable to convert to JSON: {}'.format(filename))
+        utils.log('Unable to convert {} to JSON: {}'.format(filename, e))
 
 
 def get_group_by_id(group_id):
@@ -205,9 +205,9 @@ def add_group(target):
                      'version': _addon_version}
     
         try:
-            utils.write_file(filename, json.dumps(group_def, indent=4))
+            utils.write_json(filename, group_def)
         except Exception as e:
-            utils.log('Unable to convert to JSON: {}'.format(filename))
+            utils.log('Unable to convert {} to JSON: {}'.format(filename, e))
             
         xbmc.executebuiltin('Container.Refresh()')
     else:

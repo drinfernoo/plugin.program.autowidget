@@ -2,6 +2,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
+import json
 import os
 import re
 import shutil
@@ -90,11 +91,12 @@ def get_unique_id(key):
 
 
 def remove_file(file):
-    try:
-        os.remove(file)
-    except Exception as e:
-        log('{}'.format(e), level=xbmc.LOGERROR)
-        
+    if os.path.exists(file):
+        try:
+            os.remove(file)
+        except Exception as e:
+            log('{}'.format(e), level=xbmc.LOGERROR)
+
 
 def open_file(file):
     if os.path.exists(file):
@@ -104,10 +106,6 @@ def open_file(file):
             except Exception as e:
                 log('Could not read from {}: {}'.format(file, e),
                     level=xbmc.LOGERROR)
-        # try:
-            # content = content.decode('utf-8')
-        # except UnicodeDecodeError as e:
-            # log('{}'.format(e), level=xbmc.LOGERROR)
     else:
         log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
         
@@ -115,11 +113,6 @@ def open_file(file):
                       
 
 def write_file(file, content):
-    # try:
-        # content = content.encode('utf-8')
-    # except UnicodeEncodeError as e:
-        # log('{}'.format(e), level=xbmc.LOGERROR)
-    
     with open(file, 'w') as f:
         try:
             f.write(content)
@@ -128,3 +121,12 @@ def write_file(file, content):
             log('Could not write to {}: {}'.format(file, e),
                 level=xbmc.LOGERROR)
     return False
+    
+    
+def write_json(file, content):
+    with open(file, 'w') as f:
+        try:
+            json.dump(content, f, ensure_ascii=False, indent=4)
+        except Exception as e:
+            log('Could not write to {}: {}'.format(file, e),
+                level=xbmc.LOGERROR)

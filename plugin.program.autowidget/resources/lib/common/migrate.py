@@ -121,9 +121,9 @@ def migrate_groups():
                     widget_def['group'] = group[1]
         
         try:
-            utils.write_file(widget_path, json.dumps(widget_def, indent=4))
+            utils.write_json(widget_path, widget_def)
         except Exception as e:
-            utils.log('Unable to convert to JSON: {}'.format(widget_path))
+            utils.log('Unable to convert {} to JSON: {}'.format(widget_path, e))
             
     for migrated in migrated_groups:
         migrated_path = os.path.join(_addon_path, '{}.group'.format(migrated[0]))
