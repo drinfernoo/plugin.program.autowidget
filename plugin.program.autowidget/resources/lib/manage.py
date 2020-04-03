@@ -227,4 +227,4 @@ def _add_path(group_def, labels):
     labels['id'] = utils.get_unique_id(labels['label'])
     labels['version'] = _addon_version
     
-    write_path(group_def, labels)
+    write_path(group_def, path_def=labels)
