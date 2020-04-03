@@ -34,12 +34,7 @@ def write_path(group_def, path_def=None, update=''):
     elif path_def:
         group_def['paths'].append(path_def)
 
-    with open(filename, 'w') as f:
-        try:
-            f.write(json.dumps(group_def, indent=4))
-        except Exception as e:
-            utils.log('{} couldn\'t be written to: {}'.format(filename, e),
-                      level=xbmc.LOGERROR)
+    utils.write_file(filename, json.dumps(group_def, indent=4))
 
 
 def get_group_by_id(group_id):
@@ -49,17 +44,9 @@ def get_group_by_id(group_id):
     filename = '{}.group'.format(group_id)
     path = os.path.join(_addon_path, filename)
     
-    if os.path.exists(path):
-        with open(path, 'r') as f:
-            try:
-                group_def = json.loads(f.read()) 
-            except ValueError:
-                utils.log('{} is invalid, this is an error!'.format(i),
-                          level=xbmc.LOGERROR)
-        
-        return group_def
-        
-    return
+    group_def = json.loads(utils.open_file(path)) 
+    
+    return group_def
 
 
 def get_path_by_id(path_id, group_id=None):
@@ -77,12 +64,7 @@ def find_defined_groups(_type=''):
     for filename in [x for x in os.listdir(_addon_path) if x.endswith('.group')]:
         path = os.path.join(_addon_path, filename)
         
-        with open(path, 'r') as f:
-            try:
-                group_def = json.loads(f.read()) 
-            except ValueError:
-                utils.log('{} is invalid, this is an error!'.format(i),
-                          level=xbmc.LOGERROR)
+        group_def = json.loads(utils.open_file(path)) 
         
         if _type:
             if group_def['type'] == _type:
@@ -99,15 +81,9 @@ def find_defined_paths(group_id=None):
         filename = '{}.group'.format(group_id)
         path = os.path.join(_addon_path, filename)
         
-        if os.path.exists(path):
-            with open(path, 'r') as f:
-                try:
-                    group_def = json.loads(f.read()) 
-                except ValueError:
-                    utils.log('{} is invalid, this is an error!'.format(i),
-                              level=xbmc.LOGERROR)
-            
-            return group_def['paths']
+        group_def = json.loads(utils.open_file(path)) 
+        
+        return group_def['paths']
     else:
         for group in find_defined_groups():
             paths.append(find_defined_paths(group_id=group.get('id')))
@@ -216,12 +192,7 @@ def add_group(target):
                      'art': folder_sync if target == 'widget' else folder_shortcut,
                      'version': _addon_version}
     
-        with open(filename, 'w') as f:
-            try:
-                f.write(json.dumps(group_def, indent=4))
-            except Exception as e:
-                utils.log('{} couldn\'t be written to: {}'.format(filename, e),
-                          level=xbmc.LOGERROR)
+        utils.write_file(filename, json.dumps(group_def, indent=4))
             
         xbmc.executebuiltin('Container.Refresh()')
     else:

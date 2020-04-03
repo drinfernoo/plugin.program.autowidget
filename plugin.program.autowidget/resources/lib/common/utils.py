@@ -94,3 +94,28 @@ def remove_file(file):
         os.remove(file)
     except Exception as e:
         utils.log('{}'.format(e), level=xbmc.LOGERROR)
+        
+
+def open_file(file):
+    with open(os.path.join(_addon_path, file), 'r') as f:
+        try:
+            content = f.read()
+        except Exception as e:
+            utils.log('Could not read from {}: {}'.format(file, e),
+                      level=xbmc.LOGERROR)
+    return content
+                      
+
+def write_file(file, content):
+    if os.path.exists(file):
+        with open(file, 'w') as f:
+            try:
+                f.write(content)
+                return True
+            except Exception as e:
+                utils.log('Could not write to {}: {}'.format(file, e),
+                          level=xbmc.LOGERROR)
+    else:
+        utils.log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
+        
+    return False
