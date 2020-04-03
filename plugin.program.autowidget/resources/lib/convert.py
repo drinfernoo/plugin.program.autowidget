@@ -70,12 +70,10 @@ def _save_path_details(params, converted, setting='', label_setting=''):
             
     params['version'] = _addon_version
 
-    with open(path_to_saved, 'w') as f:
-        try:
-            f.write(json.dumps(params, indent=4))
-        except Exception as e:
-            utils.log('{} couldn\'t be written to: {}'.format(path_to_saved, e),
-                      level=xbmc.LOGERROR)
+    try:
+        utils.write_file(path_to_saved, json.dumps(params, indent=4))
+    except Exception as e:
+        utils.log('Unable to convert to JSON: {}'.format(path_to_saved))
 
     return params
 
@@ -226,13 +224,11 @@ def _convert_properties(converted):
     if not os.path.exists(props_path):
         return converted
         
-    with open(props_path, 'r') as f:
-        try:
-            content = ast.literal_eval(f.read())
-        except Exception as e:
-            utils.log('{} is invalid, this is an error!'.format(props_path),
-                      level=xbmc.LOGERROR)
-    
+    try:
+        content = ast.literal_eval(utils.open_file(props_path))
+    except Exception as e:
+        utils.log('Unable to parse: {}'.format(props_path))
+        
     props = [x for x in content if all(i in x[3]
                                        for i in ['plugin.program.autowidget',
                                                  'mode=path', 'action=random'])]
@@ -279,12 +275,7 @@ def _convert_properties(converted):
         
         converted.append(_id)
         
-    with open(props_path, 'w') as f:
-        try:
-            f.write('{}'.format(content))
-        except Exception as e:
-            utils.log('{} couldn\'t be written to: {}'.format(props_path, e),
-                      level=xbmc.LOGERROR)
+    utils.write_file(props_path, '{}'.format(content))
         
     return converted
 
@@ -304,12 +295,10 @@ def refresh_paths(notify=False, force=False):
 
         for widget in [x for x in os.listdir(_addon_path) if x.endswith('.widget')]:
             saved_path = os.path.join(_addon_path, widget)
-            with open(saved_path, 'r') as f:
-                try:
-                    widget_def = json.loads(f.read()) 
-                except ValueError:
-                    utils.log('{} is invalid, this is an error!'.format(i),
-                              level=xbmc.LOGERROR)
+            try:
+                widget_def = json.loads(utils.open_file(saved_path))
+            except ValueError:
+                utils.log('Unable to parse: {}'.format(saved_path))
 
             if group_def['id'] == widget_def['group']:
                 _id = widget_def['id']
