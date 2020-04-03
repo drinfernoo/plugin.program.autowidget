@@ -38,18 +38,7 @@
         </assets>
     </extension>
 </addon>
-some skin localizations
- - Add more widget artwork
- - Update documentation
-1.2.3
- - Fix paths made from add-on browser
- - Add ability to set plot
-1.2.2
- - Fix group dialog calls
-1.2.1
- - Fix imports
-1.2.0
- - Better handling of art
+f art
  - Better add-on art added
  - Redesigned path addition dialog
  - Settings shortcuts added
@@ -82,20 +71,7 @@ some skin localizations
  - First stable release
         </news>
         <assets>
-            <icon>resources/media/sync.png</icon>
-            <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-c.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-r>
-            <banner>resources/media/banner/sync.png</banner>
+            <icon>icon.png</icon>
         </assets>
     </extension>
 </addon>
