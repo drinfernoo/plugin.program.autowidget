@@ -74,7 +74,7 @@ def _save_path_details(params, converted, setting='', label_setting=''):
         try:
             f.write(json.dumps(params, indent=4))
         except Exception as e:
-            utils.log('{} couldn\'t be written to: {}'.format(path_to_saved, e)
+            utils.log('{} couldn\'t be written to: {}'.format(path_to_saved, e),
                       level=xbmc.LOGERROR)
 
     return params
@@ -214,7 +214,7 @@ def _convert_shortcuts(converted):
         try:
             tree.write(xml_path)
         except:
-            utils.log('{} couldn\'t be written to: {}'.format(xml_path, e)
+            utils.log('{} couldn\'t be written to: {}'.format(xml_path, e),
                       level=xbmc.LOGERROR)
 
     return converted
@@ -283,7 +283,7 @@ def _convert_properties(converted):
         try:
             f.write('{}'.format(content))
         except Exception as e:
-            utils.log('{} couldn\'t be written to: {}'.format(props_path, e)
+            utils.log('{} couldn\'t be written to: {}'.format(props_path, e),
                       level=xbmc.LOGERROR)
         
     return converted
