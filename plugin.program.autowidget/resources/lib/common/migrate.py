@@ -46,7 +46,8 @@ def migrate_groups():
             try:
                 group_def = json.loads(f.read()) 
             except ValueError:
-                utils.log('{} is invalid, this is an error!'.format(i), level=xbmc.LOGERROR)
+                utils.log('{} is invalid, this is an error!'.format(i),
+                          level=xbmc.LOGERROR)
             
         if 'label' not in group_def:
             if 'name' in group_def:
@@ -112,7 +113,8 @@ def migrate_groups():
             try:
                 widget_def = json.loads(f.read()) 
             except ValueError:
-                utils.log('{} is invalid, this is an error!'.format(i), level=xbmc.LOGERROR)
+                utils.log('{} is invalid, this is an error!'.format(i),
+                          level=xbmc.LOGERROR)
             
         if 'version' not in widget_def:
             widget_def['version'] = _addon_version
@@ -125,5 +127,5 @@ def migrate_groups():
             try:
                 f.write(json.dumps(widget_def, indent=4))
             except Exception as e:
-                utils.log('{} couldn\'t be written to: {}'.format(widget_path, e)
+                utils.log('{} couldn\'t be written to: {}'.format(widget_path, e),
                           level=xbmc.LOGERROR)

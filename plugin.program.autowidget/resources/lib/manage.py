@@ -38,7 +38,7 @@ def write_path(group_def, path_def=None, update=''):
         try:
             f.write(json.dumps(group_def, indent=4))
         except Exception as e:
-            utils.log('{} couldn\'t be written to: {}'.format(filename, e)
+            utils.log('{} couldn\'t be written to: {}'.format(filename, e),
                       level=xbmc.LOGERROR)
 
 
@@ -220,7 +220,7 @@ def add_group(target):
             try:
                 f.write(json.dumps(group_def, indent=4))
             except Exception as e:
-                utils.log('{} couldn\'t be written to: {}'.format(filename, e)
+                utils.log('{} couldn\'t be written to: {}'.format(filename, e),
                           level=xbmc.LOGERROR)
             
         xbmc.executebuiltin('Container.Refresh()')
