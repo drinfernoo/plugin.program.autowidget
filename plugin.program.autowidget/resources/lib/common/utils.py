@@ -93,39 +93,38 @@ def remove_file(file):
     try:
         os.remove(file)
     except Exception as e:
-        utils.log('{}'.format(e), level=xbmc.LOGERROR)
+        log('{}'.format(e), level=xbmc.LOGERROR)
         
 
 def open_file(file):
-    with open(os.path.join(_addon_path, file), 'r') as f:
-        try:
-            content = f.read()
-        except Exception as e:
-            utils.log('Could not read from {}: {}'.format(file, e),
-                      level=xbmc.LOGERROR)
-    try:
-        content = content.decode('utf-8')
-    except UnicodeDecodeError:
-        pass
+    if os.path.exists(file):
+        with open(os.path.join(_addon_path, file), 'r') as f:
+            try:
+                content = f.read()
+            except Exception as e:
+                log('Could not read from {}: {}'.format(file, e),
+                    level=xbmc.LOGERROR)
+        # try:
+            # content = content.decode('utf-8')
+        # except UnicodeDecodeError as e:
+            # log('{}'.format(e), level=xbmc.LOGERROR)
+    else:
+        log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
         
     return content
                       
 
 def write_file(file, content):
-    if os.path.exists(file):
+    # try:
+        # content = content.encode('utf-8')
+    # except UnicodeEncodeError as e:
+        # log('{}'.format(e), level=xbmc.LOGERROR)
+    
+    with open(file, 'w') as f:
         try:
-            content = content.encode('utf-8')
-        except UnicodeEncodeError:
-            pass
-        
-        with open(file, 'w') as f:
-            try:
-                f.write(content)
-                return True
-            except Exception as e:
-                utils.log('Could not write to {}: {}'.format(file, e),
-                          level=xbmc.LOGERROR)
-    else:
-        utils.log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
-        
+            f.write(content)
+            return True
+        except Exception as e:
+            log('Could not write to {}: {}'.format(file, e),
+                level=xbmc.LOGERROR)
     return False
