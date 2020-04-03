@@ -26,6 +26,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.3.6
+ - Fix error handling
 1.3.5
  - Add extra error checking for file operations
 1.3.4
