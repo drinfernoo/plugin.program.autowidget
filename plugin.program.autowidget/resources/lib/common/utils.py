@@ -3,6 +3,7 @@ import xbmcaddon
 import xbmcgui
 
 import ast
+import codecs
 import io
 import json
 import os
@@ -10,6 +11,7 @@ import re
 import shutil
 import sys
 import time
+import unicodedata
 
 from xml.dom import minidom
 from xml.etree import ElementTree
@@ -85,6 +87,7 @@ def prettify(elem):
 
 def get_valid_filename(s):
     s = str(s).strip().replace(' ', '_')
+    s = unicodedata.normalize('NFKD', s.decode('utf-8'))
     return re.sub(r'(?u)[^-\w.]', '', s)
     
     
@@ -139,11 +142,11 @@ def write_file(file, content):
     
     
 def read_json(file):
-    content = None
+    data = None
     if os.path.exists(file):
-        with io.open(os.path.join(_addon_path, file), 'r', encoding='utf-8') as f:
+        with codecs.open(os.path.join(_addon_path, file), 'r', encoding='utf-8') as f:
             try:
-                content = f.read()
+                content = f.read().encode('utf-8')
                 data = json.loads(content)
             except Exception as e:
                 log('Could not read JSON from {}: {}'.format(file, e),
@@ -151,11 +154,13 @@ def read_json(file):
     else:
         log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
         
-    return content
+    return convert(data)
     
     
 def write_json(file, content):
-    with io.open(file, 'w', encoding='utf-8') as f:
-        data = json.dumps(content)
-        f.write(unicode(data))
-        f.close()
+    with codecs.open(file, 'w', encoding='utf-8') as f:
+        try:
+            json.dump(content, f, indent=4)
+        except Exception as e:
+            log('Could not write to {}: {}'.format(file, e),
+                level=xbmc.LOGERROR)

@@ -296,7 +296,7 @@ def refresh_paths(notify=False, force=False):
         for widget in [x for x in os.listdir(_addon_path) if x.endswith('.widget')]:
             saved_path = os.path.join(_addon_path, widget)
             try:
-                widget_def = json.loads(utils.open_file(saved_path))
+                widget_def = utils.read_json(saved_path)
             except ValueError:
                 utils.log('Unable to parse: {}'.format(saved_path))
 

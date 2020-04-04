@@ -81,7 +81,7 @@ def group_menu(group_id):
         return        
     
     group_type = group['type']
-    group_name = group['label']
+    group_name = group['label'].decode('utf-8')
     is_widget = group_type == 'widget'
     is_shortcut = group_type == 'shortcut'
     

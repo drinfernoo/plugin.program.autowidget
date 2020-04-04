@@ -49,7 +49,7 @@ def get_group_by_id(group_id):
     path = os.path.join(_addon_path, filename)
     
     try:
-        group_def = json.loads(utils.open_file(path))
+        group_def = utils.read_json(path)
     except ValueError:
         utils.log('Unable to parse: {}'.format(path))
     
@@ -72,7 +72,7 @@ def find_defined_groups(_type=''):
         path = os.path.join(_addon_path, filename)
         
         try:
-            group_def = json.loads(utils.open_file(path))
+            group_def = utils.read_json(path)
         except ValueError:
             utils.log('Unable to parse: {}'.format(path))
         
@@ -92,7 +92,7 @@ def find_defined_paths(group_id=None):
         path = os.path.join(_addon_path, filename)
         
         try:
-            group_def = json.loads(utils.open_file(path))
+            group_def = utils.read_json(path)
         except ValueError:
             utils.log('Unable to parse: {}'.format(path))
         

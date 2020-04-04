@@ -48,7 +48,7 @@ def _get_window(labels):
 
 if __name__ == '__main__':
     utils.ensure_addon_data()
-    # migrate.migrate_groups()
+    migrate.migrate_groups()
 
     labels = {'label': xbmc.getInfoLabel('ListItem.Label'),
               'is_folder': xbmc.getCondVisibility('Container.ListItem.IsFolder'),
