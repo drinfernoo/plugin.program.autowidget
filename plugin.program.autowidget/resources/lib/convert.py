@@ -70,10 +70,10 @@ def _save_path_details(params, converted, setting='', label_setting=''):
             
     params['version'] = _addon_version
 
-    try:
-        utils.write_json(path_to_saved, params, indent=4)
-    except Exception as e:
-        utils.log('Unable to convert {} to JSON: {}'.format(path_to_saved, e))
+    # try:
+    utils.write_json(path_to_saved, params)
+    # except Exception as e:
+        # utils.log('Unable to convert {} to JSON: {}'.format(path_to_saved, e))
 
     return params
 

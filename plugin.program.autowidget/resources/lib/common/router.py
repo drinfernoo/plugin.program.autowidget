@@ -34,7 +34,7 @@ def dispatch(_plugin, _handle, _params):
     is_type = 'files'
 
     utils.ensure_addon_data()
-    migrate.migrate_groups()
+    # migrate.migrate_groups()
     
     mode = params.get('mode', '')
     action = params.get('action', '')
