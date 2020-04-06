@@ -68,13 +68,21 @@ def dispatch(_plugin, _handle, _params):
             menu.shortcut_menu(group)
             is_type = 'videos'
             is_dir = True
+    elif mode == 'groups':
+        menu.groups_menu()
+        is_dir = True
     elif mode == 'group' and group:
         menu.group_menu(group)
+        is_dir = True
+    elif mode == 'tools':
+        menu.tools_menu()
         is_dir = True
     elif mode == 'force':
         convert.refresh_paths(notify=True, force=True)
     elif mode == 'wipe':
         utils.wipe()
+    elif mode == 'clean':
+        manage.clean()
 
     if is_dir:
         xbmcplugin.setContent(_handle, is_type)

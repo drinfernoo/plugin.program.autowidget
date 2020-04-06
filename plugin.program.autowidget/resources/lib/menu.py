@@ -19,12 +19,40 @@ remove = utils.get_art('remove.png')
 share = utils.get_art('share.png')
 shuffle = utils.get_art('shuffle.png')
 sync = utils.get_art('sync.png')
+tools = utils.get_art('tools.png')
 unpack = utils.get_art('unpack.png')
 
 _addon = xbmcaddon.Addon()
 
 
 def root_menu():
+    directory.add_menu_item(title=32007,
+                            params={'mode': 'groups'},
+                            art=folder,
+                            isFolder=True)
+    directory.add_menu_item(title=32008,
+                            params={'mode': 'tools'},
+                            art=tools,
+                            isFolder=True)
+
+    
+def tools_menu():
+    directory.add_menu_item(title=32006,
+                            params={'mode': 'force'},
+                            art=refresh,
+                            info={'plot': _addon.getLocalizedString(32020)},
+                            isFolder=False)
+    directory.add_menu_item(title=32066,
+                            params={'mode': 'clean'},
+                            art=remove,
+                            isFolder=False)    
+    directory.add_menu_item(title=32064,
+                            params={'mode': 'wipe'},
+                            art=remove,
+                            isFolder=False)
+                            
+                            
+def groups_menu():
     directory.add_menu_item(title=32015,
                             params={'mode': 'manage', 'action': 'add_group',
                                     'target': 'widget'},
@@ -60,19 +88,10 @@ def root_menu():
                                     art=group.get('art') or (folder_shortcut if group_type == 'shortcut' else folder_sync),
                                     cm=cm,
                                     isFolder=True)
-
-    # //// TOOLS ////
-    directory.add_separator(title=32008, char='/')
-
-    directory.add_menu_item(title=32006,
-                            params={'mode': 'force'},
-                            art=refresh,
-                            info={'plot': _addon.getLocalizedString(32020)},
-                            isFolder=False)
-    directory.add_menu_item(title=32064,
-                            params={'mode': 'wipe'},
-                            art=remove,
-                            isFolder=False)
+    else:
+        directory.add_menu_item(title=32068,
+                                art=alert,
+                                isFolder=False)
 
 
 def group_menu(group_id):
@@ -134,7 +153,7 @@ def group_menu(group_id):
     else:
         directory.add_menu_item(title=32032,
                                 art=alert,
-                                isFolder=True)
+                                isFolder=False)
 
 
 def random_path_menu(group_id):
