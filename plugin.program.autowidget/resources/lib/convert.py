@@ -159,6 +159,7 @@ def _convert_skin_strings(converted):
                 _id = details['id']
                 if _id not in converted:
                     converted.append(_id)
+                    import web_pdb; web_pdb.set_trace()
 
     return converted
 

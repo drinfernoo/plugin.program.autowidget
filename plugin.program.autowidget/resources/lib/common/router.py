@@ -75,6 +75,8 @@ def dispatch(_plugin, _handle, _params):
         convert.refresh_paths(notify=True, force=True)
     elif mode == 'wipe':
         utils.wipe()
+    elif mode == 'clean':
+        manage.clean()
 
     if is_dir:
         xbmcplugin.setContent(_handle, is_type)

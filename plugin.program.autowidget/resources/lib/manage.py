@@ -16,6 +16,11 @@ from resources.lib.common import utils
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_version = _addon.getAddonInfo('version')
+if xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
+    _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
+    _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
+else:
+    _shortcuts_path = ''
 
 folder_add = utils.get_art('folder-add.png')
 folder_shortcut = utils.get_art('folder-shortcut.png')
@@ -102,6 +107,20 @@ def find_defined_paths(group_id=None):
             paths.append(find_defined_paths(group_id=group.get('id')))
     
     return paths
+    
+
+def find_defined_widgets():
+    addon_files = os.listdir(_addon_path)
+    widgets = []
+    
+    widget_files = [x for x in addon_files if x.endswith('.widget')]
+    for widget_file in widget_files:
+        widget_def = utils.read_json(os.path.join(_addon_path, widget_file))
+    
+    if widget_def:
+        widgets.append(widget_def)
+    
+    return widgets
     
     
 def add_from_context(labels):
@@ -229,3 +248,48 @@ def _add_path(group_def, labels):
     labels['version'] = _addon_version
     
     write_path(group_def, path_def=labels)
+
+
+def clean_old_references():
+    dialog = xbmcgui.Dialog()
+    choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32067))
+    
+    if not choice:
+        return
+
+    addon_files = os.listdir(_addon_path)
+    to_remove = []
+    
+    widgets = find_defined_widgets()
+    groups = find_defined_groups()
+    if shortcuts_path:
+        shortcuts = os.listdir(shortcuts_path)
+        
+    for widget_def in widgets:
+        widget_id = widget_def['id']
+        widget_group = ['group']
+        
+        for group_def in groups:
+            remove = True
+            group_id = group_def['id']
+            
+            if group_id == widget_id:
+                remove = False
+                break
+        
+        if shortcuts:
+            for shortcut in shortcuts:
+                shortcut_file = os.path.join(_shorcuts_path, shortcut)
+                shortcut_def = utils.open_file(shortcut_file)
+                
+                if shortcut_def:
+                    if widget_id in shortcut_def:
+                        remove = False
+                        break
+
+        if remove:
+            to_remove.append(widget_id)
+            
+    for remove in to_remove:
+        filename = '{}.widget'.format(remove)
+        utils.remove_file(os.path.join(_addon_path, filename))

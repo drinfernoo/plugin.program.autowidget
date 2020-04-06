@@ -281,3 +281,12 @@ msgstr ""
 msgctxt "#32065"
 msgid "This will remove [B]all[/B] data for AutoWidget. Any current AutoWidgets will no longer refresh and may not work reliably. It is recommended that this only be done if you intend on repointing all of those widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
 msgstr ""
+
+msgctxt "#32066"
+msgid "Clear Old References"
+msgstr ""
+
+msgctxt "#32067"
+msgid "This will try to delete references to widgets that are no longer active. This [COLOR firebrick]cannot[/COLOR] be undone."
+msgstr ""
+
