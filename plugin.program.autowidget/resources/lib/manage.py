@@ -250,42 +250,39 @@ def _add_path(group_def, labels):
     write_path(group_def, path_def=labels)
 
 
-def clean_old_references():
+def clean():
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32067))
-    
+
     if not choice:
         return
 
-    addon_files = os.listdir(_addon_path)
     to_remove = []
     
     widgets = find_defined_widgets()
     groups = find_defined_groups()
-    if shortcuts_path:
-        shortcuts = os.listdir(shortcuts_path)
+    if _shortcuts_path:
+        shortcuts = os.listdir(_shortcuts_path)
         
     for widget_def in widgets:
+        remove = True
         widget_id = widget_def['id']
-        widget_group = ['group']
+        widget_group = widget_def['group']
         
         for group_def in groups:
-            remove = True
             group_id = group_def['id']
             
-            if group_id == widget_id:
+            if group_id == widget_group:
                 remove = False
-                break
         
         if shortcuts:
             for shortcut in shortcuts:
-                shortcut_file = os.path.join(_shorcuts_path, shortcut)
+                shortcut_file = os.path.join(_shortcuts_path, shortcut)
                 shortcut_def = utils.open_file(shortcut_file)
                 
                 if shortcut_def:
                     if widget_id in shortcut_def:
                         remove = False
-                        break
 
         if remove:
             to_remove.append(widget_id)

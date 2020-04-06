@@ -159,7 +159,6 @@ def _convert_skin_strings(converted):
                 _id = details['id']
                 if _id not in converted:
                     converted.append(_id)
-                    import web_pdb; web_pdb.set_trace()
 
     return converted
 
@@ -192,7 +191,7 @@ def _convert_shortcuts(converted):
                 continue
 
             params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
-            details = _save_path_details(params, converted)
+            details = _save_path_details(params)
             if not details:
                 continue
                 
@@ -251,7 +250,7 @@ def _convert_properties(converted):
         else:
             params = dict(parse_qsl(prop[3].split('?')[1].replace('\"', '')))
         
-        details = _save_path_details(params, converted)
+        details = _save_path_details(params)
         if not details:
             continue
         
