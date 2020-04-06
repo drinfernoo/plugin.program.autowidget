@@ -26,6 +26,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.3.9
+ - Fix label bug in Embuary (and maybe elsewhere)
 1.3.8
  - Add "Wipe Add-on Data" shortcuts
  - Allow Unicode characters in labels
