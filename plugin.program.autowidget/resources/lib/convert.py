@@ -39,6 +39,11 @@ skin_string_pattern = 'autowidget-{}-{}'
 skin_string_info_pattern = '$INFO[Skin.String({})]'.format(skin_string_pattern)
 path_replace_pattern = '{}({})'
 widget_param_pattern = '^(?:\w+)(\W\w+)?$'
+uuid_pattern = ('^Random Path \(([0-9a-fA-F]{8}'
+                              '\-[0-9a-fA-F]{4}'
+                              '\-[0-9a-fA-F]{4}'
+                              '\-[0-9a-fA-F]{4}'
+                              '\-[0-9a-fA-F]{12})\)$')
 
 
 def _get_random_paths(group_id, force=False, change_sec=3600):
@@ -52,17 +57,10 @@ def _get_random_paths(group_id, force=False, change_sec=3600):
     return paths
 
 
-def _save_path_details(params, converted, setting='', label_setting=''):
+def _save_path_details(params):
     _id = params['id']
-    if _id in converted:
-        return
     
     path_to_saved = os.path.join(_addon_path, '{}.widget'.format(_id))
-
-    if setting:
-        params['setting'] = setting
-    if label_setting:
-        params['label_setting'] = label_setting
         
     for param in params:
         if params[param].endswith(',return)'):
@@ -144,22 +142,23 @@ def _convert_skin_strings(converted):
                                             for j in ['plugin.program.autowidget',
                                                       'mode=path',
                                                       'action=random'])]
-    label_settings = [i for i in settings if 'Random Path' in i.text]
+    label_settings = [i for i in settings if re.match(uuid_pattern, i.text)]
     
     for path in path_settings:
         path_id = path.get('id')
         params = dict(parse_qsl(path.text.split('?')[1].replace('\"', '')))
+        params['setting'] = path_id
         
-        label_id = ''
         for label in label_settings:
             if params.get('id') in label.text:
-                label_id = label.get('id')
+                params['label_setting'] = label.get('id')
     
-        details = _save_path_details(params, converted, setting=path_id,
-                                     label_setting=label_id)
-        if details:
-            _id = details['id']
-            converted.append(_id)
+        if params.get('id') not in converted:
+            details = _save_path_details(params)
+            if details:
+                _id = details['id']
+                if _id not in converted:
+                    converted.append(_id)
 
     return converted
 
