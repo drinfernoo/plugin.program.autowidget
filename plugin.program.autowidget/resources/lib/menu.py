@@ -69,6 +69,10 @@ def root_menu():
                             art=refresh,
                             info={'plot': _addon.getLocalizedString(32020)},
                             isFolder=False)
+    directory.add_menu_item(title=32064,
+                            params={'mode': 'wipe'},
+                            art=remove},
+                            isFolder=False)
 
 
 def group_menu(group_id):
@@ -81,7 +85,7 @@ def group_menu(group_id):
         return        
     
     group_type = group['type']
-    group_name = group['label']
+    group_name = group['label'].decode('utf-8')
     is_widget = group_type == 'widget'
     is_shortcut = group_type == 'shortcut'
     

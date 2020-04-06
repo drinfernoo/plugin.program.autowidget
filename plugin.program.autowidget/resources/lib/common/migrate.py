@@ -44,7 +44,7 @@ def migrate_groups():
     for file in [i for i in os.listdir(_addon_path) if i.endswith('.group')]:
         group_path = os.path.join(_addon_path, file)
         try:
-            group_def = json.loads(utils.open_file(group_path))
+            group_def = utils.read_json(group_path)
         except ValueError:
             utils.log('Unable to parse: {}'.format(group_path))
             
@@ -109,7 +109,7 @@ def migrate_groups():
     for file in [i for i in os.listdir(_addon_path) if i.endswith('.widget')]:
         widget_path = os.path.join(_addon_path, file)
         try:
-            widget_def = json.loads(utils.open_file(widget_path))
+            widget_def = utils.read_json(widget_path)
         except ValueError:
             utils.log('Unable to parse: {}'.format(widget_path))
             
@@ -120,10 +120,10 @@ def migrate_groups():
                 if group[0] == widget_def['group']:
                     widget_def['group'] = group[1]
         
-        try:
-            utils.write_file(widget_path, json.dumps(widget_def, indent=4))
-        except Exception as e:
-            utils.log('Unable to convert to JSON: {}'.format(widget_path))
+        # try:
+        utils.write_json(widget_path, widget_def)
+        # except Exception as e:
+            # utils.log('Unable to convert {} to JSON: {}'.format(widget_path, e))
             
     for migrated in migrated_groups:
         migrated_path = os.path.join(_addon_path, '{}.group'.format(migrated[0]))

@@ -70,10 +70,10 @@ def _save_path_details(params, converted, setting='', label_setting=''):
             
     params['version'] = _addon_version
 
-    try:
-        utils.write_file(path_to_saved, json.dumps(params, indent=4))
-    except Exception as e:
-        utils.log('Unable to convert to JSON: {}'.format(path_to_saved))
+    # try:
+    utils.write_json(path_to_saved, params)
+    # except Exception as e:
+        # utils.log('Unable to convert {} to JSON: {}'.format(path_to_saved, e))
 
     return params
 
@@ -296,7 +296,7 @@ def refresh_paths(notify=False, force=False):
         for widget in [x for x in os.listdir(_addon_path) if x.endswith('.widget')]:
             saved_path = os.path.join(_addon_path, widget)
             try:
-                widget_def = json.loads(utils.open_file(saved_path))
+                widget_def = utils.read_json(saved_path)
             except ValueError:
                 utils.log('Unable to parse: {}'.format(saved_path))
 

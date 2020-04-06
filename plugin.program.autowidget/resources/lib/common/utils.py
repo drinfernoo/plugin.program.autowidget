@@ -2,11 +2,16 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
+import ast
+import codecs
+import io
+import json
 import os
 import re
 import shutil
 import sys
 import time
+import unicodedata
 
 from xml.dom import minidom
 from xml.etree import ElementTree
@@ -33,6 +38,14 @@ def ensure_addon_data():
         if path:
             if not os.path.exists(path):
                 os.makedirs(path)
+                
+                
+def wipe(folder=_addon_path):
+    dialog = xbmcgui.Dialog()
+    choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32065))
+    
+    if choice:
+        shutil.rmtree(folder)
 
 
 def set_skin_string(string, value):
@@ -82,32 +95,42 @@ def prettify(elem):
 
 def get_valid_filename(s):
     s = str(s).strip().replace(' ', '_')
+    s = unicodedata.normalize('NFKD', s.decode('utf-8'))
     return re.sub(r'(?u)[^-\w.]', '', s)
     
     
 def get_unique_id(key):
     return get_valid_filename('{}-{}'.format(key, time.time()).lower())
+    
+    
+def convert(input):
+    if isinstance(input, dict):
+        return {convert(key): convert(value) for key, value in input.items()}
+    elif isinstance(input, list):
+        return [convert(element) for element in input]
+    elif isinstance(input, unicode):
+        return input.encode('utf-8')
+        
+    return input
 
 
 def remove_file(file):
-    try:
-        os.remove(file)
-    except Exception as e:
-        log('{}'.format(e), level=xbmc.LOGERROR)
-        
+    if os.path.exists(file):
+        try:
+            os.remove(file)
+        except Exception as e:
+            log('{}'.format(e), level=xbmc.LOGERROR)
+
 
 def open_file(file):
+    content = None
     if os.path.exists(file):
-        with open(os.path.join(_addon_path, file), 'r') as f:
+        with io.open(os.path.join(_addon_path, file), 'r', encoding='utf-8') as f:
             try:
                 content = f.read()
             except Exception as e:
                 log('Could not read from {}: {}'.format(file, e),
                     level=xbmc.LOGERROR)
-        # try:
-            # content = content.decode('utf-8')
-        # except UnicodeDecodeError as e:
-            # log('{}'.format(e), level=xbmc.LOGERROR)
     else:
         log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
         
@@ -115,11 +138,6 @@ def open_file(file):
                       
 
 def write_file(file, content):
-    # try:
-        # content = content.encode('utf-8')
-    # except UnicodeEncodeError as e:
-        # log('{}'.format(e), level=xbmc.LOGERROR)
-    
     with open(file, 'w') as f:
         try:
             f.write(content)
@@ -127,4 +145,30 @@ def write_file(file, content):
         except Exception as e:
             log('Could not write to {}: {}'.format(file, e),
                 level=xbmc.LOGERROR)
+                
     return False
+    
+    
+def read_json(file):
+    data = None
+    if os.path.exists(file):
+        with codecs.open(os.path.join(_addon_path, file), 'r', encoding='utf-8') as f:
+            try:
+                content = f.read().encode('utf-8')
+                data = json.loads(content)
+            except Exception as e:
+                log('Could not read JSON from {}: {}'.format(file, e),
+                    level=xbmc.LOGERROR)
+    else:
+        log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
+        
+    return convert(data)
+    
+    
+def write_json(file, content):
+    with codecs.open(file, 'w', encoding='utf-8') as f:
+        try:
+            json.dump(content, f, indent=4)
+        except Exception as e:
+            log('Could not write to {}: {}'.format(file, e),
+                level=xbmc.LOGERROR)

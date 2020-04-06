@@ -27,17 +27,18 @@ folder_settings = utils.get_art('folder-settings.png')
 def write_path(group_def, path_def=None, update=''):
     filename = os.path.join(_addon_path, '{}.group'.format(group_def['id']))
 
-    if update and path_def:
-        for path in group_def['paths']:
-            if path['id'] == update:
-                group_def['paths'][group_def['paths'].index(path)] = path_def
-    elif path_def:
-        group_def['paths'].append(path_def)
+    if path_def:
+        if update:
+            for path in group_def['paths']:
+                if path['id'] == update:
+                    group_def['paths'][group_def['paths'].index(path)] = path_def
+        else:
+            group_def['paths'].append(path_def)
 
-    try:
-        utils.write_file(filename, json.dumps(group_def, indent=4))
-    except Exception as e:
-        utils.log('Unable to convert to JSON: {}'.format(filename))
+    # try:
+    utils.write_json(filename, group_def)
+    # except Exception as e:
+        # utils.log('Unable to convert {} to JSON: {}'.format(filename, e))
 
 
 def get_group_by_id(group_id):
@@ -48,7 +49,7 @@ def get_group_by_id(group_id):
     path = os.path.join(_addon_path, filename)
     
     try:
-        group_def = json.loads(utils.open_file(path))
+        group_def = utils.read_json(path)
     except ValueError:
         utils.log('Unable to parse: {}'.format(path))
     
@@ -71,7 +72,7 @@ def find_defined_groups(_type=''):
         path = os.path.join(_addon_path, filename)
         
         try:
-            group_def = json.loads(utils.open_file(path))
+            group_def = utils.read_json(path)
         except ValueError:
             utils.log('Unable to parse: {}'.format(path))
         
@@ -91,7 +92,7 @@ def find_defined_paths(group_id=None):
         path = os.path.join(_addon_path, filename)
         
         try:
-            group_def = json.loads(utils.open_file(path))
+            group_def = utils.read_json(path)
         except ValueError:
             utils.log('Unable to parse: {}'.format(path))
         
@@ -204,10 +205,10 @@ def add_group(target):
                      'art': folder_sync if target == 'widget' else folder_shortcut,
                      'version': _addon_version}
     
-        try:
-            utils.write_file(filename, json.dumps(group_def, indent=4))
-        except Exception as e:
-            utils.log('Unable to convert to JSON: {}'.format(filename))
+        # try:
+        utils.write_json(filename, group_def)
+        # except Exception as e:
+            # utils.log('Unable to convert {} to JSON: {}'.format(filename, e))
             
         xbmc.executebuiltin('Container.Refresh()')
     else:

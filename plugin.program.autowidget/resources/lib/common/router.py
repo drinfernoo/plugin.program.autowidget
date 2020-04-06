@@ -73,6 +73,8 @@ def dispatch(_plugin, _handle, _params):
         is_dir = True
     elif mode == 'force':
         convert.refresh_paths(notify=True, force=True)
+    elif mode == 'wipe':
+        utils.wipe()
 
     if is_dir:
         xbmcplugin.setContent(_handle, is_type)
