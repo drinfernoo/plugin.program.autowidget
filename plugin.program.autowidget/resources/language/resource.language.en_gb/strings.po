@@ -147,7 +147,7 @@ msgid "Show a list of shortcuts from the {} group."
 msgstr ""
 
 msgctxt "#32032"
-msgid "No AutoWidgets have been defined for this group."
+msgid "No paths have been defined for this group."
 msgstr ""
 
 msgctxt "#32033"
@@ -290,3 +290,6 @@ msgctxt "#32067"
 msgid "This will try to delete references to widgets that are no longer active. This [COLOR firebrick]cannot[/COLOR] be undone."
 msgstr ""
 
+msgctxt "#32068"
+msgid "No groups have been defined."
+msgstr ""
