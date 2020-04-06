@@ -273,3 +273,11 @@ msgstr ""
 msgctxt "#32063"
 msgid "{} is an [COLOR goldenrod]advanced parameter[/COLOR]. Change at your [COLOR firebrick]own risk[/COLOR]."
 msgstr ""
+
+msgctxt "#32064"
+msgid "Wipe Add-on Data"
+msgstr ""
+
+msgctxt "#32065"
+msgid "This will remove [B]all[/B] data for AutoWidget. Any current AutoWidgets will no longer refresh and may not work reliably. It is recommended that this only be done if you intend on repointing all of those widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
+msgstr ""

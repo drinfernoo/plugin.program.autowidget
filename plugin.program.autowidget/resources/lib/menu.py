@@ -69,6 +69,10 @@ def root_menu():
                             art=refresh,
                             info={'plot': _addon.getLocalizedString(32020)},
                             isFolder=False)
+    directory.add_menu_item(title=32064,
+                            params={'mode': 'wipe'},
+                            art=remove},
+                            isFolder=False)
 
 
 def group_menu(group_id):

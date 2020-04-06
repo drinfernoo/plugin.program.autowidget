@@ -38,6 +38,14 @@ def ensure_addon_data():
         if path:
             if not os.path.exists(path):
                 os.makedirs(path)
+                
+                
+def wipe(folder=_addon_path):
+    dialog = xbmcgui.Dialog()
+    choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32065))
+    
+    if choice:
+        shutil.rmtree(folder)
 
 
 def set_skin_string(string, value):
