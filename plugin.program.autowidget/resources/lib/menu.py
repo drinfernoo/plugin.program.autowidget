@@ -71,7 +71,7 @@ def root_menu():
                             isFolder=False)
     directory.add_menu_item(title=32064,
                             params={'mode': 'wipe'},
-                            art=remove},
+                            art=remove,
                             isFolder=False)
 
 
