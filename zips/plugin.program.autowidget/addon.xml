@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.100" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.90" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -18,33 +18,17 @@
         <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
         <email></email>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <source></source>
         <news></news>
         <disclaimer></disclaimer>
         <assets>
-            <icon>icon.png</icon>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
         </assets>
     </extension>
 </addon>
-b.com/drinfernoo/</website>
-        <email></email>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news></news>
-        <disclaimer></disclaimer>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-ialog
-1.3.1
- - Cleanup skin string conversion
-1.3.0
- - Add group editing dialog
- - Non-Skin Shortcuts skin support
- - Fix issues with groups and paths with the same name
- - Fix settings shortcuts
- - Add rudimentary JSON migration
+autowidget/</source>
+        <news>
 1.2.5
  - Update some skin localizations
  - Add more widget artwork
@@ -91,6 +75,19 @@ ialog
         </news>
         <assets>
             <icon>resources/media/sync.png</icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+           <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+n>resources/media/sync.png</icon>
             <fanart>resources/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
