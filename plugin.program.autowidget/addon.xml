@@ -26,6 +26,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.4.1
+ - Fix bug in migration
 1.4.0
  - Add "Clean Old References" shortcuts
  - Change main menu layout
