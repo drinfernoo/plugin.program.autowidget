@@ -178,8 +178,8 @@ def read_xml(file):
     if os.path.exists(file):
         try:
             xml = ElementTree.parse(file).getroot()
-        except ParseError:
-            utils.log('Unable to parse: {}'.format(file))
+        except Exception as e:
+            utils.log('Unable to parse {}: {}'.format(file, e))
     else:
         log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
         
@@ -193,5 +193,5 @@ def write_xml(file, content):
     try:
         tree.write(file)
     except:
-        utils.log('{} couldn\'t be written to: {}'.format(file, e),
+        utils.log('Could not write to {}: {}'.format(file, e),
                   level=xbmc.LOGERROR)
