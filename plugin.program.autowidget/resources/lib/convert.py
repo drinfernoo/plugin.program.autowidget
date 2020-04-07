@@ -3,7 +3,6 @@ import xbmcaddon
 import xbmcgui
 
 import ast
-import json
 import os
 import random
 import re
@@ -129,7 +128,9 @@ def _convert_widgets(notify=False):
     
 def _convert_skin_strings(converted):
     xml_path = os.path.join(_skin_path, 'settings.xml')
-    if not os.path.exists(xml_path):
+    settings = utils.read_xml(xml_path)
+    
+    if not settings:
         return converted
     
     try:
@@ -167,11 +168,10 @@ def _convert_shortcuts(converted):
     for xml in [x for x in os.listdir(_shortcuts_path)
                 if x.endswith('.DATA.xml') and 'powermenu' not in x]:
         xml_path = os.path.join(_shortcuts_path, xml)
+        shortcuts = utils.read_xml(xml_path)
         
-        try:
-            shortcuts = ElementTree.parse(xml_path).getroot()
-        except ParseError:
-            utils.log('Unable to parse: {}'.format(xml))
+        if not shortcuts:
+            continue
 
         for shortcut in shortcuts.findall('shortcut'):
             label_node = shortcut.find('label')
@@ -224,7 +224,7 @@ def _convert_properties(converted):
         return converted
         
     try:
-        content = ast.literal_eval(utils.open_file(props_path))
+        content = ast.literal_eval(utils.read_file(props_path))
     except Exception as e:
         utils.log('Unable to parse: {}'.format(props_path))
         
@@ -292,26 +292,19 @@ def refresh_paths(notify=False, force=False):
     for group_def in manage.find_defined_groups():
         paths = []
 
-        for widget in [x for x in os.listdir(_addon_path) if x.endswith('.widget')]:
-            saved_path = os.path.join(_addon_path, widget)
-            try:
-                widget_def = utils.read_json(saved_path)
-            except ValueError:
-                utils.log('Unable to parse: {}'.format(saved_path))
+        for widget_def in manage.find_defined_widgets(group_def['id']):
+            _id = widget_def['id']
+            group_id = widget_def['group']
+            action = widget_def['action'].lower()
+            setting = widget_def.get('setting')
+            label_setting = widget_def.get('label_setting')
 
-            if group_def['id'] == widget_def['group']:
-                _id = widget_def['id']
-                group_id = widget_def['group']
-                action = widget_def['action'].lower()
-                setting = widget_def.get('setting')
-                label_setting = widget_def.get('label_setting')
+            if action == 'random' and len(paths) == 0:
+                paths = _get_random_paths(group_id, force)
 
-                if action == 'random' and len(paths) == 0:
-                    paths = _get_random_paths(group_id, force)
-
-                if paths:
-                    path_def = paths.pop()
-                    _update_strings(_id, path_def, setting, label_setting)
+            if paths:
+                path_def = paths.pop()
+                _update_strings(_id, path_def, setting, label_setting)
 
     if len(converted) > 0:
         xbmc.executebuiltin('ReloadSkin()')

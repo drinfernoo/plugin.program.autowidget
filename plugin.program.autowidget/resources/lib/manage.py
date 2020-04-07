@@ -68,6 +68,15 @@ def get_path_by_id(path_id, group_id=None):
     for defined in find_defined_paths(group_id):
         if defined.get('id', '') == path_id:
             return defined
+            
+            
+def get_widget_by_id(widget_id, group_id=None):
+    if not widget_id:
+        return
+        
+    for defined in find_defined_widgets(group_id):
+        if defined.get('id', '') == widget_id:
+            return defined
     
     
 def find_defined_groups(_type=''):
@@ -109,7 +118,7 @@ def find_defined_paths(group_id=None):
     return paths
     
 
-def find_defined_widgets():
+def find_defined_widgets(group_id=None):
     addon_files = os.listdir(_addon_path)
     widgets = []
     
@@ -117,8 +126,11 @@ def find_defined_widgets():
     for widget_file in widget_files:
         widget_def = utils.read_json(os.path.join(_addon_path, widget_file))
     
-    if widget_def:
-        widgets.append(widget_def)
+        if widget_def:
+            if not group_id:
+                widgets.append(widget_def)
+            elif group_id == widget_def['group']:
+                widgets.append(widget_def)
     
     return widgets
     
@@ -278,7 +290,7 @@ def clean():
         if shortcuts:
             for shortcut in shortcuts:
                 shortcut_file = os.path.join(_shortcuts_path, shortcut)
-                shortcut_def = utils.open_file(shortcut_file)
+                shortcut_def = utils.read_file(shortcut_file)
                 
                 if shortcut_def:
                     if widget_id in shortcut_def:

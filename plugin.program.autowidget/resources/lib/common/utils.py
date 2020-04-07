@@ -122,7 +122,7 @@ def remove_file(file):
             log('{}'.format(e), level=xbmc.LOGERROR)
 
 
-def open_file(file):
+def read_file(file):
     content = None
     if os.path.exists(file):
         with io.open(os.path.join(_addon_path, file), 'r', encoding='utf-8') as f:
@@ -172,3 +172,26 @@ def write_json(file, content):
         except Exception as e:
             log('Could not write to {}: {}'.format(file, e),
                 level=xbmc.LOGERROR)
+
+
+def read_xml(file):
+    if os.path.exists(file):
+        try:
+            xml = ElementTree.parse(file).getroot()
+        except ParseError:
+            utils.log('Unable to parse: {}'.format(file))
+    else:
+        log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
+        
+    return xml
+    
+    
+def write_xml(file, content):
+    prettify(content)
+    tree = ElementTree.ElementTree(content)
+    
+    try:
+        tree.write(file)
+    except:
+        utils.log('{} couldn\'t be written to: {}'.format(file, e),
+                  level=xbmc.LOGERROR)
