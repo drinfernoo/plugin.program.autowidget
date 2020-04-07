@@ -10,6 +10,7 @@ from resources.lib.common import utils
 
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
+_home = xbmc.translatePath('special://home/')
 
 advanced = _addon.getSettingBool('context.advanced')
 warning_shown = _addon.getSettingBool('context.warning')
@@ -153,14 +154,15 @@ def _get_value(edit_def, key):
         value = _get_value(_def, _key)
         if value:
             _def[_key] = value
-            return value
+            return _def[_key]
     elif key in types:
+        default = edit_def[key] if not edit_def[key].lower().startswith('http') else ''
         value = dialog.browse(2, _addon.getLocalizedString(32049).format(key.capitalize()),
-                              'files', mask='.jpg|.png', useThumbs=True,
-                              defaultt=edit_def[key])
+                              shares='files', mask='.jpg|.png', useThumbs=True,
+                              defaultt=default)
         if value:
-            edit_def[key] = value
-            return value
+            edit_def[key] = value.replace(_home, 'special://home/')
+            return edit_def[key]
     else:
         if key in warn:
             title = _addon.getLocalizedString(32063).format(key.capitalize())
@@ -171,7 +173,7 @@ def _get_value(edit_def, key):
                              defaultt=str(edit_def[key]))
         if value:
             edit_def[key] = value
-            return value
+            return edit_def[key]
 
 
 def _clean_key(key):
