@@ -4,6 +4,7 @@ from resources.lib import manage
 from resources.lib.common import migrate
 from resources.lib.common import utils
 
+_home = xbmc.translatePath('special://home/')
 _windows = {'programs':     ['program', 'script'],
             'addonbrowser': ['addon',   'addons'],
             'music':        ['audio',   'music'],
@@ -27,7 +28,11 @@ def _get_art(labels):
     labels['art'].update({i: xbmc.getInfoLabel('ListItem.{}'
                                                .format(i.capitalize()))
                              for i in ['icon', 'thumb']})
-                             
+    
+    for label in labels['art']:
+        labels['art'][label] = labels['art'][label].replace(_home,
+                                                            'special://home/')
+        
     return labels
     
     

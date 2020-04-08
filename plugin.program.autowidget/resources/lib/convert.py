@@ -67,10 +67,7 @@ def _save_path_details(params):
             
     params['version'] = _addon_version
 
-    # try:
     utils.write_json(path_to_saved, params)
-    # except Exception as e:
-        # utils.log('Unable to convert {} to JSON: {}'.format(path_to_saved, e))
 
     return params
 
@@ -80,17 +77,6 @@ def _update_strings(_id, path_def, setting=None, label_setting=None):
     action = path_def['path']
     
     if setting:
-        current = utils.get_skin_string(setting)
-        if _id not in current:
-            return
-        
-        if '?' in action:
-            action = '{}&id={}'.format(action, _id)
-        elif action.endswith('/'):
-            action = '{}?id={}'.format(action, _id)
-        else:
-            action = '{}/?id={}'.format(action, _id)
-            
         if label_setting:
             utils.log('Setting {} to {}'.format(label_setting, label))
             utils.set_skin_string(label_setting, label)
@@ -130,7 +116,7 @@ def _convert_skin_strings(converted):
     xml_path = os.path.join(_skin_path, 'settings.xml')
     settings = utils.read_xml(xml_path)
     
-    if not settings:
+    if settings is None:
         return converted
     
     try:
@@ -170,7 +156,7 @@ def _convert_shortcuts(converted):
         xml_path = os.path.join(_shortcuts_path, xml)
         shortcuts = utils.read_xml(xml_path)
         
-        if not shortcuts:
+        if shortcuts is None:
             continue
 
         for shortcut in shortcuts.findall('shortcut'):

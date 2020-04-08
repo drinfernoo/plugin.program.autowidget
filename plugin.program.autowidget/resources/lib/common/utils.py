@@ -119,7 +119,8 @@ def remove_file(file):
         try:
             os.remove(file)
         except Exception as e:
-            log('{}'.format(e), level=xbmc.LOGERROR)
+            log('Could not remove {}: {}'.format(file, e),
+                level=xbmc.LOGERROR)
 
 
 def read_file(file):
@@ -175,11 +176,13 @@ def write_json(file, content):
 
 
 def read_xml(file):
+    xml = None
     if os.path.exists(file):
         try:
             xml = ElementTree.parse(file).getroot()
-        except ParseError:
-            utils.log('Unable to parse: {}'.format(file))
+        except Exception as e:
+            log('Could not read XML from {}: {}'.format(file, e),
+                level=xbmc.LOGERROR)
     else:
         log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
         
@@ -193,5 +196,5 @@ def write_xml(file, content):
     try:
         tree.write(file)
     except:
-        utils.log('{} couldn\'t be written to: {}'.format(file, e),
+        utils.log('Could not write to {}: {}'.format(file, e),
                   level=xbmc.LOGERROR)
