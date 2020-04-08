@@ -119,7 +119,8 @@ def remove_file(file):
         try:
             os.remove(file)
         except Exception as e:
-            log('{}'.format(e), level=xbmc.LOGERROR)
+            log('Could not remove {}: {}'.format(file, e),
+                level=xbmc.LOGERROR)
 
 
 def read_file(file):
@@ -179,7 +180,8 @@ def read_xml(file):
         try:
             xml = ElementTree.parse(file).getroot()
         except Exception as e:
-            utils.log('Unable to parse {}: {}'.format(file, e))
+            log('Could not read XML from {}: {}'.format(file, e),
+                level=xbmc.LOGERROR)
     else:
         log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
         
