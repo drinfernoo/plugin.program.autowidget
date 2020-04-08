@@ -26,6 +26,13 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.4.3
+ - Add context menu on more items
+ - Fix some log spam
+ - Catch more errors from invalid files
+ - Fix "Settings" shortcuts
+ - Gracefully handle remote artwork
+ - Use special paths for artwork
 1.4.2
  - Fix bug in conversion
 1.4.1
