@@ -151,7 +151,7 @@ def _add_as(path, is_folder):
     if is_folder:
         types = types[:2]
     else:
-        if path.startswith('addons://user'):
+        if any(i in path for i in ['addons://user', 'plugin://']) and not parse_qsl(path):
             pass
         else:
             types = [types[0]]
