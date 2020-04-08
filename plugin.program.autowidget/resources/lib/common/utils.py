@@ -176,6 +176,7 @@ def write_json(file, content):
 
 
 def read_xml(file):
+    xml = None
     if os.path.exists(file):
         try:
             xml = ElementTree.parse(file).getroot()
