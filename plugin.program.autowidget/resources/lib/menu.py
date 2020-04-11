@@ -27,13 +27,14 @@ _addon = xbmcaddon.Addon()
 
 def root_menu():
     directory.add_menu_item(title=32007,
-                            params={'mode': 'groups'},
+                            params={'mode': 'group'},
                             art=folder,
                             isFolder=True)
     directory.add_menu_item(title=32008,
                             params={'mode': 'tools'},
                             art=tools,
                             isFolder=True)
+    return True, 'AutoWidget'
 
     
 def tools_menu():
@@ -50,25 +51,11 @@ def tools_menu():
                             params={'mode': 'wipe'},
                             art=remove,
                             isFolder=False)
+    return True, _addon.getLocalizedString(32008)
                             
                             
 def groups_menu():
-    directory.add_menu_item(title=32015,
-                            params={'mode': 'manage', 'action': 'add_group',
-                                    'target': 'widget'},
-                            art=folder_add,
-                            info={'plot': _addon.getLocalizedString(32016)})
-                            
-    directory.add_menu_item(title=32017,
-                            params={'mode': 'manage', 'action': 'add_group',
-                                    'target': 'shortcut'},
-                            art=folder_shortcut,
-                            info={'plot': _addon.getLocalizedString(32018)})
-                            
     if len(manage.find_defined_groups()) > 0:
-        # //// MY GROUPS ////
-        directory.add_separator(title=32007, char='/')
-        
         for group in manage.find_defined_groups():
             group_name = group['label']
             group_id = group['id']
@@ -83,7 +70,8 @@ def groups_menu():
             
             directory.add_menu_item(title=group_name,
                                     params={'mode': 'group',
-                                            'group': group_id},
+                                            'group': group_id,
+                                            'target': group_type},
                                     info=group.get('info'),
                                     art=group.get('art') or (folder_shortcut if group_type == 'shortcut' else folder_sync),
                                     cm=cm,
@@ -92,9 +80,10 @@ def groups_menu():
         directory.add_menu_item(title=32068,
                                 art=alert,
                                 isFolder=False)
-
-
-def group_menu(group_id):
+    return True, _addon.getLocalizedString(32007)
+                                
+                                
+def shortcut_menu(group_id):
     _id = uuid.uuid4()
     
     group = manage.get_group_by_id(group_id)
@@ -103,57 +92,88 @@ def group_menu(group_id):
                   level=xbmc.LOGERROR)
         return        
     
-    group_type = group['type']
     group_name = group['label'].decode('utf-8')
-    is_widget = group_type == 'widget'
-    is_shortcut = group_type == 'shortcut'
     
-    # //// PATHS ////
     paths = manage.find_defined_paths(group_id)
     if paths:
-        directory.add_separator(title=32009, char='/')
-
+        cm = []
+        _window = utils.get_active_window()
+        
         for idx, path in enumerate(paths):
+            if _window == 'media':
+                cm = _create_context_items(group_id, path['id'], idx, len(paths))
+            
             directory.add_menu_item(title=path['label'],
                                     params={'mode': 'path',
                                             'action': 'call',
                                             'group': group_id,
-                                            'path': path['id']},
+                                            'path': path['id'],
+                                            'id': str(_id)},
                                     info=path.get('info'),
-                                    art=path.get('art') or (folder_shortcut if is_shortcut else folder_sync),
-                                    cm=_create_context_items(group_id,
-                                                             path['id'],
-                                                             idx,
-                                                             len(paths)))
-                                                
-    
-    # //// ACTIONS ////
-    directory.add_separator(title=32010, char='/')
-
-    params = {'mode': 'path', 'group': group_id, 'id': '{}'.format(_id)}
-
-    if len(paths) > 0:
-        if is_widget:
-            title = _addon.getLocalizedString(32028).format(_id)
-            art = shuffle
-            description = _addon.getLocalizedString(32029).format(group_name)
-            
-            params.update({'action': 'random'})
-        elif is_shortcut:
-            title = _addon.getLocalizedString(32030).format(group_name)
-            art = share
-            description = _addon.getLocalizedString(32031).format(group_name)
-            params.update({'action': 'shortcuts'})
-        
-        directory.add_menu_item(title=title,
-                                params=params,
-                                art=art,
-                                info={'plot': description},
-                                isFolder=True)
+                                    art=path.get('art') or folder_shortcut,
+                                    cm=cm,
+                                    isFolder=False)
     else:
         directory.add_menu_item(title=32032,
                                 art=alert,
                                 isFolder=False)
+    
+    return True, group_name
+    
+    
+def widget_menu(group_id):
+    _id = uuid.uuid4()
+    
+    group = manage.get_group_by_id(group_id)
+    if not group:
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id),
+                  level=xbmc.LOGERROR)
+        return        
+    
+    group_name = group['label'].decode('utf-8')
+    
+    paths = manage.find_defined_paths(group_id)
+    if paths:
+        cm = []
+        _window = utils.get_active_window()
+        
+        for idx, path in enumerate(paths):
+            if _window == 'media':
+                cm = _create_context_items(group_id, path['id'], idx, len(paths))
+            
+            directory.add_menu_item(title=path['label'],
+                                    params={'mode': 'path',
+                                            'action': 'call',
+                                            'group': group_id,
+                                            'path': path['id'],
+                                            'id': str(_id)},
+                                    info=path.get('info'),
+                                    art=path.get('art') or folder_sync,
+                                    cm=cm,
+                                    isFolder=False)
+                                    
+        # //// ACTIONS ////
+        directory.add_separator(title=32010, char='/')
+
+        title = _addon.getLocalizedString(32028).format(_id)
+        description = _addon.getLocalizedString(32029).format(group_name)
+        
+        rand = random.randrange(len(group['paths']) - 1)
+        
+        directory.add_menu_item(title=title,
+                                params={'mode': 'path',
+                                        'action': 'random',
+                                        'group': group_id,
+                                        'id': '{}'.format(_id)},
+                                art=shuffle,
+                                info={'plot': description},
+                                isFolder=False)
+    else:
+        directory.add_menu_item(title=32032,
+                                art=alert,
+                                isFolder=False)
+    
+    return True, group_name
 
 
 def random_path_menu(group_id):
@@ -192,32 +212,7 @@ def random_path_menu(group_id):
         directory.add_menu_item(title=32032,
                                 art=alert,
                                 isFolder=True)
-                                
-    
-def shortcut_menu(group_id):
-    _window = utils.get_active_window()
-    group = manage.get_group_by_id(group_id)
-    if not group:
-        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id),
-                  level=xbmc.LOGERROR)
-        return
-        
-    group_name = group.get('label', '')
-    paths = manage.find_defined_paths(group_id)
-    
-    if len(paths) > 0 and _window != 'home':
-        directory.add_menu_item(title=32011,
-                                art=folder_shortcut)
-        directory.add_separator(group_name, char='/')
-    
-    for path in paths:
-        directory.add_menu_item(title=path['label'],
-                                params={'mode': 'path',
-                                        'action': 'call',
-                                        'group': group_id,
-                                        'path': path['id']},
-                                art=path.get('art'),
-                                info=path.get('info'))
+    return True, group_name
 
 
 def call_path(group_id, path_id):

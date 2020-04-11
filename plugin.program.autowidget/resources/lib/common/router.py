@@ -30,6 +30,8 @@ def _log_params(_plugin, _handle, _params):
 def dispatch(_plugin, _handle, _params):
     _handle = int(_handle)
     params = _log_params(_plugin, _handle, _params)
+    
+    category = 'AutoWidget'
     is_dir = False
     is_type = 'files'
 
@@ -43,8 +45,7 @@ def dispatch(_plugin, _handle, _params):
     target = params.get('target', '')
     
     if not mode:
-        menu.root_menu()
-        is_dir = True
+        is_dir, category = menu.root_menu()
     elif mode == 'manage':
         if action == 'add_group':
             manage.add_group(target)
@@ -61,22 +62,22 @@ def dispatch(_plugin, _handle, _params):
         if action == 'call' and group and path:
             menu.call_path(group, path)
         elif action == 'random' and group:
-            menu.random_path_menu(group)
+            is_dir, category = menu.random_path_menu(group)
             is_type = 'videos'
-            is_dir = True
         elif action == 'shortcuts' and group:
-            menu.shortcut_menu(group)
+            is_dir, category = menu.shortcut_menu(group)
             is_type = 'videos'
-            is_dir = True
-    elif mode == 'groups':
-        menu.groups_menu()
-        is_dir = True
-    elif mode == 'group' and group:
-        menu.group_menu(group)
-        is_dir = True
+    elif mode == 'group':
+        if not group:
+            is_dir, category = menu.groups_menu()
+        elif target:
+            if target == 'shortcut':
+                is_dir, category = menu.shortcut_menu(group)
+                is_type = 'videos'
+            elif target == 'widget':
+                is_dir, category = menu.widget_menu(group)
     elif mode == 'tools':
-        menu.tools_menu()
-        is_dir = True
+        is_dir, category = menu.tools_menu()
     elif mode == 'force':
         convert.refresh_paths(notify=True, force=True)
     elif mode == 'wipe':
@@ -85,5 +86,6 @@ def dispatch(_plugin, _handle, _params):
         manage.clean()
 
     if is_dir:
+        xbmcplugin.setPluginCategory(_handle, category)
         xbmcplugin.setContent(_handle, is_type)
         xbmcplugin.endOfDirectory(_handle)
