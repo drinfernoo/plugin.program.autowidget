@@ -40,10 +40,7 @@ def write_path(group_def, path_def=None, update=''):
         else:
             group_def['paths'].append(path_def)
 
-    # try:
     utils.write_json(filename, group_def)
-    # except Exception as e:
-        # utils.log('Unable to convert {} to JSON: {}'.format(filename, e))
 
 
 def get_group_by_id(group_id):
@@ -142,6 +139,8 @@ def add_from_context(labels):
         group_def = _group_dialog(_type)
         if group_def:
             _add_path(group_def, labels)
+            if _type == 'shortcut':
+                xbmc.executebuiltin('UpdateLibrary(video)')
             
             
 def _add_as(path, is_folder):
