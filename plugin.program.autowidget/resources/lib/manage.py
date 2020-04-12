@@ -16,6 +16,7 @@ from resources.lib.common import utils
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_version = _addon.getAddonInfo('version')
+_home = xbmc.translatePath('special://home/')
 if xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
     _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
     _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
@@ -27,6 +28,8 @@ folder_shortcut = utils.get_art('folder-shortcut.png')
 folder_sync = utils.get_art('folder-sync.png')
 share = utils.get_art('share.png')
 folder_settings = utils.get_art('folder-settings.png')
+folder_clone = utils.get_art('folder-clone.png')
+folder_explode = utils.get_art('folder-explode.png')
 
 
 def write_path(group_def, path_def=None, update=''):
@@ -134,21 +137,28 @@ def find_defined_widgets(group_id=None):
     
 def add_from_context(labels):
     _type = _add_as(labels['path'], labels['is_folder'])
-    if _type:
+    if _type not in ['clone', 'explode']:
         labels['target'] = _type
         group_def = _group_dialog(_type)
         if group_def:
             _add_path(group_def, labels)
             if _type == 'shortcut':
                 xbmc.executebuiltin('UpdateLibrary(video)')
+    elif _type == 'clone':
+        labels['target'] = 'shortcut'
+        _copy_path(labels)
+    elif _type == 'explode':
+        labels['target'] = 'widget'
+        _copy_path(labels)
             
             
 def _add_as(path, is_folder):
     types = [_addon.getLocalizedString(32051), _addon.getLocalizedString(32052),
-             _addon.getLocalizedString(32053)]
+             'Clone', 'Explode', _addon.getLocalizedString(32053)]
+    art = [folder_shortcut, folder_sync, folder_clone, folder_explode, folder_settings]
     
     if is_folder:
-        types = types[:2]
+        types = types[:4]
     else:
         if any(i in path for i in ['addons://user', 'plugin://']) and not parse_qsl(path):
             pass
@@ -156,22 +166,14 @@ def _add_as(path, is_folder):
             types = [types[0]]
 
     options = []
-    for type in types:
+    for idx, type in enumerate(types):
         li = xbmcgui.ListItem(type)
         
-        icon = ''
-        if type == _addon.getLocalizedString(32051):
-            icon = folder_shortcut
-        elif type == _addon.getLocalizedString(32052):
-            icon = folder_sync
-        elif type == _addon.getLocalizedString(32053):
-            icon = folder_settings
-            
-        li.setArt(icon)
+        li.setArt(art[idx])
         options.append(li)
     
     dialog = xbmcgui.Dialog()
-    idx = dialog.select('Add as', options, useDetails=True)
+    idx = dialog.select('Add as...', options, useDetails=True)
     if idx < 0:
         return ''
     
@@ -235,10 +237,7 @@ def add_group(target):
                      'art': folder_sync if target == 'widget' else folder_shortcut,
                      'version': _addon_version}
     
-        # try:
         utils.write_json(filename, group_def)
-        # except Exception as e:
-            # utils.log('Unable to convert {} to JSON: {}'.format(filename, e))
             
         xbmc.executebuiltin('Container.Refresh()')
     else:
@@ -247,14 +246,16 @@ def add_group(target):
     return group_id
     
     
-def _add_path(group_def, labels):
-    if group_def['type'] == 'shortcut':
-        labels['label'] = xbmcgui.Dialog().input(heading=_addon.getLocalizedString(32043),
+def _add_path(group_def, labels, over=False):
+    if not over:
+        if group_def['type'] == 'shortcut':
+            heading = _addon.getLocalizedString(32043)
+        elif group_def['type'] == 'widget':
+            heading = _addon.getLocalizedString(32044)
+        
+        labels['label'] = xbmcgui.Dialog().input(heading=heading,
                                                  defaultt=labels['label'])
-    elif group_def['type'] == 'widget':
-        labels['label'] = xbmcgui.Dialog().input(heading=_addon.getLocalizedString(32044),
-                                                 defaultt=labels['label'])
-    
+                                                 
     labels['id'] = utils.get_unique_id(labels['label'])
     labels['version'] = _addon_version
     
@@ -301,3 +302,50 @@ def clean():
     for remove in to_remove:
         filename = '{}.widget'.format(remove)
         utils.remove_file(os.path.join(_addon_path, filename))
+
+
+def _copy_path(path_def):
+    _windows = {'programs':     ['program', 'script'],
+                'addonbrowser': ['addon',   'addons'],
+                'music':        ['audio',   'music'],
+                'pictures':     ['image',   'picture'],
+                'videos':       ['video',   'videos']}
+    
+    params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
+              'params': {'directory': path_def['path'],
+                         'properties': ['title', 'art', 'plot']},
+              'id': 1}
+    group_id = add_group(path_def['target'])
+    group_def = get_group_by_id(group_id)
+    files = xbmc.executeJSONRPC(json.dumps(params))
+    if 'error' not in files:
+        files = json.loads(files)['result']['files']
+        for file in files:
+            if file['type'] in ['movie', 'episode', 'musicvideo', 'song']:
+                continue
+            
+            labels = {'label': file['label'],
+                      'is_folder': file['filetype'] == 'directory',
+                      'content': ''}
+            
+            path = file['file']
+            if path != 'addons://user/':
+                path = path.replace('addons://user/', 'plugin://')
+            labels['path'] = path
+            
+            labels['art'] = {i: file['art'][i] if i in file['art'] else ''
+                         for i in ['poster', 'fanart', 'banner', 'landscape',
+                                   'clearlogo', 'clearart', 'icon', 'thumb']}
+            for label in labels['art']:
+                labels['art'][label] = labels['art'][label].replace(_home,
+                                                            'special://home/')
+            
+            if 'plot' in file:
+                labels['info'] = {'plot': file['plot']}
+            labels['target'] = path_def['target']
+            
+            for _key in _windows:
+                if any(i in path for i in _windows[_key]):
+                    labels['window'] = _key
+                    
+            _add_path(group_def, labels, over=True)
