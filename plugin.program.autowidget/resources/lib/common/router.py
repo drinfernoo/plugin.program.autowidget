@@ -54,28 +54,19 @@ def dispatch(_plugin, _handle, _params):
         elif action == 'shift_path' and group and path and target:
             edit.shift_path(group, path, target)
         elif action == 'edit':
-            if not path:
-                edit.edit_dialog(group)
-            else:
-                edit.edit_dialog(group, path)
+            edit.edit_dialog(group, path)
     elif mode == 'path':
         if action == 'call' and group and path:
             menu.call_path(group, path)
         elif action == 'random' and group:
-            is_dir, category = menu.random_path_menu(group)
-            is_type = 'videos'
-        elif action == 'shortcuts' and group:
-            is_dir, category = menu.shortcut_menu(group)
-            is_type = 'videos'
+            is_dir, category = menu.random_path(group)
+        elif action == 'next' and group:
+            is_dir, category = menu.next_path(group)
     elif mode == 'group':
         if not group:
-            is_dir, category = menu.groups_menu()
+            is_dir, category = menu.my_groups_menu()
         elif target:
-            if target == 'shortcut':
-                is_dir, category = menu.shortcut_menu(group)
-                is_type = 'videos'
-            elif target == 'widget':
-                is_dir, category = menu.widget_menu(group)
+            is_dir, category = menu.group_menu(group, target)
     elif mode == 'tools':
         is_dir, category = menu.tools_menu()
     elif mode == 'force':
