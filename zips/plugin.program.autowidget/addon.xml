@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.124" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.112" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
@@ -28,6 +28,37 @@
 </addon>
 autowidget/</source>
         <news>
+1.4.1
+ - Fix bug in migration
+1.4.0
+ - Add "Clean Old References" shortcuts
+ - Change main menu layout
+1.3.9
+ - Fix label bug in Embuary (and maybe elsewhere)
+1.3.8
+ - Add "Wipe Add-on Data" shortcuts
+ - Allow Unicode characters in labels
+1.3.7
+ - Fix typo in path handling
+1.3.6
+ - Fix error handling
+1.3.5
+ - Add extra error checking for file operations
+1.3.4
+ - Add proper migration from old JSON to current
+1.3.3
+ - Rewrite editor dialog
+ - Fix path conversion for skin string paths
+1.3.2
+ - Fixes and cleanup in editor dialog
+1.3.1
+ - Cleanup skin string conversion
+1.3.0
+ - Add group editing dialog
+ - Non-Skin Shortcuts skin support
+ - Fix issues with groups and paths with the same name
+ - Fix settings shortcuts
+ - Add rudimentary JSON migration
 1.2.5
  - Update some skin localizations
  - Add more widget artwork
@@ -75,45 +106,6 @@ autowidget/</source>
         <assets>
             <icon>resources/media/sync.png</icon>
             <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-           <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-       </assets>
-    </extension>
-</addon>
-media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-/banner>
-        </assets>
-    </extension>
-</addon>
-ources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-ext menu setting
-1.0.0
- - First stable release
-        </news>
-        <assets>
-            <icon>resources/media/sync.png</icon>
-            <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-s/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
         </assets>
