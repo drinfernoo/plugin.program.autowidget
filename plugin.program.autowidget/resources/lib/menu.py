@@ -26,6 +26,16 @@ unpack = utils.get_art('unpack.png')
 
 _addon = xbmcaddon.Addon()
 
+label_warning_shown = _addon.getSettingBool('label.warning')
+
+
+def _warn():
+    dialog = xbmcgui.Dialog()
+    dialog.ok('AutoWidget', 'The unique identifier in the number in this path\'s label is [B]necessary[/B] for AutoWidget to refresh it correctly. Don\'t change the label given to this widget, or it may be unable to update correctly. This wessage [COLOR firebrick]will not[/COLOR] be shown again.')
+    
+    _addon.setSetting('label.warning', 'true')
+    label_warning_shown = True
+
 
 def root_menu():
     directory.add_menu_item(title=32007,
@@ -178,9 +188,9 @@ def call_path(group_id, path_id):
 def random_path(group_id):
     _window = utils.get_active_window()
     
-    if _window not in ['home', 'media']:
-        dialog = xbmcgui.Dialog()
-        dialog.ok('AutoWidget', 'Don\'t change the label given to this widget, or it will be unable to update correctly.')
+    if _window not in ['home', 'media'] and not label_warning_shown:
+        _warn()
+    
     dir = _window == 'media'
     
     group = manage.get_group_by_id(group_id)
@@ -211,6 +221,9 @@ def random_path(group_id):
     
 def next_path(group_id):
     _window = utils.get_active_window()
+    
+    if _window not in ['home', 'media'] and not label_warning_shown:
+        _warn()
     
     dir = _window != 'media'
     
