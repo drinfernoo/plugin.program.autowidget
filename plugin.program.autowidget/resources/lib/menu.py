@@ -181,6 +181,7 @@ def random_path(group_id):
     if _window not in ['home', 'media']:
         dialog = xbmcgui.Dialog()
         dialog.ok('AutoWidget', 'Don\'t change the label given to this widget, or it will be unable to update correctly.')
+    dir = _window == 'media'
     
     group = manage.get_group_by_id(group_id)
     if not group:
@@ -205,12 +206,14 @@ def random_path(group_id):
         directory.add_menu_item(title=32032,
                                 art=alert,
                                 isFolder=True)
-    return True, group_name
+    return dir, group_name
     
     
 def next_path(group_id):
     _window = utils.get_active_window()
     
+    dir = _window != 'media'
+    
     group = manage.get_group_by_id(group_id)
     if not group:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id),
@@ -234,7 +237,7 @@ def next_path(group_id):
         directory.add_menu_item(title=32032,
                                 art=alert,
                                 isFolder=True)
-    return True, group_name
+    return dir, group_name
 
 
 def _create_context_items(group_id, path_id, idx, length):
