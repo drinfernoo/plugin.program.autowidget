@@ -67,6 +67,7 @@ def dispatch(_plugin, _handle, _params):
             is_dir, category = menu.my_groups_menu()
         elif target:
             is_dir, category = menu.group_menu(group, target)
+        is_type = 'videos'
     elif mode == 'tools':
         is_dir, category = menu.tools_menu()
     elif mode == 'force':

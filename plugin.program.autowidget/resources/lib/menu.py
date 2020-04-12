@@ -108,7 +108,7 @@ def group_menu(group_id, target):
     group_name = group['label'].decode('utf-8')
     
     paths = manage.find_defined_paths(group_id)
-    if paths:
+    if len(paths) > 0:
         cm = []
         art = folder_shortcut if target == 'shortcut' else folder_sync
         
@@ -131,8 +131,6 @@ def group_menu(group_id, target):
 
             title = _addon.getLocalizedString(32028).format(_id)
             description = _addon.getLocalizedString(32029).format(group_name)
-            
-            rand = random.randrange(len(group['paths']) - 1)
             
             directory.add_menu_item(title=title,
                                     params={'mode': 'path',
@@ -204,7 +202,7 @@ def random_path(group_id):
     
     if len(paths) > 0:
         if _window == 'media':
-            rand = random.randrange(len(group['paths']) - 1)
+            rand = random.randrange(len(paths))
             call_path(group_id, paths[rand]['id'])
         else:
             directory.add_menu_item(title=32013,
@@ -238,8 +236,7 @@ def next_path(group_id):
     
     if len(paths) > 0:
         if _window == 'media':
-            rand = random.randrange(len(group['paths']) - 1)
-            call_path(group_id, paths[rand]['id'])
+            call_path(group_id, paths[0]['id'])
         else:
             directory.add_menu_item(title=32013,
                                     params={'mode': 'force'},
