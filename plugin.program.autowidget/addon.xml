@@ -14,7 +14,11 @@
         <menu id="kodi.core.main">
             <item library="context.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEqual(ListItem.DbType,movie) + !String.IsEqual(ListItem.DbType,episode) + String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
+                <visible>[!String.IsEqual(ListItem.DbType,movie) +
+                         !String.IsEqual(ListItem.DbType,episode) +
+                         !String.IsEqual(ListItem.DbType,musicvideo) +
+                         !String.IsEqual(ListItem.DbType,song)] +
+                          String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
             </item>
         </menu>
     </extension>
