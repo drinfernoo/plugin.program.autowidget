@@ -31,6 +31,10 @@ folder_settings = utils.get_art('folder-settings.png')
 folder_clone = utils.get_art('folder-clone.png')
 folder_explode = utils.get_art('folder-explode.png')
 
+_types = [_addon.getLocalizedString(32051), _addon.getLocalizedString(32052),
+          'Clone as Shortcut Group', 'Explode as Widget Group',
+          _addon.getLocalizedString(32053)]
+
 
 def write_path(group_def, path_def=None, update=''):
     filename = os.path.join(_addon_path, '{}.group'.format(group_def['id']))
@@ -153,17 +157,15 @@ def add_from_context(labels):
             
             
 def _add_as(path, is_folder):
-    types = [_addon.getLocalizedString(32051), _addon.getLocalizedString(32052),
-             'Clone', 'Explode', _addon.getLocalizedString(32053)]
     art = [folder_shortcut, folder_sync, folder_clone, folder_explode, folder_settings]
     
     if is_folder:
-        types = types[:4]
+        types = _types[:4]
     else:
         if any(i in path for i in ['addons://user', 'plugin://']) and not parse_qsl(path):
             pass
         else:
-            types = [types[0]]
+            types = [_types[0]]
 
     options = []
     for idx, type in enumerate(types):
@@ -177,7 +179,15 @@ def _add_as(path, is_folder):
     if idx < 0:
         return ''
     
-    return types[idx].lower()
+    chosen = types[idx]
+    if chosen in [_types[0], _types[4]]:
+        return 'shortcut'
+    elif chosen == _types[1]:
+        return 'widget'
+    elif chosen == _types[2]:
+        return 'clone'
+    elif chosen == _types[3]:
+        return 'explode'
             
             
 def _group_dialog(_type, group_id=None):
