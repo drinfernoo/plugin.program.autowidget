@@ -21,12 +21,6 @@ warn = ['content', 'id', 'is_folder', 'target', 'window', 'version', 'type']
 exclude = ['paths']
 
 
-def _update_container(_type):
-    xbmc.executebuiltin('Container.Refresh()')
-    if _type == 'shortcut':
-        xbmc.executebuiltin('UpdateLibrary(video)')
-
-
 def shift_path(group_id, path_id, target):
     group_def = manage.get_group_by_id(group_id)
     
@@ -45,7 +39,7 @@ def shift_path(group_id, path_id, target):
 
     group_def['paths'] = paths
     manage.write_path(group_def)
-    _update_container(group_def['type'])
+    utils.update_container()
         
         
 def _remove_group(group_id, over=False):
@@ -217,10 +211,10 @@ def edit_dialog(group_id, path_id=''):
     elif idx == len(options) - 1:
         if path_id:
             _remove_path(path_id, group_id)
-            _update_container(group_def['type'])
+            utils.update_container()
         else:
             _remove_group(group_id)
-            _update_container(group_def['type'])
+            utils.update_container()
         return
     else:
         key = _clean_key(options[idx])
@@ -234,4 +228,4 @@ def edit_dialog(group_id, path_id=''):
         else:
             manage.write_path(group_def)
             
-        _update_container(group_def['type'])
+        utils.update_container()

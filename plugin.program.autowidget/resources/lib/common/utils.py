@@ -85,6 +85,11 @@ def get_active_window():
         return 'home'
     else:
         pass
+        
+        
+def update_container():
+    xbmc.executebuiltin('Container.Refresh()')
+    xbmc.executebuiltin('UpdateLibrary(video,AutoWidget)')
 
         
 def prettify(elem):

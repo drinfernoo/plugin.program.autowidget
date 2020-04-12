@@ -126,7 +126,7 @@ def group_menu(group_id, target):
                                     art=path.get('art') or art,
                                     cm=cm,
                                     isFolder=False)
-        if target == 'widget':
+        if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/')
 
             title = _addon.getLocalizedString(32028).format(_id)
@@ -189,13 +189,11 @@ def random_path(group_id):
     if _window not in ['home', 'media'] and not label_warning_shown:
         _warn()
     
-    dir = _window == 'media'
-    
     group = manage.get_group_by_id(group_id)
     if not group:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id),
                   level=xbmc.LOGERROR)
-        return
+        return False, ''
     
     group_name = group.get('label', '')
     paths = manage.find_defined_paths(group_id)
@@ -204,17 +202,19 @@ def random_path(group_id):
         if _window == 'media':
             rand = random.randrange(len(paths))
             call_path(group_id, paths[rand]['id'])
+            return False, group_name
         else:
             directory.add_menu_item(title=32013,
                                     params={'mode': 'force'},
                                     art=unpack,
                                     info={'plot': _addon.getLocalizedString(32014)},
                                     isFolder=False)
+            return True, group_name
     else:
         directory.add_menu_item(title=32032,
                                 art=alert,
-                                isFolder=True)
-    return dir, group_name
+                                isFolder=False)
+        return False, group_name
     
     
 def next_path(group_id):
@@ -223,13 +223,11 @@ def next_path(group_id):
     if _window not in ['home', 'media'] and not label_warning_shown:
         _warn()
     
-    dir = _window != 'media'
-    
     group = manage.get_group_by_id(group_id)
     if not group:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id),
                   level=xbmc.LOGERROR)
-        return
+        return False, ''
     
     group_name = group.get('label', '')
     paths = manage.find_defined_paths(group_id)
@@ -237,17 +235,19 @@ def next_path(group_id):
     if len(paths) > 0:
         if _window == 'media':
             call_path(group_id, paths[0]['id'])
+            return False, group_name
         else:
             directory.add_menu_item(title=32013,
                                     params={'mode': 'force'},
                                     art=unpack,
                                     info={'plot': _addon.getLocalizedString(32014)},
                                     isFolder=False)
+            return True, group_name
     else:
         directory.add_menu_item(title=32032,
                                 art=alert,
-                                isFolder=True)
-    return dir, group_name
+                                isFolder=False)
+        return False, group_name
 
 
 def _create_context_items(group_id, path_id, idx, length):

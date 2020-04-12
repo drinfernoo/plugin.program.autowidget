@@ -6,6 +6,11 @@ import json
 import os
 import re
 
+try:
+    from urllib.parse import parse_qsl
+except ImportError:
+    from urlparse import parse_qsl
+
 from resources.lib import manage
 from resources.lib.common import utils
 
@@ -19,8 +24,6 @@ windows = {'programs':     ['program', 'script'],
             'music':        ['audio',   'music'],
             'pictures':     ['image',   'picture'],
             'videos':       ['video',   'videos']}
-art_types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
-         'poster', 'thumb']
 
 shortcut_types = [_addon.getLocalizedString(32051), _addon.getLocalizedString(32052),
           'Clone as Shortcut Group', 'Explode as Widget Group',
@@ -43,14 +46,14 @@ def add(labels):
         group_def = _group_dialog(_type)
         if group_def:
             _add_path(group_def, labels)
-            if _type == 'shortcut':
-                xbmc.executebuiltin('UpdateLibrary(video)')
     elif _type == 'clone':
         labels['target'] = 'shortcut'
         _copy_path(labels)
     elif _type == 'explode':
         labels['target'] = 'widget'
         _copy_path(labels)
+        
+    utils.update_container()
             
             
 def build_labels(source, path_def=None):
@@ -102,14 +105,14 @@ def build_labels(source, path_def=None):
 def _add_as(path, is_folder):
     art = [folder_shortcut, folder_sync, folder_clone, folder_explode, folder_settings]
     
-    types = art_types[:]
+    types = shortcut_types[:]
     if is_folder:
-        types = art_types[:4]
+        types = shortcut_types[:4]
     else:
         if any(i in path for i in ['addons://user', 'plugin://']) and not parse_qsl(path):
             pass
         else:
-            types = [art_types[0]]
+            types = [shortcut_types[0]]
 
     options = []
     for idx, type in enumerate(types):
@@ -124,13 +127,13 @@ def _add_as(path, is_folder):
         return
     
     chosen = types[idx]
-    if chosen in [art_types[0], art_types[4]]:
+    if chosen in [shortcut_types[0], shortcut_types[4]]:
         return 'shortcut'
-    elif chosen == art_types[1]:
+    elif chosen == shortcut_types[1]:
         return 'widget'
-    elif chosen == art_types[2]:
+    elif chosen == shortcut_types[2]:
         return 'clone'
-    elif chosen == art_types[3]:
+    elif chosen == shortcut_types[3]:
         return 'explode'
             
             
