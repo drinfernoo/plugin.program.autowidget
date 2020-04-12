@@ -33,7 +33,7 @@ folder_explode = utils.get_art('folder-explode.png')
 
 _types = [_addon.getLocalizedString(32051), _addon.getLocalizedString(32052),
           'Clone as Shortcut Group', 'Explode as Widget Group',
-          _addon.getLocalizedString(32053)]
+          'Settings Shortcut']
 
 
 def write_path(group_def, path_def=None, update=''):
@@ -141,6 +141,9 @@ def find_defined_widgets(group_id=None):
     
 def add_from_context(labels):
     _type = _add_as(labels['path'], labels['is_folder'])
+    if not _type:
+        return
+    
     if _type not in ['clone', 'explode']:
         labels['target'] = _type
         group_def = _group_dialog(_type)
@@ -159,6 +162,7 @@ def add_from_context(labels):
 def _add_as(path, is_folder):
     art = [folder_shortcut, folder_sync, folder_clone, folder_explode, folder_settings]
     
+    types = _types[:]
     if is_folder:
         types = _types[:4]
     else:
@@ -177,7 +181,7 @@ def _add_as(path, is_folder):
     dialog = xbmcgui.Dialog()
     idx = dialog.select('Add as...', options, useDetails=True)
     if idx < 0:
-        return ''
+        return
     
     chosen = types[idx]
     if chosen in [_types[0], _types[4]]:
@@ -326,6 +330,9 @@ def _copy_path(path_def):
                          'properties': ['title', 'art', 'plot']},
               'id': 1}
     group_id = add_group(path_def['target'])
+    if not group_id:
+        return
+        
     group_def = get_group_by_id(group_id)
     files = xbmc.executeJSONRPC(json.dumps(params))
     if 'error' not in files:
