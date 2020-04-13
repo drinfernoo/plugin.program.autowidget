@@ -64,7 +64,8 @@ class AutoWidgetService(xbmc.Monitor):
                             notification = True
                 
                 utils.log('+++++ REFRESHING AUTOWIDGETS +++++', level=xbmc.LOGNOTICE)
-                convert.refresh_paths(notify=notification)
+                convert.refresh_paths(notify=notification,
+                                      duration=delay * self.refresh_duration)
             else:
                 utils.log('+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++',
                           level=xbmc.LOGNOTICE)

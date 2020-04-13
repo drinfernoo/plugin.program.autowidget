@@ -109,7 +109,7 @@ def find_defined_paths(group_id=None):
     return paths
     
 
-def find_defined_widgets(group_id=None):
+def find_defined_widgets(path_id=None, group_id=None):
     addon_files = os.listdir(_addon_path)
     widgets = []
     

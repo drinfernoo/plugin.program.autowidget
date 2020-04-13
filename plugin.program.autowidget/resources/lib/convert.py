@@ -57,6 +57,10 @@ def _get_random_paths(group_id, force=False, change_sec=3600):
 
 
 def _save_path_details(params, _id=''):
+    for param in params:
+        if str(params[param]).endswith(',return)'):
+            return
+    
     if not _id:
         _id = params['id']
     
@@ -64,10 +68,8 @@ def _save_path_details(params, _id=''):
     params['version'] = _addon_version
     if 'current' not in params:
         params['current'] = -1
-    
-    for param in params:
-        if str(params[param]).endswith(',return)'):
-            return
+    if 'updated' not in params:
+        params['updated'] = time.time()
 
     utils.write_json(path_to_saved, params)
 
@@ -266,8 +268,9 @@ def _convert_properties(converted):
     return converted
 
 
-def refresh_paths(notify=False, force=False):
+def refresh_paths(notify=False, force=False, duration=0):
     converted = []
+    current_time = time.time()
     
     if force:
         converted = _convert_widgets(notify)
@@ -280,27 +283,34 @@ def refresh_paths(notify=False, force=False):
         paths = []
 
         for widget_def in manage.find_defined_widgets(group_def['id']):
-            path_def = {}
-            _id = widget_def['id']
-            group_id = widget_def['group']
-            action = widget_def['action'].lower()
-            setting = widget_def.get('setting')
-            label_setting = widget_def.get('label_setting')
-            current = widget_def.get('current')
+            updated_at = widget_def.get('updated', current_time)
+            
+            if updated_at < current_time - duration or force:
+                path_def = {}
+                _id = widget_def['id']
+                group_id = widget_def['group']
+                action = widget_def['action'].lower()
+                setting = widget_def.get('setting')
+                label_setting = widget_def.get('label_setting')
+                current = widget_def.get('current')
 
-            if action == 'random' and len(paths) == 0:
-                paths = _get_random_paths(group_id, force)
-            elif action == 'next':
-                next_paths = manage.find_defined_paths(group_id)
-                next = (current + 1) % len(next_paths)
-                path_def = next_paths[next]
-                widget_def['current'] = next
+                if action == 'random' and len(paths) == 0:
+                    paths = _get_random_paths(group_id, force)
+                
+                if action == 'next':
+                    next_paths = manage.find_defined_paths(group_id)
+                    next = (current + 1) % len(next_paths)
+                    path_def = next_paths[next]
+                    widget_def['current'] = next
+                elif action == 'random':
+                    path_def = paths.pop()
+                
+                widget_def['path'] = path_def['id']
+                widget_def['updated'] = current_time
+                    
                 _save_path_details(widget_def, _id)
-                
-            if action == 'random' and len(paths) > 0:
-                path_def = paths.pop()
-                
-            _update_strings(_id, path_def, setting, label_setting)
+                _update_strings(_id, path_def, setting, label_setting)
 
+    xbmc.executebuiltin('Container.Refresh()')
     if len(converted) > 0:
         xbmc.executebuiltin('ReloadSkin()')
