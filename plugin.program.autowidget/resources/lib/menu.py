@@ -103,7 +103,7 @@ def group_menu(group_id, target):
     if not group:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id),
                   level=xbmc.LOGERROR)
-        return
+        return False, 'AutoWidget'
     
     group_name = group['label'].decode('utf-8')
     
@@ -193,7 +193,7 @@ def random_path(group_id):
     if not group:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id),
                   level=xbmc.LOGERROR)
-        return False, ''
+        return False, 'AutoWidget'
     
     group_name = group.get('label', '')
     paths = manage.find_defined_paths(group_id)
@@ -227,7 +227,7 @@ def next_path(group_id):
     if not group:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id),
                   level=xbmc.LOGERROR)
-        return False, ''
+        return False, 'AutoWidget'
     
     group_name = group.get('label', '')
     paths = manage.find_defined_paths(group_id)
