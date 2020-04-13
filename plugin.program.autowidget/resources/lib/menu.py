@@ -42,28 +42,15 @@ def root_menu():
                             params={'mode': 'group'},
                             art=folder,
                             isFolder=True)
+    directory.add_menu_item(title='Active Widgets',
+                            params={'mode': 'widget'},
+                            art=folder,
+                            isFolder=True)
     directory.add_menu_item(title=32008,
                             params={'mode': 'tools'},
                             art=tools,
                             isFolder=True)
     return True, 'AutoWidget'
-
-    
-def tools_menu():
-    directory.add_menu_item(title=32006,
-                            params={'mode': 'force'},
-                            art=refresh,
-                            info={'plot': _addon.getLocalizedString(32020)},
-                            isFolder=False)
-    directory.add_menu_item(title=32066,
-                            params={'mode': 'clean'},
-                            art=remove,
-                            isFolder=False)    
-    directory.add_menu_item(title=32064,
-                            params={'mode': 'wipe'},
-                            art=remove,
-                            isFolder=False)
-    return True, _addon.getLocalizedString(32008)
                             
                             
 def my_groups_menu():
@@ -154,6 +141,34 @@ def group_menu(group_id, target):
                                 isFolder=False)
     
     return True, group_name
+    
+    
+def active_widgets_menu():
+    widgets = manage.find_defined_widgets()
+    for widget_def in widgets:
+        action = widget_def['action']
+        directory.add_menu_item(title=widget_def['id'],
+                                art=folder_sync if action == 'random' else folder_next,
+                                isFolder=False)
+
+    return True, 'Active Widgets'
+    
+    
+def tools_menu():
+    directory.add_menu_item(title=32006,
+                            params={'mode': 'force'},
+                            art=refresh,
+                            info={'plot': _addon.getLocalizedString(32020)},
+                            isFolder=False)
+    directory.add_menu_item(title=32066,
+                            params={'mode': 'clean'},
+                            art=remove,
+                            isFolder=False)    
+    directory.add_menu_item(title=32064,
+                            params={'mode': 'wipe'},
+                            art=remove,
+                            isFolder=False)
+    return True, _addon.getLocalizedString(32008)
     
     
 def call_path(group_id, path_id):
