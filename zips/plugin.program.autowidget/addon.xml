@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.140" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.387" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -11,47 +10,22 @@
     
     <extension point="xbmc.service" library="service.py" />
     
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEmpty(ListItem.DbType) + String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
+            </item>
+        </menu>
+    </extension>
+    
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB"></description>
-        <language></language>
         <platform>all</platform>
         <license>LGPL-3.0</license>
-        <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
-        <email></email>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news></news>
-        <disclaimer></disclaimer>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-    </extension>
-</addon>
-://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news></news>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-claimer>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-ialog
-1.3.1
- - Cleanup skin string conversion
-1.3.0
- - Add group editing dialog
- - Non-Skin Shortcuts skin support
- - Fix issues with groups and paths with the same name
- - Fix settings shortcuts
- - Add rudimentary JSON migration
+        <news>
 1.2.5
  - Update some skin localizations
  - Add more widget artwork
@@ -104,7 +78,30 @@ ialog
         </assets>
     </extension>
 </addon>
-.4
+s
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>resources/media/sync.png</icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+nd context menu options
+ - Add support for skins with "basic" Skin Shortcuts integration
+ - Add setting to pause AutoWidget's service
+1.0.7
+ - Fix context menu option not showing
+1.0.6
+ - Fix paths not saving
+1.0.5
+ - Raise required Skin Shortcuts version to  1.0.19
+1.0.4
  - Allow custom labels
  - Add removal notifications    
 1.0.3
