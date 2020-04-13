@@ -154,7 +154,8 @@ def _convert_skin_strings(converted):
 def _convert_shortcuts(converted):    
     shortcut_files = os.listdir(_shortcuts_path)
     shortcut_files = [x for x in shortcut_files if x.endswith('.DATA.xml')
-                                                and 'powermenu' not in x]
+                                                and 'powermenu' not in x
+                                                and _skin_id in x]
     for xml in shortcut_files:
         xml_path = os.path.join(_shortcuts_path, xml)
         shortcuts = utils.read_xml(xml_path)
