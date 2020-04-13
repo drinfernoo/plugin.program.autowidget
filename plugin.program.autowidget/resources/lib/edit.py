@@ -39,7 +39,7 @@ def shift_path(group_id, path_id, target):
 
     group_def['paths'] = paths
     manage.write_path(group_def)
-    utils.update_container()
+    utils.update_container(group_def['type'])
         
         
 def _remove_group(group_id, over=False):
@@ -211,10 +211,10 @@ def edit_dialog(group_id, path_id=''):
     elif idx == len(options) - 1:
         if path_id:
             _remove_path(path_id, group_id)
-            utils.update_container()
+            utils.update_container(group_def['type'])
         else:
             _remove_group(group_id)
-            utils.update_container()
+            utils.update_container(group_def['type'])
         return
     else:
         key = _clean_key(options[idx])
@@ -228,4 +228,4 @@ def edit_dialog(group_id, path_id=''):
         else:
             manage.write_path(group_def)
             
-        utils.update_container()
+        utils.update_container(group_def['type'])

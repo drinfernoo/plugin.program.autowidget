@@ -53,7 +53,7 @@ def add(labels):
         labels['target'] = 'widget'
         _copy_path(labels)
         
-    utils.update_container()
+    utils.update_container(_type)
             
             
 def build_labels(source, path_def=None, target=''):
