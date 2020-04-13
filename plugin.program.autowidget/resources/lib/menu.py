@@ -3,6 +3,7 @@ import xbmcaddon
 import xbmcgui
 
 import random
+import time
 import uuid
 
 from resources.lib import manage
@@ -107,8 +108,7 @@ def group_menu(group_id, target):
                                     params={'mode': 'path',
                                             'action': 'call',
                                             'group': group_id,
-                                            'path': path['id'],
-                                            'id': str(_id)},
+                                            'path': path['id']},
                                     info=path.get('info'),
                                     art=path.get('art') or art,
                                     cm=cm,
@@ -123,7 +123,7 @@ def group_menu(group_id, target):
                                     params={'mode': 'path',
                                             'action': 'random',
                                             'group': group_id,
-                                            'id': '{}'.format(_id)},
+                                            'id': str(_id)},
                                     art=folder_sync,
                                     info={'plot': description},
                                     isFolder=True)
@@ -131,7 +131,7 @@ def group_menu(group_id, target):
                                     params={'mode': 'path',
                                             'action': 'next',
                                             'group': group_id,
-                                            'id': '{}'.format(_id)},
+                                            'id': str(_id)},
                                     art=folder_next,
                                     info={'plot': description},
                                     isFolder=True)
@@ -146,9 +146,22 @@ def group_menu(group_id, target):
 def active_widgets_menu():
     widgets = manage.find_defined_widgets()
     for widget_def in widgets:
-        action = widget_def['action']
-        directory.add_menu_item(title=widget_def['id'],
+        _id = widget_def.get('id', '')
+        action = widget_def.get('action', '')
+        group = widget_def.get('group', '')
+        path = widget_def.get('path', '')
+        updated = widget_def.get('updated', '')
+        
+        path_def = manage.get_path_by_id(path, group)
+        group_def = manage.get_group_by_id(group)
+        title = '{} - {}'.format(path_def['label'], group_def['label'])
+        
+        directory.add_menu_item(title=title,
                                 art=folder_sync if action == 'random' else folder_next,
+                                params={'mode': 'path',
+                                        'action': 'call',
+                                        'group': group,
+                                        'path': path},
                                 isFolder=False)
 
     return True, 'Active Widgets'
