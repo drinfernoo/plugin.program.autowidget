@@ -46,6 +46,7 @@ def dispatch(_plugin, _handle, _params):
     
     if not mode:
         is_dir, category = menu.root_menu()
+        xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_UNSORTED)
     elif mode == 'manage':
         if action == 'add_group':
             manage.add_group(target)
@@ -65,14 +66,16 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'group':
         if not group:
             is_dir, category = menu.my_groups_menu()
+            xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL)
         elif target:
             is_dir, category = menu.group_menu(group, target)
-        is_type = 'videos'
+            xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_UNSORTED)
     elif mode == 'widget':
         is_dir, is_category = menu.active_widgets_menu()
-        is_type = 'videos'
+        xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LASTPLAYED)
     elif mode == 'tools':
         is_dir, category = menu.tools_menu()
+        xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_UNSORTED)
     elif mode == 'force':
         convert.refresh_paths(notify=True, force=True)
     elif mode == 'wipe':

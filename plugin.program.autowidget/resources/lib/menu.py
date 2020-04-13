@@ -154,7 +154,9 @@ def active_widgets_menu():
         
         path_def = manage.get_path_by_id(path, group)
         group_def = manage.get_group_by_id(group)
+        
         title = '{} - {}'.format(path_def['label'], group_def['label'])
+        last = time.strftime('%Y-%m-%d %I:%M:%S', time.localtime(updated))
         
         directory.add_menu_item(title=title,
                                 art=folder_sync if action == 'random' else folder_next,
@@ -162,6 +164,7 @@ def active_widgets_menu():
                                         'action': 'call',
                                         'group': group,
                                         'path': path},
+                                info={'lastplayed': last},
                                 isFolder=False)
 
     return True, 'Active Widgets'
