@@ -56,8 +56,8 @@ def add(labels):
     utils.update_container()
             
             
-def build_labels(source, path_def=None):
-    if source == 'context' and not path_def:
+def build_labels(source, path_def=None, target=''):
+    if source == 'context' and not path_def and not target:
         labels = {'label': xbmc.getInfoLabel('ListItem.Label'),
                   'is_folder': xbmc.getCondVisibility('Container.ListItem.IsFolder'),
                   'content': xbmc.getInfoLabel('Container.Content')}
@@ -72,10 +72,11 @@ def build_labels(source, path_def=None):
                                  for i in ['icon', 'thumb']})
         
         labels['info'] = {'plot': xbmc.getInfoLabel('ListItem.Plot')}
-    elif source == 'json' and path_def:
+    elif source == 'json' and path_def and target:
         labels = {'label': path_def['label'],
                   'is_folder': path_def['filetype'] == 'directory',
-                  'content': ''}
+                  'content': '',
+                  'target': target}
         
         path = path_def['file']
         
@@ -236,5 +237,5 @@ def _copy_path(path_def):
             if file['type'] in ['movie', 'episode', 'musicvideo', 'song']:
                 continue
             
-            labels = build_labels('json', file)
+            labels = build_labels('json', file, path_def['target'])
             _add_path(group_def, labels, over=True)
