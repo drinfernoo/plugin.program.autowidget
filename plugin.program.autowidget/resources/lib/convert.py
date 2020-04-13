@@ -56,7 +56,7 @@ def _get_random_paths(group_id, force=False, change_sec=3600):
     return paths
 
 
-def _save_path_details(params, _id=''):
+def save_path_details(params, _id=''):
     for param in params:
         if str(params[param]).endswith(',return)'):
             return
@@ -104,7 +104,7 @@ def _update_strings(_id, path_def, setting=None, label_setting=None):
         utils.set_skin_string(target_string, target)
     
     
-def _convert_widgets(notify=False):
+def convert_widgets(notify=False):
     dialog = xbmcgui.Dialog()
     
     converted = []
@@ -142,7 +142,7 @@ def _convert_skin_strings(converted):
                 params['label_setting'] = label.get('id')
     
         if params.get('id') not in converted:
-            details = _save_path_details(params)
+            details = save_path_details(params)
             if details:
                 _id = details['id']
                 if _id not in converted:
@@ -180,7 +180,7 @@ def _convert_shortcuts(converted):
                 continue
 
             params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
-            details = _save_path_details(params)
+            details = save_path_details(params)
             if not details:
                 continue
                 
@@ -239,7 +239,7 @@ def _convert_properties(converted):
         else:
             params = dict(parse_qsl(prop[3].split('?')[1].replace('\"', '')))
         
-        details = _save_path_details(params)
+        details = save_path_details(params)
         if not details:
             continue
         
@@ -266,51 +266,3 @@ def _convert_properties(converted):
     utils.write_file(props_path, '{}'.format(content))
         
     return converted
-
-
-def refresh_paths(notify=False, force=False, duration=0):
-    converted = []
-    current_time = time.time()
-    
-    if force:
-        converted = _convert_widgets(notify)
-
-    if notify:
-        dialog = xbmcgui.Dialog()
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32033))
-    
-    for group_def in manage.find_defined_groups():
-        paths = []
-
-        for widget_def in manage.find_defined_widgets(group_def['id']):
-            updated_at = widget_def.get('updated', current_time)
-            
-            if updated_at < current_time - duration or force:
-                path_def = {}
-                _id = widget_def['id']
-                group_id = widget_def['group']
-                action = widget_def['action'].lower()
-                setting = widget_def.get('setting')
-                label_setting = widget_def.get('label_setting')
-                current = widget_def.get('current')
-
-                if action == 'random' and len(paths) == 0:
-                    paths = _get_random_paths(group_id, force)
-                
-                if action == 'next':
-                    next_paths = manage.find_defined_paths(group_id)
-                    next = (current + 1) % len(next_paths)
-                    path_def = next_paths[next]
-                    widget_def['current'] = next
-                elif action == 'random':
-                    path_def = paths.pop()
-                
-                widget_def['path'] = path_def['id']
-                widget_def['updated'] = current_time
-                    
-                _save_path_details(widget_def, _id)
-                _update_strings(_id, path_def, setting, label_setting)
-
-    xbmc.executebuiltin('Container.Refresh()')
-    if len(converted) > 0:
-        xbmc.executebuiltin('ReloadSkin()')

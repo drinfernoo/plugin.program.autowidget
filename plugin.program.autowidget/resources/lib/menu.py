@@ -158,6 +158,12 @@ def active_widgets_menu():
         title = '{} - {}'.format(path_def['label'], group_def['label'])
         last = time.strftime('%Y-%m-%d %I:%M:%S', time.localtime(updated))
         
+        
+        cm = [('Refresh Path', ('RunPlugin('
+                                'plugin://plugin.program.autowidget/'
+                                '?mode=refresh'
+                                '&target={})').format(_id))]
+        
         directory.add_menu_item(title=title,
                                 art=folder_sync if action == 'random' else folder_next,
                                 params={'mode': 'path',
@@ -165,6 +171,7 @@ def active_widgets_menu():
                                         'group': group,
                                         'path': path},
                                 info={'lastplayed': last},
+                                cm=cm,
                                 isFolder=False)
 
     return True, 'Active Widgets'

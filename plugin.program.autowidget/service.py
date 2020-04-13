@@ -4,7 +4,7 @@ import xbmcgui
 
 import random
 
-from resources.lib import convert
+from resources.lib import refresh
 from resources.lib import manage
 from resources.lib.common import migrate
 from resources.lib.common import utils
@@ -64,7 +64,7 @@ class AutoWidgetService(xbmc.Monitor):
                             notification = True
                 
                 utils.log('+++++ REFRESHING AUTOWIDGETS +++++', level=xbmc.LOGNOTICE)
-                convert.refresh_paths(notify=notification,
+                refresh.refresh_paths(notify=notification,
                                       duration=delay * self.refresh_duration)
             else:
                 utils.log('+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++',

@@ -11,7 +11,7 @@ except ImportError:
 from resources.lib import edit
 from resources.lib import menu
 from resources.lib import manage
-from resources.lib import convert
+from resources.lib import refresh
 from resources.lib.common import migrate
 from resources.lib.common import utils
 
@@ -73,11 +73,16 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'widget':
         is_dir, is_category = menu.active_widgets_menu()
         xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LASTPLAYED)
+    elif mode == 'refresh':
+        if not target:
+            refresh.refresh_paths(notify=True)
+        else:
+            refresh.refresh(target, force=True)
     elif mode == 'tools':
         is_dir, category = menu.tools_menu()
         xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_UNSORTED)
     elif mode == 'force':
-        convert.refresh_paths(notify=True, force=True)
+        refresh.refresh_paths(notify=True, force=True)
     elif mode == 'wipe':
         utils.wipe()
     elif mode == 'clean':
