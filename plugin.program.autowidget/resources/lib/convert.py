@@ -291,13 +291,13 @@ def refresh_paths(notify=False, force=False):
             if action == 'random' and len(paths) == 0:
                 paths = _get_random_paths(group_id, force)
             elif action == 'next':
-                paths = manage.find_defined_paths(group_id)
-                next = (current + 1) % len(paths)
-                path_def = paths[next]
+                next_paths = manage.find_defined_paths(group_id)
+                next = (current + 1) % len(next_paths)
+                path_def = next_paths[next]
                 widget_def['current'] = next
                 _save_path_details(widget_def, _id)
                 
-            if action == 'random':
+            if action == 'random' and len(paths) > 0:
                 path_def = paths.pop()
                 
             _update_strings(_id, path_def, setting, label_setting)
