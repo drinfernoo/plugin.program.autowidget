@@ -32,7 +32,13 @@ label_warning_shown = _addon.getSettingBool('label.warning')
 
 def _warn():
     dialog = xbmcgui.Dialog()
-    dialog.ok('AutoWidget', 'The unique identifier in the number in this path\'s label is [B]necessary[/B] for AutoWidget to refresh it correctly. Don\'t change the label given to this widget, or it may be unable to update correctly. This wessage [COLOR firebrick]will not[/COLOR] be shown again.')
+    dialog.ok('AutoWidget', ('The unique identifier in the number in this path'
+                             '\'s label is [B]necessary[/B] for AutoWidget to '
+                             'refresh it correctly. Don\'t change the label '
+                             'given to this widget, or it may be unable to '
+                             'update correctly. This wessage '
+                             '[COLOR firebrick]will not[/COLOR] be shown '
+                             'again.'))
     
     _addon.setSetting('label.warning', 'true')
     label_warning_shown = True
@@ -57,6 +63,7 @@ def root_menu():
 def my_groups_menu():
     if len(manage.find_defined_groups()) > 0:
         for group in manage.find_defined_groups():
+            _id = uuid.uuid4()
             group_name = group['label']
             group_id = group['id']
             group_type = group['type']
@@ -71,9 +78,12 @@ def my_groups_menu():
             directory.add_menu_item(title=group_name,
                                     params={'mode': 'group',
                                             'group': group_id,
-                                            'target': group_type},
+                                            'target': group_type,
+                                            'id': str(_id)},
                                     info=group.get('info'),
-                                    art=group.get('art') or (folder_shortcut if group_type == 'shortcut' else folder_sync),
+                                    art=group.get('art') or (folder_shortcut
+                                                             if group_type == 'shortcut'
+                                                             else folder_sync),
                                     cm=cm,
                                     isFolder=True)
     else:
@@ -83,8 +93,7 @@ def my_groups_menu():
     return True, _addon.getLocalizedString(32007)
     
     
-def group_menu(group_id, target):
-    _id = uuid.uuid4()
+def group_menu(group_id, target, _id):
     _window = utils.get_active_window()
     
     group = manage.get_group_by_id(group_id)
@@ -116,10 +125,9 @@ def group_menu(group_id, target):
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/')
 
-            title = _addon.getLocalizedString(32028).format(_id)
             description = _addon.getLocalizedString(32029).format(group_name)
             
-            directory.add_menu_item(title=title,
+            directory.add_menu_item(title='Random Path from {} ({})'.format(group_name, _id),
                                     params={'mode': 'path',
                                             'action': 'random',
                                             'group': group_id,
@@ -127,7 +135,7 @@ def group_menu(group_id, target):
                                     art=folder_sync,
                                     info={'plot': description},
                                     isFolder=True)
-            directory.add_menu_item(title='Next Path ({})'.format(_id),
+            directory.add_menu_item(title='Next Path from {} ({})'.format(group_name, _id),
                                     params={'mode': 'path',
                                             'action': 'next',
                                             'group': group_id,
@@ -173,16 +181,18 @@ def active_widgets_menu():
                                 info={'lastplayed': last},
                                 cm=cm,
                                 isFolder=False)
-
-    return True, 'Active Widgets'
     
-    
-def tools_menu():
+    directory.add_separator(title=32010, char='/')
     directory.add_menu_item(title=32006,
                             params={'mode': 'force'},
                             art=refresh,
                             info={'plot': _addon.getLocalizedString(32020)},
                             isFolder=False)
+
+    return True, 'Active Widgets'
+    
+    
+def tools_menu():
     directory.add_menu_item(title=32066,
                             params={'mode': 'clean'},
                             art=remove,

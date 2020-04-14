@@ -43,6 +43,7 @@ def dispatch(_plugin, _handle, _params):
     group = params.get('group', '')
     path = params.get('path', '')
     target = params.get('target', '')
+    _id = params.get('id', '')
     
     if not mode:
         is_dir, category = menu.root_menu()
@@ -68,11 +69,11 @@ def dispatch(_plugin, _handle, _params):
             is_dir, category = menu.my_groups_menu()
             xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL)
         elif target:
-            is_dir, category = menu.group_menu(group, target)
+            is_dir, category = menu.group_menu(group, target, _id)
             xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_UNSORTED)
     elif mode == 'widget':
         is_dir, is_category = menu.active_widgets_menu()
-        xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LASTPLAYED)
+        xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_UNSORTED)
     elif mode == 'refresh':
         if not target:
             refresh.refresh_paths(notify=True)
