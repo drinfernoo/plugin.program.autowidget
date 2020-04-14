@@ -163,24 +163,37 @@ def active_widgets_menu():
         path_def = manage.get_path_by_id(path, group)
         group_def = manage.get_group_by_id(group)
         
-        title = '{} - {}'.format(path_def['label'], group_def['label'])
+        if path_def:
+            title = '{} - {}'.format(path_def['label'], group_def['label'])
+        else:
+            title = group_def['label']
+            
         last = time.strftime('%Y-%m-%d %I:%M:%S', time.localtime(updated))
         
-        
+        if not action:
+            art = folder_shortcut
+            params = {'mode': 'group',
+                      'group': group,
+                      'target': 'shortcut',
+                      'id': _id}
+        elif action in ['random', 'next']:
+            art = folder_sync if action == 'random' else folder_next
+            params = {'mode': 'path',
+                      'action': 'call',
+                      'group': group,
+                      'path': path}
+            
         cm = [('Refresh Path', ('RunPlugin('
                                 'plugin://plugin.program.autowidget/'
                                 '?mode=refresh'
                                 '&target={})').format(_id))]
         
         directory.add_menu_item(title=title,
-                                art=folder_sync if action == 'random' else folder_next,
-                                params={'mode': 'path',
-                                        'action': 'call',
-                                        'group': group,
-                                        'path': path},
+                                art=art,
+                                params=params,
                                 info={'lastplayed': last},
                                 cm=cm,
-                                isFolder=False)
+                                isFolder=not action)
     
     directory.add_separator(title=32010, char='/')
     directory.add_menu_item(title=32006,
