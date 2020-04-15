@@ -13,6 +13,8 @@ import sys
 import time
 import unicodedata
 
+import six
+
 from xml.dom import minidom
 from xml.etree import ElementTree
 
@@ -100,8 +102,8 @@ def prettify(elem):
 
 
 def get_valid_filename(s):
-    s = str(s).strip().replace(' ', '_')
-    s = unicodedata.normalize('NFKD', s.decode('utf-8'))
+    s = s.replace(' ', '_')
+    s = six.ensure_text(unicodedata.normalize('NFKD', s))
     return re.sub(r'(?u)[^-\w.]', '', s)
     
     
@@ -114,8 +116,8 @@ def convert(input):
         return {convert(key): convert(value) for key, value in input.items()}
     elif isinstance(input, list):
         return [convert(element) for element in input]
-    elif isinstance(input, unicode):
-        return input.encode('utf-8')
+    elif isinstance(input, six.text_type):
+        return six.ensure_text(input)
         
     return input
 
@@ -161,7 +163,7 @@ def read_json(file):
     if os.path.exists(file):
         with codecs.open(os.path.join(_addon_path, file), 'r', encoding='utf-8') as f:
             try:
-                content = f.read().encode('utf-8')
+                content = six.ensure_text(f.read())
                 data = json.loads(content)
             except Exception as e:
                 log('Could not read JSON from {}: {}'.format(file, e),

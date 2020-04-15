@@ -102,7 +102,7 @@ def group_menu(group_id, target, _id):
                   level=xbmc.LOGERROR)
         return False, 'AutoWidget'
     
-    group_name = group['label'].decode('utf-8')
+    group_name = group['label']
     
     paths = manage.find_defined_paths(group_id)
     if len(paths) > 0:

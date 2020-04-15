@@ -2,6 +2,7 @@
 <addon id="plugin.program.autowidget" name="AutoWidget" version="CURRENT_VERSION" provider-name="drinfernoo">
     <requires>
         <!-- <import addon="xbmc.python" version="2.25.0" /> -->
+        <import addon="script.module.six" />
         <import addon="script.module.web-pdb" />
     </requires>
     

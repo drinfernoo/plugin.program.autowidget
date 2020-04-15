@@ -68,7 +68,7 @@ def _remove_path(path_id, group_id):
         paths = group_def['paths']
         for path_def in paths:
             if path_def['id'] == path_id:
-                path_name = path_def['label'].decode('utf-8')
+                path_name = path_def['label']
                 group_def['paths'].remove(path_def)
                 dialog.notification('AutoWidget',
                                     _addon.getLocalizedString(32045)
