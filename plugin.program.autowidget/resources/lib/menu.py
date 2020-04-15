@@ -61,8 +61,9 @@ def root_menu():
                             
                             
 def my_groups_menu():
-    if len(manage.find_defined_groups()) > 0:
-        for group in manage.find_defined_groups():
+    groups = manage.find_defined_groups()
+    if len(groups) > 0:
+        for group in groups:
             _id = uuid.uuid4()
             group_name = group['label']
             group_id = group['id']
@@ -153,59 +154,63 @@ def group_menu(group_id, target, _id):
     
 def active_widgets_menu():
     widgets = manage.find_defined_widgets()
-    for widget_def in widgets:
-        _id = widget_def.get('id', '')
-        action = widget_def.get('action', '')
-        group = widget_def.get('group', '')
-        path = widget_def.get('path', '')
-        updated = widget_def.get('updated', '')
-        
-        path_def = manage.get_path_by_id(path, group)
-        group_def = manage.get_group_by_id(group)
-        
-        if path_def:
-            title = '{} - {}'.format(path_def['label'], group_def['label'])
-        else:
-            title = group_def['label']
-            
-        last = time.strftime('%Y-%m-%d %I:%M:%S', time.localtime(updated))
-        
-        if not action:
-            art = folder_shortcut
-            params = {'mode': 'group',
-                      'group': group,
-                      'target': 'shortcut',
-                      'id': _id}
-        elif action in ['random', 'next']:
-            art = folder_sync if action == 'random' else folder_next
-            params = {'mode': 'path',
-                      'action': 'call',
-                      'group': group,
-                      'path': path}
-            
-        cm = [('Refresh Path', ('RunPlugin('
-                                'plugin://plugin.program.autowidget/'
-                                '?mode=refresh'
-                                '&target={})').format(_id))]
-        
-        directory.add_menu_item(title=title,
-                                art=art,
-                                params=params,
-                                info={'lastplayed': last},
-                                cm=cm,
-                                isFolder=not action)
     
-    directory.add_separator(title=32010, char='/')
-    directory.add_menu_item(title=32006,
-                            params={'mode': 'force'},
-                            art=refresh,
-                            info={'plot': _addon.getLocalizedString(32020)},
-                            isFolder=False)
+    if len(widgets) > 0:
+        for widget_def in widgets:
+            _id = widget_def.get('id', '')
+            action = widget_def.get('action', '')
+            group = widget_def.get('group', '')
+            path = widget_def.get('path', '')
+            updated = widget_def.get('updated', '')
+            
+            path_def = manage.get_path_by_id(path, group)
+            group_def = manage.get_group_by_id(group)
+            
+            if path_def:
+                title = '{} - {}'.format(path_def['label'], group_def['label'])
+            else:
+                title = group_def['label']
+                
+            last = time.strftime('%Y-%m-%d %I:%M:%S', time.localtime(updated))
+            
+            if not action:
+                art = folder_shortcut
+                params = {'mode': 'group',
+                          'group': group,
+                          'target': 'shortcut',
+                          'id': _id}
+            elif action in ['random', 'next']:
+                art = folder_sync if action == 'random' else folder_next
+                params = {'mode': 'path',
+                          'action': 'call',
+                          'group': group,
+                          'path': path}
+                
+            cm = [('Refresh Path', ('RunPlugin('
+                                    'plugin://plugin.program.autowidget/'
+                                    '?mode=refresh'
+                                    '&target={})').format(_id))]
+            
+            directory.add_menu_item(title=title,
+                                    art=art,
+                                    params=params,
+                                    info={'lastplayed': last},
+                                    cm=cm,
+                                    isFolder=not action)
+    else:
+        directory.add_menu_item(title='No AutoWidgets have been intialized.',
+                                art=alert,
+                                isFolder=False)
 
     return True, 'Active Widgets'
     
     
 def tools_menu():
+    directory.add_menu_item(title=32006,
+                            params={'mode': 'force'},
+                            art=refresh,
+                            info={'plot': _addon.getLocalizedString(32020)},
+                            isFolder=False)
     directory.add_menu_item(title=32066,
                             params={'mode': 'clean'},
                             art=remove,
