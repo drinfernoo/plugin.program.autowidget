@@ -15,9 +15,23 @@ _home = xbmc.translatePath('special://home/')
 advanced = _addon.getSettingBool('context.advanced')
 warning_shown = _addon.getSettingBool('context.warning')
 
-types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
+art_types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
          'poster', 'thumb']
-warn = ['content', 'id', 'is_folder', 'target', 'window', 'version', 'type']
+safe = ['label', 'art', 'info', 'path']
+info_types = ['artist', 'albumartist', 'genre', 'year', 'rating', 'album',
+              'track', 'duration', 'comment', 'lyrics', 'musicbrainztrackid',
+              'musicbrainzartistid', 'musicbrainzalbumid',
+              'musicbrainzalbumartistid', 'playcount', 'director', 'trailer',
+              'tagline', 'plot', 'plotoutline', 'originaltitle', 'lastplayed',
+              'writer', 'studio', 'mpaa', 'cast', 'country', 'imdbnumber',
+              'premiered', 'productioncode', 'runtime', 'set', 'showlink',
+              'streamdetails', 'top250', 'votes', 'firstaired', 'season',
+              'episode', 'showtitle', 'resume', 'artistid', 'albumid',
+              'tvshowid', 'setid', 'watchedepisodes', 'disc', 'tag', 'genreid',
+              'displayartist', 'albumartistid', 'description', 'theme', 'mood',
+              'style', 'albumlabel', 'sorttitle', 'episodeguide', 'uniqueid',
+              'dateadded', 'size', 'lastmodified', 'mimetype',
+              'specialsortepisode', 'specialsortseason']
 exclude = ['paths']
 
 
@@ -92,16 +106,17 @@ def _warn():
         warning = True
         
         
-def _get_options(edit_def, use_thumbs=False):
+def _get_options(edit_def, base_key='', use_thumbs=False):
     options = []
     label = 'n/a'
     
     all_keys = sorted([i for i in edit_def.keys() if i not in exclude])
-    base_keys = sorted([i for i in all_keys if i not in warn])
+    base_keys = sorted([i for i in all_keys if any(i in x for x in [safe, art_types, info_types])])
     keys = all_keys if advanced else base_keys
-
+    
     for key in keys:
-        disp = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key in warn else key
+        disp = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in safe else key
+        disp = disp if key not in info_types else key
         _def = edit_def[key]
         
         if isinstance(_def, dict):
@@ -117,7 +132,7 @@ def _get_options(edit_def, use_thumbs=False):
             elif key == 'info':
                 label = ', '.join(_keys)
         elif key in edit_def:
-            if key in types:
+            if key in art_types:
                 item = xbmcgui.ListItem('{}: {}'.format(key, edit_def[key]))
                 if use_thumbs:
                     item.setArt({'icon': edit_def[key]})
@@ -130,6 +145,9 @@ def _get_options(edit_def, use_thumbs=False):
                     
         if label:
             options.append('{}: {}'.format(disp, label))
+    
+    if base_key == 'info':    
+        options.append('Add New InfoLabel...')
         
     return options
     
@@ -142,18 +160,29 @@ def _get_value(edit_def, key):
         if key == 'art':
             options = _get_options(_def, use_thumbs=True)
             idx = dialog.select(_addon.getLocalizedString(32046), options, useDetails=True)
-        else:
-            options = _get_options(_def)
+        elif key == 'info':
+            options = _get_options(_def, base_key=key)
             idx = dialog.select(_addon.getLocalizedString(32047), options)
         if idx < 0:
             return
-        
-        _key = _clean_key(options[idx])
-        value = _get_value(_def, _key)
-        if value:
+        elif idx == len(options) - 1:
+            label = dialog.select('Add New InfoLabel', info_types)
+            if label < 0:
+                return
+                
+            _key = _clean_key(info_types[label])
+            value = dialog.input(heading=_key.capitalize(),
+                                 defaultt=str(_def.get(_key)))
+            
             _def[_key] = value
             return _def[_key]
-    elif key in types:
+        else:
+            _key = _clean_key(options[idx])
+            value = _get_value(_def, _key)
+            if value:
+                _def[_key] = value
+                return _def[_key]
+    elif key in art_types:
         default = edit_def[key] if not edit_def[key].lower().startswith('http') else ''
         value = dialog.browse(2, _addon.getLocalizedString(32049).format(key.capitalize()),
                               shares='files', mask='.jpg|.png', useThumbs=True,
@@ -162,16 +191,15 @@ def _get_value(edit_def, key):
             edit_def[key] = value.replace(_home, 'special://home/')
             return edit_def[key]
     else:
-        if key in warn:
+        if not any(key in i for i in [safe, art_types, info_types]):
             title = _addon.getLocalizedString(32063).format(key.capitalize())
         elif key in edit_def:
             title = key.capitalize()
             
         value = dialog.input(heading=title,
                              defaultt=str(edit_def[key]))
-        if value:
-            edit_def[key] = value
-            return edit_def[key]
+        edit_def[key] = value
+        return edit_def[key]
 
 
 def _clean_key(key):

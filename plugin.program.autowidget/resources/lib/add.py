@@ -70,8 +70,6 @@ def build_labels(source, path_def=None, target=''):
         labels['art'].update({i: xbmc.getInfoLabel('ListItem.{}'
                                                    .format(i.capitalize()))
                                  for i in ['icon', 'thumb']})
-        
-        labels['info'] = {'plot': xbmc.getInfoLabel('ListItem.Plot')}
     elif source == 'json' and path_def and target:
         labels = {'label': path_def['label'],
                   'is_folder': path_def['filetype'] == 'directory',
@@ -84,11 +82,8 @@ def build_labels(source, path_def=None, target=''):
                      for i in ['poster', 'fanart', 'banner', 'landscape',
                                'clearlogo', 'clearart', 'icon', 'thumb']}
         
-        if 'plot' in path_def:
-            labels['info'] = {'plot': path_def['plot']}
-        else:
-            labels['info'] = {'plot': ''}
-        
+    labels['info'] = {}
+    
     if path != 'addons://user/':
         path = path.replace('addons://user/', 'plugin://')
     labels['path'] = path
@@ -191,7 +186,7 @@ def add_group(target):
                      'type': target,
                      'paths': [],
                      'id': group_id,
-                     'info': {'plot': ''},
+                     'info': {},
                      'art': folder_sync if target == 'widget' else folder_shortcut,
                      'version': _addon_version}
     
@@ -223,7 +218,7 @@ def _add_path(group_def, labels, over=False):
 def _copy_path(path_def):
     params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
               'params': {'directory': path_def['path'],
-                         'properties': ['title', 'art', 'plot']},
+                         'properties': ['title', 'art']},
               'id': 1}
     group_id = add_group(path_def['target'])
     if not group_id:
