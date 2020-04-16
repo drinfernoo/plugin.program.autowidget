@@ -147,6 +147,7 @@ def _convert_skin_strings(converted):
         for label in label_settings:
             if _id in label.text:
                 params['label_setting'] = label.get('id')
+                break
     
         if _id not in converted:
             save_path_details(params)
@@ -245,12 +246,13 @@ def _convert_properties(converted):
         _id = params.get('id')
         
         prop[3] = skin_string_info_pattern.format(_id, 'action')
-        params['prop'] = prop[:3]
+        params['path_prop'] = prop[:3]
         
         for label_prop in label_props:
             if _id in label_prop[3]:
                 label_prop[3] = skin_string_info_pattern.format(_id, 'label')
                 params['label_prop'] = label_prop[:3]
+                break
         
         if _id not in converted:
             save_path_details(params)

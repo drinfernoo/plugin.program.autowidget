@@ -69,7 +69,7 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, duration=0):
         _id = widget_def['id']
         group_id = widget_def['group']
         action = widget_def.get('action')
-        setting = widget_def.get('setting')
+        setting = widget_def.get('path_setting')
         label_setting = widget_def.get('label_setting')
         current = widget_def.get('current')
         
