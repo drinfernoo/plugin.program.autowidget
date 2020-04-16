@@ -9,6 +9,7 @@ import json
 import os
 import re
 import shutil
+import string
 import sys
 import time
 import unicodedata
@@ -99,16 +100,29 @@ def prettify(elem):
     rough_string = ElementTree.tostring(elem, 'utf-8')
     reparsed = minidom.parseString(rough_string)
     return reparsed.toprettyxml(indent='\t')
+    
+   
 
-
-def get_valid_filename(s):
-    s = s.replace(' ', '_')
-    s = six.ensure_text(unicodedata.normalize('NFKD', s))
-    return re.sub(r'(?u)[^-\w.]', '', s)
+def get_valid_filename(filename):
+    whitelist = '-_.() {}{}'.format(string.ascii_letters, string.digits)
+    char_limit = 255
+    
+    filename = filename.replace(' ','_')
+    cleaned_filename = unicodedata.normalize('NFKD',
+                                             filename).encode('ASCII',
+                                                              'ignore').decode()
+    
+    cleaned_filename = ''.join(c for c in cleaned_filename if c in whitelist)
+    if len(cleaned_filename) > char_limit:
+        print('Warning, filename truncated because it was over {} characters. '
+              'Filenames may no longer be unique'.format(char_limit))
+              
+    return cleaned_filename[:char_limit]    
     
     
 def get_unique_id(key):
-    return get_valid_filename('{}-{}'.format(key, time.time()).lower())
+    return '{}-{}'.format(get_valid_filename(six.ensure_text(key)),
+                          time.time()).lower()
     
     
 def convert(input):
