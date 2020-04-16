@@ -122,7 +122,7 @@
  - First stable release
         </news>
         <assets>
-            <icon>resources/media/sync.png</icon>
+            <icon>resources/media/icon/sync.png</icon>
             <fanart>resources/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>

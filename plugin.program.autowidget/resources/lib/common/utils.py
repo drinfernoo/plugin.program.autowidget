@@ -60,19 +60,10 @@ def get_skin_string(string):
     
     
 def get_art(filename):
-    icon_path = os.path.join(_art_path, filename)
-    poster_path = os.path.join(_art_path, 'poster', filename)
-    fanart_path = os.path.join(_art_path, 'fanart', filename)
-    banner_path = os.path.join(_art_path, 'banner', filename)
-    
-    art = {'icon': icon_path if os.path.exists(icon_path) else '',
-           'poster': poster_path if os.path.exists(poster_path) else '',
-           'fanart': fanart_path if os.path.exists(fanart_path) else '',
-           'landscape': '',
-           'banner': banner_path if os.path.exists(banner_path) else '',
-           'thumb': '',
-           'clearart': '',
-           'clearlogo': ''}
+    for i in art_types:
+        path = os.path.join(_art_path, i, filename)
+        if os.path.exists(path):
+            art[i] = path
     
     return art
     
