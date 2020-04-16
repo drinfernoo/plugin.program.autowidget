@@ -123,6 +123,11 @@ def _get_options(edit_def, base_key='', use_thumbs=False):
                 label = _def
         
         if base_key != 'art' and label:
+            try:
+                label = label.encode('utf-8')
+            except:
+                pass
+                
             options.append('{}: {}'.format(disp, label))
     
     if base_key == 'info':    
