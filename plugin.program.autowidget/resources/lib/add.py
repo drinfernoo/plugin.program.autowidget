@@ -19,12 +19,6 @@ _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_version = _addon.getAddonInfo('version')
 _home = xbmc.translatePath('special://home/')
 
-windows = {'programs':     ['program', 'script'],
-            'addonbrowser': ['addon',   'addons'],
-            'music':        ['audio',   'music'],
-            'pictures':     ['image',   'picture'],
-            'videos':       ['video',   'videos']}
-
 shortcut_types = [_addon.getLocalizedString(32051), _addon.getLocalizedString(32052),
           'Clone as Shortcut Group', 'Explode as Widget Group',
           'Settings Shortcut']
@@ -64,12 +58,21 @@ def build_labels(source, path_def=None, target=''):
         
         path = xbmc.getInfoLabel('ListItem.FolderPath')
         
-        labels['art'] = {i: xbmc.getInfoLabel('ListItem.Art({})'.format(i))
-                            for i in ['poster', 'fanart', 'banner', 'landscape',
-                                      'clearlogo', 'clearart']}
-        labels['art'].update({i: xbmc.getInfoLabel('ListItem.{}'
-                                                   .format(i.capitalize()))
-                                 for i in ['icon', 'thumb']})
+        labels['info'] = {}
+        for i in utils.info_types:
+            info = xbmc.getInfoLabel('ListItem.{}'.format(i.capitalize()))
+            if info:
+                labels['info'][i] = info
+                                 
+        labels['art'] = {}
+        for i in utils.art_types:
+            art = xbmc.getInfoLabel('ListItem.Art({})'.format(i.capitalize()))
+            if art:
+                labels['art'][i] = art
+        for i in ['icon', 'thumb']:
+            art = xbmc.getInfoLabel('ListItem.{}'.format(i.capitalize()))
+            if art:
+                labels['art'][i] = art
     elif source == 'json' and path_def and target:
         labels = {'label': path_def['label'],
                   'is_folder': path_def['filetype'] == 'directory',
@@ -78,18 +81,22 @@ def build_labels(source, path_def=None, target=''):
         
         path = path_def['file']
         
-        labels['art'] = {i: path_def['art'][i] if i in path_def['art'] else ''
-                     for i in ['poster', 'fanart', 'banner', 'landscape',
-                               'clearlogo', 'clearart', 'icon', 'thumb']}
+        labels['info'] = {}
+        for i in [i for i in utils.info_types if i not in utils.art_types]:
+            if i in path_def and i not in ['art', 'title', 'file']:
+                labels['info'][i] = path_def[i]
         
-    labels['info'] = {}
+        labels['art'] = {}
+        for i in utils.art_types:
+            if i in path_def['art']:
+                labels['art'][i] = path_def['art'][i]
     
     if path != 'addons://user/':
         path = path.replace('addons://user/', 'plugin://')
     labels['path'] = path
     
-    for _key in windows:
-            if any(i in path for i in windows[_key]):
+    for _key in utils.windows:
+            if any(i in path for i in utils.windows[_key]):
                 labels['window'] = _key
                 
     for label in labels['art']:
@@ -218,7 +225,7 @@ def _add_path(group_def, labels, over=False):
 def _copy_path(path_def):
     params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
               'params': {'directory': path_def['path'],
-                         'properties': ['title', 'art']},
+                         'properties': utils.info_types},
               'id': 1}
     group_id = add_group(path_def['target'])
     if not group_id:

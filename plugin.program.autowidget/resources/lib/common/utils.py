@@ -30,6 +30,35 @@ if xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
 else:
     _shortcuts_path = ''
 
+windows = {'programs': ['program', 'script'],
+            'addonbrowser': ['addon', 'addons'],
+            'music': ['audio', 'music'],
+            'pictures': ['image', 'picture'],
+            'videos': ['video', 'videos']}
+            
+info_types = ['title', 'artist', 'albumartist', 'genre', 'year', 'rating',
+              'album', 'track', 'duration', 'comment', 'lyrics',
+              'musicbrainztrackid', 'musicbrainzartistid',
+              'musicbrainzalbumid', 'musicbrainzalbumartistid', 'playcount',
+              'fanart', 'director', 'trailer', 'tagline', 'plot', 'plotoutline',
+              'originaltitle', 'lastplayed', 'writer', 'studio', 'mpaa', 'cast',
+              'country', 'imdbnumber', 'premiered', 'productioncode', 'runtime',
+              'set', 'showlink', 'streamdetails', 'top250', 'votes',
+              'firstaired', 'season', 'episode', 'showtitle', 'thumbnail',
+              'file', 'resume', 'artistid', 'albumid', 'tvshowid', 'setid',
+              'watchedepisodes', 'disc', 'tag', 'art', 'genreid',
+              'displayartist', 'albumartistid', 'description', 'theme', 'mood',
+              'style', 'albumlabel', 'sorttitle', 'episodeguide', 'uniqueid',
+              'dateadded', 'size', 'lastmodified', 'mimetype',
+              'specialsortseason', 'specialsortepisode', 'sortartist',
+              'musicbrainzreleasegroupid', 'isboxset', 'totaldiscs',
+              'disctitle', 'releasedate', 'originaldate', 'bpm', 'bitrate',
+              'samplerate', 'channels']
+              
+art_types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
+             'poster', 'thumb']
+
+
 
 def log(msg, level=xbmc.LOGDEBUG):
     msg = '{}: {}'.format(_addon_id, msg)
