@@ -61,7 +61,7 @@ def build_labels(source, path_def=None, target=''):
         labels['info'] = {}
         for i in utils.info_types:
             info = xbmc.getInfoLabel('ListItem.{}'.format(i.capitalize()))
-            if info:
+            if info and not info.startswith('ListItem'):
                 labels['info'][i] = info
                                  
         labels['art'] = {}

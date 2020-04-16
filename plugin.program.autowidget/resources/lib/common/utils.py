@@ -36,24 +36,19 @@ windows = {'programs': ['program', 'script'],
             'pictures': ['image', 'picture'],
             'videos': ['video', 'videos']}
             
-info_types = ['title', 'artist', 'albumartist', 'genre', 'year', 'rating',
+info_types = ['artist', 'albumartist', 'genre', 'year', 'rating',
               'album', 'track', 'duration', 'comment', 'lyrics',
-              'musicbrainztrackid', 'musicbrainzartistid',
-              'musicbrainzalbumid', 'musicbrainzalbumartistid', 'playcount',
-              'fanart', 'director', 'trailer', 'tagline', 'plot', 'plotoutline',
-              'originaltitle', 'lastplayed', 'writer', 'studio', 'mpaa', 'cast',
+              'musicbrainztrackid', 'plot', 'art', 'mpaa', 'cast',
+              'musicbrainzartistid', 'set', 'showlink', 'top250', 'votes',
+              'musicbrainzalbumid', 'disc', 'tag', 'genreid', 'season',
+              'musicbrainzalbumartistid', 'size', 'theme', 'mood', 'style',
+              'playcount', 'director', 'trailer', 'tagline', 'thumbnail',
+              'plotoutline', 'originaltitle', 'lastplayed', 'writer', 'studio',
               'country', 'imdbnumber', 'premiered', 'productioncode', 'runtime',
-              'set', 'showlink', 'streamdetails', 'top250', 'votes',
-              'firstaired', 'season', 'episode', 'showtitle', 'thumbnail',
-              'file', 'resume', 'artistid', 'albumid', 'tvshowid', 'setid',
-              'watchedepisodes', 'disc', 'tag', 'art', 'genreid',
-              'displayartist', 'albumartistid', 'description', 'theme', 'mood',
-              'style', 'albumlabel', 'sorttitle', 'episodeguide', 'uniqueid',
-              'dateadded', 'size', 'lastmodified', 'mimetype',
-              'specialsortseason', 'specialsortepisode', 'sortartist',
-              'musicbrainzreleasegroupid', 'isboxset', 'totaldiscs',
-              'disctitle', 'releasedate', 'originaldate', 'bpm', 'bitrate',
-              'samplerate', 'channels']
+              'firstaired', 'episode', 'showtitle', 'artistid', 'albumid',
+              'tvshowid', 'setid', 'watchedepisodes', 'displayartist', 'mimetype',
+              'albumartistid', 'description', 'albumlabel', 'sorttitle', 'episodeguide',
+              'dateadded', 'lastmodified', 'specialsortseason', 'specialsortepisode']
               
 art_types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
              'poster', 'thumb']
@@ -89,6 +84,7 @@ def get_skin_string(string):
     
     
 def get_art(filename):
+    art = {}
     for i in art_types:
         path = os.path.join(_art_path, i, filename)
         if os.path.exists(path):
