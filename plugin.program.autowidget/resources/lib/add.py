@@ -8,8 +8,10 @@ import re
 
 try:
     from urllib.parse import parse_qsl
+    from urllib.parse import unquote
 except ImportError:
     from urlparse import parse_qsl
+    from urllib import unquote
 
 from resources.lib import manage
 from resources.lib.common import utils
@@ -83,12 +85,13 @@ def build_labels(source, path_def=None, target=''):
         
         labels['info'] = {}
         for i in [i for i in utils.info_types if i not in utils.art_types]:
-            if i in path_def and i not in ['art', 'title', 'file']:
-                labels['info'][i] = path_def[i]
+            if i in path_def and i != 'art':
+                if path_def[i]:
+                    labels['info'][i] = path_def[i]
         
         labels['art'] = {}
         for i in utils.art_types:
-            if i in path_def['art']:
+            if i in path_def['art'] and path_def['art'][i]:
                 labels['art'][i] = path_def['art'][i]
     
     if path != 'addons://user/':
@@ -100,7 +103,9 @@ def build_labels(source, path_def=None, target=''):
                 labels['window'] = _key
                 
     for label in labels['art']:
-        labels['art'][label] = labels['art'][label].replace(_home, 'special://home/')
+        labels['art'][label] = unquote(labels['art'][label]).replace(_home, 'special://home/').replace('image://', '')
+        if labels['art'][label].endswith('/'):
+            labels['art'][label] = labels['art'][label][:-1]
         
     return labels
             
