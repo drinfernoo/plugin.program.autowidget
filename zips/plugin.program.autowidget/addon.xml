@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.400" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.377" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
     </requires>
@@ -71,14 +71,19 @@
  - First stable release
         </news>
         <assets>
-            <icon>resources/media/sync.png</icon>
-            <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
+            <icon>icon.png</icon>
+            <fanart>fanart.png</fanart>
+            <poster>poster.png</poster>
+            <banner>banner.png</banner>
         </assets>
     </extension>
 </addon>
-rtcuts skin support
+Fixes and cleanup in editor dialog
+1.3.1
+ - Cleanup skin string conversion
+1.3.0
+ - Add group editing dialog
+ - Non-Skin Shortcuts skin support
  - Fix issues with groups and paths with the same name
  - Fix settings shortcuts
  - Add rudimentary JSON migration
@@ -127,14 +132,10 @@ rtcuts skin support
  - First stable release
         </news>
         <assets>
-            <icon>resources/media/icon/sync.png</icon>
+            <icon>resources/media/sync.png</icon>
             <fanart>resources/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
 </addon>
-      </assets>
-    </extension>
-</addon>
-on>
