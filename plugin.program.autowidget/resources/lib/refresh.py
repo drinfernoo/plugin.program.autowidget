@@ -1,5 +1,4 @@
 import xbmc
-import xbmcaddon
 import xbmcgui
 
 import os
@@ -9,8 +8,6 @@ import time
 from resources.lib import convert
 from resources.lib import manage
 from resources.lib.common import utils
-
-_addon = xbmcaddon.Addon()
 
 skin_string_pattern = 'autowidget-{}-{}'
 
@@ -110,7 +107,7 @@ def refresh_paths(notify=False, force=False, duration=0):
 
     if notify:
         dialog = xbmcgui.Dialog()
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32033))
+        dialog.notification('AutoWidget', utils.getString(32033))
     
     for group_def in manage.find_defined_groups():
         paths = []

@@ -21,7 +21,7 @@ _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_version = _addon.getAddonInfo('version')
 _home = xbmc.translatePath('special://home/')
 
-shortcut_types = [_addon.getLocalizedString(32051), _addon.getLocalizedString(32052),
+shortcut_types = [utils.getString(32051), utils.getString(32052),
           'Clone as Shortcut Group', 'Explode as Widget Group',
           'Settings Shortcut']
 
@@ -156,11 +156,11 @@ def _group_dialog(_type, group_id=None):
     offset = 1
     
     if _type == 'widget':
-        new_widget = xbmcgui.ListItem(_addon.getLocalizedString(32015))
+        new_widget = xbmcgui.ListItem(utils.getString(32015))
         new_widget.setArt(folder_sync)
         options.append(new_widget)
     else:
-        new_shortcut = xbmcgui.ListItem(_addon.getLocalizedString(32017))
+        new_shortcut = xbmcgui.ListItem(utils.getString(32017))
         new_shortcut.setArt(folder_shortcut)
         options.append(new_shortcut)
         
@@ -173,11 +173,11 @@ def _group_dialog(_type, group_id=None):
         options.append(item)
     
     dialog = xbmcgui.Dialog()
-    choice = dialog.select(_addon.getLocalizedString(32054), options, preselect=index,
+    choice = dialog.select(utils.getString(32054), options, preselect=index,
                            useDetails=True)
     
     if choice < 0:
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32034))
+        dialog.notification('AutoWidget', utils.getString(32034))
     elif (choice, _type) == (0, 'widget'):
         return _group_dialog(_type, add_group('widget'))
     elif choice == 0:
@@ -188,7 +188,7 @@ def _group_dialog(_type, group_id=None):
 
 def add_group(target):
     dialog = xbmcgui.Dialog()
-    group_name = dialog.input(heading=_addon.getLocalizedString(32037))
+    group_name = dialog.input(heading=utils.getString(32037))
     group_id = ''
     
     if group_name:
@@ -206,7 +206,7 @@ def add_group(target):
             
         xbmc.executebuiltin('Container.Refresh()')
     else:
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32038))
+        dialog.notification('AutoWidget', utils.getString(32038))
     
     return group_id
     
@@ -214,9 +214,9 @@ def add_group(target):
 def _add_path(group_def, labels, over=False):
     if not over:
         if group_def['type'] == 'shortcut':
-            heading = _addon.getLocalizedString(32043)
+            heading = utils.getString(32043)
         elif group_def['type'] == 'widget':
-            heading = _addon.getLocalizedString(32044)
+            heading = utils.getString(32044)
         
         labels['label'] = xbmcgui.Dialog().input(heading=heading,
                                                  defaultt=labels['label'])

@@ -12,8 +12,8 @@ _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _home = xbmc.translatePath('special://home/')
 
-advanced = _addon.getSettingBool('context.advanced')
-warning_shown = _addon.getSettingBool('context.warning')
+advanced = utils.getSettingBool('context.advanced')
+warning_shown = utils.getSettingBool('context.warning')
 
 safe = ['label', 'art', 'info', 'path']
 exclude = ['paths']
@@ -46,19 +46,19 @@ def _remove_group(group_id, over=False):
     group_name = group_def['label']
     
     if not over:
-        choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32039))
+        choice = dialog.yesno('AutoWidget', utils.getString(32039))
     
     if over or choice:
         file = os.path.join(_addon_path, '{}.group'.format(group_id))
         utils.remove_file(file)
             
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32045)
+        dialog.notification('AutoWidget', utils.getString(32045)
                                                 .format(group_name))
         
         
 def _remove_path(path_id, group_id):
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32035))
+    choice = dialog.yesno('AutoWidget', utils.getString(32035))
     
     if choice:
         group_def = manage.get_group_by_id(group_id)
@@ -69,7 +69,7 @@ def _remove_path(path_id, group_id):
                 path_name = path_def['label']
                 group_def['paths'].remove(path_def)
                 dialog.notification('AutoWidget',
-                                    _addon.getLocalizedString(32045)
+                                    utils.getString(32045)
                                           .format(path_name))
                 
         manage.write_path(group_def)
@@ -77,9 +77,9 @@ def _remove_path(path_id, group_id):
         
 def _warn():
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32058),
-                          yeslabel=_addon.getLocalizedString(32059),
-                          nolabel=_addon.getLocalizedString(32060))
+    choice = dialog.yesno('AutoWidget', utils.getString(32058),
+                          yeslabel=utils.getString(32059),
+                          nolabel=utils.getString(32060))
     if choice < 1:
         _addon.setSetting('context.advanced', 'false')
         _addon.setSetting('context.warning', 'true')
@@ -145,10 +145,10 @@ def _get_value(edit_def, key):
         _def = edit_def[key]
         if key == 'art':
             options = _get_options(_def, base_key=key, use_thumbs=True)
-            idx = dialog.select(_addon.getLocalizedString(32046), options, useDetails=True)
+            idx = dialog.select(utils.getString(32046), options, useDetails=True)
         elif key == 'info':
             options = _get_options(_def, base_key=key)
-            idx = dialog.select(_addon.getLocalizedString(32047), options)
+            idx = dialog.select(utils.getString(32047), options)
         
         if idx < 0:
             return
@@ -170,7 +170,7 @@ def _get_value(edit_def, key):
                     return
                     
                 _key = _clean_key(utils.art_types[label])
-                value = dialog.browse(2, _addon.getLocalizedString(32049).format(_key.capitalize()),
+                value = dialog.browse(2, utils.getString(32049).format(_key.capitalize()),
                               shares='files', mask='.jpg|.png', useThumbs=True)
                 
                 _def[_key] = value
@@ -183,7 +183,7 @@ def _get_value(edit_def, key):
                 return _def[_key]
     elif key in utils.art_types:
         default = edit_def[key] if not edit_def[key].lower().startswith('http') else ''
-        value = dialog.browse(2, _addon.getLocalizedString(32049).format(key.capitalize()),
+        value = dialog.browse(2, utils.getString(32049).format(key.capitalize()),
                               shares='files', mask='.jpg|.png', useThumbs=True,
                               defaultt=default)
         if value:
@@ -191,7 +191,7 @@ def _get_value(edit_def, key):
             return edit_def[key]
     else:
         if not any(key in i for i in [safe, utils.art_types, utils.info_types]):
-            title = _addon.getLocalizedString(32063).format(key.capitalize())
+            title = utils.getString(32063).format(key.capitalize())
         elif key in edit_def:
             title = key.capitalize()
             
@@ -229,10 +229,10 @@ def edit_dialog(group_id, path_id=''):
     edit_def = path_def if path_id else group_def
     options = _get_options(edit_def)
     
-    remove_label = _addon.getLocalizedString(32025) if path_id else _addon.getLocalizedString(32023)
+    remove_label = utils.getString(32025) if path_id else utils.getString(32023)
     options.append('[COLOR firebrick]{}[/COLOR]'.format(remove_label))
     
-    idx = dialog.select(_addon.getLocalizedString(32048), options)
+    idx = dialog.select(utils.getString(32048), options)
     if idx < 0:
         return
     elif idx == len(options) - 1:

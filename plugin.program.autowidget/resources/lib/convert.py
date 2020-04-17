@@ -114,7 +114,7 @@ def convert_widgets(notify=False):
     converted.extend(_convert_skin_strings(converted))
     
     if _shortcuts_path:    
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32062))
+        dialog.notification('AutoWidget', utils.getString(32062))
         converted.extend(_convert_shortcuts(converted))
         converted.extend(_convert_properties(converted))
     

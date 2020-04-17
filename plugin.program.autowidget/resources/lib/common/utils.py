@@ -26,9 +26,9 @@ _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
 _art_path = os.path.join(_addon_root, 'resources', 'media')
 if xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
     _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
-    _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
+    shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 else:
-    _shortcuts_path = ''
+    shortcuts_path = ''
 
 windows = {'programs': ['program', 'script'],
             'addonbrowser': ['addon', 'addons'],
@@ -61,7 +61,7 @@ def log(msg, level=xbmc.LOGDEBUG):
 
 
 def ensure_addon_data():
-    for path in [_addon_path, _shortcuts_path]:
+    for path in [_addon_path, shortcuts_path]:
         if path:
             if not os.path.exists(path):
                 os.makedirs(path)
@@ -69,7 +69,7 @@ def ensure_addon_data():
                 
 def wipe(folder=_addon_path):
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32065))
+    choice = dialog.yesno('AutoWidget', getString(32065))
     
     if choice:
         shutil.rmtree(folder)
@@ -234,7 +234,7 @@ def write_xml(file, content):
     try:
         tree.write(file)
     except:
-        utils.log('Could not write to {}: {}'.format(file, e),
+        log('Could not write to {}: {}'.format(file, e),
                   level=xbmc.LOGERROR)
                   
                   
@@ -257,3 +257,7 @@ def getSettingNumber(setting):
         return _addon.getSettingNumber(setting)
     except:
         return _addon.getSetting(setting)
+        
+        
+def getString(_id):
+    return _addon.getLocalizedString(_id)

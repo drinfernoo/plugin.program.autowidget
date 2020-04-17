@@ -27,7 +27,7 @@ unpack = utils.get_art('unpack.png')
 
 _addon = xbmcaddon.Addon()
 
-label_warning_shown = _addon.getSettingBool('label.warning')
+label_warning_shown = utils.getSettingBool('label.warning')
 
 
 def _warn():
@@ -69,7 +69,7 @@ def my_groups_menu():
             group_id = group['id']
             group_type = group['type']
             
-            cm = [(_addon.getLocalizedString(32061),
+            cm = [(utils.getString(32061),
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'
@@ -91,7 +91,7 @@ def my_groups_menu():
         directory.add_menu_item(title=32068,
                                 art=alert,
                                 isFolder=False)
-    return True, _addon.getLocalizedString(32007)
+    return True, utils.getString(32007)
     
     
 def group_menu(group_id, target, _id):
@@ -126,7 +126,7 @@ def group_menu(group_id, target, _id):
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/')
 
-            description = _addon.getLocalizedString(32029).format(group_name)
+            description = utils.getString(32029).format(group_name)
             
             directory.add_menu_item(title='Random Path from {} ({})'.format(group_name, _id),
                                     params={'mode': 'path',
@@ -209,7 +209,7 @@ def tools_menu():
     directory.add_menu_item(title=32006,
                             params={'mode': 'force'},
                             art=refresh,
-                            info={'plot': _addon.getLocalizedString(32020)},
+                            info={'plot': utils.getString(32020)},
                             isFolder=False)
     directory.add_menu_item(title=32066,
                             params={'mode': 'clean'},
@@ -219,7 +219,7 @@ def tools_menu():
                             params={'mode': 'wipe'},
                             art=remove,
                             isFolder=False)
-    return True, _addon.getLocalizedString(32008)
+    return True, utils.getString(32008)
     
     
 def call_path(group_id, path_id):
@@ -273,7 +273,7 @@ def random_path(group_id):
             directory.add_menu_item(title=32013,
                                     params={'mode': 'force'},
                                     art=unpack,
-                                    info={'plot': _addon.getLocalizedString(32014)},
+                                    info={'plot': utils.getString(32014)},
                                     isFolder=False)
             return True, group_name
     else:
@@ -306,7 +306,7 @@ def next_path(group_id):
             directory.add_menu_item(title=32013,
                                     params={'mode': 'force'},
                                     art=unpack,
-                                    info={'plot': _addon.getLocalizedString(32014)},
+                                    info={'plot': utils.getString(32014)},
                                     isFolder=False)
             return True, group_name
     else:
@@ -317,7 +317,7 @@ def next_path(group_id):
 
 
 def _create_context_items(group_id, path_id, idx, length):
-    cm = [(_addon.getLocalizedString(32048),
+    cm = [(utils.getString(32048),
           ('RunPlugin('
            'plugin://plugin.program.autowidget/'
            '?mode=manage'
@@ -325,7 +325,7 @@ def _create_context_items(group_id, path_id, idx, length):
            '&group={}'
            '&path={})').format(group_id, path_id))]
     if idx > 0:
-        cm.append((_addon.getLocalizedString(32026),
+        cm.append((utils.getString(32026),
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'
@@ -334,7 +334,7 @@ def _create_context_items(group_id, path_id, idx, length):
                    '&group={}'
                    '&path={})').format(group_id, path_id)))
     if idx < length - 1:
-        cm.append((_addon.getLocalizedString(32027),
+        cm.append((utils.getString(32027),
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'
