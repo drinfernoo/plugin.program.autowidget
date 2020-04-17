@@ -33,6 +33,11 @@ def _update_strings(_id, path_def, setting=None, label_setting=None):
     label = path_def['label']
     action = path_def['path']
     
+    try:
+        label = label.encode('utf-8')
+    except:
+        pass
+    
     if setting:
         if label_setting:
             utils.log('Setting {} to {}'.format(label_setting, label))
