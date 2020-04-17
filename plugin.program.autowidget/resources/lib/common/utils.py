@@ -260,4 +260,4 @@ def getSettingNumber(setting):
         
         
 def getString(_id):
-    return _addon.getLocalizedString(_id)
+    return six.text_type(_addon.getLocalizedString(_id))
