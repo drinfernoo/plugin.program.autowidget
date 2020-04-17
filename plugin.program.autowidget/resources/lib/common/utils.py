@@ -236,3 +236,24 @@ def write_xml(file, content):
     except:
         utils.log('Could not write to {}: {}'.format(file, e),
                   level=xbmc.LOGERROR)
+                  
+                  
+def getSettingBool(setting):
+    try:
+        return _addon.getSettingBool(setting)
+    except:
+        return _addon.getSetting(setting)
+        
+        
+def getSettingInt(setting):
+    try:
+        return _addon.getSettingInt(setting)
+    except:
+        return _addon.getSetting(setting)
+        
+        
+def getSettingNumber(setting):
+    try:
+        return _addon.getSettingNumber(setting)
+    except:
+        return _addon.getSetting(setting)
