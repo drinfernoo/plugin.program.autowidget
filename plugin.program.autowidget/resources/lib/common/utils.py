@@ -242,21 +242,21 @@ def getSettingBool(setting):
     try:
         return _addon.getSettingBool(setting)
     except:
-        return _addon.getSetting(setting)
+        return bool(_addon.getSetting(setting))
         
         
 def getSettingInt(setting):
     try:
         return _addon.getSettingInt(setting)
     except:
-        return _addon.getSetting(setting)
+        return int(_addon.getSetting(setting))
         
         
 def getSettingNumber(setting):
     try:
         return _addon.getSettingNumber(setting)
     except:
-        return _addon.getSetting(setting)
+        return float(_addon.getSetting(setting))
         
         
 def getString(_id):
