@@ -6,6 +6,8 @@ import random
 import time
 import uuid
 
+import six
+
 from resources.lib import manage
 from resources.lib.common import directory
 from resources.lib.common import utils
@@ -80,7 +82,7 @@ def my_groups_menu():
                                     params={'mode': 'group',
                                             'group': group_id,
                                             'target': group_type,
-                                            'id': str(_id)},
+                                            'id': six.text_type(_id)},
                                     info=group.get('info'),
                                     art=group.get('art') or (folder_shortcut
                                                              if group_type == 'shortcut'
@@ -132,7 +134,7 @@ def group_menu(group_id, target, _id):
                                     params={'mode': 'path',
                                             'action': 'random',
                                             'group': group_id,
-                                            'id': str(_id)},
+                                            'id': six.text_type(_id)},
                                     art=folder_sync,
                                     info={'plot': description},
                                     isFolder=True)
@@ -140,7 +142,7 @@ def group_menu(group_id, target, _id):
                                     params={'mode': 'path',
                                             'action': 'next',
                                             'group': group_id,
-                                            'id': str(_id)},
+                                            'id': six.text_type(_id)},
                                     art=folder_next,
                                     info={'plot': description},
                                     isFolder=True)
@@ -167,6 +169,12 @@ def active_widgets_menu():
             group_def = manage.get_group_by_id(group)
             
             if path_def:
+                try:
+                    path_def['label'] = path_def['label'].encode('utf-8')
+                    group_def['label'] = group_def['label'].encode('utf-8')
+                except:
+                    pass
+            
                 title = '{} - {}'.format(path_def['label'], group_def['label'])
             else:
                 title = group_def['label']
