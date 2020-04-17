@@ -181,23 +181,23 @@ def _convert_shortcuts(converted):
             if not groups or len(groups) < 2:
                 continue
 
-            _id = re.search(uuid_pattern, groups[2])
-            if 'plugin.program.autowidget' in groups[2] and _id:
+            id_match = re.search(uuid_pattern, groups[2])
+            if 'plugin.program.autowidget' in groups[2] and id_match:
                 params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
-                if not params or params.get('target') == 'shortcut':
-                    continue
-
+                
                 _id = params.get('id')
-
-                label_node.text = skin_string_info_pattern.format(_id,
+                
+                if not params or params.get('target') == 'shortcut':
+                    pass
+                else:
+                    label_node.text = skin_string_info_pattern.format(_id,
                                                                   'label')
 
-                groups[1], groups[2] = (skin_string_info_pattern.format(_id,
-                                        i) for i in ['target', 'action'])
+                    groups[1], groups[2] = (skin_string_info_pattern.format(_id,
+                                            i) for i in ['target', 'action'])
 
-                action_node.text = path_replace_pattern.format(groups[0],
-                                                               ','.join(groups[1:]))
-
+                    action_node.text = path_replace_pattern.format(groups[0],
+                                                                   ','.join(groups[1:]))
                 if _id not in converted:
                     save_path_details(params)
                     converted.append(_id)
