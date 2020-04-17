@@ -86,6 +86,8 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, duration=0):
                 widget_def['current'] = next
             elif action == 'random':
                 path_def = paths.pop()
+                paths = manage.find_defined_paths(group_id)
+                widget_def['current'] = paths.index(path_def)
             
             widget_def['path'] = path_def['id']
             widget_def['updated'] = current_time

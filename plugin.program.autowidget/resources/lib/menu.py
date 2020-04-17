@@ -188,6 +188,7 @@ def active_widgets_menu():
                           'group': group,
                           'target': 'shortcut',
                           'id': six.text_type(_id)}
+                title = 'Shortcuts from {}'.format(title)
             elif action in ['random', 'next']:
                 art = folder_sync if action == 'random' else folder_next
                 params = {'mode': 'group',
@@ -198,13 +199,21 @@ def active_widgets_menu():
             cm = [('Refresh Path', ('RunPlugin('
                                     'plugin://plugin.program.autowidget/'
                                     '?mode=refresh'
-                                    '&target={})').format(_id))]
+                                    '&target={})').format(_id)),
+                  ('Edit Widget', ('RunPlugin('
+                                   'plugin://plugin.program.autowidget/'
+                                   '?mode=manage'
+                                   '&action=edit_widget'
+                                   '&target={})').format(_id))]
             
+            if not title:
+                title = '{} - [COLOR firebrick]Orphaned[/COLOR]'.format(_id)
+                
             directory.add_menu_item(title=title,
                                     art=art,
                                     params=params,
                                     info={'lastplayed': last},
-                                    cm=cm,
+                                    cm=cm[1:] if not action else cm,
                                     isFolder=True)
     else:
         directory.add_menu_item(title='No AutoWidgets have been intialized.',

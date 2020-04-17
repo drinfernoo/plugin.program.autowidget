@@ -5,6 +5,7 @@ import xbmcgui
 import os
 import re
 
+from resources.lib import convert
 from resources.lib import manage
 from resources.lib.common import utils
 
@@ -16,6 +17,7 @@ advanced = utils.getSettingBool('context.advanced')
 warning_shown = utils.getSettingBool('context.warning')
 
 safe = ['label', 'art', 'info', 'path']
+widget_safe = ['current', 'action']
 exclude = ['paths']
 
 
@@ -75,6 +77,18 @@ def _remove_path(path_id, group_id):
         manage.write_path(group_def)
         
         
+def _remove_widget(widget_id):
+    dialog = xbmcgui.Dialog()
+    choice = dialog.yesno('AutoWidget', utils.getString(32039))
+    
+    if choice:
+        file = os.path.join(_addon_path, '{}.widget'.format(widget_id))
+        utils.remove_file(file)
+            
+        dialog.notification('AutoWidget', utils.getString(32045)
+                                                .format(widget_id))
+        
+        
 def _warn():
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno('AutoWidget', utils.getString(32058),
@@ -91,8 +105,8 @@ def _warn():
         
         
 def _get_options(edit_def, base_key='', use_thumbs=False):
+    label = ''
     options = []
-    label = 'n/a'
     
     all_keys = sorted([i for i in edit_def.keys() if i not in exclude])
     base_keys = sorted([i for i in all_keys if any(i in x for x in [safe, utils.art_types, utils.info_types])])
@@ -118,16 +132,18 @@ def _get_options(edit_def, base_key='', use_thumbs=False):
                     if use_thumbs:
                         item.setArt({'icon': edit_def[key]})
                     options.append(item)
-                    label = ''
             else:
                 label = _def
         
-        if base_key != 'art' and label:
-            try:
-                label = label.encode('utf-8')
-            except:
-                pass
-                
+        if not label:
+            label = 'n/a'
+            
+        try:
+            label = label.encode('utf-8')
+        except:
+            pass
+        
+        if base_key != 'art':
             options.append('{}: {}'.format(disp, label))
     
     if base_key == 'info':    
@@ -135,6 +151,32 @@ def _get_options(edit_def, base_key='', use_thumbs=False):
     elif base_key == 'art':
         options.append('Add New Artwork...')
         
+    return options
+    
+    
+def _get_widget_options(edit_def):
+    options = []
+    label = 'n/a'
+    
+    all_keys = sorted([i for i in edit_def.keys() if i not in exclude])
+    base_keys = sorted([i for i in all_keys if i in widget_safe])
+    keys = all_keys if advanced else base_keys
+    
+    for key in keys:
+        disp = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in widget_safe else key
+        _def = edit_def[key]
+        
+        if key in edit_def:
+            label = _def
+            
+        if label:
+            try:
+                label = label.encode('utf-8')
+            except:
+                pass
+                
+            options.append('{}: {}'.format(disp, label))
+            
     return options
     
     
@@ -196,9 +238,23 @@ def _get_value(edit_def, key):
             title = key.capitalize()
             
         default = edit_def.get(key)
-        value = dialog.input(title)
+        value = dialog.input(title, defaultt=default)
         edit_def[key] = value
         return edit_def[key]
+        
+        
+def _get_widget_value(edit_def, key):
+    dialog = xbmcgui.Dialog()
+    
+    if key not in widget_safe:
+        title = utils.getString(32063).format(key.capitalize())
+    elif key in edit_def:
+        title = key.capitalize()
+        
+    default = edit_def.get(key)
+    value = dialog.input(title, defaultt=default)
+    edit_def[key] = value
+    return edit_def[key]
 
 
 def _clean_key(key):
@@ -210,6 +266,39 @@ def _clean_key(key):
         key = color.group(1)
     
     return key
+    
+    
+def edit_widget_dialog(widget_id):
+    dialog = xbmcgui.Dialog()
+    updated = False
+    if advanced and not warning_shown:
+        _warn()
+        
+    widget_def = manage.get_widget_by_id(widget_id)
+    if not widget_def:
+        return
+    
+    options = _get_widget_options(widget_def)
+    
+    remove_label = utils.getString(32025) if widget_id else utils.getString(32023)
+    options.append('[COLOR firebrick]{}[/COLOR]'.format(remove_label))
+    
+    idx = dialog.select(utils.getString(32048), options)
+    if idx < 0:
+        return
+    elif idx == len(options) - 1:
+        _remove_widget(widget_id)
+        utils.update_container()
+        return
+    else:
+        key = _clean_key(options[idx])
+        
+    updated = _get_widget_value(widget_def, key)
+    utils.log(updated, xbmc.LOGNOTICE)
+    
+    if updated:
+        convert.save_path_details(widget_def, widget_id)
+        utils.update_container()
 
         
 def edit_dialog(group_id, path_id=''):
