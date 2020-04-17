@@ -186,13 +186,13 @@ def active_widgets_menu():
                 params = {'mode': 'group',
                           'group': group,
                           'target': 'shortcut',
-                          'id': _id}
+                          'id': six.text_type(_id)}
             elif action in ['random', 'next']:
                 art = folder_sync if action == 'random' else folder_next
-                params = {'mode': 'path',
-                          'action': 'call',
+                params = {'mode': 'group',
                           'group': group,
-                          'path': path}
+                          'target': 'widget',
+                          'id': six.text_type(_id)}
                 
             cm = [('Refresh Path', ('RunPlugin('
                                     'plugin://plugin.program.autowidget/'
@@ -204,7 +204,7 @@ def active_widgets_menu():
                                     params=params,
                                     info={'lastplayed': last},
                                     cm=cm,
-                                    isFolder=not action)
+                                    isFolder=True)
     else:
         directory.add_menu_item(title='No AutoWidgets have been intialized.',
                                 art=alert,
