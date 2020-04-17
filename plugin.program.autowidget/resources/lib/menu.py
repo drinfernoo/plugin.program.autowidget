@@ -15,7 +15,6 @@ from resources.lib.common import utils
 add = utils.get_art('add.png')
 alert = utils.get_art('alert.png')
 folder = utils.get_art('folder.png')
-folder_add = utils.get_art('folder-add.png')
 folder_shortcut = utils.get_art('folder-shortcut.png')
 folder_sync = utils.get_art('folder-sync.png')
 folder_next = utils.get_art('folder-next.png')
