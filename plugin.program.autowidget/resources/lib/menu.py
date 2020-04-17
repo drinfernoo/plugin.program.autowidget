@@ -206,7 +206,7 @@ def active_widgets_menu():
                                    '&action=edit_widget'
                                    '&target={})').format(_id))]
             
-            if not title:
+            if not group_def:
                 title = '{} - [COLOR firebrick]Orphaned[/COLOR]'.format(_id)
                 
             directory.add_menu_item(title=title,
