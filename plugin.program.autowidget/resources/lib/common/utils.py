@@ -106,7 +106,7 @@ def get_active_window():
         pass
         
         
-def update_container(_type):
+def update_container(_type=''):
     xbmc.executebuiltin('Container.Refresh()')
     if _type == 'shortcut':
         xbmc.executebuiltin('UpdateLibrary(video,AutoWidget)')

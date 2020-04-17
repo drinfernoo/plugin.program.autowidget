@@ -168,7 +168,8 @@ def active_widgets_menu():
             path_def = manage.get_path_by_id(path, group)
             group_def = manage.get_group_by_id(group)
             
-            if path_def:
+            title = ''
+            if path_def and group_def:
                 try:
                     path_def['label'] = path_def['label'].encode('utf-8')
                     group_def['label'] = group_def['label'].encode('utf-8')
@@ -176,8 +177,8 @@ def active_widgets_menu():
                     pass
             
                 title = '{} - {}'.format(path_def['label'], group_def['label'])
-            else:
-                title = group_def['label']
+            elif group_def:
+                title = group_def.get('label')
                 
             last = time.strftime('%Y-%m-%d %I:%M:%S', time.localtime(updated))
             
