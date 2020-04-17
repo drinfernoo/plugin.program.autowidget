@@ -117,5 +117,5 @@ def refresh_paths(notify=False, force=False, duration=0):
             paths = refresh(widget_def['id'], widget_def=widget_def, paths=paths, force=force)
 
     xbmc.executebuiltin('Container.Refresh()')
-    if len(converted) > 0:
+    if len(converted) > 0 and utils.shortcuts_path:
         xbmc.executebuiltin('ReloadSkin()')
