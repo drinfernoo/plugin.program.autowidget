@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.555" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.522" provider-name="drinfernoo">
     <requires>
-        <!-- <import addon="xbmc.python" version="2.25.0" /> -->
-        <import addon="script.module.six" />
-        <import addon="script.module.web-pdb" />
+        <import addon="xbmc.python" version="2.25.0" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -32,11 +30,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-1.4.5
- - Refresh Shortcut widgets Automatically
- - Add "Next Path" widget action
- - Add "Clone" and "Explode" widget modes
- - Allow refreshing between 15m-2h, at 15m intervals
 1.4.3
  - Add context menu on more items
  - Fix some log spam
@@ -129,4 +122,11 @@
         </assets>
     </extension>
 </addon>
-on>
+
+            <icon>resources/media/sync.png</icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
