@@ -5,6 +5,8 @@ import xbmcgui
 import os
 import re
 
+import six
+
 from resources.lib import convert
 from resources.lib import manage
 from resources.lib.common import utils
@@ -17,7 +19,7 @@ advanced = utils.getSettingBool('context.advanced')
 warning_shown = utils.getSettingBool('context.warning')
 
 safe = ['label', 'art', 'info', 'path']
-widget_safe = ['current', 'action']
+widget_safe = ['action', 'refresh']
 exclude = ['paths']
 
 
@@ -165,9 +167,10 @@ def _get_widget_options(edit_def):
     for key in keys:
         disp = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in widget_safe else key
         _def = edit_def[key]
+        label = _def
         
-        if key in edit_def:
-            label = _def
+        if key == 'action':
+            label = '{} Path'.format(label.capitalize())
             
         if label:
             try:
@@ -238,7 +241,7 @@ def _get_value(edit_def, key):
             title = key.capitalize()
             
         default = edit_def.get(key)
-        value = dialog.input(title, defaultt=default)
+        value = dialog.input(title, defaultt=six.text_type(default))
         edit_def[key] = value
         return edit_def[key]
         
@@ -250,11 +253,21 @@ def _get_widget_value(edit_def, key):
         title = utils.getString(32063).format(key.capitalize())
     elif key in edit_def:
         title = key.capitalize()
-        
-    default = edit_def.get(key)
-    value = dialog.input(title, defaultt=default)
-    edit_def[key] = value
-    return edit_def[key]
+    
+    if key == 'action':
+        actions = ['Random Path', 'Next Path']
+        choice = dialog.select('Action', actions)
+        if choice < 0:
+            return
+            
+        value = actions[choice].split(' ')[0].lower()
+    else:        
+        default = edit_def.get(key)
+        value = dialog.input(title, defaultt=six.text_type(default))
+    
+    if value:
+        edit_def[key] = value
+        return edit_def[key]
 
 
 def _clean_key(key):
