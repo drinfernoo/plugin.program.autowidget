@@ -40,33 +40,37 @@ class AutoWidgetService(xbmc.Monitor):
                 utils.log('Property {0} cleared'.format(property))
 
         self._reload_settings()
+        
+    def _refresh(self):
+        if self.refresh_enabled in [0, 1]:
+            notification = False
+            if self.refresh_enabled == 1:
+                if _player.isPlayingVideo():
+                    utils.log('+++++ PLAYBACK DETECTED, SKIPPING AUTOWIDGET REFRESH +++++',
+                              level=xbmc.LOGNOTICE)
+                    return
+            else:
+                if self.refresh_notification == 0:
+                    notification = True
+                elif self.refresh_notification == 1:
+                    if not _player.isPlayingVideo():
+                        notification = True
+            
+            utils.log('+++++ REFRESHING AUTOWIDGETS +++++', level=xbmc.LOGNOTICE)
+            refresh.refresh_paths(notify=notification)
+        else:
+            utils.log('+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++',
+                      level=xbmc.LOGNOTICE)
 
     def _update_widgets(self):
+        self._refresh()
+        
         while not self.abortRequested():
-            delay = (45 + int(random.random() * 30)) * 60 
-            if self.waitForAbort(delay * self.refresh_duration):
+            if self.waitForAbort(60 * 15):
                 break
 
-            if self.refresh_enabled in [0, 1]:
-                notification = False
-                if self.refresh_enabled == 1:
-                    if _player.isPlayingVideo():
-                        utils.log('+++++ PLAYBACK DETECTED, SKIPPING AUTOWIDGET REFRESH +++++',
-                                  level=xbmc.LOGNOTICE)
-                        continue
-                else:
-                    if self.refresh_notification == 0:
-                        notification = True
-                    elif self.refresh_notification == 1:
-                        if not _player.isPlayingVideo():
-                            notification = True
-                
-                utils.log('+++++ REFRESHING AUTOWIDGETS +++++', level=xbmc.LOGNOTICE)
-                refresh.refresh_paths(notify=notification,
-                                      duration=delay * self.refresh_duration)
-            else:
-                utils.log('+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++',
-                          level=xbmc.LOGNOTICE)
+            if not self._refresh():
+                continue
 
 
 _player = xbmc.Player()

@@ -72,6 +72,8 @@ def save_path_details(params, _id=''):
         params['current'] = -1
     if 'updated' not in params:
         params['updated'] = time.time()
+    if 'refresh' not in params:
+        params['refresh'] = utils.getSettingNumber('service.refresh_duration')
 
     utils.write_json(path_to_saved, params)
 

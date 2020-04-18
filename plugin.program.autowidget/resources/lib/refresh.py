@@ -56,7 +56,7 @@ def _update_strings(_id, path_def, setting=None, label_setting=None):
         utils.set_skin_string(target_string, target)
 
 
-def refresh(widget_id, widget_def=None, paths=None, force=False, duration=0):
+def refresh(widget_id, widget_def=None, paths=None, force=False):
     if not paths:
         paths = []
         
@@ -65,8 +65,11 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, duration=0):
     
     current_time = time.time()
     updated_at = widget_def.get('updated', current_time)
+    
+    default_refresh = utils.getSettingNumber('service.refresh_duration')
+    refresh = float(widget_def.get('refresh', default_refresh))
             
-    if updated_at < current_time - duration or force:
+    if updated_at <= current_time - (3600 * refresh) or force:
         path_def = {}
         _id = widget_def['id']
         group_id = widget_def['group']
@@ -100,7 +103,7 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, duration=0):
     return paths
 
 
-def refresh_paths(notify=False, force=False, duration=0):
+def refresh_paths(notify=False, force=False):
     converted = []
     current_time = time.time()
     
