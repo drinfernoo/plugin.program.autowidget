@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.589" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.555" provider-name="drinfernoo">
     <requires>
-        <import addon="xbmc.python" version="2.25.0" />
+        <!-- <import addon="xbmc.python" version="2.25.0" /> -->
+        <import addon="script.module.six" />
+        <import addon="script.module.web-pdb" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -14,7 +16,11 @@
         <menu id="kodi.core.main">
             <item library="context.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
+                <visible>[!String.IsEqual(ListItem.DbType,movie) +
+                         !String.IsEqual(ListItem.DbType,episode) +
+                         !String.IsEqual(ListItem.DbType,musicvideo) +
+                         !String.IsEqual(ListItem.DbType,song)] +
+                          String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
             </item>
         </menu>
     </extension>
@@ -26,6 +32,22 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.4.5
+ - Refresh Shortcut widgets Automatically
+ - Add "Next Path" widget action
+ - Add "Clone" and "Explode" widget modes
+ - Allow refreshing between 15m-2h, at 15m intervals
+1.4.3
+ - Add context menu on more items
+ - Fix some log spam
+ - Catch more errors from invalid files
+ - Fix "Settings" shortcuts
+ - Gracefully handle remote artwork
+ - Use special paths for artwork
+1.4.2
+ - Fix bug in conversion
+1.4.1
+ - Fix bug in migration
 1.4.0
  - Add "Clean Old References" shortcuts
  - Change main menu layout
@@ -107,3 +129,4 @@
         </assets>
     </extension>
 </addon>
+on>
