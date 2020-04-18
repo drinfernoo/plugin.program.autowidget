@@ -179,7 +179,7 @@ def active_widgets_menu():
             elif group_def:
                 title = group_def.get('label')
                 
-            last = time.strftime('%Y-%m-%d %I:%M:%S', time.localtime(updated))
+            last = time.strftime('%Y-%m-%d %I:%M:%S', time.localtime(float(updated)))
             
             if not action:
                 art = folder_shortcut
