@@ -33,13 +33,7 @@ label_warning_shown = utils.getSettingBool('label.warning')
 
 def _warn():
     dialog = xbmcgui.Dialog()
-    dialog.ok('AutoWidget', ('The unique identifier in the number in this path'
-                             '\'s label is [B]necessary[/B] for AutoWidget to '
-                             'refresh it correctly. Don\'t change the label '
-                             'given to this widget, or it may be unable to '
-                             'update correctly. This wessage '
-                             '[COLOR firebrick]will not[/COLOR] be shown '
-                             'again.'))
+    dialog.ok('AutoWidget', utils.getString(32073))
     
     _addon.setSetting('label.warning', 'true')
     label_warning_shown = True
@@ -50,7 +44,7 @@ def root_menu():
                             params={'mode': 'group'},
                             art=folder,
                             isFolder=True)
-    directory.add_menu_item(title='Active Widgets',
+    directory.add_menu_item(title=32074,
                             params={'mode': 'widget'},
                             art=folder,
                             isFolder=True)
@@ -126,24 +120,20 @@ def group_menu(group_id, target, _id):
                                     isFolder=False)
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/')
-
-            description = utils.getString(32029).format(group_name)
             
-            directory.add_menu_item(title='Random Path from {} ({})'.format(group_name, _id),
+            directory.add_menu_item(title=utils.getString(32028).format(group_name, _id),
                                     params={'mode': 'path',
                                             'action': 'random',
                                             'group': group_id,
                                             'id': six.text_type(_id)},
                                     art=folder_sync,
-                                    info={'plot': description},
                                     isFolder=True)
-            directory.add_menu_item(title='Next Path from {} ({})'.format(group_name, _id),
+            directory.add_menu_item(title=utils.getString(32076).format(group_name, _id),
                                     params={'mode': 'path',
                                             'action': 'next',
                                             'group': group_id,
                                             'id': six.text_type(_id)},
                                     art=folder_next,
-                                    info={'plot': description},
                                     isFolder=True)
     else:
         directory.add_menu_item(title=32032,
@@ -187,7 +177,7 @@ def active_widgets_menu():
                           'group': group,
                           'target': 'shortcut',
                           'id': six.text_type(_id)}
-                title = 'Shortcuts from {}'.format(title)
+                title = utils.getString(32030).format(title)
             elif action in ['random', 'next']:
                 art = folder_sync if action == 'random' else folder_next
                 params = {'mode': 'group',
@@ -195,18 +185,18 @@ def active_widgets_menu():
                           'target': 'widget',
                           'id': six.text_type(_id)}
                 
-            cm = [('Refresh Path', ('RunPlugin('
-                                    'plugin://plugin.program.autowidget/'
-                                    '?mode=refresh'
-                                    '&target={})').format(_id)),
-                  ('Edit Widget', ('RunPlugin('
-                                   'plugin://plugin.program.autowidget/'
-                                   '?mode=manage'
-                                   '&action=edit_widget'
-                                   '&target={})').format(_id))]
+            cm = [(utils.getString(32069), ('RunPlugin('
+                                            'plugin://plugin.program.autowidget/'
+                                            '?mode=refresh'
+                                            '&target={})').format(_id)),
+                  (utils.getString(32070), ('RunPlugin('
+                                            'plugin://plugin.program.autowidget/'
+                                            '?mode=manage'
+                                            '&action=edit_widget'
+                                            '&target={})').format(_id))]
             
             if not group_def:
-                title = '{} - [COLOR firebrick]Orphaned[/COLOR]'.format(_id)
+                title = '{} - [COLOR firebrick]{}[/COLOR]'.format(_id, utils.getString(32071))
                 
             directory.add_menu_item(title=title,
                                     art=art,
@@ -215,11 +205,11 @@ def active_widgets_menu():
                                     cm=cm[1:] if not action else cm,
                                     isFolder=True)
     else:
-        directory.add_menu_item(title='No AutoWidgets have been intialized.',
+        directory.add_menu_item(title=32072,
                                 art=alert,
                                 isFolder=False)
 
-    return True, 'Active Widgets'
+    return True, utils.getString(32074)
     
     
 def tools_menu():

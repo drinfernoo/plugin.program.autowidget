@@ -149,9 +149,9 @@ def _get_options(edit_def, base_key='', use_thumbs=False):
             options.append('{}: {}'.format(disp, label))
     
     if base_key == 'info':    
-        options.append('Add New InfoLabel...')
+        options.append(utils.getString(32077))
     elif base_key == 'art':
-        options.append('Add New Artwork...')
+        options.append(utils.getString(32078))
         
     return options
     
@@ -170,7 +170,7 @@ def _get_widget_options(edit_def):
         label = _def
         
         if key == 'action':
-            label = '{} Path'.format(label.capitalize())
+            label = utils.getString(32079) if label == 'random' else utils.getString(32080)
             
         if label:
             try:
@@ -199,7 +199,7 @@ def _get_value(edit_def, key):
             return
         elif idx == len(options) - 1:
             if key == 'info':
-                label = dialog.select('Add New InfoLabel', utils.info_types)
+                label = dialog.select(utils.getString(32077), utils.info_types)
                 if label < 0:
                     return
                     
@@ -210,7 +210,7 @@ def _get_value(edit_def, key):
                 _def[_key] = value
                 return _def[_key]
             elif key == 'art':
-                label = dialog.select('Add New Artwork', utils.art_types)
+                label = dialog.select(utils.getString(32078), utils.art_types)
                 if label < 0:
                     return
                     
@@ -255,8 +255,8 @@ def _get_widget_value(edit_def, key):
         title = key.capitalize()
     
     if key == 'action':
-        actions = ['Random Path', 'Next Path']
-        choice = dialog.select('Action', actions)
+        actions = [utils.getString(32079), utils.getString(32080)]
+        choice = dialog.select(utils.getString(32081), actions)
         if choice < 0:
             return
             

@@ -22,8 +22,8 @@ _addon_version = _addon.getAddonInfo('version')
 _home = xbmc.translatePath('special://home/')
 
 shortcut_types = [utils.getString(32051), utils.getString(32052),
-          'Clone as Shortcut Group', 'Explode as Widget Group',
-          'Settings Shortcut']
+                  utils.getString(32082), utils.getString(32083),
+                  utils.getString(32053)]
 
 folder_shortcut = utils.get_art('folder-shortcut.png')
 folder_sync = utils.get_art('folder-sync.png')
@@ -130,7 +130,7 @@ def _add_as(path, is_folder):
         options.append(li)
     
     dialog = xbmcgui.Dialog()
-    idx = dialog.select('Add as...', options, useDetails=True)
+    idx = dialog.select(utils.getString(32084), options, useDetails=True)
     if idx < 0:
         return
     
