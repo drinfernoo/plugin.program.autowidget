@@ -312,6 +312,7 @@ def edit_widget_dialog(widget_id):
     if updated:
         convert.save_path_details(widget_def, widget_id)
         utils.update_container()
+    edit_widget_dialog(widget_id)
 
         
 def edit_dialog(group_id, path_id=''):
@@ -358,3 +359,4 @@ def edit_dialog(group_id, path_id=''):
             manage.write_path(group_def)
             
         utils.update_container(group_def['type'])
+    edit_dialog(group_id, path_id)
