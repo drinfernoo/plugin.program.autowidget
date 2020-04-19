@@ -38,11 +38,11 @@ skin_string_pattern = 'autowidget-{}-{}'
 skin_string_info_pattern = '$INFO[Skin.String({})]'.format(skin_string_pattern)
 path_replace_pattern = '{}({})'
 widget_param_pattern = '^(?:\w+)(\W\w+)?$'
-uuid_pattern = ('\(([0-9a-fA-F]{8}'
+uuid_pattern = ('[0-9a-fA-F]{8}'
                 '\-[0-9a-fA-F]{4}'
                 '\-[0-9a-fA-F]{4}'
                 '\-[0-9a-fA-F]{4}'
-                '\-[0-9a-fA-F]{12})\)$')
+                '\-[0-9a-fA-F]{12}')
 
 
 def _get_random_paths(group_id, force=False, change_sec=3600):
@@ -56,18 +56,24 @@ def _get_random_paths(group_id, force=False, change_sec=3600):
     return paths
 
 
-def _save_path_details(params, _id=''):
+def save_path_details(params, _id=''):
+    for param in params:
+        if str(params[param]).endswith(',return)'):
+            return
+    
     if not _id:
-        _id = params['id']
+        _id = params.get('id')
+        if not _id:
+            return
     
     path_to_saved = os.path.join(_addon_path, '{}.widget'.format(_id))
     params['version'] = _addon_version
     if 'current' not in params:
         params['current'] = -1
-    
-    for param in params:
-        if str(params[param]).endswith(',return)'):
-            return
+    if 'updated' not in params:
+        params['updated'] = time.time()
+    if 'refresh' not in params:
+        params['refresh'] = utils.getSettingNumber('service.refresh_duration')
 
     utils.write_json(path_to_saved, params)
 
@@ -102,7 +108,7 @@ def _update_strings(_id, path_def, setting=None, label_setting=None):
         utils.set_skin_string(target_string, target)
     
     
-def _convert_widgets(notify=False):
+def convert_widgets(notify=False):
     dialog = xbmcgui.Dialog()
     
     converted = []
@@ -110,7 +116,7 @@ def _convert_widgets(notify=False):
     converted.extend(_convert_skin_strings(converted))
     
     if _shortcuts_path:    
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32062))
+        dialog.notification('AutoWidget', utils.getString(32062))
         converted.extend(_convert_shortcuts(converted))
         converted.extend(_convert_properties(converted))
     
@@ -125,26 +131,31 @@ def _convert_skin_strings(converted):
         return converted
     
     settings = [i for i in settings.findall('setting') if i.text]
-    path_settings = [i for i in settings if all(j in i.text
-                                            for j in ['plugin.program.autowidget',
-                                                      'mode=path'])]
-    label_settings = [i for i in settings if re.match(uuid_pattern, i.text)]
+    path_settings = [i for i in settings if 'plugin.program.autowidget' in i.text
+                                         and re.search(uuid_pattern, i.text)]
+    label_settings = [i for i in settings if 'plugin.program.autowidget' not in i.text
+                                         and re.search(uuid_pattern, i.text)]
     
     for path in path_settings:
         path_id = path.get('id')
+        if not path_id:
+            continue
+            
         params = dict(parse_qsl(path.text.split('?')[1].replace('\"', '')))
-        params['setting'] = path_id
         
-        for label in label_settings:
-            if params.get('id') in label.text:
-                params['label_setting'] = label.get('id')
+        _id = params.get('id')
+        if params.get('target') == 'shortcut':
+            pass
+        else:
+            params['path_setting'] = path_id
+            for label in label_settings:
+                if _id in label.text:
+                    params['label_setting'] = label.get('id')
+                    break
     
-        if params.get('id') not in converted:
-            details = _save_path_details(params)
-            if details:
-                _id = details['id']
-                if _id not in converted:
-                    converted.append(_id)
+        if _id and _id not in converted:
+            save_path_details(params)
+            converted.append(_id)
 
     return converted
 
@@ -164,42 +175,38 @@ def _convert_shortcuts(converted):
             label_node = shortcut.find('label')
             action_node = shortcut.find('action')
 
-            if not action_node.text:
-                continue
-
             match = re.search(activate_window_pattern, action_node.text)
             if not match:
                 continue
-
+            
             groups = list(match.groups())
 
-            if not groups[2] or not all(i in groups[2] for i in [
-                'plugin.program.autowidget', 'mode=path']):
+            if not groups or len(groups) < 2:
                 continue
 
-            params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
-            details = _save_path_details(params)
-            if not details:
-                continue
-                
-            _id = details['id']
-            label_node.text = skin_string_info_pattern.format(_id, 'label')
+            id_match = re.search(uuid_pattern, groups[2])
+            if 'plugin.program.autowidget' in groups[2] and id_match:
+                params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
+                if not params:
+                    continue
+                    
+                _id = params.get('id')
+                if params.get('target') == 'shortcut':
+                    pass
+                else:
+                    label_node.text = skin_string_info_pattern.format(_id,
+                                                                  'label')
 
-            groups[1] = skin_string_info_pattern.format(_id, 'target')
-            groups[2] = skin_string_info_pattern.format(_id, 'action')
+                    groups[1], groups[2] = (skin_string_info_pattern.format(_id,
+                                            i) for i in ['target', 'action'])
 
-            action_node.text = path_replace_pattern.format(groups[0],
-                                                           ','.join(groups[1:]))
+                    action_node.text = path_replace_pattern.format(groups[0],
+                                                                   ','.join(groups[1:]))
+                if _id and _id not in converted:
+                    save_path_details(params)
+                    converted.append(_id)
 
-            converted.append(_id)
-
-        utils.prettify(shortcuts)
-        tree = ElementTree.ElementTree(shortcuts)
-        try:
-            tree.write(xml_path)
-        except:
-            utils.log('{} couldn\'t be written to: {}'.format(xml_path, e),
-                      level=xbmc.LOGERROR)
+        utils.write_xml(xml_path, shortcuts)
 
     return converted
 
@@ -214,93 +221,49 @@ def _convert_properties(converted):
         content = ast.literal_eval(utils.read_file(props_path))
     except Exception as e:
         utils.log('Unable to parse: {}'.format(props_path))
-        
-    props = [x for x in content if all(i in x[3]
-                                       for i in ['plugin.program.autowidget',
-                                                 'mode=path'])]
-    for prop in props:
-        prop_index = content.index(prop)
-        suffix = re.search(widget_param_pattern, prop[2])
-        if not suffix:
-            continue
-        
+    
+    
+    props = [x for x in content if 'plugin.program.autowidget' in x[3]
+                                and re.search(uuid_pattern, x[3])]
+    label_props = [x for x in content if 'plugin.program.autowidget' not in x[3]
+                                      and re.search(uuid_pattern, x[3])]
+    for prop in props:        
         if 'ActivateWindow' in prop[3]:
+            groups = []
             match = re.search(activate_window_pattern, prop[3])
             if not match:
                 continue
                 
             groups = list(match.groups())
-            if not groups[2] or not all(i in groups[2] for i in ['plugin.program.autowidget', 'mode=path']):
+            if not groups or len(groups) < 2:
                 continue
-        
-            params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
+                
+            id_match = re.search(uuid_pattern, groups[2])
+            if 'plugin.program.autowidget' in groups[2] and id_match:
+                params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
         else:
             params = dict(parse_qsl(prop[3].split('?')[1].replace('\"', '')))
         
-        details = _save_path_details(params)
-        if not details:
+        if not params:
             continue
         
-        _id = details['id']
-        prop[3] = skin_string_info_pattern.format(_id, 'action')
-        content[prop_index] = prop
-        
-        params = [x for x in content if x[:2] == prop[:2]
-                  and re.search(widget_param_pattern,
-                                x[2]) and re.search(widget_param_pattern,
-                                                    x[2]).groups() == suffix.groups()]
-        for param in params:
-            param_index = content.index(param)
-            norm = param[2].lower()
-            if 'name' in norm and not 'sort' in norm:
-                param[3] = skin_string_info_pattern.format(_id, 'label')
-            elif 'target' in norm:
-                param[3] = skin_string_info_pattern.format(_id, 'target')
+        _id = params.get('id')
+        if params.get('target') == 'shortcut':
+            pass
+        else:        
+            prop[3] = skin_string_info_pattern.format(_id, 'action')
+            params['path_prop'] = prop[:3]
             
-            content[param_index] = param
+            for label_prop in label_props:
+                if _id in label_prop[3]:
+                    label_prop[3] = skin_string_info_pattern.format(_id, 'label')
+                    params['label_prop'] = label_prop[:3]
+                    break
         
-        converted.append(_id)
+        if _id and _id not in converted:
+            save_path_details(params)
+            converted.append(_id)
         
     utils.write_file(props_path, '{}'.format(content))
         
     return converted
-
-
-def refresh_paths(notify=False, force=False):
-    converted = []
-    
-    if force:
-        converted = _convert_widgets(notify)
-
-    if notify:
-        dialog = xbmcgui.Dialog()
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32033))
-    
-    for group_def in manage.find_defined_groups():
-        paths = []
-
-        for widget_def in manage.find_defined_widgets(group_def['id']):
-            path_def = {}
-            _id = widget_def['id']
-            group_id = widget_def['group']
-            action = widget_def['action'].lower()
-            setting = widget_def.get('setting')
-            label_setting = widget_def.get('label_setting')
-            current = widget_def.get('current')
-
-            if action == 'random' and len(paths) == 0:
-                paths = _get_random_paths(group_id, force)
-            elif action == 'next':
-                next_paths = manage.find_defined_paths(group_id)
-                next = (current + 1) % len(next_paths)
-                path_def = next_paths[next]
-                widget_def['current'] = next
-                _save_path_details(widget_def, _id)
-                
-            if action == 'random' and len(paths) > 0:
-                path_def = paths.pop()
-                
-            _update_strings(_id, path_def, setting, label_setting)
-
-    if len(converted) > 0:
-        xbmc.executebuiltin('ReloadSkin()')

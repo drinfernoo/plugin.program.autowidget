@@ -39,7 +39,7 @@ msgid "Show 'Add to AutoWidget Group' on Context Menu"
 msgstr ""
 
 msgctxt "#32005"
-msgid "Hours between widget refreshes"
+msgid "Default time between widget refreshes (in hours)"
 msgstr ""
 
 msgctxt "#32006"
@@ -131,7 +131,7 @@ msgid "Shift Path Down"
 msgstr ""
 
 msgctxt "#32028"
-msgid "Random Path ({})"
+msgid "'Random Path from {} ({})'"
 msgstr ""
 
 msgctxt "#32029"
@@ -231,7 +231,7 @@ msgid "Widget"
 msgstr ""
 
 msgctxt "#32053"
-msgid "Settings"
+msgid "Settings Shortcut"
 msgstr ""
 
 msgctxt "#32054"
@@ -292,4 +292,68 @@ msgstr ""
 
 msgctxt "#32068"
 msgid "No groups have been defined."
+msgstr ""
+
+msgctxt "#32069"
+msgid "Refresh Widget"
+msgstr ""
+
+msgctxt "#32070"
+msgid "Edit Widget"
+msgstr ""
+
+msgctxt "#32071"
+msgid "Orphaned"
+msgstr ""
+
+msgctxt "#32072"
+msgid "No widgets have been initialized."
+msgstr ""
+
+msgctxt "#32073"
+msgid "The unique identifier in the number in this path's label is [B]necessary[/B] for AutoWidget to refresh it correctly. Don't change the label given to this widget, or it may be unable to update correctly. This wessage [COLOR firebrick]will not[/COLOR] be shown again."
+msgstr ""
+
+msgctxt "#32074"
+msgid "Active Widgets"
+msgstr ""
+
+msgctxt "#32075"
+msgid "UNUSED"
+msgstr ""
+
+msgctxt "#32076"
+msgid "Next Path from {} ({})"
+msgstr ""
+
+msgctxt "#32077"
+msgid "Add New InfoLabel"
+msgstr ""
+
+msgctxt "#32078"
+msgid "Add New Artwork"
+msgstr ""
+
+msgctxt "#32079"
+msgid "Random Path"
+msgstr ""
+
+msgctxt "#32080"
+msgid "Next Path"
+msgstr ""
+
+msgctxt "#32081"
+msgid "Action"
+msgstr ""
+
+msgctxt "#32082"
+msgid "Clone as Shortcut Group"
+msgstr ""
+
+msgctxt "#32083"
+msgid "Explode as Widget Group"
+msgstr ""
+
+msgctxt "#32084"
+msgid "Add as"
 msgstr ""

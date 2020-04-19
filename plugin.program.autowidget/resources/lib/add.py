@@ -8,8 +8,10 @@ import re
 
 try:
     from urllib.parse import parse_qsl
+    from urllib.parse import unquote
 except ImportError:
     from urlparse import parse_qsl
+    from urllib import unquote
 
 from resources.lib import manage
 from resources.lib.common import utils
@@ -19,15 +21,9 @@ _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_version = _addon.getAddonInfo('version')
 _home = xbmc.translatePath('special://home/')
 
-windows = {'programs':     ['program', 'script'],
-            'addonbrowser': ['addon',   'addons'],
-            'music':        ['audio',   'music'],
-            'pictures':     ['image',   'picture'],
-            'videos':       ['video',   'videos']}
-
-shortcut_types = [_addon.getLocalizedString(32051), _addon.getLocalizedString(32052),
-          'Clone as Shortcut Group', 'Explode as Widget Group',
-          'Settings Shortcut']
+shortcut_types = [utils.getString(32051), utils.getString(32052),
+                  utils.getString(32082), utils.getString(32083),
+                  utils.getString(32053)]
 
 folder_shortcut = utils.get_art('folder-shortcut.png')
 folder_sync = utils.get_art('folder-sync.png')
@@ -64,14 +60,21 @@ def build_labels(source, path_def=None, target=''):
         
         path = xbmc.getInfoLabel('ListItem.FolderPath')
         
-        labels['art'] = {i: xbmc.getInfoLabel('ListItem.Art({})'.format(i))
-                            for i in ['poster', 'fanart', 'banner', 'landscape',
-                                      'clearlogo', 'clearart']}
-        labels['art'].update({i: xbmc.getInfoLabel('ListItem.{}'
-                                                   .format(i.capitalize()))
-                                 for i in ['icon', 'thumb']})
-        
-        labels['info'] = {'plot': xbmc.getInfoLabel('ListItem.Plot')}
+        labels['info'] = {}
+        for i in utils.info_types:
+            info = xbmc.getInfoLabel('ListItem.{}'.format(i.capitalize()))
+            if info and not info.startswith('ListItem'):
+                labels['info'][i] = info
+                                 
+        labels['art'] = {}
+        for i in utils.art_types:
+            art = xbmc.getInfoLabel('ListItem.Art({})'.format(i.capitalize()))
+            if art:
+                labels['art'][i] = art
+        for i in ['icon', 'thumb']:
+            art = xbmc.getInfoLabel('ListItem.{}'.format(i.capitalize()))
+            if art:
+                labels['art'][i] = art
     elif source == 'json' and path_def and target:
         labels = {'label': path_def['label'],
                   'is_folder': path_def['filetype'] == 'directory',
@@ -80,25 +83,29 @@ def build_labels(source, path_def=None, target=''):
         
         path = path_def['file']
         
-        labels['art'] = {i: path_def['art'][i] if i in path_def['art'] else ''
-                     for i in ['poster', 'fanart', 'banner', 'landscape',
-                               'clearlogo', 'clearart', 'icon', 'thumb']}
+        labels['info'] = {}
+        for i in [i for i in utils.info_types if i not in utils.art_types]:
+            if i in path_def and i != 'art':
+                if path_def[i]:
+                    labels['info'][i] = path_def[i]
         
-        if 'plot' in path_def:
-            labels['info'] = {'plot': path_def['plot']}
-        else:
-            labels['info'] = {'plot': ''}
-        
+        labels['art'] = {}
+        for i in utils.art_types:
+            if i in path_def['art'] and path_def['art'][i]:
+                labels['art'][i] = path_def['art'][i]
+    
     if path != 'addons://user/':
         path = path.replace('addons://user/', 'plugin://')
     labels['path'] = path
     
-    for _key in windows:
-            if any(i in path for i in windows[_key]):
+    for _key in utils.windows:
+            if any(i in path for i in utils.windows[_key]):
                 labels['window'] = _key
                 
     for label in labels['art']:
-        labels['art'][label] = labels['art'][label].replace(_home, 'special://home/')
+        labels['art'][label] = unquote(labels['art'][label]).replace(_home, 'special://home/').replace('image://', '')
+        if labels['art'][label].endswith('/'):
+            labels['art'][label] = labels['art'][label][:-1]
         
     return labels
             
@@ -123,7 +130,7 @@ def _add_as(path, is_folder):
         options.append(li)
     
     dialog = xbmcgui.Dialog()
-    idx = dialog.select('Add as...', options, useDetails=True)
+    idx = dialog.select(utils.getString(32084), options, useDetails=True)
     if idx < 0:
         return
     
@@ -149,11 +156,11 @@ def _group_dialog(_type, group_id=None):
     offset = 1
     
     if _type == 'widget':
-        new_widget = xbmcgui.ListItem(_addon.getLocalizedString(32015))
+        new_widget = xbmcgui.ListItem(utils.getString(32015))
         new_widget.setArt(folder_sync)
         options.append(new_widget)
     else:
-        new_shortcut = xbmcgui.ListItem(_addon.getLocalizedString(32017))
+        new_shortcut = xbmcgui.ListItem(utils.getString(32017))
         new_shortcut.setArt(folder_shortcut)
         options.append(new_shortcut)
         
@@ -166,11 +173,11 @@ def _group_dialog(_type, group_id=None):
         options.append(item)
     
     dialog = xbmcgui.Dialog()
-    choice = dialog.select(_addon.getLocalizedString(32054), options, preselect=index,
+    choice = dialog.select(utils.getString(32054), options, preselect=index,
                            useDetails=True)
     
     if choice < 0:
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32034))
+        dialog.notification('AutoWidget', utils.getString(32034))
     elif (choice, _type) == (0, 'widget'):
         return _group_dialog(_type, add_group('widget'))
     elif choice == 0:
@@ -181,7 +188,7 @@ def _group_dialog(_type, group_id=None):
 
 def add_group(target):
     dialog = xbmcgui.Dialog()
-    group_name = dialog.input(heading=_addon.getLocalizedString(32037))
+    group_name = dialog.input(heading=utils.getString(32037))
     group_id = ''
     
     if group_name:
@@ -191,15 +198,14 @@ def add_group(target):
                      'type': target,
                      'paths': [],
                      'id': group_id,
-                     'info': {'plot': ''},
+                     'info': {},
                      'art': folder_sync if target == 'widget' else folder_shortcut,
                      'version': _addon_version}
     
         utils.write_json(filename, group_def)
-            
-        xbmc.executebuiltin('Container.Refresh()')
+        utils.update_container()
     else:
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32038))
+        dialog.notification('AutoWidget', utils.getString(32038))
     
     return group_id
     
@@ -207,9 +213,9 @@ def add_group(target):
 def _add_path(group_def, labels, over=False):
     if not over:
         if group_def['type'] == 'shortcut':
-            heading = _addon.getLocalizedString(32043)
+            heading = utils.getString(32043)
         elif group_def['type'] == 'widget':
-            heading = _addon.getLocalizedString(32044)
+            heading = utils.getString(32044)
         
         labels['label'] = xbmcgui.Dialog().input(heading=heading,
                                                  defaultt=labels['label'])
@@ -223,7 +229,7 @@ def _add_path(group_def, labels, over=False):
 def _copy_path(path_def):
     params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
               'params': {'directory': path_def['path'],
-                         'properties': ['title', 'art', 'plot']},
+                         'properties': utils.info_types},
               'id': 1}
     group_id = add_group(path_def['target'])
     if not group_id:

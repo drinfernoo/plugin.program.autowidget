@@ -81,11 +81,12 @@ def find_defined_groups(_type=''):
         except ValueError:
             utils.log('Unable to parse: {}'.format(path))
         
-        if _type:
-            if group_def['type'] == _type:
+        if group_def:
+            if _type:
+                if group_def['type'] == _type:
+                    groups.append(group_def)
+            else:
                 groups.append(group_def)
-        else:
-            groups.append(group_def)
 
     return groups
     
@@ -101,7 +102,8 @@ def find_defined_paths(group_id=None):
         except ValueError:
             utils.log('Unable to parse: {}'.format(path))
         
-        return group_def['paths']
+        if group_def:
+            return group_def.get('paths', [])
     else:
         for group in find_defined_groups():
             paths.append(find_defined_paths(group_id=group.get('id')))
@@ -128,7 +130,7 @@ def find_defined_widgets(group_id=None):
     
 def clean():
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32067))
+    choice = dialog.yesno('AutoWidget', utils.getString(32067))
 
     if not choice:
         return

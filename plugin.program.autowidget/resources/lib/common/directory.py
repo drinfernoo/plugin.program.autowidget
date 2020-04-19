@@ -1,4 +1,3 @@
-import xbmcaddon
 import xbmcgui
 import xbmcplugin
 
@@ -11,8 +10,6 @@ try:
     from urllib.parse import quote_plus
 except ImportError:
     from urllib import quote_plus
-    
-_addon = xbmcaddon.Addon()
 
     
 def add_separator(title='', char='-'):
@@ -24,7 +21,7 @@ def add_separator(title='', char='-'):
 
     if title:
         if isinstance(title, int):
-            title = _addon.getLocalizedString(title)
+            title = utils.getString(title)
             
         split = (len(title) + 2) / 2
         edge = char * int(40 - split)
@@ -54,7 +51,7 @@ def add_menu_item(title, params=None, info=None, cm=None, art=None,
             _plugin += '&{0}={1}'.format(param, _param)
 
     if isinstance(title, int):
-        title = _addon.getLocalizedString(title)
+        title = utils.getString(title)
     
     def_art = {}
     if art:

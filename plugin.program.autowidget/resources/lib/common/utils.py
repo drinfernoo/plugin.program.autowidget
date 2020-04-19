@@ -9,9 +9,12 @@ import json
 import os
 import re
 import shutil
+import string
 import sys
 import time
 import unicodedata
+
+import six
 
 from xml.dom import minidom
 from xml.etree import ElementTree
@@ -23,9 +26,33 @@ _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
 _art_path = os.path.join(_addon_root, 'resources', 'media')
 if xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
     _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
-    _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
+    shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
 else:
-    _shortcuts_path = ''
+    shortcuts_path = ''
+
+windows = {'programs': ['program', 'script'],
+            'addonbrowser': ['addon', 'addons'],
+            'music': ['audio', 'music'],
+            'pictures': ['image', 'picture'],
+            'videos': ['video', 'videos']}
+            
+info_types = ['artist', 'albumartist', 'genre', 'year', 'rating',
+              'album', 'track', 'duration', 'comment', 'lyrics',
+              'musicbrainztrackid', 'plot', 'art', 'mpaa', 'cast',
+              'musicbrainzartistid', 'set', 'showlink', 'top250', 'votes',
+              'musicbrainzalbumid', 'disc', 'tag', 'genreid', 'season',
+              'musicbrainzalbumartistid', 'size', 'theme', 'mood', 'style',
+              'playcount', 'director', 'trailer', 'tagline', 'thumbnail',
+              'plotoutline', 'originaltitle', 'lastplayed', 'writer', 'studio',
+              'country', 'imdbnumber', 'premiered', 'productioncode', 'runtime',
+              'firstaired', 'episode', 'showtitle', 'artistid', 'albumid',
+              'tvshowid', 'setid', 'watchedepisodes', 'displayartist', 'mimetype',
+              'albumartistid', 'description', 'albumlabel', 'sorttitle', 'episodeguide',
+              'dateadded', 'lastmodified', 'specialsortseason', 'specialsortepisode']
+              
+art_types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
+             'poster', 'thumb']
+
 
 
 def log(msg, level=xbmc.LOGDEBUG):
@@ -34,7 +61,7 @@ def log(msg, level=xbmc.LOGDEBUG):
 
 
 def ensure_addon_data():
-    for path in [_addon_path, _shortcuts_path]:
+    for path in [_addon_path, shortcuts_path]:
         if path:
             if not os.path.exists(path):
                 os.makedirs(path)
@@ -42,7 +69,7 @@ def ensure_addon_data():
                 
 def wipe(folder=_addon_path):
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32065))
+    choice = dialog.yesno('AutoWidget', getString(32065))
     
     if choice:
         shutil.rmtree(folder)
@@ -57,19 +84,11 @@ def get_skin_string(string):
     
     
 def get_art(filename):
-    icon_path = os.path.join(_art_path, filename)
-    poster_path = os.path.join(_art_path, 'poster', filename)
-    fanart_path = os.path.join(_art_path, 'fanart', filename)
-    banner_path = os.path.join(_art_path, 'banner', filename)
-    
-    art = {'icon': icon_path if os.path.exists(icon_path) else '',
-           'poster': poster_path if os.path.exists(poster_path) else '',
-           'fanart': fanart_path if os.path.exists(fanart_path) else '',
-           'landscape': '',
-           'banner': banner_path if os.path.exists(banner_path) else '',
-           'thumb': '',
-           'clearart': '',
-           'clearlogo': ''}
+    art = {}
+    for i in art_types:
+        path = os.path.join(_art_path, i, filename)
+        if os.path.exists(path):
+            art[i] = path
     
     return art
     
@@ -87,26 +106,41 @@ def get_active_window():
         pass
         
         
-def update_container(_type):
+def update_container(reload=False, _type=''):
     xbmc.executebuiltin('Container.Refresh()')
     if _type == 'shortcut':
         xbmc.executebuiltin('UpdateLibrary(video,AutoWidget)')
+    if reload:
+        xbmc.executebuiltin('ReloadSkin()')
 
         
 def prettify(elem):
     rough_string = ElementTree.tostring(elem, 'utf-8')
     reparsed = minidom.parseString(rough_string)
     return reparsed.toprettyxml(indent='\t')
+    
+   
 
-
-def get_valid_filename(s):
-    s = str(s).strip().replace(' ', '_')
-    s = unicodedata.normalize('NFKD', s.decode('utf-8'))
-    return re.sub(r'(?u)[^-\w.]', '', s)
+def get_valid_filename(filename):
+    whitelist = '-_.() {}{}'.format(string.ascii_letters, string.digits)
+    char_limit = 255
+    
+    filename = filename.replace(' ','_')
+    cleaned_filename = unicodedata.normalize('NFKD',
+                                             filename).encode('ASCII',
+                                                              'ignore').decode()
+    
+    cleaned_filename = ''.join(c for c in cleaned_filename if c in whitelist)
+    if len(cleaned_filename) > char_limit:
+        print('Warning, filename truncated because it was over {} characters. '
+              'Filenames may no longer be unique'.format(char_limit))
+              
+    return cleaned_filename[:char_limit]    
     
     
 def get_unique_id(key):
-    return get_valid_filename('{}-{}'.format(key, time.time()).lower())
+    return '{}-{}'.format(get_valid_filename(six.ensure_text(key)),
+                          time.time()).lower()
     
     
 def convert(input):
@@ -114,8 +148,8 @@ def convert(input):
         return {convert(key): convert(value) for key, value in input.items()}
     elif isinstance(input, list):
         return [convert(element) for element in input]
-    elif isinstance(input, unicode):
-        return input.encode('utf-8')
+    elif isinstance(input, six.text_type):
+        return six.ensure_text(input)
         
     return input
 
@@ -161,7 +195,7 @@ def read_json(file):
     if os.path.exists(file):
         with codecs.open(os.path.join(_addon_path, file), 'r', encoding='utf-8') as f:
             try:
-                content = f.read().encode('utf-8')
+                content = six.ensure_text(f.read())
                 data = json.loads(content)
             except Exception as e:
                 log('Could not read JSON from {}: {}'.format(file, e),
@@ -202,5 +236,30 @@ def write_xml(file, content):
     try:
         tree.write(file)
     except:
-        utils.log('Could not write to {}: {}'.format(file, e),
+        log('Could not write to {}: {}'.format(file, e),
                   level=xbmc.LOGERROR)
+                  
+                  
+def getSettingBool(setting):
+    try:
+        return _addon.getSettingBool(setting)
+    except:
+        return bool(_addon.getSetting(setting))
+        
+        
+def getSettingInt(setting):
+    try:
+        return _addon.getSettingInt(setting)
+    except:
+        return int(_addon.getSetting(setting))
+        
+        
+def getSettingNumber(setting):
+    try:
+        return _addon.getSettingNumber(setting)
+    except:
+        return float(_addon.getSetting(setting))
+        
+        
+def getString(_id):
+    return six.text_type(_addon.getLocalizedString(_id))
