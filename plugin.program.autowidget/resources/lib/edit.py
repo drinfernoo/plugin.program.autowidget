@@ -171,6 +171,15 @@ def _get_widget_options(edit_def):
         
         if key == 'action':
             label = utils.getString(32079) if label == 'random' else utils.getString(32080)
+        elif key == 'refresh':
+            hh = int(_def)
+            mm = int((_def * 60)  % 60)
+            if hh and mm:
+                label = '{}h {}m'.format(hh, mm)
+            elif not mm:
+                label = '{}h'.format(hh)
+            elif not hh:
+                label = '{}m'.format(mm)
             
         if label:
             try:
@@ -261,7 +270,36 @@ def _get_widget_value(edit_def, key):
             return
             
         value = actions[choice].split(' ')[0].lower()
-    else:        
+    elif key == 'refresh':
+        durations = []
+        d = 0.25
+        while d <= 12:
+            hh = int(d)
+            mm = int((d * 60) % 60)
+            if hh and mm:
+                label = '{}h {}m'.format(hh, mm)
+            elif not mm:
+                label = '{}h'.format(hh)
+            elif not hh:
+                label = '{}m'.format(mm)
+            
+            durations.append(label)
+            d = d + 0.25
+            
+        choice = dialog.select('Refresh Duration', durations)
+        
+        if choice < 0:
+            return
+            
+        duration = durations[choice].split(' ')
+        if len(duration) > 1:
+            value = float(duration[0][:-1]) + (float(duration[1][:-1]) / 60)
+        else:
+            if 'm' in duration[0]:
+                value = float(duration[0][:-1]) / 60
+            elif 'h' in duration[0]:
+                value = float(duration[0][:-1])
+    else:
         default = edit_def.get(key)
         value = dialog.input(title, defaultt=six.text_type(default))
     
