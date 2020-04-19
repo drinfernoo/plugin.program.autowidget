@@ -240,6 +240,10 @@ def write_xml(file, content):
                   level=xbmc.LOGERROR)
                   
                   
+def getSetting(setting):
+    return _addon.getSetting(setting)
+
+                  
 def getSettingBool(setting):
     try:
         return _addon.getSettingBool(setting)
