@@ -12,17 +12,6 @@ from resources.lib.common import utils
 skin_string_pattern = 'autowidget-{}-{}'
 
 
-def _get_random_paths(group_id, force=False, change_sec=3600):
-    wait_time = 5 if force else change_sec
-    now = time.time()
-    seed = now - (now % wait_time)
-    rand = random.Random(seed)
-    paths = manage.find_defined_paths(group_id)
-    rand.shuffle(paths)
-
-    return paths
-
-
 def _update_strings(_id, path_def, setting=None, label_setting=None):
     if not path_def:
         return
@@ -56,20 +45,20 @@ def _update_strings(_id, path_def, setting=None, label_setting=None):
         utils.set_skin_string(target_string, target)
 
 
-def refresh(widget_id, widget_def=None, paths=None, force=False):
-    if not paths:
-        paths = []
-        
+def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
     if not widget_def:
         widget_def = manage.get_widget_by_id(widget_id)
+    
+    if not single:
+        seen = [i['current'] for i in manage.find_defined_widgets(widget_def['group'])]
     
     current_time = time.time()
     updated_at = widget_def.get('updated', current_time)
     
     default_refresh = utils.getSettingNumber('service.refresh_duration')
-    refresh = float(widget_def.get('refresh', default_refresh))
+    refresh_duration = float(widget_def.get('refresh', default_refresh))
             
-    if updated_at <= current_time - (3600 * refresh) or force:
+    if updated_at <= current_time - (3600 * refresh_duration) or force:
         path_def = {}
         _id = widget_def['id']
         group_id = widget_def['group']
@@ -77,30 +66,34 @@ def refresh(widget_id, widget_def=None, paths=None, force=False):
         setting = widget_def.get('path_setting')
         label_setting = widget_def.get('label_setting')
         current = widget_def.get('current')
+        if len(seen) == 0:
+            seen.append(current)
         
         if action:
-            if action == 'random' and len(paths) == 0:
-                paths = _get_random_paths(group_id, force)
-
+            paths = manage.find_defined_paths(group_id)
+        
             if action == 'next':
-                paths = manage.find_defined_paths(group_id)
                 next = (current + 1) % len(paths)
-                path_def = paths[next]
-                widget_def['current'] = next
             elif action == 'random':
-                path_def = paths.pop()
-                paths = manage.find_defined_paths(group_id)
-                widget_def['current'] = paths.index(path_def)
-            
-            widget_def['path'] = path_def['id']
-            widget_def['updated'] = current_time
+                next = random.randrange(len(paths))
                 
-            convert.save_path_details(widget_def, _id)
-            _update_strings(_id, path_def, setting, label_setting)
+            if next in seen:
+                seen = refresh(widget_id, widget_def, seen=seen, force=force)
+            else:                        
+                widget_def['current'] = next
+                seen.append(next)
+                path_def = paths[next]
             
-            xbmc.executebuiltin('Container.Refresh()')
+            widget_def['path'] = path_def.get('id')
+            if widget_def['path']:
+                widget_def['updated'] = current_time
+                    
+                convert.save_path_details(widget_def, _id)
+                _update_strings(_id, path_def, setting, label_setting)
+                
+                xbmc.executebuiltin('Container.Refresh()')
     
-    return paths
+    return seen
 
 
 def refresh_paths(notify=False, force=False):
@@ -115,11 +108,11 @@ def refresh_paths(notify=False, force=False):
         dialog.notification('AutoWidget', utils.getString(32033))
     
     for group_def in manage.find_defined_groups():
-        paths = []
+        seen = []
         
         widgets = manage.find_defined_widgets(group_def['id'])
         for widget_def in widgets:
-            paths = refresh(widget_def['id'], widget_def=widget_def, paths=paths, force=force)
+            seen = refresh(widget_def['id'], widget_def=widget_def, seen=seen, force=force)
 
     xbmc.executebuiltin('Container.Refresh()')
     if len(converted) > 0 and utils.shortcuts_path:
