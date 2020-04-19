@@ -65,7 +65,7 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
         action = widget_def.get('action')
         setting = widget_def.get('path_setting')
         label_setting = widget_def.get('label_setting')
-        current = widget_def.get('current')
+        current = int(widget_def.get('current'))
         if len(seen) == 0:
             seen.append(current)
         
@@ -77,7 +77,7 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
             elif action == 'random':
                 next = random.randrange(len(paths))
                 
-            if next in seen:
+            if next in seen and action == 'random':
                 seen = refresh(widget_id, widget_def, seen=seen, force=force)
             else:                        
                 widget_def['current'] = next
