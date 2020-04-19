@@ -106,10 +106,12 @@ def get_active_window():
         pass
         
         
-def update_container(_type=''):
+def update_container(reload=False, _type=''):
     xbmc.executebuiltin('Container.Refresh()')
     if _type == 'shortcut':
         xbmc.executebuiltin('UpdateLibrary(video,AutoWidget)')
+    if reload:
+        xbmc.executebuiltin('ReloadSkin()')
 
         
 def prettify(elem):

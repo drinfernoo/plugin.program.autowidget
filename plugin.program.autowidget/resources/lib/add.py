@@ -203,8 +203,7 @@ def add_group(target):
                      'version': _addon_version}
     
         utils.write_json(filename, group_def)
-            
-        xbmc.executebuiltin('Container.Refresh()')
+        utils.update_container()
     else:
         dialog.notification('AutoWidget', utils.getString(32038))
     
