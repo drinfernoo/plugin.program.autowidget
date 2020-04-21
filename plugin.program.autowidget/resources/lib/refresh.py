@@ -10,6 +10,70 @@ from resources.lib import manage
 from resources.lib.common import utils
 
 skin_string_pattern = 'autowidget-{}-{}'
+_properties = ['context.autowidget']
+
+class RefreshService(xbmc.Monitor):
+
+    def __init__(self):
+        utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
+        self.player = xbmc.Player()
+        utils.ensure_addon_data()
+        self._update_properties()
+        self._update_widgets()
+
+    def onSettingsChanged(self):
+        self._update_properties()
+
+    def _reload_settings(self):
+        self.refresh_enabled = utils.getSettingInt('service.refresh_enabled')
+        self.refresh_duration = utils.getSettingNumber('service.refresh_duration')
+        self.refresh_notification = utils.getSettingInt('service.refresh_notification')
+
+    def _update_properties(self, window=10000):
+
+        for property in _properties:
+            setting = utils.getSetting(property)
+            utils.log('{}: {}'.format(property, setting))
+            if setting is not None:
+                xbmcgui.Window(window).setProperty(property, setting)
+                utils.log('Property {0} set'.format(property))
+            else:
+                xbmcgui.Window(window).clearProperty(property)
+                utils.log('Property {0} cleared'.format(property))
+
+        self._reload_settings()
+        
+    def _refresh(self):
+        if self.refresh_enabled in [0, 1]:
+            notification = False
+            if self.refresh_enabled == 1:
+                if self.player.isPlayingVideo():
+                    utils.log('+++++ PLAYBACK DETECTED, SKIPPING AUTOWIDGET REFRESH +++++',
+                              level=xbmc.LOGNOTICE)
+                    return
+            else:
+                if self.refresh_notification == 0:
+                    notification = True
+                elif self.refresh_notification == 1:
+                    if not self.player.isPlayingVideo():
+                        notification = True
+            
+            utils.log('+++++ REFRESHING AUTOWIDGETS +++++', level=xbmc.LOGNOTICE)
+            refresh_paths(notify=notification)
+        else:
+            utils.log('+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++',
+                      level=xbmc.LOGNOTICE)
+
+    def _update_widgets(self):
+        self._refresh()
+        
+        while not self.abortRequested():
+            if self.waitForAbort(60 * 15):
+                break
+
+            if not self._refresh():
+                continue
+
 
 
 def _update_strings(_id, path_def, setting=None, label_setting=None):
@@ -50,10 +114,10 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
         widget_def = manage.get_widget_by_id(widget_id)
     
     if not single:
-        seen = [i['current'] for i in manage.find_defined_widgets(widget_def['group'])]
+        seen = [i.get('current', -1) for i in manage.find_defined_widgets(widget_def['group'])]
     
     current_time = time.time()
-    updated_at = widget_def.get('updated', current_time)
+    updated_at = widget_def.get('updated', 0)
     
     default_refresh = utils.getSettingNumber('service.refresh_duration')
     refresh_duration = float(widget_def.get('refresh', default_refresh))
@@ -65,7 +129,8 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
         action = widget_def.get('action')
         setting = widget_def.get('path_setting')
         label_setting = widget_def.get('label_setting')
-        current = int(widget_def.get('current'))
+        current = int(widget_def.get('current', -1))
+        
         if len(seen) == 0:
             seen.append(current)
         
@@ -86,7 +151,7 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
             
             widget_def['path'] = path_def.get('id')
             if widget_def['path']:
-                widget_def['updated'] = current_time
+                widget_def['updated'] = 0 if force else current_time
                     
                 convert.save_path_details(widget_def, _id)
                 _update_strings(_id, path_def, setting, label_setting)

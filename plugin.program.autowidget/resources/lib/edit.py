@@ -107,7 +107,6 @@ def _warn():
         
         
 def _get_options(edit_def, base_key='', use_thumbs=False):
-    label = ''
     options = []
     
     all_keys = sorted([i for i in edit_def.keys() if i not in exclude])
@@ -158,7 +157,6 @@ def _get_options(edit_def, base_key='', use_thumbs=False):
     
 def _get_widget_options(edit_def):
     options = []
-    label = 'n/a'
     
     all_keys = sorted([i for i in edit_def.keys() if i not in exclude])
     base_keys = sorted([i for i in all_keys if i in widget_safe])
@@ -171,14 +169,25 @@ def _get_widget_options(edit_def):
         
         if key == 'action':
             label = utils.getString(32079) if label == 'random' else utils.getString(32080)
+        elif key == 'refresh':
+            hh = int(_def)
+            mm = int((_def * 60)  % 60)
+            if hh and mm:
+                label = '{}h {}m'.format(hh, mm)
+            elif not mm:
+                label = '{}h'.format(hh)
+            elif not hh:
+                label = '{}m'.format(mm)
             
-        if label:
-            try:
-                label = label.encode('utf-8')
-            except:
-                pass
+        if not label:
+            label = 'n/a'
+            
+        try:
+            label = label.encode('utf-8')
+        except:
+            pass
                 
-            options.append('{}: {}'.format(disp, label))
+        options.append('{}: {}'.format(disp, label))
             
     return options
     
@@ -261,7 +270,36 @@ def _get_widget_value(edit_def, key):
             return
             
         value = actions[choice].split(' ')[0].lower()
-    else:        
+    elif key == 'refresh':
+        durations = []
+        d = 0.25
+        while d <= 12:
+            hh = int(d)
+            mm = int((d * 60) % 60)
+            if hh and mm:
+                label = '{}h {}m'.format(hh, mm)
+            elif not mm:
+                label = '{}h'.format(hh)
+            elif not hh:
+                label = '{}m'.format(mm)
+            
+            durations.append(label)
+            d = d + 0.25
+            
+        choice = dialog.select('Refresh Duration', durations)
+        
+        if choice < 0:
+            return
+            
+        duration = durations[choice].split(' ')
+        if len(duration) > 1:
+            value = float(duration[0][:-1]) + (float(duration[1][:-1]) / 60)
+        else:
+            if 'm' in duration[0]:
+                value = float(duration[0][:-1]) / 60
+            elif 'h' in duration[0]:
+                value = float(duration[0][:-1])
+    else:
         default = edit_def.get(key)
         value = dialog.input(title, defaultt=six.text_type(default))
     
