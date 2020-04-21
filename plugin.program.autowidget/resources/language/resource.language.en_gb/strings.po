@@ -131,7 +131,7 @@ msgid "Shift Path Down"
 msgstr ""
 
 msgctxt "#32028"
-msgid "'Random Path from {} ({})'"
+msgid "Random Path from {} ({})"
 msgstr ""
 
 msgctxt "#32029"
