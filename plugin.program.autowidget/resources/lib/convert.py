@@ -68,10 +68,7 @@ def save_path_details(params, _id=''):
     
     path_to_saved = os.path.join(_addon_path, '{}.widget'.format(_id))
     params['version'] = _addon_version
-    if 'current' not in params:
-        params['current'] = -1
-    if 'updated' not in params:
-        params['updated'] = time.time()
+    
     if 'refresh' not in params:
         params['refresh'] = utils.getSettingNumber('service.refresh_duration')
 

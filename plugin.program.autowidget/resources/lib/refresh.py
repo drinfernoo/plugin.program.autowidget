@@ -114,10 +114,10 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
         widget_def = manage.get_widget_by_id(widget_id)
     
     if not single:
-        seen = [i['current'] for i in manage.find_defined_widgets(widget_def['group'])]
+        seen = [i.get('current', -1) for i in manage.find_defined_widgets(widget_def['group'])]
     
     current_time = time.time()
-    updated_at = widget_def.get('updated', current_time)
+    updated_at = widget_def.get('updated', 0)
     
     default_refresh = utils.getSettingNumber('service.refresh_duration')
     refresh_duration = float(widget_def.get('refresh', default_refresh))
@@ -129,7 +129,8 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
         action = widget_def.get('action')
         setting = widget_def.get('path_setting')
         label_setting = widget_def.get('label_setting')
-        current = int(widget_def.get('current'))
+        current = int(widget_def.get('current', -1))
+        
         if len(seen) == 0:
             seen.append(current)
         
@@ -150,7 +151,7 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
             
             widget_def['path'] = path_def.get('id')
             if widget_def['path']:
-                widget_def['updated'] = current_time
+                widget_def['updated'] = 0 if force else current_time
                     
                 convert.save_path_details(widget_def, _id)
                 _update_strings(_id, path_def, setting, label_setting)
