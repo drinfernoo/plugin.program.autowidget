@@ -107,7 +107,6 @@ def _warn():
         
         
 def _get_options(edit_def, base_key='', use_thumbs=False):
-    label = ''
     options = []
     
     all_keys = sorted([i for i in edit_def.keys() if i not in exclude])
@@ -158,7 +157,6 @@ def _get_options(edit_def, base_key='', use_thumbs=False):
     
 def _get_widget_options(edit_def):
     options = []
-    label = 'n/a'
     
     all_keys = sorted([i for i in edit_def.keys() if i not in exclude])
     base_keys = sorted([i for i in all_keys if i in widget_safe])
@@ -181,13 +179,15 @@ def _get_widget_options(edit_def):
             elif not hh:
                 label = '{}m'.format(mm)
             
-        if label:
-            try:
-                label = label.encode('utf-8')
-            except:
-                pass
+        if not label:
+            label = 'n/a'
+            
+        try:
+            label = label.encode('utf-8')
+        except:
+            pass
                 
-            options.append('{}: {}'.format(disp, label))
+        options.append('{}: {}'.format(disp, label))
             
     return options
     
