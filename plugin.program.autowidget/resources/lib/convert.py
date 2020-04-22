@@ -43,6 +43,12 @@ uuid_pattern = ('[0-9a-fA-F]{8}'
                 '\-[0-9a-fA-F]{4}'
                 '\-[0-9a-fA-F]{4}'
                 '\-[0-9a-fA-F]{12}')
+label_pattern = ('^(?:Random|Next) Path from .+'
+                 '\(([0-9a-fA-F]{8}'
+                 '\-[0-9a-fA-F]{4}'
+                 '\-[0-9a-fA-F]{4}'
+                 '\-[0-9a-fA-F]{4}'
+                 '\-[0-9a-fA-F]{12})\)$')
 
 
 def _get_random_paths(group_id, force=False, change_sec=3600):
@@ -129,10 +135,10 @@ def _convert_skin_strings(converted):
     
     settings = [i for i in settings.findall('setting') if i.text]
     path_settings = [i for i in settings if 'plugin.program.autowidget' in i.text
-                                         and re.search(uuid_pattern, i.text)]
+                                         and re.search(uuid_pattern, i.text)
+                                         and not re.match(activate_window_pattern, i.text)]
     label_settings = [i for i in settings if 'plugin.program.autowidget' not in i.text
-                                         and re.search(uuid_pattern, i.text)]
-    
+                                         and re.match(label_pattern, i.text)]
     for path in path_settings:
         path_id = path.get('id')
         if not path_id:

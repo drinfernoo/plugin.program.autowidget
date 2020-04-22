@@ -38,7 +38,7 @@ windows = {'programs': ['program', 'script'],
             
 info_types = ['artist', 'albumartist', 'genre', 'year', 'rating',
               'album', 'track', 'duration', 'comment', 'lyrics',
-              'musicbrainztrackid', 'plot', 'art', 'mpaa', 'cast',
+              'musicbrainztrackid', 'plot', 'art', 'mpaa',
               'musicbrainzartistid', 'set', 'showlink', 'top250', 'votes',
               'musicbrainzalbumid', 'disc', 'tag', 'genreid', 'season',
               'musicbrainzalbumartistid', 'size', 'theme', 'mood', 'style',

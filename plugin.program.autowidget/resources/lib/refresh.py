@@ -44,7 +44,7 @@ class RefreshService(xbmc.Monitor):
         self._reload_settings()
         
     def _refresh(self):
-        if self.refresh_enabled in [0, 1]:
+        if self.refresh_enabled in [0, 1] and manage.find_defined_widgets():
             notification = False
             if self.refresh_enabled == 1:
                 if self.player.isPlayingVideo():
@@ -136,7 +136,8 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
         
         if action:
             paths = manage.find_defined_paths(group_id)
-        
+            
+            next = 0
             if action == 'next':
                 next = (current + 1) % len(paths)
             elif action == 'random':
