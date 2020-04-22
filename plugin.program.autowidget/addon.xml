@@ -2,7 +2,6 @@
 <addon id="plugin.program.autowidget" name="AutoWidget" version="CURRENT_VERSION" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.six" />
-        <import addon="script.module.web-pdb" optional="true" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -27,6 +26,13 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.4.6
+ - Add "Active Widgets" menu
+ - Consistency fixes during initialization and refresh
+ - Allow adding playable items as shortcuts
+ - Fix crashes in Krypton
+ - Fix crashes from invalid group/widget files
+ - Fix Unicode compatibility
 1.4.5
  - Refresh Shortcut widgets Automatically
  - Add "Next Path" widget action
