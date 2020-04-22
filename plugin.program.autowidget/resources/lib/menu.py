@@ -245,7 +245,7 @@ def call_path(group_id, path_id):
                 if path_def['path'] == 'addons://install/':
                     xbmc.executebuiltin('InstallFromZip')
                 else:
-                    xbmc.executebuiltin('RunPlugin({})'.format(path_def['path']))
+                    xbmc.executebuiltin('PlayMedia({})'.format(path_def['path']))
         else:
             xbmc.executebuiltin('ActivateWindow({},{},return)'.format(path_def['window'],
                                                                       path_def['path']))
