@@ -136,7 +136,8 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
         
         if action:
             paths = manage.find_defined_paths(group_id)
-        
+            
+            next = 0
             if action == 'next':
                 next = (current + 1) % len(paths)
             elif action == 'random':
