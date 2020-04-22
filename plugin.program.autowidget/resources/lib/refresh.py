@@ -44,7 +44,7 @@ class RefreshService(xbmc.Monitor):
         self._reload_settings()
         
     def _refresh(self):
-        if self.refresh_enabled in [0, 1]:
+        if self.refresh_enabled in [0, 1] and manage.find_defined_widgets():
             notification = False
             if self.refresh_enabled == 1:
                 if self.player.isPlayingVideo():
