@@ -19,8 +19,12 @@ def _log_params(_plugin, _handle, _params):
     params = dict(parse_qsl(_params))
     
     logstring = ''
+    
     for param in params:
         logstring += '[ {0}: {1} ] '.format(param, params[param])
+    
+    if not logstring:
+        logstring = '[ Root Menu ]'
 
     utils.log(logstring, level=xbmc.LOGNOTICE)
 
