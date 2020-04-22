@@ -5,6 +5,9 @@ import xbmcgui
 import os
 import re
 
+import six
+
+from resources.lib import convert
 from resources.lib import manage
 from resources.lib.common import utils
 
@@ -12,12 +15,11 @@ _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _home = xbmc.translatePath('special://home/')
 
-advanced = _addon.getSettingBool('context.advanced')
-warning_shown = _addon.getSettingBool('context.warning')
+advanced = utils.getSettingBool('context.advanced')
+warning_shown = utils.getSettingBool('context.warning')
 
-types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
-         'poster', 'thumb']
-warn = ['content', 'id', 'is_folder', 'target', 'window', 'version', 'type']
+safe = ['label', 'art', 'info', 'path']
+widget_safe = ['action', 'refresh']
 exclude = ['paths']
 
 
@@ -48,19 +50,19 @@ def _remove_group(group_id, over=False):
     group_name = group_def['label']
     
     if not over:
-        choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32039))
+        choice = dialog.yesno('AutoWidget', utils.getString(32039))
     
     if over or choice:
         file = os.path.join(_addon_path, '{}.group'.format(group_id))
         utils.remove_file(file)
             
-        dialog.notification('AutoWidget', _addon.getLocalizedString(32045)
+        dialog.notification('AutoWidget', utils.getString(32045)
                                                 .format(group_name))
         
         
 def _remove_path(path_id, group_id):
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32035))
+    choice = dialog.yesno('AutoWidget', utils.getString(32035))
     
     if choice:
         group_def = manage.get_group_by_id(group_id)
@@ -68,20 +70,32 @@ def _remove_path(path_id, group_id):
         paths = group_def['paths']
         for path_def in paths:
             if path_def['id'] == path_id:
-                path_name = path_def['label'].decode('utf-8')
+                path_name = path_def['label']
                 group_def['paths'].remove(path_def)
                 dialog.notification('AutoWidget',
-                                    _addon.getLocalizedString(32045)
+                                    utils.getString(32045)
                                           .format(path_name))
                 
         manage.write_path(group_def)
         
         
+def _remove_widget(widget_id):
+    dialog = xbmcgui.Dialog()
+    choice = dialog.yesno('AutoWidget', utils.getString(32039))
+    
+    if choice:
+        file = os.path.join(_addon_path, '{}.widget'.format(widget_id))
+        utils.remove_file(file)
+            
+        dialog.notification('AutoWidget', utils.getString(32045)
+                                                .format(widget_id))
+        
+        
 def _warn():
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', _addon.getLocalizedString(32058),
-                          yeslabel=_addon.getLocalizedString(32059),
-                          nolabel=_addon.getLocalizedString(32060))
+    choice = dialog.yesno('AutoWidget', utils.getString(32058),
+                          yeslabel=utils.getString(32059),
+                          nolabel=utils.getString(32060))
     if choice < 1:
         _addon.setSetting('context.advanced', 'false')
         _addon.setSetting('context.warning', 'true')
@@ -92,45 +106,89 @@ def _warn():
         warning = True
         
         
-def _get_options(edit_def, use_thumbs=False):
+def _get_options(edit_def, base_key='', use_thumbs=False):
     options = []
-    label = 'n/a'
     
     all_keys = sorted([i for i in edit_def.keys() if i not in exclude])
-    base_keys = sorted([i for i in all_keys if i not in warn])
+    base_keys = sorted([i for i in all_keys if any(i in x for x in [safe, utils.art_types, utils.info_types])])
     keys = all_keys if advanced else base_keys
-
+    
     for key in keys:
-        disp = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key in warn else key
+        disp = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in safe else key
+        disp = disp if key not in utils.info_types else key
         _def = edit_def[key]
         
         if isinstance(_def, dict):
             _keys = sorted(_def.keys())
         
             if key == 'art':
-                arts = ['[COLOR {}]{}[/COLOR]'
-                        .format('firebrick' if not _def[i]
-                           else 'lawngreen',
-                                i.capitalize())
-                        for i in _keys]
+                arts = [i for i in _keys if _def[i]]
                 label = ' / '.join(arts)
             elif key == 'info':
                 label = ', '.join(_keys)
         elif key in edit_def:
-            if key in types:
-                item = xbmcgui.ListItem('{}: {}'.format(key, edit_def[key]))
-                if use_thumbs:
-                    item.setArt({'icon': edit_def[key]})
-                options.append(item)
-                label = ''
+            if key in utils.art_types:
+                if edit_def[key]:
+                    item = xbmcgui.ListItem('{}: {}'.format(key, edit_def[key]))
+                    if use_thumbs:
+                        item.setArt({'icon': edit_def[key]})
+                    options.append(item)
             else:
                 label = _def
-                if not label:
-                    label = 'n/a'
-                    
-        if label:
-            options.append('{}: {}'.format(disp, label))
         
+        if not label:
+            label = 'n/a'
+            
+        try:
+            label = label.encode('utf-8')
+        except:
+            pass
+        
+        if base_key != 'art':
+            options.append('{}: {}'.format(disp, label))
+    
+    if base_key == 'info':    
+        options.append(utils.getString(32077))
+    elif base_key == 'art':
+        options.append(utils.getString(32078))
+        
+    return options
+    
+    
+def _get_widget_options(edit_def):
+    options = []
+    
+    all_keys = sorted([i for i in edit_def.keys() if i not in exclude])
+    base_keys = sorted([i for i in all_keys if i in widget_safe])
+    keys = all_keys if advanced else base_keys
+    
+    for key in keys:
+        disp = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in widget_safe else key
+        _def = edit_def[key]
+        label = _def
+        
+        if key == 'action':
+            label = utils.getString(32079) if label == 'random' else utils.getString(32080)
+        elif key == 'refresh':
+            hh = int(_def)
+            mm = int((_def * 60)  % 60)
+            if hh and mm:
+                label = '{}h {}m'.format(hh, mm)
+            elif not mm:
+                label = '{}h'.format(hh)
+            elif not hh:
+                label = '{}m'.format(mm)
+            
+        if not label:
+            label = 'n/a'
+            
+        try:
+            label = label.encode('utf-8')
+        except:
+            pass
+                
+        options.append('{}: {}'.format(disp, label))
+            
     return options
     
     
@@ -140,38 +198,114 @@ def _get_value(edit_def, key):
     if isinstance(edit_def.get(key), dict):
         _def = edit_def[key]
         if key == 'art':
-            options = _get_options(_def, use_thumbs=True)
-            idx = dialog.select(_addon.getLocalizedString(32046), options, useDetails=True)
-        else:
-            options = _get_options(_def)
-            idx = dialog.select(_addon.getLocalizedString(32047), options)
+            options = _get_options(_def, base_key=key, use_thumbs=True)
+            idx = dialog.select(utils.getString(32046), options, useDetails=True)
+        elif key == 'info':
+            options = _get_options(_def, base_key=key)
+            idx = dialog.select(utils.getString(32047), options)
+        
         if idx < 0:
             return
-        
-        _key = _clean_key(options[idx])
-        value = _get_value(_def, _key)
-        if value:
-            _def[_key] = value
-            return _def[_key]
-    elif key in types:
+        elif idx == len(options) - 1:
+            if key == 'info':
+                label = dialog.select(utils.getString(32077), utils.info_types)
+                if label < 0:
+                    return
+                    
+                _key = _clean_key(utils.info_types[label])
+                default = _def.get(_key)
+                value = dialog.input(_key.capitalize())
+                
+                _def[_key] = value
+                return _def[_key]
+            elif key == 'art':
+                label = dialog.select(utils.getString(32078), utils.art_types)
+                if label < 0:
+                    return
+                    
+                _key = _clean_key(utils.art_types[label])
+                value = dialog.browse(2, utils.getString(32049).format(_key.capitalize()),
+                              shares='files', mask='.jpg|.png', useThumbs=True)
+                
+                _def[_key] = value
+                return _def[_key]
+        else:
+            _key = _clean_key(options[idx])
+            value = _get_value(_def, _key)
+            if value:
+                _def[_key] = value
+                return _def[_key]
+    elif key in utils.art_types:
         default = edit_def[key] if not edit_def[key].lower().startswith('http') else ''
-        value = dialog.browse(2, _addon.getLocalizedString(32049).format(key.capitalize()),
+        value = dialog.browse(2, utils.getString(32049).format(key.capitalize()),
                               shares='files', mask='.jpg|.png', useThumbs=True,
                               defaultt=default)
         if value:
             edit_def[key] = value.replace(_home, 'special://home/')
             return edit_def[key]
     else:
-        if key in warn:
-            title = _addon.getLocalizedString(32063).format(key.capitalize())
+        if not any(key in i for i in [safe, utils.art_types, utils.info_types]):
+            title = utils.getString(32063).format(key.capitalize())
         elif key in edit_def:
             title = key.capitalize()
             
-        value = dialog.input(heading=title,
-                             defaultt=str(edit_def[key]))
-        if value:
-            edit_def[key] = value
-            return edit_def[key]
+        default = edit_def.get(key)
+        value = dialog.input(title, defaultt=six.text_type(default))
+        edit_def[key] = value
+        return edit_def[key]
+        
+        
+def _get_widget_value(edit_def, key):
+    dialog = xbmcgui.Dialog()
+    
+    if key not in widget_safe:
+        title = utils.getString(32063).format(key.capitalize())
+    elif key in edit_def:
+        title = key.capitalize()
+    
+    if key == 'action':
+        actions = [utils.getString(32079), utils.getString(32080)]
+        choice = dialog.select(utils.getString(32081), actions)
+        if choice < 0:
+            return
+            
+        value = actions[choice].split(' ')[0].lower()
+    elif key == 'refresh':
+        durations = []
+        d = 0.25
+        while d <= 12:
+            hh = int(d)
+            mm = int((d * 60) % 60)
+            if hh and mm:
+                label = '{}h {}m'.format(hh, mm)
+            elif not mm:
+                label = '{}h'.format(hh)
+            elif not hh:
+                label = '{}m'.format(mm)
+            
+            durations.append(label)
+            d = d + 0.25
+            
+        choice = dialog.select('Refresh Duration', durations)
+        
+        if choice < 0:
+            return
+            
+        duration = durations[choice].split(' ')
+        if len(duration) > 1:
+            value = float(duration[0][:-1]) + (float(duration[1][:-1]) / 60)
+        else:
+            if 'm' in duration[0]:
+                value = float(duration[0][:-1]) / 60
+            elif 'h' in duration[0]:
+                value = float(duration[0][:-1])
+    else:
+        default = edit_def.get(key)
+        value = dialog.input(title, defaultt=six.text_type(default))
+    
+    if value:
+        edit_def[key] = value
+        return edit_def[key]
 
 
 def _clean_key(key):
@@ -183,6 +317,40 @@ def _clean_key(key):
         key = color.group(1)
     
     return key
+    
+    
+def edit_widget_dialog(widget_id):
+    dialog = xbmcgui.Dialog()
+    updated = False
+    if advanced and not warning_shown:
+        _warn()
+        
+    widget_def = manage.get_widget_by_id(widget_id)
+    if not widget_def:
+        return
+    
+    options = _get_widget_options(widget_def)
+    
+    remove_label = utils.getString(32025) if widget_id else utils.getString(32023)
+    options.append('[COLOR firebrick]{}[/COLOR]'.format(remove_label))
+    
+    idx = dialog.select(utils.getString(32048), options)
+    if idx < 0:
+        return
+    elif idx == len(options) - 1:
+        _remove_widget(widget_id)
+        utils.update_container()
+        return
+    else:
+        key = _clean_key(options[idx])
+        
+    updated = _get_widget_value(widget_def, key)
+    utils.log(updated, xbmc.LOGNOTICE)
+    
+    if updated:
+        convert.save_path_details(widget_def, widget_id)
+        utils.update_container()
+    edit_widget_dialog(widget_id)
 
         
 def edit_dialog(group_id, path_id=''):
@@ -202,10 +370,10 @@ def edit_dialog(group_id, path_id=''):
     edit_def = path_def if path_id else group_def
     options = _get_options(edit_def)
     
-    remove_label = _addon.getLocalizedString(32025) if path_id else _addon.getLocalizedString(32023)
+    remove_label = utils.getString(32025) if path_id else utils.getString(32023)
     options.append('[COLOR firebrick]{}[/COLOR]'.format(remove_label))
     
-    idx = dialog.select(_addon.getLocalizedString(32048), options)
+    idx = dialog.select(utils.getString(32048), options)
     if idx < 0:
         return
     elif idx == len(options) - 1:
@@ -229,3 +397,4 @@ def edit_dialog(group_id, path_id=''):
             manage.write_path(group_def)
             
         utils.update_container(group_def['type'])
+    edit_dialog(group_id, path_id)
