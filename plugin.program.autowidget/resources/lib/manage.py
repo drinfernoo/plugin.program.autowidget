@@ -130,7 +130,7 @@ def find_defined_widgets(group_id=None):
     
 def clean():
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', utils.getString(32067))
+    choice = dialog.yesno('AutoWidget', utils.get_string(32067))
 
     if not choice:
         return

@@ -28,12 +28,12 @@ unpack = utils.get_art('unpack.png')
 
 _addon = xbmcaddon.Addon()
 
-label_warning_shown = utils.getSettingBool('label.warning')
+label_warning_shown = utils.get_setting_bool('label.warning')
 
 
 def _warn():
     dialog = xbmcgui.Dialog()
-    dialog.ok('AutoWidget', utils.getString(32073))
+    dialog.ok('AutoWidget', utils.get_string(32073))
     
     _addon.setSetting('label.warning', 'true')
     label_warning_shown = True
@@ -64,7 +64,7 @@ def my_groups_menu():
             group_id = group['id']
             group_type = group['type']
             
-            cm = [(utils.getString(32061),
+            cm = [(utils.get_string(32061),
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'
@@ -86,7 +86,7 @@ def my_groups_menu():
         directory.add_menu_item(title=32068,
                                 art=alert,
                                 isFolder=False)
-    return True, utils.getString(32007)
+    return True, utils.get_string(32007)
     
     
 def group_menu(group_id, target, _id):
@@ -121,14 +121,14 @@ def group_menu(group_id, target, _id):
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/')
             
-            directory.add_menu_item(title=utils.getString(32028).format(group_name, _id),
+            directory.add_menu_item(title=utils.get_string(32028).format(group_name, _id),
                                     params={'mode': 'path',
                                             'action': 'random',
                                             'group': group_id,
                                             'id': six.text_type(_id)},
                                     art=folder_sync,
                                     isFolder=True)
-            directory.add_menu_item(title=utils.getString(32076).format(group_name, _id),
+            directory.add_menu_item(title=utils.get_string(32076).format(group_name, _id),
                                     params={'mode': 'path',
                                             'action': 'next',
                                             'group': group_id,
@@ -177,7 +177,7 @@ def active_widgets_menu():
                           'group': group,
                           'target': 'shortcut',
                           'id': six.text_type(_id)}
-                title = utils.getString(32030).format(title)
+                title = utils.get_string(32030).format(title)
             elif action in ['random', 'next']:
                 art = folder_sync if action == 'random' else folder_next
                 params = {'mode': 'group',
@@ -185,18 +185,18 @@ def active_widgets_menu():
                           'target': 'widget',
                           'id': six.text_type(_id)}
                 
-            cm = [(utils.getString(32069), ('RunPlugin('
+            cm = [(utils.get_string(32069), ('RunPlugin('
                                             'plugin://plugin.program.autowidget/'
                                             '?mode=refresh'
                                             '&target={})').format(_id)),
-                  (utils.getString(32070), ('RunPlugin('
+                  (utils.get_string(32070), ('RunPlugin('
                                             'plugin://plugin.program.autowidget/'
                                             '?mode=manage'
                                             '&action=edit_widget'
                                             '&target={})').format(_id))]
             
             if not group_def:
-                title = '{} - [COLOR firebrick]{}[/COLOR]'.format(_id, utils.getString(32071))
+                title = '{} - [COLOR firebrick]{}[/COLOR]'.format(_id, utils.get_string(32071))
                 
             directory.add_menu_item(title=title,
                                     art=art,
@@ -208,14 +208,14 @@ def active_widgets_menu():
                                 art=alert,
                                 isFolder=False)
 
-    return True, utils.getString(32074)
+    return True, utils.get_string(32074)
     
     
 def tools_menu():
     directory.add_menu_item(title=32006,
                             params={'mode': 'force'},
                             art=refresh,
-                            info={'plot': utils.getString(32020)},
+                            info={'plot': utils.get_string(32020)},
                             isFolder=False)
     directory.add_menu_item(title=32066,
                             params={'mode': 'clean'},
@@ -225,7 +225,7 @@ def tools_menu():
                             params={'mode': 'wipe'},
                             art=remove,
                             isFolder=False)
-    return True, utils.getString(32008)
+    return True, utils.get_string(32008)
     
     
 def call_path(group_id, path_id):
@@ -279,7 +279,7 @@ def random_path(group_id):
             directory.add_menu_item(title=32013,
                                     params={'mode': 'force'},
                                     art=unpack,
-                                    info={'plot': utils.getString(32014)},
+                                    info={'plot': utils.get_string(32014)},
                                     isFolder=False)
             return True, group_name
     else:
@@ -312,7 +312,7 @@ def next_path(group_id):
             directory.add_menu_item(title=32013,
                                     params={'mode': 'force'},
                                     art=unpack,
-                                    info={'plot': utils.getString(32014)},
+                                    info={'plot': utils.get_string(32014)},
                                     isFolder=False)
             return True, group_name
     else:
@@ -323,7 +323,7 @@ def next_path(group_id):
 
 
 def _create_context_items(group_id, path_id, idx, length):
-    cm = [(utils.getString(32048),
+    cm = [(utils.get_string(32048),
           ('RunPlugin('
            'plugin://plugin.program.autowidget/'
            '?mode=manage'
@@ -331,7 +331,7 @@ def _create_context_items(group_id, path_id, idx, length):
            '&group={}'
            '&path={})').format(group_id, path_id))]
     if idx > 0:
-        cm.append((utils.getString(32026),
+        cm.append((utils.get_string(32026),
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'
@@ -340,7 +340,7 @@ def _create_context_items(group_id, path_id, idx, length):
                    '&group={}'
                    '&path={})').format(group_id, path_id)))
     if idx < length - 1:
-        cm.append((utils.getString(32027),
+        cm.append((utils.get_string(32027),
                   ('RunPlugin('
                    'plugin://plugin.program.autowidget/'
                    '?mode=manage'

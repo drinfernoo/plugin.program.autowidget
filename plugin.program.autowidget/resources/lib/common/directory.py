@@ -21,7 +21,7 @@ def add_separator(title='', char='-'):
 
     if title:
         if isinstance(title, int):
-            title = utils.getString(title)
+            title = utils.get_string(title)
             
         split = (len(title) + 2) / 2
         edge = char * int(40 - split)
@@ -51,7 +51,7 @@ def add_menu_item(title, params=None, info=None, cm=None, art=None,
             _plugin += '&{0}={1}'.format(param, _param)
 
     if isinstance(title, int):
-        title = utils.getString(title)
+        title = utils.get_string(title)
     
     def_art = {}
     if art:
