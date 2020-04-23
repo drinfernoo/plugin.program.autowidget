@@ -217,10 +217,6 @@ def tools_menu():
                             art=refresh,
                             info={'plot': utils.get_string(32020)},
                             isFolder=False)
-    directory.add_menu_item(title=32066,
-                            params={'mode': 'clean'},
-                            art=remove,
-                            isFolder=False)    
     directory.add_menu_item(title=32064,
                             params={'mode': 'wipe'},
                             art=remove,
