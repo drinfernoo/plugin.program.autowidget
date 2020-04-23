@@ -168,7 +168,9 @@ def active_widgets_menu():
                 title = '{} - {}'.format(path_def['label'], group_def['label'])
             elif group_def:
                 title = group_def.get('label')
-                
+
+            art = {}
+            params = {}
             if not action:
                 art = folder_shortcut
                 params = {'mode': 'group',
@@ -231,7 +233,6 @@ def call_path(group_id, path_id):
     if not path_def:
         return
     
-    # import web_pdb; web_pdb.set_trace()
     xbmc.executebuiltin('Dialog.Close(busydialog)')
         
     if path_def['target'] == 'shortcut':

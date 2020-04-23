@@ -107,6 +107,7 @@ def _warn():
         
         
 def _get_options(edit_def, base_key='', use_thumbs=False):
+    label = ''
     options = []
     
     all_keys = sorted([i for i in edit_def.keys() if i not in exclude])
