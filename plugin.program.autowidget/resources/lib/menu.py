@@ -199,8 +199,7 @@ def active_widgets_menu():
                                             '&target={})').format(_id))]
             
             if not group_def:
-                title = '{} - [COLOR firebrick]{}[/COLOR]'
-                        .format(_id, utils.get_string(32071))
+                title = '{} - [COLOR firebrick]{}[/COLOR]'.format(_id, utils.get_string(32071))
                 
             directory.add_menu_item(title=title,
                                     art=art,
