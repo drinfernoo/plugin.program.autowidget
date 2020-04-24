@@ -16,7 +16,6 @@
         <!-- Shortcuts -->
         <setting label="$ADDON[plugin.program.autowidget 32002]" type="lsep" />
         <setting label="$ADDON[plugin.program.autowidget 32006]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=force)" option="close" />
-        <setting label="$ADDON[plugin.program.autowidget 32066]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clean)" option="close" />
         <setting label="$ADDON[plugin.program.autowidget 32064]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=wipe)" option="close" />
     </category>
 </settings>
