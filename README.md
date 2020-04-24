@@ -33,7 +33,7 @@ This is a limitation of the way that Skin Shortcuts represents widgets internall
 
 > **My widget never changes anymore! Who's in charge here?**
 
-After initializing an AutoWidget, if either the label or thw widget action are changed manually, they will quit updating correctly, and the widget will need to be set up again.
+After initializing an AutoWidget, if either the label or the widget action are changed manually, they will quit updating correctly, and the widget will need to be set up again.
 
 > **The label on my widget changes, but the widget takes forever to update! I'm writing a letter to the editor!**
 
