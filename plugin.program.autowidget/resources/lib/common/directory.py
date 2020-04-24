@@ -53,6 +53,17 @@ def add_menu_item(title, params=None, info=None, cm=None, art=None,
     if isinstance(title, int):
         title = utils.get_string(title)
     
+    def_info = {}
+    if info:
+        def_info.update(info)
+        for key in def_info:
+            if any(key == i for i in ['artist', 'cast']):
+                i = def_info[key]
+                if not i:
+                    def_info[key] = []
+                elif not isinstance(i, list):
+                    def_info[key] = [def_info[key]]
+    
     def_art = {}
     if art:
         def_art.update(art)
@@ -63,11 +74,9 @@ def add_menu_item(title, params=None, info=None, cm=None, art=None,
         
     # build list item
     item = xbmcgui.ListItem(title)
-    
+    item.setInfo('video', def_info)
     item.setArt(def_art)
     item.addContextMenuItems(def_cm)
-    
-    item.setInfo('video', info)
     
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
                                 isFolder=isFolder)
