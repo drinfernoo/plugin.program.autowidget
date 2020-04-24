@@ -69,7 +69,7 @@ def ensure_addon_data():
                 
 def wipe(folder=_addon_path):
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', getString(32065))
+    choice = dialog.yesno('AutoWidget', get_string(32065))
     
     if choice:
         shutil.rmtree(folder)
@@ -240,30 +240,30 @@ def write_xml(file, content):
                   level=xbmc.LOGERROR)
                   
                   
-def getSetting(setting):
+def get_setting(setting):
     return _addon.getSetting(setting)
 
                   
-def getSettingBool(setting):
+def get_setting_bool(setting):
     try:
         return _addon.getSettingBool(setting)
     except:
         return bool(_addon.getSetting(setting))
         
         
-def getSettingInt(setting):
+def get_setting_int(setting):
     try:
         return _addon.getSettingInt(setting)
     except:
         return int(_addon.getSetting(setting))
         
         
-def getSettingNumber(setting):
+def get_setting_float(setting):
     try:
         return _addon.getSettingNumber(setting)
     except:
         return float(_addon.getSetting(setting))
         
         
-def getString(_id):
+def get_string(_id):
     return six.text_type(_addon.getLocalizedString(_id))

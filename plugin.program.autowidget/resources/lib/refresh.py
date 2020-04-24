@@ -25,9 +25,9 @@ class RefreshService(xbmc.Monitor):
         self._update_properties()
 
     def _reload_settings(self):
-        self.refresh_enabled = utils.getSettingInt('service.refresh_enabled')
-        self.refresh_duration = utils.getSettingNumber('service.refresh_duration')
-        self.refresh_notification = utils.getSettingInt('service.refresh_notification')
+        self.refresh_enabled = utils.get_setting_int('service.refresh_enabled')
+        self.refresh_duration = utils.get_setting_float('service.refresh_duration')
+        self.refresh_notification = utils.get_setting_int('service.refresh_notification')
 
     def _update_properties(self, window=10000):
 
@@ -119,7 +119,7 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
     current_time = time.time()
     updated_at = widget_def.get('updated', 0)
     
-    default_refresh = utils.getSettingNumber('service.refresh_duration')
+    default_refresh = utils.get_setting_float('service.refresh_duration')
     refresh_duration = float(widget_def.get('refresh', default_refresh))
             
     if updated_at <= current_time - (3600 * refresh_duration) or force:
@@ -171,7 +171,7 @@ def refresh_paths(notify=False, force=False):
 
     if notify:
         dialog = xbmcgui.Dialog()
-        dialog.notification('AutoWidget', utils.getString(32033))
+        dialog.notification('AutoWidget', utils.get_string(32033))
     
     for group_def in manage.find_defined_groups():
         seen = []

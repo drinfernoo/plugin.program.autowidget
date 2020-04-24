@@ -76,7 +76,7 @@ def save_path_details(params, _id=''):
     params['version'] = _addon_version
     
     if 'refresh' not in params:
-        params['refresh'] = utils.getSettingNumber('service.refresh_duration')
+        params['refresh'] = utils.get_setting_number('service.refresh_duration')
 
     utils.write_json(path_to_saved, params)
 
@@ -119,7 +119,7 @@ def convert_widgets(notify=False):
     converted.extend(_convert_skin_strings(converted))
     
     if _shortcuts_path:    
-        dialog.notification('AutoWidget', utils.getString(32062))
+        dialog.notification('AutoWidget', utils.get_string(32062))
         converted.extend(_convert_shortcuts(converted))
         converted.extend(_convert_properties(converted))
     
