@@ -26,7 +26,10 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-1.4.6
+1.5.1
+ - Fix error in editor dialog
+ - Fix changelog
+1.5.0
  - Add "Active Widgets" menu
  - Consistency fixes during initialization and refresh
  - Allow adding playable items as shortcuts
