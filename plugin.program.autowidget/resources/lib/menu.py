@@ -94,7 +94,8 @@ def group_menu(group_id, target, _id):
     
     group = manage.get_group_by_id(group_id)
     if not group:
-        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id),
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'
+                  .format(group_id),
                   level=xbmc.LOGERROR)
         return False, 'AutoWidget'
     
@@ -121,14 +122,16 @@ def group_menu(group_id, target, _id):
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/')
             
-            directory.add_menu_item(title=utils.get_string(32028).format(group_name, _id),
+            directory.add_menu_item(title=utils.get_string(32028)
+                                          .format(group_name, _id),
                                     params={'mode': 'path',
                                             'action': 'random',
                                             'group': group_id,
                                             'id': six.text_type(_id)},
                                     art=folder_sync,
                                     isFolder=True)
-            directory.add_menu_item(title=utils.get_string(32076).format(group_name, _id),
+            directory.add_menu_item(title=utils.get_string(32076)
+                                          .format(group_name, _id),
                                     params={'mode': 'path',
                                             'action': 'next',
                                             'group': group_id,
@@ -196,7 +199,8 @@ def active_widgets_menu():
                                             '&target={})').format(_id))]
             
             if not group_def:
-                title = '{} - [COLOR firebrick]{}[/COLOR]'.format(_id, utils.get_string(32071))
+                title = '{} - [COLOR firebrick]{}[/COLOR]'
+                        .format(_id, utils.get_string(32071))
                 
             directory.add_menu_item(title=title,
                                     art=art,
@@ -230,25 +234,26 @@ def call_path(group_id, path_id):
         return
     
     xbmc.executebuiltin('Dialog.Close(busydialog)')
-        
-    if path_def['target'] == 'shortcut':
-        if path_def['is_folder'] == 0:
-            if path_def['content'] == 'addons':
-                xbmc.executebuiltin('ActivateWindow({},{},return)'.format(path_def['window'],
-                                                                          path_def['path']))
-            else:
-                if path_def['path'] == 'addons://install/':
-                    xbmc.executebuiltin('InstallFromZip')
-                else:
-                    xbmc.executebuiltin('PlayMedia({})'.format(path_def['path']))
+    final_path = ''
+    
+    if path_def['target'] == 'shortcut' and path_def['is_folder'] == 0 \
+                                        and path_def['content'] != 'addons':
+        if path_def['path'] == 'addons://install/':
+            final_path = 'InstallFromZip'
+        elif 'plugin.video.youtube' in path_def['path']:
+            final_path = 'RunPlugin({})'.format(path_def['path'])
         else:
-            xbmc.executebuiltin('ActivateWindow({},{},return)'.format(path_def['window'],
-                                                                      path_def['path']))
-    elif path_def['target'] == 'widget':
-        xbmc.executebuiltin('ActivateWindow({},{},return)'.format(path_def['window'],
-                                                                  path_def['path']))
+            final_path = 'PlayMedia({})'.format(path_def['path'])
+    elif path_def['target'] == 'widget' or path_def['is_folder'] == 1 \
+                                        or path_def['content'] == 'addons':
+        final_path = 'ActivateWindow({},{},return)'.format(path_def['window'],
+                                                           path_def['path'])
     elif path_def['target'] == 'settings':
-        xbmc.executebuiltin('Addon.OpenSettings({})'.format(path_def['path'].replace('plugin://', '')))
+        final_path = 'Addon.OpenSettings({})'.format(path_def['path']
+                                                     .replace('plugin://', ''))
+        
+    if final_path:
+        xbmc.executebuiltin(final_path)
 
 
 def random_path(group_id):
@@ -259,7 +264,8 @@ def random_path(group_id):
     
     group = manage.get_group_by_id(group_id)
     if not group:
-        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id),
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'
+                  .format(group_id),
                   level=xbmc.LOGERROR)
         return False, 'AutoWidget'
     
@@ -293,7 +299,8 @@ def next_path(group_id):
     
     group = manage.get_group_by_id(group_id)
     if not group:
-        utils.log('\"{}\" is missing, please repoint the widget to fix it.'.format(group_id),
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'
+                  .format(group_id),
                   level=xbmc.LOGERROR)
         return False, 'AutoWidget'
     
