@@ -26,6 +26,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.5.3
+ - Fix indent error
 1.5.2
  - Fix shortcut calls for YouTube
 1.5.1
