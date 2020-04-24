@@ -32,7 +32,7 @@ class RefreshService(xbmc.Monitor):
     def _update_properties(self, window=10000):
 
         for property in _properties:
-            setting = utils.getSetting(property)
+            setting = utils.get_setting(property)
             utils.log('{}: {}'.format(property, setting))
             if setting is not None:
                 xbmcgui.Window(window).setProperty(property, setting)

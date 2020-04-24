@@ -76,7 +76,7 @@ def save_path_details(params, _id=''):
     params['version'] = _addon_version
     
     if 'refresh' not in params:
-        params['refresh'] = utils.get_setting_number('service.refresh_duration')
+        params['refresh'] = utils.get_setting_float('service.refresh_duration')
 
     utils.write_json(path_to_saved, params)
 
