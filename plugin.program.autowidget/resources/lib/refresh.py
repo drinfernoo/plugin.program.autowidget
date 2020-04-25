@@ -109,12 +109,9 @@ def _update_strings(_id, path_def, setting=None, label_setting=None):
         utils.set_skin_string(target_string, target)
 
 
-def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
+def refresh(widget_id, widget_def=None, paths=None, force=False):
     if not widget_def:
         widget_def = manage.get_widget_by_id(widget_id)
-    
-    if not single:
-        seen = [i.get('current', -1) for i in manage.find_defined_widgets(widget_def['group'])]
     
     current_time = time.time()
     updated_at = widget_def.get('updated', 0)
@@ -124,6 +121,7 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
             
     if updated_at <= current_time - (3600 * refresh_duration) or force:
         path_def = {}
+        
         _id = widget_def['id']
         group_id = widget_def['group']
         action = widget_def.get('action')
@@ -131,35 +129,32 @@ def refresh(widget_id, widget_def=None, seen=None, force=False, single=False):
         label_setting = widget_def.get('label_setting')
         current = int(widget_def.get('current', -1))
         
-        if len(seen) == 0:
-            seen.append(current)
+        if not paths:
+            paths = manage.find_defined_paths(group_id)
+            random.shuffle(paths)
         
         if action:
-            paths = manage.find_defined_paths(group_id)
-            
-            next = 0
-            if action == 'next':
-                next = (current + 1) % len(paths)
-            elif action == 'random':
-                next = random.randrange(len(paths))
-                
-            if next in seen and action == 'random':
-                seen = refresh(widget_id, widget_def, seen=seen, force=force)
-            else:                        
-                widget_def['current'] = next
-                seen.append(next)
-                path_def = paths[next]
-            
-            widget_def['path'] = path_def.get('id')
-            if widget_def['path']:
-                widget_def['updated'] = 0 if force else current_time
+            if len(paths) > 0:
+                next = 0
+                if action == 'next':
+                    next = (current + 1) % len(paths)
+                elif action == 'random':
+                    next = random.randrange(len(paths))
                     
-                convert.save_path_details(widget_def, _id)
-                _update_strings(_id, path_def, setting, label_setting)
+                widget_def['current'] = next
+                path_def = paths[next]
+                paths.remove(paths[next])            
                 
-                utils.update_container()
+                widget_def['path'] = path_def.get('id')
+                if widget_def['path']:
+                    widget_def['updated'] = 0 if force else current_time
+                        
+                    convert.save_path_details(widget_def, _id)
+                    _update_strings(_id, path_def, setting, label_setting)
+                    
+                    utils.update_container()
     
-    return seen
+    return paths
 
 
 def refresh_paths(notify=False, force=False):
@@ -174,10 +169,10 @@ def refresh_paths(notify=False, force=False):
         dialog.notification('AutoWidget', utils.get_string(32033))
     
     for group_def in manage.find_defined_groups():
-        seen = []
+        paths = []
         
         widgets = manage.find_defined_widgets(group_def['id'])
         for widget_def in widgets:
-            seen = refresh(widget_def['id'], widget_def=widget_def, seen=seen, force=force)
+            paths = refresh(widget_def['id'], widget_def=widget_def, paths=paths, force=force)
 
     utils.update_container(reload=len(converted) > 0 and utils.shortcuts_path)
