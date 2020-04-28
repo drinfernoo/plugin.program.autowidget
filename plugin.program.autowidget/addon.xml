@@ -26,6 +26,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.5.5
+ - Fix regex for labels in some skins
 1.5.4
  - Fix recursion crash during refresh
 1.5.3
