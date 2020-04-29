@@ -108,7 +108,7 @@ msgstr "Agregar ruta"
 
 msgctxt "#32022"
 msgid "Add a New Path to This Group."
-msgstr "Agrega un nueva ruta a este grupo."
+msgstr "Agrega una nueva ruta a este grupo."
 
 msgctxt "#32023"
 msgid "Remove Group"
@@ -144,7 +144,7 @@ msgstr "Accesos directos de {}"
 
 msgctxt "#32031"
 msgid "Show a list of shortcuts from the {} group."
-msgstr "Mostrar una lista de accesos directos de el grupo {}."
+msgstr "Mostrar una lista de accesos directos del grupo {}."
 
 msgctxt "#32032"
 msgid "No paths have been defined for this group."
@@ -184,7 +184,7 @@ msgstr "Eliminación cancelada."
 
 msgctxt "#32041"
 msgid "Enable Path Refreshing Service"
-msgstr "Habilitar el servicio de actualización de ruta"
+msgstr "Habilitar servicio de actualización de ruta"
 
 msgctxt "#32042"
 msgid "Show 'Refreshing Paths' Notification"
@@ -204,11 +204,11 @@ msgstr "{} eliminado."
 
 msgctxt "#32046"
 msgid "Select Art Type"
-msgstr "Selecionar tipo de arte"
+msgstr "Seleccionar tipo de arte"
 
 msgctxt "#32047"
 msgid "Select InfoLabel"
-msgstr "Selecionar etiqueta de información"
+msgstr "Seleccionar etiqueta de información"
 
 msgctxt "#32048"
 msgid "Edit Path"
