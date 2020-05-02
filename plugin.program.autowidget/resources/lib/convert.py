@@ -237,7 +237,7 @@ def _convert_properties(converted):
             match = re.search(activate_window_pattern, prop[3])
             if not match:
                 continue
-                
+
             groups = list(match.groups())
             if not groups or len(groups) < 2:
                 continue
@@ -278,7 +278,12 @@ def _convert_properties(converted):
         if _id and _id not in converted:
             save_path_details(params)
             converted.append(_id)
-        
-    utils.write_file(props_path, '{}'.format(content))
+    
+    inner_content = ''
+    for idx, line in enumerate(content):
+        inner_content += '{}{}'.format(line, ',\n' if idx < len(content) else '')
+    final_content = '[{}]'.format(inner_content)
+    
+    utils.write_file(props_path, final_content)
         
     return converted
