@@ -179,7 +179,8 @@ def _convert_shortcuts(converted):
             label_node = shortcut.find('label')
             action_node = shortcut.find('action')
 
-            match = re.search(activate_window_pattern, action_node.text)
+            match = re.search(activate_window_pattern,
+                              action_node.text if action_node.text else '')
             if not match:
                 continue
             
