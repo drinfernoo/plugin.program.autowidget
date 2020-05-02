@@ -234,7 +234,6 @@ def _convert_properties(converted):
                                       and re.search(uuid_pattern, x[3])]
     for prop in props:        
         if 'ActivateWindow' in prop[3]:
-            groups = []
             match = re.search(activate_window_pattern, prop[3])
             if not match:
                 continue
@@ -246,17 +245,28 @@ def _convert_properties(converted):
             id_match = re.search(uuid_pattern, groups[2])
             if 'plugin.program.autowidget' in groups[2] and id_match:
                 params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
+                
+            if not params:
+                continue
+            
+            _id = params.get('id')
+            groups[1], groups[2] = (skin_string_info_pattern.format(_id,
+                                            i) for i in ['target', 'action'])
+
+            prop[3] = path_replace_pattern.format(groups[0],
+                                                           ','.join(groups[1:]))
         else:
             params = dict(parse_qsl(prop[3].split('?')[1].replace('\"', '')))
+            if not params:
+                continue
+            
+            _id = params.get('id')
+            prop[3] = skin_string_info_pattern.format(_id, 'action')
         
-        if not params:
-            continue
         
-        _id = params.get('id')
         if params.get('target') == 'shortcut':
             pass
         else:        
-            prop[3] = skin_string_info_pattern.format(_id, 'action')
             params['path_prop'] = prop[:3]
             
             for label_prop in label_props:
