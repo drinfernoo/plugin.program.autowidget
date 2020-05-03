@@ -226,6 +226,7 @@ def _convert_properties(converted):
         content = ast.literal_eval(utils.read_file(props_path))
     except Exception as e:
         utils.log('Unable to parse: {}'.format(props_path))
+        return converted
     
     
     props = [x for x in content if 'plugin.program.autowidget' in x[3]
