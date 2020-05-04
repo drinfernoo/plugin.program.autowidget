@@ -179,7 +179,8 @@ def _convert_shortcuts(converted):
             label_node = shortcut.find('label')
             action_node = shortcut.find('action')
 
-            match = re.search(activate_window_pattern, action_node.text)
+            match = re.search(activate_window_pattern,
+                              action_node.text if action_node.text else '')
             if not match:
                 continue
             
@@ -225,6 +226,7 @@ def _convert_properties(converted):
         content = ast.literal_eval(utils.read_file(props_path))
     except Exception as e:
         utils.log('Unable to parse: {}'.format(props_path))
+        return converted
     
     
     props = [x for x in content if 'plugin.program.autowidget' in x[3]
@@ -233,11 +235,10 @@ def _convert_properties(converted):
                                       and re.search(uuid_pattern, x[3])]
     for prop in props:        
         if 'ActivateWindow' in prop[3]:
-            groups = []
             match = re.search(activate_window_pattern, prop[3])
             if not match:
                 continue
-                
+
             groups = list(match.groups())
             if not groups or len(groups) < 2:
                 continue
@@ -245,17 +246,28 @@ def _convert_properties(converted):
             id_match = re.search(uuid_pattern, groups[2])
             if 'plugin.program.autowidget' in groups[2] and id_match:
                 params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
+                
+            if not params:
+                continue
+            
+            _id = params.get('id')
+            groups[1], groups[2] = (skin_string_info_pattern.format(_id,
+                                            i) for i in ['target', 'action'])
+
+            prop[3] = path_replace_pattern.format(groups[0],
+                                                           ','.join(groups[1:]))
         else:
             params = dict(parse_qsl(prop[3].split('?')[1].replace('\"', '')))
+            if not params:
+                continue
+            
+            _id = params.get('id')
+            prop[3] = skin_string_info_pattern.format(_id, 'action')
         
-        if not params:
-            continue
         
-        _id = params.get('id')
         if params.get('target') == 'shortcut':
             pass
         else:        
-            prop[3] = skin_string_info_pattern.format(_id, 'action')
             params['path_prop'] = prop[:3]
             
             for label_prop in label_props:
@@ -267,7 +279,12 @@ def _convert_properties(converted):
         if _id and _id not in converted:
             save_path_details(params)
             converted.append(_id)
-        
-    utils.write_file(props_path, '{}'.format(content))
+    
+    inner_content = ''
+    for idx, line in enumerate(content):
+        inner_content += '{}{}'.format(line, ',\n' if idx < len(content) else '')
+    final_content = '[{}]'.format(inner_content)
+    
+    utils.write_file(props_path, final_content)
         
     return converted

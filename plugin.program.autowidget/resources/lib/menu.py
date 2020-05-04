@@ -241,6 +241,11 @@ def call_path(group_id, path_id):
             final_path = 'InstallFromZip'
         elif 'plugin.video.youtube' in path_def['path']:
             final_path = 'RunPlugin({})'.format(path_def['path'])
+        elif path_def['path'].startswith('androidapp://sources/apps/'):
+            final_path = 'StartAndroidActivity({})'.format(path_def['path']
+                                                           .replace('androidapp://sources/apps/', ''))
+        elif all(i in path_def['path'] for i in ['(', ')']) and '://' not in path_def['path']:
+            final_path = path_def['path']
         else:
             final_path = 'PlayMedia({})'.format(path_def['path'])
     elif path_def['target'] == 'widget' or path_def['is_folder'] == 1 \
