@@ -71,18 +71,7 @@
         </assets>
     </extension>
 </addon>
-le notification
-1.1.0
- - Remove Skin Shortcuts dependency
- - Expand context menu options
- - Add support for skins with "basic" Skin Shortcuts integration
- - Add setting to pause AutoWidget's service
-1.0.7
- - Fix context menu option not showing
-1.0.6
- - Fix paths not saving
-1.0.5
- - Raise required Skin Shortcuts version to  1.0.19
+
 1.0.4
  - Allow custom labels
  - Add removal notifications    
@@ -103,13 +92,19 @@ le notification
         </assets>
     </extension>
 </addon>
-a/fanart/sync.png</fanart>
+ix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>resources/media/sync.png</icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
 </addon>
-ith "basic" Skin Shortcuts integration
+d support for skins with "basic" Skin Shortcuts integration
  - Add setting to pause AutoWidget's service
 1.0.7
  - Fix context menu option not showing
@@ -133,6 +128,11 @@ ith "basic" Skin Shortcuts integration
             <icon>resources/media/icon/sync.png</icon>
             <fanart>resources/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+</poster>
             <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
