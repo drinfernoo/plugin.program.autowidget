@@ -27,6 +27,12 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.6.0
+ - Android App shortcut support (thanks to @Sandmann79)
+ - Add Spanish translation (thanks to @roliverosc)
+ - Fix bug with empty action nodes
+ - Reduce refreshes
+ - Prettify .props file output
 1.5.5
  - Fix regex for labels in some skins
 1.5.4
