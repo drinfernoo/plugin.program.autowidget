@@ -254,15 +254,17 @@ def _convert_properties(converted):
             groups[1], groups[2] = (skin_string_info_pattern.format(_id,
                                             i) for i in ['target', 'action'])
 
-            prop[3] = path_replace_pattern.format(groups[0],
-                                                           ','.join(groups[1:]))
+            if params.get('target') != 'shortcut':
+                prop[3] = path_replace_pattern.format(groups[0],
+                                                      ','.join(groups[1:]))
         else:
             params = dict(parse_qsl(prop[3].split('?')[1].replace('\"', '')))
             if not params:
                 continue
             
             _id = params.get('id')
-            prop[3] = skin_string_info_pattern.format(_id, 'action')
+            if params.get('target') != 'shortcut':
+                prop[3] = skin_string_info_pattern.format(_id, 'action')
         
         
         if params.get('target') == 'shortcut':
