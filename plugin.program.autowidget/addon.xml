@@ -27,6 +27,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.6.1
+ - Fix bug with shortcut widgets being "converted"
 1.6.0
  - Android App shortcut support (thanks to @Sandmann79)
  - Add Spanish translation (thanks to @roliverosc)
