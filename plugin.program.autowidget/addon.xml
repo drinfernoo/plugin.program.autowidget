@@ -27,6 +27,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.6.3
+ - Update settings localizations
 1.6.2
  - Fix bug that caused Skin Shortcuts to not be able to rebuild the skin
 1.6.1
