@@ -311,7 +311,7 @@ msgid "No widgets have been initialized."
 msgstr ""
 
 msgctxt "#32073"
-msgid "The unique identifier in the number in this path's label is [B]necessary[/B] for AutoWidget to refresh it correctly. Don't change the label given to this widget, or it may be unable to update correctly. This wessage [COLOR firebrick]will not[/COLOR] be shown again."
+msgid "The unique identifier in the number in this path's label is [B]necessary[/B] for AutoWidget to refresh it correctly. Don't change the label given to this widget, or it may be unable to update correctly. This message [COLOR firebrick]will not[/COLOR] be shown again."
 msgstr ""
 
 msgctxt "#32074"
