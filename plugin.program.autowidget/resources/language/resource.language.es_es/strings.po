@@ -357,3 +357,15 @@ msgstr "Usar como grupo de widgets"
 msgctxt "#32084"
 msgid "Add as"
 msgstr "Agregar como"
+
+msgctxt "#32085"
+msgid "Always"
+msgstr "Siempre"
+
+msgctxt "#32086"
+msgid "While Nothing Playing"
+msgstr "Mientras nada jugando"
+
+msgctxt "#32087"
+msgid "Never"
+msgstr "Nunca"

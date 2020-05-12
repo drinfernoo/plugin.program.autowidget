@@ -357,3 +357,15 @@ msgstr ""
 msgctxt "#32084"
 msgid "Add as"
 msgstr ""
+
+msgctxt "#32085"
+msgid "Always"
+msgstr ""
+
+msgctxt "#32086"
+msgid "While Nothing Playing"
+msgstr ""
+
+msgctxt "#32087"
+msgid "Never"
+msgstr ""

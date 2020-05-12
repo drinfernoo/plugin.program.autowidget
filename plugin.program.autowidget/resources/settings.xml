@@ -9,9 +9,9 @@
     
         <!-- Path Service -->
         <setting label="$ADDON[plugin.program.autowidget 32001]" type="lsep" />
-        <setting label="$ADDON[plugin.program.autowidget 32041]" type="enum" id="service.refresh_enabled" default="0" values="Always|While Nothing Playing|Never" />
+        <setting label="$ADDON[plugin.program.autowidget 32041]" type="enum" id="service.refresh_enabled" default="0" lvalues="32085|32086|32087" />
         <setting label="$ADDON[plugin.program.autowidget 32005]" type="slider" id="service.refresh_duration" default="2" range="0.25,0.25,12" option="float" visible="lt(-1,2)" />
-        <setting label="$ADDON[plugin.program.autowidget 32042]" type="enum" id="service.refresh_notification" default="1" values="Always|While Nothing Playing|Never" visible="lt(-2,2)" />
+        <setting label="$ADDON[plugin.program.autowidget 32042]" type="enum" id="service.refresh_notification" default="1" lvalues="32085|32086|32087" visible="lt(-2,2)" />
         
         <!-- Shortcuts -->
         <setting label="$ADDON[plugin.program.autowidget 32002]" type="lsep" />
