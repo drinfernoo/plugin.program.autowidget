@@ -364,7 +364,7 @@ msgstr "Siempre"
 
 msgctxt "#32086"
 msgid "While Nothing Playing"
-msgstr "Mientras nada jugando"
+msgstr "Mientras no haya nada en reproducción"
 
 msgctxt "#32087"
 msgid "Never"

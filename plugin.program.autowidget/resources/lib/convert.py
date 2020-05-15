@@ -117,12 +117,12 @@ def convert_widgets(notify=False):
     
     converted = []
     
-    converted.extend(_convert_skin_strings(converted))
+    converted = _convert_skin_strings(converted)
     
     if _shortcuts_path:    
         dialog.notification('AutoWidget', utils.get_string(32062))
-        converted.extend(_convert_shortcuts(converted))
-        converted.extend(_convert_properties(converted))
+        converted = _convert_shortcuts(converted)
+        converted = _convert_properties(converted)
     
     return converted
     
@@ -159,7 +159,8 @@ def _convert_skin_strings(converted):
     
         if _id and _id not in converted:
             save_path_details(params)
-            converted.append(_id)
+            if params.get('target') != 'shortcut':
+                converted.append(_id)
 
     return converted
 
@@ -183,7 +184,7 @@ def _convert_shortcuts(converted):
                               action_node.text if action_node.text else '')
             if not match:
                 continue
-            
+
             groups = list(match.groups())
 
             if not groups or len(groups) < 2:
@@ -209,7 +210,8 @@ def _convert_shortcuts(converted):
                                                                    ','.join(groups[1:]))
                 if _id and _id not in converted:
                     save_path_details(params)
-                    converted.append(_id)
+                    if params.get('target') != 'shortcut':
+                        converted.append(_id)
 
         utils.write_xml(xml_path, shortcuts)
 
@@ -280,7 +282,8 @@ def _convert_properties(converted):
         
         if _id and _id not in converted:
             save_path_details(params)
-            converted.append(_id)
+            if params.get('target') != 'shortcut':
+                converted.append(_id)
         
     utils.write_file(props_path, '{}'.format(content))
         
