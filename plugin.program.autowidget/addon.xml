@@ -27,6 +27,9 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.6.4
+ - Fix more rogue refreshes
+ - Fix wording in Spanish translation (again, thanks to @roliverosc)
 1.6.3
  - Update settings localizations
 1.6.2
