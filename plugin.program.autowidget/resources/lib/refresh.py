@@ -3,6 +3,7 @@ import xbmcgui
 
 import os
 import random
+import re
 import time
 
 from resources.lib import convert
@@ -10,6 +11,7 @@ from resources.lib import manage
 from resources.lib.common import utils
 
 skin_string_pattern = 'autowidget-{}-{}'
+info_pattern = '\$INFO\[(.*)\]'
 _properties = ['context.autowidget']
 
 class RefreshService(xbmc.Monitor):
@@ -87,6 +89,13 @@ def _update_strings(_id, path_def, setting=None, label_setting=None):
         label = label.encode('utf-8')
     except:
         pass
+    
+    has_info = re.search(info_pattern, label)
+    if has_info:
+        info_groups = has_info.groups()
+        for info in info_groups:
+            value = xbmc.getInfoLabel(info)
+            label = re.sub(info_pattern, value, label)
     
     if setting:
         if label_setting:
