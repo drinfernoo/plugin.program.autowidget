@@ -285,6 +285,9 @@ def _convert_properties(converted):
             if params.get('target') != 'shortcut':
                 converted.append(_id)
         
-    utils.write_file(props_path, '{}'.format(content))
+    content_str = '['
+    for idx, prop in enumerate(content):
+        content_str += '{}{}'.format(prop, ',\n ' if idx < len(content) - 1 else ']')
+    utils.write_file(props_path, content_str)
         
     return converted
