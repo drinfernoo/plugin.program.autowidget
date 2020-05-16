@@ -108,6 +108,7 @@ def _convert_skin_strings(converted):
     
     settings = [i for i in settings.findall('setting') if i.text]
     path_settings = [i for i in settings if 'plugin.program.autowidget' in i.text
+                                         and not 'action=merged' in i.text
                                          and re.search(uuid_pattern, i.text)
                                          and not re.match(activate_window_pattern, i.text)]
     label_settings = [i for i in settings if 'plugin.program.autowidget' not in i.text
@@ -163,7 +164,7 @@ def _convert_shortcuts(converted):
                 continue
 
             id_match = re.search(uuid_pattern, groups[2])
-            if 'plugin.program.autowidget' in groups[2] and id_match:
+            if 'plugin.program.autowidget' in groups[2] and id_match and not 'action=merged' in groups[2]:
                 params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
                 if not params:
                     continue
@@ -204,6 +205,7 @@ def _convert_properties(converted):
     
     
     props = [x for x in content if 'plugin.program.autowidget' in x[3]
+                                and not 'action=merged' in x[3]
                                 and re.search(uuid_pattern, x[3])]
     label_props = [x for x in content if 'plugin.program.autowidget' not in x[3]
                                       and re.search(uuid_pattern, x[3])]
