@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.660" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.216" provider-name="drinfernoo">
     <requires>
-        <import addon="script.module.six" />
+        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.skinshortcuts" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -14,7 +15,7 @@
         <menu id="kodi.core.main">
             <item library="context.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
+                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
             </item>
         </menu>
     </extension>
@@ -25,28 +26,15 @@
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news></news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+drinfernoo/</website>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-1.5.4
- - Fix recursion crash during refresh
-1.5.3
- - Fix indent error
-1.5.2
- - Fix shortcut calls for YouTube
-1.5.1
- - Fix error in editor dialog
- - Fix changelog
-1.5.0
- - Add "Active Widgets" menu
- - Consistency fixes during initialization and refresh
- - Allow adding playable items as shortcuts
- - Fix crashes in Krypton
- - Fix crashes from invalid group/widget files
- - Fix Unicode compatibility
-1.4.5
- - Refresh Shortcut widgets Automatically
- - Add "Next Path" widget action
- - Add "Clone" and "Explode" widget modes
- - Allow refreshing between 15m-2h, at 15m intervals
 1.4.3
  - Add context menu on more items
  - Fix some log spam
@@ -132,10 +120,21 @@
  - First stable release
         </news>
         <assets>
-            <icon>resources/media/icon/sync.png</icon>
+            <icon>resources/media/sync.png</icon>
             <fanart>resources/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+/icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+anner/sync.png</banner>
         </assets>
     </extension>
 </addon>
@@ -145,6 +144,13 @@ ash from non-existent context menu setting
         </news>
         <assets>
             <icon>resources/media/icon/sync.png</icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+          <icon>resources/media/icon/sync.png</icon>
             <fanart>resources/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
