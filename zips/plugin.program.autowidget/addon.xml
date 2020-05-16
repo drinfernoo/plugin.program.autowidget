@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.216" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.557" provider-name="drinfernoo">
     <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
+        <!-- <import addon="xbmc.python" version="2.25.0" /> -->
+        <import addon="script.module.six" />
+        <import addon="script.module.web-pdb" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -15,7 +16,11 @@
         <menu id="kodi.core.main">
             <item library="context.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+                <visible>[!String.IsEqual(ListItem.DbType,movie) +
+                         !String.IsEqual(ListItem.DbType,episode) +
+                         !String.IsEqual(ListItem.DbType,musicvideo) +
+                         !String.IsEqual(ListItem.DbType,song)] +
+                          String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
             </item>
         </menu>
     </extension>
@@ -26,15 +31,12 @@
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news></news>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.4.5
+ - Refresh Shortcut widgets Automatically
+ - Add "Next Path" widget action
+ - Add "Clone" and "Explode" widget modes
+ - Allow refreshing between 15m-2h, at 15m intervals
 1.4.3
  - Add context menu on more items
  - Fix some log spam
@@ -127,30 +129,21 @@ drinfernoo/</website>
         </assets>
     </extension>
 </addon>
-/icon>
-            <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-anner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-ash from non-existent context menu setting
+tcuts version to  1.0.19
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
 1.0.0
  - First stable release
         </news>
         <assets>
             <icon>resources/media/icon/sync.png</icon>
-            <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-          <icon>resources/media/icon/sync.png</icon>
             <fanart>resources/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
