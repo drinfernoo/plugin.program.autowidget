@@ -19,6 +19,9 @@ folder = utils.get_art('folder.png')
 folder_shortcut = utils.get_art('folder-shortcut.png')
 folder_sync = utils.get_art('folder-sync.png')
 folder_next = utils.get_art('folder-next.png')
+folder_merged = utils.get_art('folder-dots.png')
+merge = utils.get_art('merge.png')
+next = utils.get_art('next.png')
 refresh = utils.get_art('refresh.png')
 remove = utils.get_art('remove.png')
 share = utils.get_art('share.png')
@@ -129,7 +132,7 @@ def group_menu(group_id, target, _id):
                                             'action': 'random',
                                             'group': group_id,
                                             'id': six.text_type(_id)},
-                                    art=folder_sync,
+                                    art=shuffle,
                                     isFolder=True)
             directory.add_menu_item(title=utils.get_string(32076)
                                           .format(group_name, _id),
@@ -137,7 +140,7 @@ def group_menu(group_id, target, _id):
                                             'action': 'next',
                                             'group': group_id,
                                             'id': six.text_type(_id)},
-                                    art=folder_next,
+                                    art=next,
                                     isFolder=True)
             directory.add_menu_item(title='Merged Path from {} ({})'
                                           .format(group_name, _id),
@@ -145,7 +148,7 @@ def group_menu(group_id, target, _id):
                                             'action': 'merged',
                                             'group': group_id,
                                             'id': six.text_type(_id)},
-                                    art=folder_next,
+                                    art=merge,
                                     isFolder=True)
     else:
         directory.add_menu_item(title=32032,
@@ -190,8 +193,14 @@ def active_widgets_menu():
                           'target': 'shortcut',
                           'id': six.text_type(_id)}
                 title = utils.get_string(32030).format(title)
-            elif action in ['random', 'next']:
-                art = folder_sync if action == 'random' else folder_next
+            elif action in ['random', 'next', 'merged']:
+                if action == 'random':
+                    art = folder_sync
+                elif action == 'next':
+                    art = folder_next
+                elif action == 'merged':
+                    art = folder_merged
+                
                 params = {'mode': 'group',
                           'group': group,
                           'target': 'widget',
