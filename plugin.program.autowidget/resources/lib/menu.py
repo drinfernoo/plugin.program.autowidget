@@ -384,6 +384,7 @@ def merged_path(group_id):
                                                                'thumbnail', 'track',
                                                                'tvshowid', 'watchedepisodes']]:
                         labels[label] = file[label]
+                    labels['title'] = file['label']
                     directory.add_menu_item(title=file['label'],
                                             path=file['file'],
                                             art=file['art'],
