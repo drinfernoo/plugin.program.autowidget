@@ -370,6 +370,14 @@ msgctxt "#32087"
 msgid "Never"
 msgstr ""
 
+msgctxt "#32088"
+msgid "Merged Path"
+msgstr ""
+
+msgctxt "#32089"
+msgid "Merged Path from {} ({})"
+msgstr ""
+
 msgctxt "#32090"
 msgid "Backup / Restore"
 msgstr ""

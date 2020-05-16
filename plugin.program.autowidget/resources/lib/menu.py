@@ -142,7 +142,7 @@ def group_menu(group_id, target, _id):
                                             'id': six.text_type(_id)},
                                     art=next,
                                     isFolder=True)
-            directory.add_menu_item(title='Merged Path from {} ({})'
+            directory.add_menu_item(title=utils.get_string(32089)
                                           .format(group_name, _id),
                                     params={'mode': 'path',
                                             'action': 'merged',
