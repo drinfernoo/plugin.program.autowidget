@@ -59,19 +59,25 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     
     def_info = {}
     if info:
-        for key in info:
-            if key == 'type':
-                def_info['mediatype'] = info[key]
-            else:
-                def_info[key] = six.text_type(info[key])
+        def_info['mediatype'] = info.get('type')
+        def_info.update(info)
 
         for key in def_info:
-            if any(key == i for i in ['artist', 'cast']):
-                i = def_info[key]
+            i = info.get(key)
+            if any(key == x for x in ['artist', 'cast']):
                 if not i:
                     def_info[key] = []
                 elif not isinstance(i, list):
-                    def_info[key] = [def_info[key]]
+                    def_info[key] = [i]
+                elif isinstance(i, list) and key == 'cast':
+                    cast = []
+                    for actor in i:
+                        cast.append((actor['name'], actor['role']))
+                    def_info[key] = cast
+            elif isinstance(i, list):
+                def_info[key] = ' / '.join(i)
+            else:
+                def_info[key] = six.text_type(i)
     
     def_art = {}
     if art:
