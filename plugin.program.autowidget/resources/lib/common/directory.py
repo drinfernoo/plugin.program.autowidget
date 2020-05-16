@@ -4,6 +4,8 @@ import xbmcplugin
 import string
 import sys
 
+import six
+
 from resources.lib.common import utils
 
 try:
@@ -32,7 +34,7 @@ def add_separator(title='', char='-'):
         add_menu_item(title=char * 80, art=sync)
 
     
-def add_menu_item(title, params=None, info=None, cm=None, art=None,
+def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
                   isFolder=False):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
@@ -49,13 +51,20 @@ def add_menu_item(title, params=None, info=None, cm=None, art=None,
             # build URI to send to router
             _param = quote_plus(params.get(param, ''))
             _plugin += '&{0}={1}'.format(param, _param)
+    elif path is not None:
+        _plugin = path
 
     if isinstance(title, int):
         title = utils.get_string(title)
     
     def_info = {}
     if info:
-        def_info.update(info)
+        for key in info:
+            if key == 'type':
+                def_info['mediatype'] = info[key]
+            else:
+                def_info[key] = six.text_type(info[key])
+
         for key in def_info:
             if any(key == i for i in ['artist', 'cast']):
                 i = def_info[key]
@@ -71,7 +80,7 @@ def add_menu_item(title, params=None, info=None, cm=None, art=None,
     def_cm = []    
     if cm:
         def_cm.extend(cm)
-        
+    
     # build list item
     item = xbmcgui.ListItem(title)
     item.setInfo('video', def_info)
