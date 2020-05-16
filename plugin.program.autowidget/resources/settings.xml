@@ -5,7 +5,10 @@
         <setting label="$ADDON[plugin.program.autowidget 32056]" type="lsep" />
         <setting label="$ADDON[plugin.program.autowidget 32004]" type="bool" id="context.autowidget" default="true" />
         <setting label="$ADDON[plugin.program.autowidget 32057]" type="bool" id="context.advanced" default="false" />
-            
+        <setting label="Show 'Next' in Merged Paths" type="enum" id="hide_next" values="Unsorted|Sorted to End|Don't Show" default="0" />
+        <setting type="bool" id="context.warning" default="false" visible="false" />
+        <setting type="bool" id="label.warning" default="false" visible="false" />
+    
         <!-- Path Service -->
         <setting label="$ADDON[plugin.program.autowidget 32001]" type="lsep" />
         <setting label="$ADDON[plugin.program.autowidget 32041]" type="enum" id="service.refresh_enabled" default="0" lvalues="32085|32086|32087" />

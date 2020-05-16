@@ -382,14 +382,19 @@ def merged_path(group_id):
                                                                'specialsortepisode',
                                                                'specialsortseason',
                                                                'thumbnail', 'track',
-                                                               'tvshowid', 'watchedepisodes']]:
+                                                               'tvshowid', 'watchedepisodes',
+                                                               'sorttitle']]:
                         labels[label] = file[label]
                     labels['title'] = file['label']
-                    directory.add_menu_item(title=file['label'],
-                                            path=file['file'],
-                                            art=file['art'],
-                                            info=labels,
-                                            isFolder=file['filetype'] == 'directory')
+                    hide_next = utils.get_setting_int('hide_next')
+                    next_item = labels['title'].lower() in ['next', 'next page']
+                    if not next_item or hide_next != 2:
+                        directory.add_menu_item(title=file['label'],
+                                                path=file['file'],
+                                                art=file['art'],
+                                                info=labels,
+                                                isFolder=file['filetype'] == 'directory',
+                                                sort='bottom' if hide_next == 1 else None)
                     
         return True, group_name
     else:

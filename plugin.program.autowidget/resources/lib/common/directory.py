@@ -35,7 +35,7 @@ def add_separator(title='', char='-'):
 
     
 def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
-                  isFolder=False):
+                  isFolder=False, sort=None):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
     _params = sys.argv[2][1:]
@@ -59,10 +59,10 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     
     def_info = {}
     if info:
-        def_info['mediatype'] = info.get('type')
-        def_info.update(info)
+        def_info = {x: info[x] for x in info if x not in ['type']}
+        def_info['mediatype'] = info.get('type', 'video')
 
-        for key in def_info:
+        for key in info:
             i = info.get(key)
             if any(key == x for x in ['artist', 'cast']):
                 if not i:
@@ -76,6 +76,8 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
                     def_info[key] = cast
             elif isinstance(i, list):
                 def_info[key] = ' / '.join(i)
+            elif key == 'type':
+                def_info['mediatype'] = i
             else:
                 def_info[key] = six.text_type(i)
     
@@ -92,6 +94,8 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     item.setInfo('video', def_info)
     item.setArt(def_art)
     item.addContextMenuItems(def_cm)
+    if sort:
+        item.setProperty('SpecialSort', sort)
     
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
                                 isFolder=isFolder)
