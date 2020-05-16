@@ -108,7 +108,6 @@ def _convert_skin_strings(converted):
     
     settings = [i for i in settings.findall('setting') if i.text]
     path_settings = [i for i in settings if 'plugin.program.autowidget' in i.text
-                                         and not 'action=merged' in i.text
                                          and re.search(uuid_pattern, i.text)
                                          and not re.match(activate_window_pattern, i.text)]
     label_settings = [i for i in settings if 'plugin.program.autowidget' not in i.text
@@ -121,7 +120,7 @@ def _convert_skin_strings(converted):
         params = dict(parse_qsl(path.text.split('?')[1].replace('\"', '')))
         
         _id = params.get('id')
-        if params.get('target') == 'shortcut':
+        if params.get('target') == 'shortcut' or params.get('action') == 'merged':
             pass
         else:
             params['path_setting'] = path_id
@@ -132,7 +131,7 @@ def _convert_skin_strings(converted):
     
         if _id and _id not in converted:
             save_path_details(params)
-            if params.get('target') != 'shortcut':
+            if params.get('target') != 'shortcut' and params.get('action') != 'merged':
                 converted.append(_id)
 
     return converted
@@ -164,13 +163,13 @@ def _convert_shortcuts(converted):
                 continue
 
             id_match = re.search(uuid_pattern, groups[2])
-            if 'plugin.program.autowidget' in groups[2] and id_match and not 'action=merged' in groups[2]:
+            if 'plugin.program.autowidget' in groups[2] and id_match:
                 params = dict(parse_qsl(groups[2].split('?')[1].replace('\"', '')))
                 if not params:
                     continue
-                    
+                
                 _id = params.get('id')
-                if params.get('target') == 'shortcut':
+                if params.get('target') == 'shortcut' or params.get('action') == 'merged':
                     pass
                 else:
                     label_node.text = skin_string_info_pattern.format(_id,
@@ -183,7 +182,7 @@ def _convert_shortcuts(converted):
                                                                    ','.join(groups[1:]))
                 if _id and _id not in converted:
                     save_path_details(params)
-                    if params.get('target') != 'shortcut':
+                    if params.get('target') != 'shortcut' and params.get('action') != 'merged':
                         converted.append(_id)
 
         utils.write_xml(xml_path, shortcuts)
@@ -205,7 +204,6 @@ def _convert_properties(converted):
     
     
     props = [x for x in content if 'plugin.program.autowidget' in x[3]
-                                and not 'action=merged' in x[3]
                                 and re.search(uuid_pattern, x[3])]
     label_props = [x for x in content if 'plugin.program.autowidget' not in x[3]
                                       and re.search(uuid_pattern, x[3])]
@@ -230,7 +228,7 @@ def _convert_properties(converted):
             groups[1], groups[2] = (skin_string_info_pattern.format(_id,
                                             i) for i in ['target', 'action'])
 
-            if params.get('target') != 'shortcut':
+            if params.get('target') != 'shortcut' and params.get('action') != 'merged':
                 prop[3] = path_replace_pattern.format(groups[0],
                                                       ','.join(groups[1:]))
         else:
@@ -239,7 +237,7 @@ def _convert_properties(converted):
                 continue
             
             _id = params.get('id')
-            if params.get('target') != 'shortcut':
+            if params.get('target') != 'shortcut' and params.get('action') != 'merged':
                 prop[3] = skin_string_info_pattern.format(_id, 'action')
         
         
