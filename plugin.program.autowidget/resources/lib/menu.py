@@ -2,6 +2,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
+import json
 import random
 import time
 import uuid
@@ -134,6 +135,14 @@ def group_menu(group_id, target, _id):
                                           .format(group_name, _id),
                                     params={'mode': 'path',
                                             'action': 'next',
+                                            'group': group_id,
+                                            'id': six.text_type(_id)},
+                                    art=folder_next,
+                                    isFolder=True)
+            directory.add_menu_item(title='Merged Path from {} ({})'
+                                          .format(group_name, _id),
+                                    params={'mode': 'path',
+                                            'action': 'merged',
                                             'group': group_id,
                                             'id': six.text_type(_id)},
                                     art=folder_next,
@@ -323,6 +332,56 @@ def next_path(group_id):
                                     info={'plot': utils.get_string(32014)},
                                     isFolder=False)
             return True, group_name
+    else:
+        directory.add_menu_item(title=32032,
+                                art=alert,
+                                isFolder=False)
+        return False, group_name
+        
+        
+def merged_path(group_id):
+    _window = utils.get_active_window()
+    
+    group_def = manage.get_group_by_id(group_id)
+    if not group_def:
+        utils.log('\"{}\" is missing, please repoint the widget to fix it.'
+                  .format(group_id),
+                  level=xbmc.LOGERROR)
+        return False, 'AutoWidget'
+    
+    group_name = group_def.get('label', '')
+    paths = manage.find_defined_paths(group_id)
+    
+    if len(paths) > 0:
+        for path_def in paths:
+            params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
+                      'params': {'directory': path_def['path'],
+                                 'properties': utils.info_types},
+                      'id': 1}
+            
+            files = xbmc.executeJSONRPC(json.dumps(params))
+            
+            if 'error' not in files:
+                files = json.loads(files)['result']['files']
+                for file in files:
+                    labels = {}
+                    for label in [x for x in file if x not in ['art', 'file',
+                                                               'filetype', 'firstaired',
+                                                               'label', 'lastmodified',
+                                                               'mimetype', 'productioncode',
+                                                               'runtime', 'showtitle',
+                                                               'specialsortepisode',
+                                                               'specialsortseason',
+                                                               'thumbnail', 'track',
+                                                               'tvshowid', 'watchedepisodes']]:
+                        labels[label] = file[label]
+                    directory.add_menu_item(title=file['label'],
+                                            path=file['file'],
+                                            art=file['art'],
+                                            info=labels,
+                                            isFolder=file['filetype'] == 'directory')
+                    
+        return True, group_name
     else:
         directory.add_menu_item(title=32032,
                                 art=alert,
