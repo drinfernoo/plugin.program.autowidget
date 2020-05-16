@@ -169,7 +169,12 @@ def _get_widget_options(edit_def):
         label = _def
         
         if key == 'action':
-            label = utils.get_string(32079) if label == 'random' else utils.get_string(32080)
+            if label == 'random':
+                label = utils.get_string(32079)
+            elif label == 'next':
+                label = utils.get_string(32080)
+            elif label == 'merged':
+                label = utils.get_string(32088)
         elif key == 'refresh':
             hh = int(_def)
             mm = int((_def * 60)  % 60)
@@ -265,7 +270,7 @@ def _get_widget_value(edit_def, key):
         title = key.capitalize()
     
     if key == 'action':
-        actions = [utils.get_string(32079), utils.get_string(32080)]
+        actions = [utils.get_string(32079), utils.get_string(32080), utils.get_string(32088)]
         choice = dialog.select(utils.get_string(32081), actions)
         if choice < 0:
             return
