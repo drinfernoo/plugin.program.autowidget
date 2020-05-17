@@ -13,6 +13,7 @@ from resources.lib import edit
 from resources.lib import menu
 from resources.lib import manage
 from resources.lib import refresh
+from resources.lib.common import directory
 from resources.lib.common import utils
 
 
@@ -31,6 +32,7 @@ def _log_params(_plugin, _handle, _params):
 
     return params
     
+    
 def dispatch(_plugin, _handle, _params):
     _handle = int(_handle)
     params = _log_params(_plugin, _handle, _params)
@@ -38,6 +40,7 @@ def dispatch(_plugin, _handle, _params):
     category = 'AutoWidget'
     is_dir = False
     is_type = 'files'
+    is_sorted = True
 
     utils.ensure_addon_data()
     
@@ -71,6 +74,7 @@ def dispatch(_plugin, _handle, _params):
         elif action == 'merged' and group:
             is_dir, category = menu.merged_path(group)
             is_type = 'videos'
+            is_sorted = True
     elif mode == 'group':
         if not group:
             is_dir, category = menu.my_groups_menu()
@@ -98,8 +102,12 @@ def dispatch(_plugin, _handle, _params):
             backup.backup()
         elif action == 'restore':
             backup.restore()
+        
+    if is_sorted:
+        directory.add_sort_methods(_handle)
 
     if is_dir:
         xbmcplugin.setPluginCategory(_handle, category)
+        xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_NONE)
         xbmcplugin.setContent(_handle, is_type)
         xbmcplugin.endOfDirectory(_handle)

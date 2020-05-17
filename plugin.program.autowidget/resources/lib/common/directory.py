@@ -13,6 +13,19 @@ try:
 except ImportError:
     from urllib import quote_plus
 
+_sort_methods = [xbmcplugin.SORT_METHOD_UNSORTED,
+                 xbmcplugin.SORT_METHOD_LABEL,
+                 xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE,
+                 xbmcplugin.SORT_METHOD_DATE,
+                 xbmcplugin.SORT_METHOD_TITLE,
+                 xbmcplugin.SORT_METHOD_TITLE_IGNORE_THE,
+                 xbmcplugin.SORT_METHOD_LASTPLAYED]
+                 
+_exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
+                 'filetype', 'lastmodified', 'productioncode', 'firstaired',
+                 'runtime', 'showtitle', 'specialsortepisode',
+                 'specialsortseason', 'track', 'tvshowid', 'watchedepisodes']
+
     
 def add_separator(title='', char='-'):
     _window = utils.get_active_window()
@@ -33,6 +46,11 @@ def add_separator(title='', char='-'):
     else:
         add_menu_item(title=char * 80, art=sync)
 
+
+def add_sort_methods(handle):
+    for method in _sort_methods:
+        xbmcplugin.addSortMethod(handle, method)
+        
     
 def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
                   isFolder=False, sort=None):
@@ -59,11 +77,13 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     
     def_info = {}
     if info:
-        def_info = {x: info[x] for x in info if x not in ['type']}
-        def_info['mediatype'] = info.get('type', 'video')
+        def_info = {x: info[x] for x in info if x not in _exclude_keys}
+        mediatype = info.get('type', 'video')
+        if mediatype != 'unknown':
+            def_info['mediatype'] = mediatype 
 
-        for key in info:
-            i = info.get(key)
+        for key in def_info:
+            i = def_info.get(key)
             if any(key == x for x in ['artist', 'cast']):
                 if not i:
                     def_info[key] = []
@@ -76,8 +96,6 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
                     def_info[key] = cast
             elif isinstance(i, list):
                 def_info[key] = ' / '.join(i)
-            elif key == 'type':
-                def_info['mediatype'] = i
             else:
                 def_info[key] = six.text_type(i)
     
@@ -92,6 +110,7 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     # build list item
     item = xbmcgui.ListItem(title)
     item.setInfo('video', def_info)
+    item.setMimeType(def_info.get('mimetype', ''))
     item.setArt(def_art)
     item.addContextMenuItems(def_cm)
     if sort:
