@@ -368,22 +368,13 @@ def merged_path(group_id):
                                  'properties': utils.info_types},
                       'id': 1}
             
-            files = xbmc.executeJSONRPC(json.dumps(params))
-            
+            files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
             if 'error' not in files:
-                files = json.loads(files)['result']['files']
+                files = files['result']['files']
+                
                 for file in files:
                     labels = {}
-                    for label in [x for x in file if x not in ['art', 'file',
-                                                               'filetype', 'firstaired',
-                                                               'label', 'lastmodified',
-                                                               'mimetype', 'productioncode',
-                                                               'runtime', 'showtitle',
-                                                               'specialsortepisode',
-                                                               'specialsortseason',
-                                                               'thumbnail', 'track',
-                                                               'tvshowid', 'watchedepisodes',
-                                                               'sorttitle']]:
+                    for label in file:
                         labels[label] = file[label]
                     labels['title'] = file['label']
                     hide_next = utils.get_setting_int('hide_next')
