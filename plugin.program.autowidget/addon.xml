@@ -20,8 +20,9 @@
     </extension>
     
     <extension point="xbmc.addon.metadata">
+        <reuselanguageinvoker>true</reuselanguageinvoker>
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-	<summary lang="es_ES">Cambia automáticamente los widgets en la pantalla de inicio para una experiencia de navegación más interesante.</summary>
+        <summary lang="es_ES">Cambia automáticamente los widgets en la pantalla de inicio para una experiencia de navegación más interesante.</summary>
         <platform>all</platform>
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
