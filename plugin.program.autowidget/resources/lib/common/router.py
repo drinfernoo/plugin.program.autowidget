@@ -8,6 +8,7 @@ try:
 except ImportError:
     from urlparse import parse_qsl
     
+from resources.lib import backup
 from resources.lib import edit
 from resources.lib import menu
 from resources.lib import manage
