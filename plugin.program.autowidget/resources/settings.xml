@@ -22,10 +22,10 @@
         <setting label="$ADDON[plugin.program.autowidget 32064]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=wipe)" option="close" />
         
         <!-- Backup/Restore -->
-        <setting label="Backup / Restore" type="lsep" />
-        <setting label="Backup Location" type="action" id="backup.location" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=location)" default="special://userdata/addon_data/plugin.program.autowidget/backups/" />
-        <setting label="Backup My Groups" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=backup)" option="close" />
-        <setting label="Restore Backup" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=restore)" option="close" />
+        <setting label="$ADDON[plugin.program.autowidget 32090]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 32091]" type="action" id="backup.location" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=location)" default="special://userdata/addon_data/plugin.program.autowidget/backups/" />
+        <setting label="$ADDON[plugin.program.autowidget 32092]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=backup)" option="close" />
+        <setting label="$ADDON[plugin.program.autowidget 32093]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=restore)" option="close" />
     </category>
 </settings>
 
