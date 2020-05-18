@@ -236,9 +236,9 @@ def _copy_path(path_def):
         return
         
     group_def = manage.get_group_by_id(group_id)
-    files = xbmc.executeJSONRPC(json.dumps(params))
+    files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
     if 'error' not in files:
-        files = json.loads(files)['result']['files']
+        files = files['result']['files']
         for file in files:
             if file['type'] in ['movie', 'episode', 'musicvideo', 'song']:
                 continue
