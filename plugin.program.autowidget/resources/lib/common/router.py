@@ -92,6 +92,13 @@ def dispatch(_plugin, _handle, _params):
         utils.wipe()
     elif mode == 'clean':
         manage.clean()
+    elif mode == 'backup' and action:
+        if action == 'location':
+            backup.location()
+        elif action == 'backup':
+            backup.backup()
+        elif action == 'restore':
+            backup.restore()
 
     if is_dir:
         xbmcplugin.setPluginCategory(_handle, category)

@@ -369,3 +369,51 @@ msgstr ""
 msgctxt "#32087"
 msgid "Never"
 msgstr ""
+
+msgctxt "#32090"
+msgid "Backup / Restore"
+msgstr ""
+
+msgctxt "#32091"
+msgid "Choose Backup Location"
+msgstr ""
+
+msgctxt "#32092"
+msgid "Backup My Groups"
+msgstr ""
+
+msgctxt "#32093"
+msgid "Restore from Backup"
+msgstr ""
+
+msgctxt "#32094"
+msgid "Do you want to backup your groups? This will not backup any widgets defined in the skin."
+msgstr ""
+
+msgctxt "#32095"
+msgid "Backup Name"
+msgstr ""
+
+msgctxt "#32096"
+msgid "Backup Cancelled."
+msgstr ""
+
+msgctxt "#32097"
+msgid "Could not create backup location."
+msgstr ""
+
+msgctxt "#32098"
+msgid "Choose Backup to Restore"
+msgstr ""
+
+msgctxt "#32099"
+msgid "Would you like to restore {} group{} from this backup?"
+msgstr ""
+
+msgctxt "#32100"
+msgid "Would you like to erase your current groups before restoring?"
+msgstr ""
+
+msgctxt "#32101"
+msgid "Restore Cancelled."
+msgstr ""

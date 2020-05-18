@@ -13,6 +13,7 @@ import string
 import sys
 import time
 import unicodedata
+import zipfile
 
 import six
 
@@ -54,7 +55,6 @@ art_types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
              'poster', 'thumb']
 
 
-
 def log(msg, level=xbmc.LOGDEBUG):
     msg = '{}: {}'.format(_addon_id, msg)
     xbmc.log(msg, level)
@@ -70,9 +70,18 @@ def ensure_addon_data():
 def wipe(folder=_addon_path):
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno('AutoWidget', get_string(32065))
+    backup_location = xbmc.translatePath(get_setting('backup.location'))
     
     if choice:
-        shutil.rmtree(folder)
+        for root, dirs, files in os.walk(folder):
+            for name in files:
+                file = os.path.join(root, name)
+                if backup_location not in file:
+                    os.remove(file)
+            for name in dirs:
+                dir = os.path.join(root, name)
+                if backup_location[:-1] not in dir:
+                    os.rmdir(dir)
 
 
 def set_skin_string(string, value):

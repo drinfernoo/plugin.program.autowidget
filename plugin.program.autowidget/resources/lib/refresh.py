@@ -3,6 +3,8 @@ import xbmcgui
 
 import os
 import random
+import re
+import threading
 import time
 
 from resources.lib import convert
@@ -10,6 +12,7 @@ from resources.lib import manage
 from resources.lib.common import utils
 
 skin_string_pattern = 'autowidget-{}-{}'
+info_pattern = '\$INFO\[(.*)\]'
 _properties = ['context.autowidget']
 
 class RefreshService(xbmc.Monitor):
@@ -75,7 +78,6 @@ class RefreshService(xbmc.Monitor):
                 continue
 
 
-
 def _update_strings(_id, path_def, setting=None, label_setting=None):
     if not path_def:
         return
@@ -89,24 +91,45 @@ def _update_strings(_id, path_def, setting=None, label_setting=None):
         pass
     
     if setting:
-        if label_setting:
-            utils.log('Setting {} to {}'.format(label_setting, label))
-            utils.set_skin_string(label_setting, label)
-        
         utils.log('Setting {} to {}'.format(setting, action))
         utils.set_skin_string(setting, action)
     else:
-        target = path_def['window']
-        label_string = skin_string_pattern.format(_id, 'label')
         action_string = skin_string_pattern.format(_id, 'action')
         target_string = skin_string_pattern.format(_id, 'target')
-
-        utils.log('Setting {} to {}'.format(label_string, label))
+    
         utils.log('Setting {} to {}'.format(action_string, action))
-        utils.log('Setting {} to {}'.format(target_string, target))
-        utils.set_skin_string(label_string, label)
+        utils.log('Setting {} to {}'.format(target_string, path_def['window']))
+        
         utils.set_skin_string(action_string, action)
-        utils.set_skin_string(target_string, target)
+        utils.set_skin_string(target_string, path_def['window'])
+    
+    thread = threading.Thread(target=_wait_for_infolabel, args=(_id, label, label_setting))
+    thread.start()
+        
+        
+def _wait_for_infolabel(_id, label, label_setting):
+    has_info = re.search(info_pattern, label)
+    if has_info:
+        info_groups = has_info.groups()
+        for info in info_groups:
+            old_value = xbmc.getInfoLabel(info)
+            value = old_value
+            count = 0
+            
+            while value == old_value and count < 10:
+                xbmc.sleep(1000)
+                value = xbmc.getInfoLabel(info)
+                count += 1
+            
+            label = re.sub(info_pattern, value, label)
+            
+    if label_setting:
+        utils.log('Setting {} to {}'.format(label_setting, label))
+        utils.set_skin_string(label_setting, label)
+    else:
+        label_string = skin_string_pattern.format(_id, 'label')
+        utils.log('Setting {} to {}'.format(label_string, label))
+        utils.set_skin_string(label_string, label)
 
 
 def refresh(widget_id, widget_def=None, paths=None, force=False):

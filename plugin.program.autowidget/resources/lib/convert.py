@@ -82,34 +82,6 @@ def save_path_details(params, _id=''):
     utils.write_json(path_to_saved, params)
 
     return params
-
-
-def _update_strings(_id, path_def, setting=None, label_setting=None):
-    if not path_def:
-        return
-    
-    label = path_def['label']
-    action = path_def['path']
-    
-    if setting:
-        if label_setting:
-            utils.log('Setting {} to {}'.format(label_setting, label))
-            utils.set_skin_string(label_setting, label)
-        
-        utils.log('Setting {} to {}'.format(setting, action))
-        utils.set_skin_string(setting, action)
-    else:
-        target = path_def['window']
-        label_string = skin_string_pattern.format(_id, 'label')
-        action_string = skin_string_pattern.format(_id, 'action')
-        target_string = skin_string_pattern.format(_id, 'target')
-
-        utils.log('Setting {} to {}'.format(label_string, label))
-        utils.log('Setting {} to {}'.format(action_string, action))
-        utils.log('Setting {} to {}'.format(target_string, target))
-        utils.set_skin_string(label_string, label)
-        utils.set_skin_string(action_string, action)
-        utils.set_skin_string(target_string, target)
     
     
 def convert_widgets(notify=False):
@@ -285,6 +257,9 @@ def _convert_properties(converted):
             if params.get('target') != 'shortcut':
                 converted.append(_id)
         
-    utils.write_file(props_path, '{}'.format(content))
+    content_str = '['
+    for idx, prop in enumerate(content):
+        content_str += '{}{}'.format(prop, ',\n ' if idx < len(content) - 1 else ']')
+    utils.write_file(props_path, content_str)
         
     return converted
