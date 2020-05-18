@@ -376,16 +376,23 @@ def merged_path(group_id):
                     labels = {}
                     for label in file:
                         labels[label] = file[label]
+                    
                     labels['title'] = file['label']
                     hide_next = utils.get_setting_int('hide_next')
                     next_item = labels['title'].lower() in ['next', 'next page']
+                    sort_to_end = next_item and hide_next == 1
+                    
                     if not next_item or hide_next != 2:
-                        directory.add_menu_item(title=file['label'],
+                        if next_item:
+                            labels['title'] = '{} - {}'.format(labels['title'],
+                                                               path_def['label'])
+                            
+                        directory.add_menu_item(title=labels['title'],
                                                 path=file['file'],
                                                 art=file['art'],
                                                 info=labels,
                                                 isFolder=file['filetype'] == 'directory',
-                                                sort='bottom' if hide_next == 1 else None)
+                                                props={'specialsort': 'bottom'} if sort_to_end else None)
                     
         return True, group_name
     else:

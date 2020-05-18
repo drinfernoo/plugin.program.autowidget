@@ -1,3 +1,4 @@
+import xbmc
 import xbmcgui
 import xbmcplugin
 
@@ -53,7 +54,7 @@ def add_sort_methods(handle):
         
     
 def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
-                  isFolder=False, sort=None):
+                  isFolder=False, props=None):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
     _params = sys.argv[2][1:]
@@ -103,7 +104,7 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     if art:
         def_art.update(art)
     
-    def_cm = []    
+    def_cm = []
     if cm:
         def_cm.extend(cm)
     
@@ -113,8 +114,9 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     item.setMimeType(def_info.get('mimetype', ''))
     item.setArt(def_art)
     item.addContextMenuItems(def_cm)
-    if sort:
-        item.setProperty('SpecialSort', sort)
+    
+    if props:
+        item.setProperties(props)
     
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
                                 isFolder=isFolder)
