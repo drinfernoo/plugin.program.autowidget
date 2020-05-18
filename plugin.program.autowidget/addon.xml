@@ -28,6 +28,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.6.6
+ - Fix extract location
 1.6.5
  - Add backup/restore features
 1.6.4
