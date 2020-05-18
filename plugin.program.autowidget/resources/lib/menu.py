@@ -362,6 +362,8 @@ def merged_path(group_id):
     paths = manage.find_defined_paths(group_id)
     
     if len(paths) > 0:
+        titles = []
+    
         for path_def in paths:
             params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
                       'params': {'directory': path_def['path'],
@@ -372,7 +374,7 @@ def merged_path(group_id):
             if 'error' not in files:
                 files = files['result']['files']
                 
-                for file in files:
+                for file in [x for x in files if x['label'] not in titles]:
                     labels = {}
                     for label in file:
                         labels[label] = file[label]
@@ -393,6 +395,7 @@ def merged_path(group_id):
                                                 info=labels,
                                                 isFolder=file['filetype'] == 'directory',
                                                 props={'specialsort': 'bottom'} if sort_to_end else None)
+                        titles.append(labels['title'])
                     
         return True, group_name
     else:
