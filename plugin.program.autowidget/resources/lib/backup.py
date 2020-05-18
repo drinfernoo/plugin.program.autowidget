@@ -65,7 +65,7 @@ def restore():
                     files = [x for x in os.listdir(utils._addon_path) if x.endswith('.group')]
                     for file in files:
                         utils.remove_file(file)
-                zip.extractall()
+                zip.extractall(utils._addon_path)
             else:
                 dialog.notification('AutoWidget', utils.get_string(32101))
     else:
