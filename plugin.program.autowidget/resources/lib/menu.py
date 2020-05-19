@@ -245,6 +245,48 @@ def tools_menu():
     return True, utils.get_string(32008)
     
     
+def show_path(group_id, path_id, titles=None):
+    path_def = manage.get_path_by_id(path_id, group_id=group_id)
+    if not path_def:
+        return False, 'AutoWidget'
+        
+    params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
+              'params': {'directory': path_def['path'],
+                         'properties': utils.info_types},
+              'id': 1}
+    
+    if not titles:
+        titles = []
+    
+    files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
+    if 'error' not in files:
+        files = files['result']['files']
+        
+        for file in [x for x in files if x['label'] not in titles]:
+            labels = {}
+            for label in file:
+                labels[label] = file[label]
+            
+            labels['title'] = file['label']
+            hide_next = utils.get_setting_int('hide_next')
+            next_item = labels['title'].lower() in ['next', 'next page']
+            sort_to_end = next_item and hide_next == 1
+            
+            if not next_item or hide_next != 2:
+                if next_item:
+                    labels['title'] = '{} - {}'.format(labels['title'],
+                                                       path_def['label'])
+                    
+                directory.add_menu_item(title=labels['title'],
+                                        path=file['file'],
+                                        art=file['art'],
+                                        info=labels,
+                                        isFolder=file['filetype'] == 'directory',
+                                        props={'specialsort': 'bottom'} if sort_to_end else None)
+                titles.append(labels['title'])
+    return titles, 'AutoWidget'
+    
+    
 def call_path(group_id, path_id):
     path_def = manage.get_path_by_id(path_id, group_id=group_id)
     if not path_def:
@@ -363,39 +405,9 @@ def merged_path(group_id):
     
     if len(paths) > 0:
         titles = []
-    
+
         for path_def in paths:
-            params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
-                      'params': {'directory': path_def['path'],
-                                 'properties': utils.info_types},
-                      'id': 1}
-            
-            files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
-            if 'error' not in files:
-                files = files['result']['files']
-                
-                for file in [x for x in files if x['label'] not in titles]:
-                    labels = {}
-                    for label in file:
-                        labels[label] = file[label]
-                    
-                    labels['title'] = file['label']
-                    hide_next = utils.get_setting_int('hide_next')
-                    next_item = labels['title'].lower() in ['next', 'next page']
-                    sort_to_end = next_item and hide_next == 1
-                    
-                    if not next_item or hide_next != 2:
-                        if next_item:
-                            labels['title'] = '{} - {}'.format(labels['title'],
-                                                               path_def['label'])
-                            
-                        directory.add_menu_item(title=labels['title'],
-                                                path=file['file'],
-                                                art=file['art'],
-                                                info=labels,
-                                                isFolder=file['filetype'] == 'directory',
-                                                props={'specialsort': 'bottom'} if sort_to_end else None)
-                        titles.append(labels['title'])
+            titles, cat = show_path(group_id, path_def['id'])
                     
         return True, group_name
     else:
