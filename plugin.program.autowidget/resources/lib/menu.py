@@ -233,6 +233,7 @@ def call_path(group_id, path_id):
         return
     
     xbmc.executebuiltin('Dialog.Close(busydialog)')
+    xbmc.sleep(500)
     final_path = ''
     
     if path_def['target'] == 'shortcut' and path_def['is_folder'] == 0 \
