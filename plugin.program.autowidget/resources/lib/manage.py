@@ -35,6 +35,27 @@ def write_path(group_def, path_def=None, update=''):
             group_def['paths'].append(path_def)
 
     utils.write_json(filename, group_def)
+    
+    
+def save_path_details(params, _id=''):
+    for param in params:
+        if str(params[param]).endswith(',return)'):
+            return
+    
+    if not _id:
+        _id = params.get('id')
+        if not _id:
+            return
+    
+    path_to_saved = os.path.join(_addon_path, '{}.widget'.format(_id))
+    params['version'] = _addon_version
+    
+    if 'refresh' not in params:
+        params['refresh'] = utils.get_setting_float('service.refresh_duration')
+
+    utils.write_json(path_to_saved, params)
+
+    return params
 
 
 def get_group_by_id(group_id):

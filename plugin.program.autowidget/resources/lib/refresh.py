@@ -7,7 +7,6 @@ import re
 import threading
 import time
 
-from resources.lib import convert
 from resources.lib import manage
 from resources.lib.common import utils
 
@@ -173,21 +172,15 @@ def refresh(widget_id, widget_def=None, paths=None, force=False):
                 if widget_def['path']:
                     widget_def['updated'] = 0 if force else current_time
                         
-                    convert.save_path_details(widget_def, _id)
+                    manage.save_path_details(widget_def, _id)
                     _update_strings(_id, path_def, setting, label_setting)
-                    
-                    # utils.update_container()
     
     return paths
 
 
 def refresh_paths(notify=False, force=False):
-    converted = []
     current_time = time.time()
     
-    # if force:
-        # converted = convert.convert_widgets(notify)
-
     if notify:
         dialog = xbmcgui.Dialog()
         dialog.notification('AutoWidget', utils.get_string(32033),
@@ -200,4 +193,4 @@ def refresh_paths(notify=False, force=False):
         for widget_def in widgets:
             paths = refresh(widget_def['id'], widget_def=widget_def, paths=paths, force=force)
 
-    utils.update_container(reload=len(converted) > 0 and utils.shortcuts_path)
+    utils.update_container()

@@ -7,7 +7,6 @@ import re
 
 import six
 
-from resources.lib import convert
 from resources.lib import manage
 from resources.lib.common import utils
 
@@ -354,7 +353,7 @@ def edit_widget_dialog(widget_id):
     utils.log(updated, xbmc.LOGNOTICE)
     
     if updated:
-        convert.save_path_details(widget_def, widget_id)
+        manage.save_path_details(widget_def, widget_id)
         utils.update_container()
     edit_widget_dialog(widget_id)
 
