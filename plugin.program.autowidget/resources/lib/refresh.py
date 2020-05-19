@@ -84,7 +84,7 @@ def _update_strings(_id, path_def, setting=None, label_setting=None):
         return
     
     label = path_def['label']
-    action = path_def['path']
+    action = path_def['id']
     
     try:
         label = label.encode('utf-8')
@@ -185,8 +185,8 @@ def refresh_paths(notify=False, force=False):
     converted = []
     current_time = time.time()
     
-    if force:
-        converted = convert.convert_widgets(notify)
+    # if force:
+        # converted = convert.convert_widgets(notify)
 
     if notify:
         dialog = xbmcgui.Dialog()

@@ -68,7 +68,7 @@ def dispatch(_plugin, _handle, _params):
         if action == 'call' and group and path:
             menu.call_path(group, path)
         elif action == 'random' and group:
-            is_dir, category = menu.random_path(group)
+            is_dir, category = menu.random_path(group, _id)
         elif action == 'next' and group:
             is_dir, category = menu.next_path(group)
         elif action == 'merged' and group:

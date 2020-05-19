@@ -9,7 +9,9 @@ import uuid
 
 import six
 
+from resources.lib import convert
 from resources.lib import manage
+from resources.lib import refresh
 from resources.lib.common import directory
 from resources.lib.common import utils
 
@@ -22,7 +24,7 @@ folder_next = utils.get_art('folder-next.png')
 folder_merged = utils.get_art('folder-dots.png')
 merge = utils.get_art('merge.png')
 next = utils.get_art('next.png')
-refresh = utils.get_art('refresh.png')
+refresh_art = utils.get_art('refresh.png')
 remove = utils.get_art('remove.png')
 share = utils.get_art('share.png')
 shuffle = utils.get_art('shuffle.png')
@@ -126,12 +128,12 @@ def group_menu(group_id, target, _id):
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/')
             
-            directory.add_menu_item(title=utils.get_string(32028)
-                                          .format(group_name, _id),
+            directory.add_menu_item(title='$ESCINFO[Skin.String[autowidget-{}-label)]'.format(_id),
                                     params={'mode': 'path',
                                             'action': 'random',
                                             'group': group_id,
-                                            'id': six.text_type(_id)},
+                                            'id': six.text_type(_id),
+                                            'path': '$INFO[Skin.String(autowidget-{}-action)]'.format(_id)},
                                     art=shuffle,
                                     isFolder=True)
             directory.add_menu_item(title=utils.get_string(32076)
@@ -235,7 +237,7 @@ def active_widgets_menu():
 def tools_menu():
     directory.add_menu_item(title=32006,
                             params={'mode': 'force'},
-                            art=refresh,
+                            art=refresh_art,
                             info={'plot': utils.get_string(32020)},
                             isFolder=False)
     directory.add_menu_item(title=32064,
@@ -321,7 +323,7 @@ def call_path(group_id, path_id):
         xbmc.executebuiltin(final_path)
 
 
-def random_path(group_id):
+def random_path(group_id, _id):
     _window = utils.get_active_window()
     
     if _window not in ['home', 'media'] and not label_warning_shown:
@@ -337,23 +339,33 @@ def random_path(group_id):
     group_name = group.get('label', '')
     paths = manage.find_defined_paths(group_id)
     
-    if len(paths) > 0:
+    if not manage.get_widget_by_id(_id, group_id) and _window == 'home':
+        duration = utils.get_setting_float('service.refresh_duration')
+        details = {'action': 'random',
+                   'id': _id,
+                   'group': group_id,
+                   'mode': 'path',
+                   'refresh': duration,
+                   'path': 'popular-1589844847.82'}
+        convert.save_path_details(details)
+        refresh.refresh(_id)
+    
+    widget_def = manage.get_widget_by_id(_id, group_id)
+    
+    if len(paths) > 0 and widget_def:
         if _window == 'media':
             rand = random.randrange(len(paths))
             call_path(group_id, paths[rand]['id'])
             return False, group_name
         else:
-            directory.add_menu_item(title=32013,
-                                    params={'mode': 'force'},
-                                    art=unpack,
-                                    info={'plot': utils.get_string(32014)},
-                                    isFolder=False)
+            show_path(group_id, widget_def['path'])
             return True, group_name
     else:
         directory.add_menu_item(title=32032,
                                 art=alert,
                                 isFolder=False)
-        return False, group_name
+        return True, group_name
+    return True, group_name
     
     
 def next_path(group_id):

@@ -116,8 +116,7 @@ def get_active_window():
         
         
 def update_container(_type='', reload=False):
-    if _type == 'shortcut':
-        xbmc.executebuiltin('UpdateLibrary(video,AutoWidget)')
+    xbmc.executebuiltin('UpdateLibrary(video, AutoWidget)')
     
     if reload:
         xbmc.executebuiltin('ReloadSkin()')
