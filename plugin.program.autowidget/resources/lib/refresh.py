@@ -78,7 +78,7 @@ class RefreshService(xbmc.Monitor):
                 continue
 
 
-def _update_strings(_id, path_def, setting=None, label_setting=None):
+def _update_strings(_id, path_def):
     if not path_def:
         return
     
@@ -90,46 +90,14 @@ def _update_strings(_id, path_def, setting=None, label_setting=None):
     except:
         pass
     
-    if setting:
-        utils.log('Setting {} to {}'.format(setting, action))
-        utils.set_skin_string(setting, action)
-    else:
-        action_string = skin_string_pattern.format(_id, 'action')
-        target_string = skin_string_pattern.format(_id, 'target')
+    label_string = skin_string_pattern.format(_id, 'label')
+    action_string = skin_string_pattern.format(_id, 'action')
     
-        utils.log('Setting {} to {}'.format(action_string, action))
-        utils.log('Setting {} to {}'.format(target_string, path_def['window']))
+    utils.log('Setting {} to {}'.format(label_string, label))
+    utils.log('Setting {} to {}'.format(action_string, action))
         
-        utils.set_skin_string(action_string, action)
-        utils.set_skin_string(target_string, path_def['window'])
-    
-    thread = threading.Thread(target=_wait_for_infolabel, args=(_id, label, label_setting))
-    thread.start()
-        
-        
-def _wait_for_infolabel(_id, label, label_setting):
-    has_info = re.search(info_pattern, label)
-    if has_info:
-        info_groups = has_info.groups()
-        for info in info_groups:
-            old_value = xbmc.getInfoLabel(info)
-            value = old_value
-            count = 0
-            
-            while value == old_value and count < 10:
-                xbmc.sleep(1000)
-                value = xbmc.getInfoLabel(info)
-                count += 1
-            
-            label = re.sub(info_pattern, value, label)
-            
-    if label_setting:
-        utils.log('Setting {} to {}'.format(label_setting, label))
-        utils.set_skin_string(label_setting, label)
-    else:
-        label_string = skin_string_pattern.format(_id, 'label')
-        utils.log('Setting {} to {}'.format(label_string, label))
-        utils.set_skin_string(label_string, label)
+    xbmcgui.Window(10000).setProperty(label_string, label)
+    xbmcgui.Window(10000).setProperty(action_string, action)
 
 
 def refresh(widget_id, widget_def=None, paths=None, force=False):
@@ -148,13 +116,10 @@ def refresh(widget_id, widget_def=None, paths=None, force=False):
         _id = widget_def['id']
         group_id = widget_def['group']
         action = widget_def.get('action')
-        setting = widget_def.get('path_setting')
-        label_setting = widget_def.get('label_setting')
         current = int(widget_def.get('current', -1))
         
         if not paths:
             paths = manage.find_defined_paths(group_id)
-            random.shuffle(paths)
         
         if action:
             if len(paths) > 0:
@@ -162,18 +127,19 @@ def refresh(widget_id, widget_def=None, paths=None, force=False):
                 if action == 'next':
                     next = (current + 1) % len(paths)
                 elif action == 'random':
+                    random.shuffle(paths)
                     next = random.randrange(len(paths))
                     
                 widget_def['current'] = next
                 path_def = paths[next]
-                paths.remove(paths[next])            
+                paths.remove(paths[next])
                 
                 widget_def['path'] = path_def.get('id')
                 if widget_def['path']:
                     widget_def['updated'] = 0 if force else current_time
                         
                     manage.save_path_details(widget_def, _id)
-                    _update_strings(_id, path_def, setting, label_setting)
+                    _update_strings(_id, path_def)
     
     return paths
 
