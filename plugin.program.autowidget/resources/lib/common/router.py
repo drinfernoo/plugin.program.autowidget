@@ -19,7 +19,6 @@ from resources.lib.common import utils
 
 def _log_params(_plugin, _handle, _params):
     params = dict(parse_qsl(_params))
-    
     logstring = ''
     
     for param in params:
@@ -67,10 +66,8 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'path':
         if action == 'call' and group and path:
             menu.call_path(group, path)
-        elif action == 'random' and group:
-            is_dir, category = menu.random_path(group, _id)
-        elif action == 'next' and group:
-            is_dir, category = menu.next_path(group)
+        elif action in ['random', 'next'] and group:
+            is_dir, category = menu.path_menu(group, action, _id)
         elif action == 'merged' and group:
             is_dir, category = menu.merged_path(group)
             is_type = 'videos'

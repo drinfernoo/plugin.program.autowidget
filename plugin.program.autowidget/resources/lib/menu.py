@@ -9,7 +9,6 @@ import uuid
 
 import six
 
-from resources.lib import convert
 from resources.lib import manage
 from resources.lib import refresh
 from resources.lib.common import directory
@@ -125,20 +124,20 @@ def group_menu(group_id, target, _id):
                                     art=path.get('art') or art,
                                     cm=cm,
                                     isFolder=False)
+                                    
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/')
             
             directory.add_menu_item(title=utils.get_string(32028)
-                                          .format(group_name, _id),
+                                          .format(group_name, ''),
                                     params={'mode': 'path',
                                             'action': 'random',
                                             'group': group_id,
-                                            'id': six.text_type(_id),
-                                            'path': '$INFO[Skin.String(autowidget-{}-action)]'.format(_id)},
+                                            'id': six.text_type(_id)},
                                     art=shuffle,
                                     isFolder=True)
             directory.add_menu_item(title=utils.get_string(32076)
-                                          .format(group_name, _id),
+                                          .format(group_name, ''),
                                     params={'mode': 'path',
                                             'action': 'next',
                                             'group': group_id,
@@ -146,7 +145,7 @@ def group_menu(group_id, target, _id):
                                     art=next,
                                     isFolder=True)
             directory.add_menu_item(title=utils.get_string(32089)
-                                          .format(group_name, _id),
+                                          .format(group_name, ''),
                                     params={'mode': 'path',
                                             'action': 'merged',
                                             'group': group_id,
@@ -248,11 +247,28 @@ def tools_menu():
     return True, utils.get_string(32008)
     
     
+def _initialize(group_def, action, _id):
+    duration = utils.get_setting_float('service.refresh_duration')
+    
+    paths = group_def['paths']
+    rand_idx = random.randrange(len(paths))
+    init_path = paths[0]['id'] if action == 'next' else paths[rand_idx]['id']
+    
+    params = {'action': action,
+              'id': _id,
+              'group': group_def['id'],
+              'refresh': duration,
+              'path': init_path}
+    details = manage.save_path_details(params)
+    refresh.refresh(_id)
+    
+    return details
+    
 def show_path(group_id, path_id, titles=None):
     path_def = manage.get_path_by_id(path_id, group_id=group_id)
     if not path_def:
         return False, 'AutoWidget'
-        
+    
     params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
               'params': {'directory': path_def['path'],
                          'properties': utils.info_types},
@@ -324,34 +340,28 @@ def call_path(group_id, path_id):
         xbmc.executebuiltin(final_path)
 
 
-def random_path(group_id, _id):
+def path_menu(group_id, action, _id):
     _window = utils.get_active_window()
-    
     if _window not in ['home', 'media'] and not label_warning_shown:
         _warn()
     
-    group = manage.get_group_by_id(group_id)
-    if not group:
+    group_def = manage.get_group_by_id(group_id)
+    if not group_def:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'
                   .format(group_id),
                   level=xbmc.LOGERROR)
         return False, 'AutoWidget'
     
-    group_name = group.get('label', '')
-    paths = manage.find_defined_paths(group_id)
-    
-    if not manage.get_widget_by_id(_id, group_id) and _window == 'home':
-        duration = utils.get_setting_float('service.refresh_duration')
-        details = {'action': 'random',
-                   'id': _id,
-                   'group': group_id,
-                   'mode': 'path',
-                   'refresh': duration,
-                   'path': 'popular-1589844847.82'}
-        convert.save_path_details(details)
-        refresh.refresh(_id)
+    group_name = group_def.get('label', '')
+    paths = group_def.get('paths', [])
     
     widget_def = manage.get_widget_by_id(_id, group_id)
+    
+    if not widget_def and _window == 'home':
+        widget_def = _initialize(group_def, action, _id)
+    
+    if not widget_def:
+        return True, group_name
     
     if len(paths) > 0 and widget_def:
         if _window == 'media':
@@ -359,7 +369,7 @@ def random_path(group_id, _id):
             call_path(group_id, paths[rand]['id'])
             return False, group_name
         else:
-            show_path(group_id, widget_def['path'])
+            show_path(group_id, widget_def.get('path', ''))
             return True, group_name
     else:
         directory.add_menu_item(title=32032,
