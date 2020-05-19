@@ -176,7 +176,7 @@ def refresh(widget_id, widget_def=None, paths=None, force=False):
                     convert.save_path_details(widget_def, _id)
                     _update_strings(_id, path_def, setting, label_setting)
                     
-                    utils.update_container()
+                    # utils.update_container()
     
     return paths
 

@@ -128,7 +128,8 @@ def group_menu(group_id, target, _id):
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/')
             
-            directory.add_menu_item(title='$ESCINFO[Skin.String[autowidget-{}-label)]'.format(_id),
+            directory.add_menu_item(title=utils.get_string(32028)
+                                          .format(group_name, _id),
                                     params={'mode': 'path',
                                             'action': 'random',
                                             'group': group_id,

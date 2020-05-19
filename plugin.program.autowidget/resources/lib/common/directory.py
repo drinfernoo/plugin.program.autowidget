@@ -2,6 +2,7 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 
+import re
 import string
 import sys
 
@@ -10,9 +11,11 @@ import six
 from resources.lib.common import utils
 
 try:
-    from urllib.parse import quote_plus
+    from urllib.parse import urlencode
+    from urllib.parse import unquote
 except ImportError:
-    from urllib import quote_plus
+    from urllib import urlencode
+    from urllib import unquote
 
 _sort_methods = [xbmcplugin.SORT_METHOD_UNSORTED,
                  xbmcplugin.SORT_METHOD_LABEL,
@@ -26,6 +29,8 @@ _exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
                  'filetype', 'lastmodified', 'productioncode', 'firstaired',
                  'runtime', 'showtitle', 'specialsortepisode',
                  'specialsortseason', 'track', 'tvshowid', 'watchedepisodes']
+
+info_replace_pattern = '(\%24INFO\%5B.*\%29\%5D)'
 
     
 def add_separator(title='', char='-'):
@@ -60,16 +65,14 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     _params = sys.argv[2][1:]
 
     if params is not None:
-        mode = quote_plus(params.get('mode', ''))
-        _plugin += '?{0}={1}'.format('mode', mode)
-        
-        for param in params:
-            if param == 'mode':
-                continue
-                
-            # build URI to send to router
-            _param = quote_plus(params.get(param, ''))
-            _plugin += '&{0}={1}'.format(param, _param)
+        _plugin += '?{}'.format(urlencode(params))
+        info_match = re.search(info_replace_pattern, _plugin)
+        if info_match:
+            groups = info_match.groups()
+            for group in groups:
+                _plugin = re.sub(info_replace_pattern,
+                                 unquote(group),
+                                 _plugin)
     elif path is not None:
         _plugin = path
 
@@ -117,6 +120,6 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     
     if props:
         item.setProperties(props)
-    
+
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
                                 isFolder=isFolder)
