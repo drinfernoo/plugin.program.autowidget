@@ -1,5 +1,4 @@
 import xbmc
-import xbmcaddon
 import xbmcgui
 
 import os
@@ -10,8 +9,6 @@ import six
 from resources.lib import manage
 from resources.lib.common import utils
 
-_addon = xbmcaddon.Addon()
-_addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _home = xbmc.translatePath('special://home/')
 
 advanced = utils.get_setting_bool('context.advanced')
@@ -52,7 +49,7 @@ def _remove_group(group_id, over=False):
         choice = dialog.yesno('AutoWidget', utils.get_string(32039))
     
     if over or choice:
-        file = os.path.join(_addon_path, '{}.group'.format(group_id))
+        file = os.path.join(utils._addon_path, '{}.group'.format(group_id))
         utils.remove_file(file)
             
         dialog.notification('AutoWidget', utils.get_string(32045)
@@ -83,7 +80,7 @@ def _remove_widget(widget_id):
     choice = dialog.yesno('AutoWidget', utils.get_string(32039))
     
     if choice:
-        file = os.path.join(_addon_path, '{}.widget'.format(widget_id))
+        file = os.path.join(utils._addon_path, '{}.widget'.format(widget_id))
         utils.remove_file(file)
             
         dialog.notification('AutoWidget', utils.get_string(32045)
@@ -96,12 +93,12 @@ def _warn():
                           yeslabel=utils.get_string(32059),
                           nolabel=utils.get_string(32060))
     if choice < 1:
-        _addon.setSetting('context.advanced', 'false')
-        _addon.setSetting('context.warning', 'true')
+        utils.set_setting('context.advanced', 'false')
+        utils.set_setting('context.warning', 'true')
         advanced = False
         warning = True
     else:
-        _addon.setSetting('context.warning', 'true')
+        utils.set_setting('context.warning', 'true')
         warning = True
         
         

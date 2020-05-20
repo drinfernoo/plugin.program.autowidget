@@ -1,10 +1,7 @@
 import xbmc
 import xbmcgui
 
-import os
 import random
-import re
-import threading
 import time
 
 from resources.lib import manage
@@ -32,16 +29,16 @@ class RefreshService(xbmc.Monitor):
         self.refresh_notification = utils.get_setting_int('service.refresh_notification')
         self.refresh_sound = utils.get_setting_bool('service.refresh_sound')
 
-    def _update_properties(self, window=10000):
+    def _update_properties(self):
 
         for property in _properties:
             setting = utils.get_setting(property)
             utils.log('{}: {}'.format(property, setting))
             if setting is not None:
-                xbmcgui.Window(window).setProperty(property, setting)
+                utils.set_property(property, setting)
                 utils.log('Property {0} set'.format(property))
             else:
-                xbmcgui.Window(window).clearProperty(property)
+                utils.clear_property(property)
                 utils.log('Property {0} cleared'.format(property))
 
         self._reload_settings()
@@ -96,8 +93,8 @@ def _update_strings(_id, path_def):
     utils.log('Setting {} to {}'.format(label_string, label))
     utils.log('Setting {} to {}'.format(action_string, action))
         
-    xbmcgui.Window(10000).setProperty(label_string, label)
-    xbmcgui.Window(10000).setProperty(action_string, action)
+    utils.set_property(label_string, label)
+    utils.set_property(action_string, path_def['path'])
 
 
 def refresh(widget_id, widget_def=None, paths=None, force=False):

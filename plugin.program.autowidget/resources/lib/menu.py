@@ -40,7 +40,7 @@ def _warn():
     dialog = xbmcgui.Dialog()
     dialog.ok('AutoWidget', utils.get_string(32073))
     
-    _addon.setSetting('label.warning', 'true')
+    utils.set_setting('label.warning', 'true')
     label_warning_shown = True
 
 

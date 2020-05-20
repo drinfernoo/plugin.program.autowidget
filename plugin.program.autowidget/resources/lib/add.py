@@ -54,25 +54,25 @@ def add(labels):
             
 def build_labels(source, path_def=None, target=''):
     if source == 'context' and not path_def and not target:
-        labels = {'label': xbmc.getInfoLabel('ListItem.Label'),
+        labels = {'label': utils.get_infolabel('ListItem.Label'),
                   'is_folder': xbmc.getCondVisibility('Container.ListItem.IsFolder'),
                   'content': xbmc.getInfoLabel('Container.Content')}
         
-        path = xbmc.getInfoLabel('ListItem.FolderPath')
+        path = utils.get_infolabel('ListItem.FolderPath')
         
         labels['info'] = {}
         for i in utils.info_types:
-            info = xbmc.getInfoLabel('ListItem.{}'.format(i.capitalize()))
+            info = utils.get_infolabel('ListItem.{}'.format(i.capitalize()))
             if info and not info.startswith('ListItem'):
                 labels['info'][i] = info
                                  
         labels['art'] = {}
         for i in utils.art_types:
-            art = xbmc.getInfoLabel('ListItem.Art({})'.format(i.capitalize()))
+            art = utils.get_infolabel('ListItem.Art({})'.format(i.capitalize()))
             if art:
                 labels['art'][i] = art
         for i in ['icon', 'thumb']:
-            art = xbmc.getInfoLabel('ListItem.{}'.format(i.capitalize()))
+            art = utils.get_infolabel('ListItem.{}'.format(i.capitalize()))
             if art:
                 labels['art'][i] = art
     elif source == 'json' and path_def and target:

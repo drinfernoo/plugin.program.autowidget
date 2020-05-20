@@ -84,14 +84,6 @@ def wipe(folder=_addon_path):
                     os.rmdir(dir)
 
 
-def set_skin_string(string, value):
-    xbmc.executebuiltin('Skin.SetString({},{})'.format(string, value))
-    
-    
-def get_skin_string(string):
-    return xbmc.getInfoLabel('Skin.String({})'.format(string))
-    
-    
 def get_art(filename):
     art = {}
     for i in art_types:
@@ -103,7 +95,7 @@ def get_art(filename):
     
     
 def get_active_window():
-    xml_file = xbmc.getInfoLabel('Window.Property(xmlfile)').lower()
+    xml_file = get_infolabel('Window.Property(xmlfile)').lower()
 
     if xbmc.getCondVisibility('Window.IsMedia()'):
         return 'media'
@@ -248,6 +240,9 @@ def write_xml(file, content):
     except:
         log('Could not write to {}: {}'.format(file, e),
                   level=xbmc.LOGERROR)
+
+def set_setting(setting, value):
+    return _addon.setSetting(setting, value)
                   
                   
 def get_setting(setting):
@@ -274,6 +269,26 @@ def get_setting_float(setting):
     except:
         return float(_addon.getSetting(setting))
         
+
+def get_skin_string(string):
+    return get_infolabel('Skin.String({})'.format(string))
         
+        
+def set_skin_string(string, value):
+    xbmc.executebuiltin('Skin.SetString({},{})'.format(string, value))
+    
+    
 def get_string(_id):
     return six.text_type(_addon.getLocalizedString(_id))
+    
+    
+def set_property(property, value, window=10000):
+    xbmcgui.Window(window).setProperty(property, value)
+    
+    
+def clear_property(property, window=10000):
+    xbmcgui.Window(window).clearProperty(property)
+
+
+def get_infolabel(label):
+    return xbmc.getInfoLabel(label)
