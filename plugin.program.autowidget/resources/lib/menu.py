@@ -379,35 +379,28 @@ def path_menu(group_id, action, _id):
                                 isFolder=False)
         return True, group_name
     return True, group_name
-    
-    
-def next_path(group_id):
+        
+        
+def merged_path(group_id):
     _window = utils.get_active_window()
     
-    if _window not in ['home', 'media'] and not label_warning_shown:
-        _warn()
-    
-    group = manage.get_group_by_id(group_id)
-    if not group:
+    group_def = manage.get_group_by_id(group_id)
+    if not group_def:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'
                   .format(group_id),
                   level=xbmc.LOGERROR)
         return False, 'AutoWidget'
     
-    group_name = group.get('label', '')
+    group_name = group_def.get('label', '')
     paths = manage.find_defined_paths(group_id)
     
     if len(paths) > 0:
-        if _window == 'media':
-            call_path(group_id, paths[0]['id'])
-            return False, group_name
-        else:
-            directory.add_menu_item(title=32013,
-                                    params={'mode': 'force'},
-                                    art=unpack,
-                                    info={'plot': utils.get_string(32014)},
-                                    isFolder=False)
-            return True, group_name
+        titles = []
+
+        for path_def in paths:
+            titles, cat = show_path(group_id, path_def['id'])
+                    
+        return True, group_name
     else:
         directory.add_menu_item(title=32032,
                                 art=alert,
