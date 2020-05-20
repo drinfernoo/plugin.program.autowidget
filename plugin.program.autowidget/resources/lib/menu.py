@@ -133,7 +133,9 @@ def group_menu(group_id, target, _id):
                                     params={'mode': 'path',
                                             'action': 'random',
                                             'group': group_id,
-                                            'id': six.text_type(_id)},
+                                            'id': six.text_type(_id),
+                                            'path': '$INFO[Window(10000).Property(autowidget-{}-action)]'
+                                                    .format(_id)},
                                     art=shuffle,
                                     isFolder=True)
             directory.add_menu_item(title=utils.get_string(32076)

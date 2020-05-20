@@ -18,6 +18,7 @@ class RefreshService(xbmc.Monitor):
         self.player = xbmc.Player()
         utils.ensure_addon_data()
         self._update_properties()
+        self._update_labels()
         self._update_widgets()
 
     def onSettingsChanged(self):
@@ -73,6 +74,22 @@ class RefreshService(xbmc.Monitor):
 
             if not self._refresh():
                 continue
+                
+    def _update_labels(self):
+        for widget_def in manage.find_defined_widgets():
+            path_property = 'autowidget-{}-action'.format(widget_def['id'])
+            label_property = 'autowidget-{}-label'.format(widget_def['id'])
+            path_def = manage.get_path_by_id(widget_def['path'],
+                                             group_id=widget_def['group'])
+            
+            path = widget_def['path']
+            label = path_def['label']
+            
+            if widget_def['updated'] > 0:
+                utils.set_property(label_property, label)
+                utils.set_property(path_property, path)
+                
+        utils.update_container()
 
 
 def _update_strings(_id, path_def):
