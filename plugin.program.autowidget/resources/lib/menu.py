@@ -303,7 +303,8 @@ def show_path(group_id, path_id, titles=None):
                                         art=file['art'],
                                         info=labels,
                                         isFolder=file['filetype'] == 'directory',
-                                        props={'specialsort': 'bottom'} if sort_to_end else None)
+                                        props={'specialsort': 'bottom' if sort_to_end else '',
+                                               'autoLabel': path_def['label']})
                 titles.append(labels['title'])
     return titles, 'AutoWidget'
     
