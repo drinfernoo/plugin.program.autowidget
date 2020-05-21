@@ -131,7 +131,7 @@ msgid "Shift Path Down"
 msgstr ""
 
 msgctxt "#32028"
-msgid "Random Path from {} ({})"
+msgid "Random Path from {}"
 msgstr ""
 
 msgctxt "#32029"
@@ -323,7 +323,7 @@ msgid "UNUSED"
 msgstr ""
 
 msgctxt "#32076"
-msgid "Next Path from {} ({})"
+msgid "Next Path from {}"
 msgstr ""
 
 msgctxt "#32077"
@@ -375,7 +375,7 @@ msgid "Merged Path"
 msgstr ""
 
 msgctxt "#32089"
-msgid "Merged Path from {} ({})"
+msgid "Merged Path from {}"
 msgstr ""
 
 msgctxt "#32090"

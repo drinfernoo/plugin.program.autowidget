@@ -129,7 +129,7 @@ def group_menu(group_id, target, _id):
             directory.add_separator(title=32010, char='/')
             
             directory.add_menu_item(title=utils.get_string(32028)
-                                          .format(group_name, ''),
+                                          .format(group_name),
                                     params={'mode': 'path',
                                             'action': 'random',
                                             'group': group_id,
@@ -139,7 +139,7 @@ def group_menu(group_id, target, _id):
                                     art=shuffle,
                                     isFolder=True)
             directory.add_menu_item(title=utils.get_string(32076)
-                                          .format(group_name, ''),
+                                          .format(group_name),
                                     params={'mode': 'path',
                                             'action': 'next',
                                             'group': group_id,
@@ -147,7 +147,7 @@ def group_menu(group_id, target, _id):
                                     art=next,
                                     isFolder=True)
             directory.add_menu_item(title=utils.get_string(32089)
-                                          .format(group_name, ''),
+                                          .format(group_name),
                                     params={'mode': 'path',
                                             'action': 'merged',
                                             'group': group_id,
