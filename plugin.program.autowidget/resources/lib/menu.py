@@ -407,33 +407,6 @@ def merged_path(group_id):
                                 art=alert,
                                 isFolder=False)
         return False, group_name
-        
-        
-def merged_path(group_id):
-    _window = utils.get_active_window()
-    
-    group_def = manage.get_group_by_id(group_id)
-    if not group_def:
-        utils.log('\"{}\" is missing, please repoint the widget to fix it.'
-                  .format(group_id),
-                  level=xbmc.LOGERROR)
-        return False, 'AutoWidget'
-    
-    group_name = group_def.get('label', '')
-    paths = manage.find_defined_paths(group_id)
-    
-    if len(paths) > 0:
-        titles = []
-
-        for path_def in paths:
-            titles, cat = show_path(group_id, path_def['id'])
-                    
-        return True, group_name
-    else:
-        directory.add_menu_item(title=32032,
-                                art=alert,
-                                isFolder=False)
-        return False, group_name
 
 
 def _create_context_items(group_id, path_id, idx, length):
