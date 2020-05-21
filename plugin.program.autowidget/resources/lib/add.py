@@ -96,6 +96,8 @@ def build_labels(source, path_def=None, target=''):
     
     if path != 'addons://user/':
         path = path.replace('addons://user/', 'plugin://')
+    if 'plugin://plugin.video.themoviedb.helper' in path:
+        path += '&widget=True'
     labels['path'] = path
     
     for _key in utils.windows:
