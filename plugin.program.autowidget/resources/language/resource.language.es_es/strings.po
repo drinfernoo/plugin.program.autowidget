@@ -435,8 +435,8 @@ msgid "Sorted to End"
 msgstr "Ordenado para terminar"
 
 msgctxt "#32104"
-msgid "Don't Show"
-msgstr "No mostrar"
+msgid "Show 'Next Page' Items"
+msgstr "Mostrar elementos de 'Página siguiente'"
 
 msgctxt "#32105"
 msgid "Widget Settings"

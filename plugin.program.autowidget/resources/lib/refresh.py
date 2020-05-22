@@ -8,7 +8,6 @@ from resources.lib import manage
 from resources.lib.common import utils
 
 skin_string_pattern = 'autowidget-{}-{}'
-info_pattern = '\$INFO\[(.*)\]'
 _properties = ['context.autowidget']
 
 class RefreshService(xbmc.Monitor):
@@ -29,6 +28,8 @@ class RefreshService(xbmc.Monitor):
         self.refresh_duration = utils.get_setting_float('service.refresh_duration')
         self.refresh_notification = utils.get_setting_int('service.refresh_notification')
         self.refresh_sound = utils.get_setting_bool('service.refresh_sound')
+        
+        utils.update_container()
 
     def _update_properties(self):
 

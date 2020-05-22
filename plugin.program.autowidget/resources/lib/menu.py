@@ -121,8 +121,7 @@ def group_menu(group_id, target, _id):
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/', sort='bottom')
 
-            path_param = '$INFO[Window(10000).Property(autowidget-{}-action)]'
-                         .format(_id)
+            path_param = '$INFO[Window(10000).Property(autowidget-{}-action)]'.format(_id)
 
             directory.add_menu_item(title=utils.get_string(32028)
                                           .format(group_name),
@@ -293,13 +292,17 @@ def show_path(group_id, path_id, titles=None, num=1):
             labels['title'] = file['label']
             
             hide_watched = utils.get_setting_bool('widgets.hide_watched')
-            hide_next = utils.get_setting_int('widgets.hide_next')
+            show_next = utils.get_setting_bool('widgets.show_next')
+            sort_next = utils.get_setting_int('widgets.sort_next')
             next_item = labels['title'].lower() in ['next', 'next page']
-            sort_to_end = next_item and hide_next == 1
+            sort_to_end = next_item and sort_next == 1
             
-            if not next_item or hide_next != 2:
+            if not next_item or sort_next != 2:
                 props = {'autoLabel': path_def['label']}
                 if next_item:
+                    if not show_next:
+                        continue
+                
                     labels['title'] = 'Next Page'
                     labels['art'] = share
                     if sort_to_end:

@@ -5,7 +5,8 @@
         <!-- Widget Settings -->
         <setting label="$ADDON[plugin.program.autowidget 32105]" type="lsep" />
         <setting label="$ADDON[plugin.program.autowidget 32106]" type="bool" id="widgets.hide_watched" default="false" />
-        <setting label="$ADDON[plugin.program.autowidget 32107]" type="enum" id="widgets.hide_next" values="32102|32103|32104" default="1" />
+        <setting label="$ADDON[plugin.program.autowidget 32104]" type="bool" id="widgets.show_next" default="true" />
+        <setting label="$ADDON[plugin.program.autowidget 32107]" type="enum" id="widgets.sort_next" lvalues="32102|32103" default="1" visible="eq(-1,true)" />
         
         <!-- Path Service -->
         <setting label="$ADDON[plugin.program.autowidget 32001]" type="lsep" />

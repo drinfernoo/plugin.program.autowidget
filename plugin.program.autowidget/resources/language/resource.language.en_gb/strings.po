@@ -435,7 +435,7 @@ msgid "Sorted to End"
 msgstr ""
 
 msgctxt "#32104"
-msgid "Don't Show"
+msgid "Show 'Next Page' Items"
 msgstr ""
 
 msgctxt "#32105"
