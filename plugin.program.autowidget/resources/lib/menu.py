@@ -292,7 +292,9 @@ def show_path(group_id, path_id, titles=None, num=1):
                 labels[label] = file[label]
             
             labels['title'] = file['label']
-            hide_next = utils.get_setting_int('hide_next')
+            
+            hide_watched = utils.get_setting_bool('widgets.hide_watched')
+            hide_next = utils.get_setting_int('widgets.hide_next')
             next_item = labels['title'].lower() in ['next', 'next page']
             sort_to_end = next_item and hide_next == 1
             
@@ -304,7 +306,10 @@ def show_path(group_id, path_id, titles=None, num=1):
                     if num > 1:
                         labels['title'] = '{} - {}'.format(labels['title'],
                                                            path_def['label'])
-
+                else:
+                    if hide_watched and labels.get('playcount', 0) > 0:
+                        continue
+                
                 directory.add_menu_item(title=labels['title'],
                                         path=file['file'],
                                         art=labels['art'],

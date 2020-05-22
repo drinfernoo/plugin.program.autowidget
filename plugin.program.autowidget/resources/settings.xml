@@ -4,7 +4,8 @@
         
         <!-- Widget Settings -->
         <setting label="Widget Settings" type="lsep" />
-        <setting label="Show 'Next' in Merged Paths" type="enum" id="hide_next" values="Unsorted|Sorted to End|Don't Show" default="1" />
+        <setting label="Hide Watched Items" type="bool" id="widgets.hide_watched" default="false" />
+        <setting label="Show 'Next' in Merged Paths" type="enum" id="widgets.hide_next" values="Unsorted|Sorted to End|Don't Show" default="1" />
         
         <!-- Path Service -->
         <setting label="$ADDON[plugin.program.autowidget 32001]" type="lsep" />
