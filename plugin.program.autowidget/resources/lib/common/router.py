@@ -39,7 +39,6 @@ def dispatch(_plugin, _handle, _params):
     category = 'AutoWidget'
     is_dir = False
     is_type = 'files'
-    is_sorted = True
 
     utils.ensure_addon_data()
     
@@ -71,7 +70,6 @@ def dispatch(_plugin, _handle, _params):
         elif action == 'merged' and group:
             is_dir, category = menu.merged_path(group)
             is_type = 'videos'
-            is_sorted = True
     elif mode == 'group':
         if not group:
             is_dir, category = menu.my_groups_menu()
@@ -81,9 +79,10 @@ def dispatch(_plugin, _handle, _params):
         is_dir, is_category = menu.active_widgets_menu()
     elif mode == 'refresh':
         if not target:
-            refresh.refresh_paths(notify=True)
+            refresh.refresh_paths()
         else:
             refresh.refresh(target, force=True)
+            utils.update_container()
     elif mode == 'tools':
         is_dir, category = menu.tools_menu()
     elif mode == 'force':
@@ -99,12 +98,9 @@ def dispatch(_plugin, _handle, _params):
             backup.backup()
         elif action == 'restore':
             backup.restore()
-        
-    if is_sorted:
-        directory.add_sort_methods(_handle)
 
     if is_dir:
+        directory.add_sort_methods(_handle)
         xbmcplugin.setPluginCategory(_handle, category)
-        xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_NONE)
         xbmcplugin.setContent(_handle, is_type)
         xbmcplugin.endOfDirectory(_handle)

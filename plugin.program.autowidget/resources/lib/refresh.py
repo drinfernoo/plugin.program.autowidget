@@ -169,4 +169,4 @@ def refresh_paths(notify=False, force=False):
         for widget_def in widgets:
             paths = refresh(widget_def['id'], widget_def=widget_def, paths=paths, force=force)
 
-    utils.update_container()
+    return True, 'AutoWidget'

@@ -57,6 +57,7 @@ def root_menu():
                             params={'mode': 'tools'},
                             art=tools,
                             isFolder=True)
+                            
     return True, 'AutoWidget'
                             
                             
@@ -90,7 +91,9 @@ def my_groups_menu():
     else:
         directory.add_menu_item(title=32068,
                                 art=alert,
-                                isFolder=False)
+                                isFolder=False,
+                                props={'specialsort': 'bottom'})
+                                
     return True, utils.get_string(32007)
     
     
@@ -126,7 +129,7 @@ def group_menu(group_id, target, _id):
                                     isFolder=False)
                                     
         if target == 'widget' and _window != 'home':
-            directory.add_separator(title=32010, char='/')
+            directory.add_separator(title=32010, char='/', sort='bottom')
 
             directory.add_menu_item(title=utils.get_string(32028)
                                           .format(group_name),
@@ -137,7 +140,8 @@ def group_menu(group_id, target, _id):
                                             'path': '$INFO[Window(10000).Property(autowidget-{}-action)]'
                                                     .format(_id)},
                                     art=shuffle,
-                                    isFolder=True)
+                                    isFolder=True,
+                                    props={'specialsort': 'bottom'})
             directory.add_menu_item(title=utils.get_string(32076)
                                           .format(group_name),
                                     params={'mode': 'path',
@@ -147,7 +151,8 @@ def group_menu(group_id, target, _id):
                                             'path': '$INFO[Window(10000).Property(autowidget-{}-action)]'
                                                     .format(_id)},
                                     art=next,
-                                    isFolder=True)
+                                    isFolder=True,
+                                    props={'specialsort': 'bottom'})
             directory.add_menu_item(title=utils.get_string(32089)
                                           .format(group_name),
                                     params={'mode': 'path',
@@ -155,11 +160,13 @@ def group_menu(group_id, target, _id):
                                             'group': group_id,
                                             'id': six.text_type(_id)},
                                     art=merge,
-                                    isFolder=True)
+                                    isFolder=True,
+                                    props={'specialsort': 'bottom'})
     else:
         directory.add_menu_item(title=32032,
                                 art=alert,
-                                isFolder=False)
+                                isFolder=False,
+                                props={'specialsort': 'bottom'})
     
     return True, group_name
     
@@ -233,7 +240,8 @@ def active_widgets_menu():
     else:
         directory.add_menu_item(title=32072,
                                 art=alert,
-                                isFolder=False)
+                                isFolder=False,
+                                props={'specialsort': 'bottom'})
 
     return True, utils.get_string(32074)
     
@@ -299,9 +307,12 @@ def show_path(group_id, path_id, titles=None, num=1):
             sort_to_end = next_item and hide_next == 1
             
             if not next_item or hide_next != 2:
+                props = {'autoLabel': path_def['label']}
                 if next_item:
                     labels['title'] = 'Next Page'
                     labels['art'] = share
+                    if sort_to_end:
+                        props['specialsort'] = 'bottom'
                     
                     if num > 1:
                         labels['title'] = '{} - {}'.format(labels['title'],
@@ -315,8 +326,8 @@ def show_path(group_id, path_id, titles=None, num=1):
                                         art=labels['art'],
                                         info=labels,
                                         isFolder=file['filetype'] == 'directory',
-                                        props={'specialsort': 'bottom' if sort_to_end else '',
-                                               'autoLabel': path_def['label']})
+                                        props=props)
+                                        
                 titles.append(labels['title'])
                 
     return titles, path_def['label']
