@@ -77,19 +77,13 @@ class RefreshService(xbmc.Monitor):
                 
     def _update_labels(self):
         for widget_def in manage.find_defined_widgets():
-            path_property = 'autowidget-{}-action'.format(widget_def['id'])
-            label_property = 'autowidget-{}-label'.format(widget_def['id'])
             path_def = manage.get_path_by_id(widget_def.get('path'),
                                              group_id=widget_def['group'])
             if not path_def:
                 continue
             
-            path = path_def.get('id')
-            label = path_def.get('label')
-            
             if widget_def.get('updated', 0) > 0:
-                utils.set_property(label_property, label)
-                utils.set_property(path_property, path)
+                _update_strings(widget_def['id'], path_def)
                 
         utils.update_container()
 

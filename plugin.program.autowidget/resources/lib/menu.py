@@ -127,7 +127,7 @@ def group_menu(group_id, target, _id):
                                     
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/')
-            
+
             directory.add_menu_item(title=utils.get_string(32028)
                                           .format(group_name),
                                     params={'mode': 'path',
@@ -143,7 +143,9 @@ def group_menu(group_id, target, _id):
                                     params={'mode': 'path',
                                             'action': 'next',
                                             'group': group_id,
-                                            'id': six.text_type(_id)},
+                                            'id': six.text_type(_id),
+                                            'path': '$INFO[Window(10000).Property(autowidget-{}-action)]'
+                                                    .format(_id)},
                                     art=next,
                                     isFolder=True)
             directory.add_menu_item(title=utils.get_string(32089)
@@ -246,6 +248,7 @@ def tools_menu():
                             params={'mode': 'wipe'},
                             art=remove,
                             isFolder=False)
+                            
     return True, utils.get_string(32008)
     
     
@@ -266,7 +269,7 @@ def _initialize(group_def, action, _id):
     
     return details
     
-def show_path(group_id, path_id, titles=None):
+def show_path(group_id, path_id, titles=None, num=1):
     path_def = manage.get_path_by_id(path_id, group_id=group_id)
     if not path_def:
         return False, 'AutoWidget'
@@ -294,7 +297,7 @@ def show_path(group_id, path_id, titles=None):
             sort_to_end = next_item and hide_next == 1
             
             if not next_item or hide_next != 2:
-                if next_item:
+                if next_item and num > 1:
                     labels['title'] = '{} - {}'.format(labels['title'],
                                                        path_def['label'])
                     
@@ -306,7 +309,8 @@ def show_path(group_id, path_id, titles=None):
                                         props={'specialsort': 'bottom' if sort_to_end else '',
                                                'autoLabel': path_def['label']})
                 titles.append(labels['title'])
-    return titles, 'AutoWidget'
+                
+    return titles, path_def['label']
     
     
 def call_path(group_id, path_id):
@@ -341,6 +345,8 @@ def call_path(group_id, path_id):
         
     if final_path:
         xbmc.executebuiltin(final_path)
+        
+    return False, path_def['label']
 
 
 def path_menu(group_id, action, _id):
@@ -363,22 +369,20 @@ def path_menu(group_id, action, _id):
     if not widget_def and _window == 'home':
         widget_def = _initialize(group_def, action, _id)
     
-    if not widget_def:
-        return True, group_name
-    
     if len(paths) > 0 and widget_def:
         if _window == 'media':
             rand = random.randrange(len(paths))
-            call_path(group_id, paths[rand]['id'])
-            return False, group_name
+            return call_path(group_id, paths[rand]['id'])
         else:
-            show_path(group_id, widget_def.get('path', ''))
-            return True, group_name
+            path_id = widget_def.get('path', '')
+            path_def = manage.get_path_by_id(path_id, group_id=group_def['id'])
+            return show_path(group_id, path_id)
     else:
         directory.add_menu_item(title=32032,
                                 art=alert,
                                 isFolder=False)
         return True, group_name
+        
     return True, group_name
         
         
@@ -399,7 +403,7 @@ def merged_path(group_id):
         titles = []
 
         for path_def in paths:
-            titles, cat = show_path(group_id, path_def['id'])
+            titles, cat = show_path(group_id, path_def['id'], num=len(paths))
                     
         return True, group_name
     else:
