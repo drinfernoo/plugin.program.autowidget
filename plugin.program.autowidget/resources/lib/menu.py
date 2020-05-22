@@ -16,6 +16,7 @@ from resources.lib.common import utils
 
 add = utils.get_art('add.png')
 alert = utils.get_art('alert.png')
+back = utils.get_art('back.png')
 folder = utils.get_art('folder.png')
 folder_shortcut = utils.get_art('folder-shortcut.png')
 folder_sync = utils.get_art('folder-sync.png')
@@ -23,6 +24,7 @@ folder_next = utils.get_art('folder-next.png')
 folder_merged = utils.get_art('folder-dots.png')
 merge = utils.get_art('merge.png')
 next = utils.get_art('next.png')
+next_page = utils.get_art('next_page.png')
 refresh_art = utils.get_art('refresh.png')
 remove = utils.get_art('remove.png')
 share = utils.get_art('share.png')
@@ -121,7 +123,7 @@ def group_menu(group_id, target, _id):
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/', sort='bottom')
 
-            path_param = '$INFO[Window(10000).Property(autowidget-{}-action)]'.format(_id)
+            path_param = '\"$INFO[Window(10000).Property(autowidget-{}-action)]\"'.format(_id)
 
             directory.add_menu_item(title=utils.get_string(32028)
                                           .format(group_name),
@@ -267,24 +269,51 @@ def _initialize(group_def, action, _id):
     
     return details
     
-def show_path(group_id, path_id, titles=None, num=1):
-    path_def = manage.get_path_by_id(path_id, group_id=group_id)
-    if not path_def:
-        return False, 'AutoWidget'
-    
+def show_path(group_id, path_id, _id, titles=None, num=1):
     params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
-              'params': {'directory': path_def['path'],
-                         'properties': utils.info_types},
+              'params': {'properties': utils.info_types},
               'id': 1}
+    
+    widget_def = manage.get_widget_by_id(_id)
+    path_def = manage.get_path_by_id(path_id, group_id=group_id)
+    if not widget_def:
+        return True, 'AutoWidget'
+        
+    if not path_def:
+        if widget_def:
+            path_def = manage.get_path_by_id(widget_def['path'],
+                                             group_id=widget_def['group'])
+        params['params']['directory'] = path_id
+    else:
+        params['params']['directory'] = path_def['path']
+    
+    if path_def:
+        path_label = path_def.get('label', 'AutoWidget')
+    else:
+        path_label = widget_def.get('label', '')
     
     if not titles:
         titles = []
     
     files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
+    stack = widget_def.get('stack', [])
+    if stack:
+        directory.add_menu_item(title='Back',
+                                params={'mode': 'path',
+                                        'action': 'update',
+                                        'id': _id,
+                                        'path': stack[-1],
+                                        'target': 'back'},
+                                art=back,
+                                isFolder=num > 1,
+                                props={'specialsort': 'top',
+                                       'autoLabel': path_label})
+    
     if 'error' not in files:
         files = files['result']['files']
-        
-        for file in [x for x in files if x['label'] not in titles]:
+        filtered_files = [x for x in files if x['label'] not in titles]
+
+        for file in filtered_files:
             labels = {}
             for label in file:
                 labels[label] = file[label]
@@ -298,33 +327,44 @@ def show_path(group_id, path_id, titles=None, num=1):
             sort_to_end = next_item and sort_next == 1
             
             if not next_item or sort_next != 2:
-                props = {'autoLabel': path_def['label']}
+                props = {'autoLabel': path_label}
                 if next_item:
                     if not show_next:
                         continue
                 
                     labels['title'] = 'Next Page'
-                    labels['art'] = share
                     if sort_to_end:
                         props['specialsort'] = 'bottom'
                     
                     if num > 1:
                         labels['title'] = '{} - {}'.format(labels['title'],
-                                                           path_def['label'])
+                                                           path_label)
+                    
+                    directory.add_menu_item(title=labels['title'],
+                                            params={'mode': 'path',
+                                                    'action': 'update',
+                                                    'id': _id,
+                                                    'path': file['file'],
+                                                    'target': 'next'} if num == 1 else None,
+                                            path=file['file'] if num > 1 else None,
+                                            art=next_page,
+                                            info=labels,
+                                            isFolder=num > 1,
+                                            props=props)
                 else:
                     if hide_watched and labels.get('playcount', 0) > 0:
                         continue
                 
-                directory.add_menu_item(title=labels['title'],
-                                        path=file['file'],
-                                        art=labels['art'],
-                                        info=labels,
-                                        isFolder=file['filetype'] == 'directory',
-                                        props=props)
+                    directory.add_menu_item(title=labels['title'],
+                                            path=file['file'],
+                                            art=labels['art'],
+                                            info=labels,
+                                            isFolder=file['filetype'] == 'directory',
+                                            props=props)
                                         
-                titles.append(labels['title'])
-                
-    return titles, path_def['label']
+                    titles.append(labels['title'])
+         
+    return titles, path_label
     
     
 def call_path(group_id, path_id):
@@ -363,7 +403,35 @@ def call_path(group_id, path_id):
     return False, path_def['label']
 
 
-def path_menu(group_id, action, _id):
+def update_path(_id, path, target):
+    widget_def = manage.get_widget_by_id(_id)
+    if not widget_def:
+        return
+        
+    stack = widget_def.get('stack', [])
+    
+    if target == 'next':
+        path_id = widget_def['path'].split('-')
+        if len(path_id) > 1:
+            if time.ctime(float(path_id[1])):
+                path_def = manage.get_path_by_id(widget_def['path'], group_id=widget_def['group'])
+                widget_def['label'] = path_def['label']
+        
+        stack.append(widget_def['path'])
+        widget_def['stack'] = stack
+        widget_def['path'] = path
+    elif target == 'back':
+        widget_def['path'] = widget_def['stack'][-1]
+        widget_def['stack'] = widget_def['stack'][:-1]
+        
+        if len(widget_def['stack']) == 0:
+            widget_def['label'] = ''
+        
+    utils.set_property('autowidget-{}-action'.format(_id), widget_def['path'])
+    manage.save_path_details(widget_def, _id)
+
+
+def path_menu(group_id, action, _id, path=None):
     _window = utils.get_active_window()
     
     group_def = manage.get_group_by_id(group_id)
@@ -386,9 +454,10 @@ def path_menu(group_id, action, _id):
             rand = random.randrange(len(paths))
             return call_path(group_id, paths[rand]['id'])
         else:
-            path_id = widget_def.get('path', '')
-            path_def = manage.get_path_by_id(path_id, group_id=group_def['id'])
-            return show_path(group_id, path_id)
+            utils.log(path, xbmc.LOGNOTICE)
+            path_id = path if path else widget_def.get('path', '')
+            titles, cat = show_path(group_id, path_id, _id)
+            return titles, cat
     else:
         directory.add_menu_item(title=32032,
                                 art=alert,
@@ -398,7 +467,7 @@ def path_menu(group_id, action, _id):
     return True, group_name
         
         
-def merged_path(group_id):
+def merged_path(group_id, _id):
     _window = utils.get_active_window()
     
     group_def = manage.get_group_by_id(group_id)
@@ -415,7 +484,7 @@ def merged_path(group_id):
         titles = []
 
         for path_def in paths:
-            titles, cat = show_path(group_id, path_def['id'], num=len(paths))
+            titles, cat = show_path(group_id, path_def['id'], _id, num=len(paths))
                     
         return True, group_name
     else:

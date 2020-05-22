@@ -1,6 +1,7 @@
 import xbmc
 import xbmcgui
 
+import os
 import random
 import time
 
@@ -17,19 +18,12 @@ class RefreshService(xbmc.Monitor):
         self.player = xbmc.Player()
         utils.ensure_addon_data()
         self._update_properties()
+        # self._clean_widgets()
         self._update_labels()
         self._update_widgets()
 
     def onSettingsChanged(self):
         self._update_properties()
-
-    def _reload_settings(self):
-        self.refresh_enabled = utils.get_setting_int('service.refresh_enabled')
-        self.refresh_duration = utils.get_setting_float('service.refresh_duration')
-        self.refresh_notification = utils.get_setting_int('service.refresh_notification')
-        self.refresh_sound = utils.get_setting_bool('service.refresh_sound')
-        
-        utils.update_container()
 
     def _update_properties(self):
 
@@ -45,6 +39,42 @@ class RefreshService(xbmc.Monitor):
 
         self._reload_settings()
         
+    def _reload_settings(self):
+        self.refresh_enabled = utils.get_setting_int('service.refresh_enabled')
+        self.refresh_duration = utils.get_setting_float('service.refresh_duration')
+        self.refresh_notification = utils.get_setting_int('service.refresh_notification')
+        self.refresh_sound = utils.get_setting_bool('service.refresh_sound')
+        
+        utils.update_container()
+        
+    def _clean_widgets(self):
+        for widget_def in manage.find_defined_widgets():
+            widget_def['stack'] = []
+            widget_def['label'] = ''
+            manage.save_path_details(widget_def, widget_def['id'])
+
+    def _update_labels(self):
+        for widget_def in manage.find_defined_widgets():
+            path_def = manage.get_path_by_id(widget_def.get('path'),
+                                             group_id=widget_def['group'])
+            if not path_def:
+                continue
+            
+            if widget_def.get('updated', 0) > 0:
+                _update_strings(widget_def['id'], path_def)
+                
+        utils.update_container()
+
+    def _update_widgets(self):
+        self._refresh()
+        
+        while not self.abortRequested():
+            if self.waitForAbort(60 * 15):
+                break
+
+            if not self._refresh():
+                continue
+                
     def _refresh(self):
         if self.refresh_enabled in [0, 1] and manage.find_defined_widgets():
             notification = False
@@ -66,28 +96,6 @@ class RefreshService(xbmc.Monitor):
             utils.log('+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++',
                       level=xbmc.LOGNOTICE)
 
-    def _update_widgets(self):
-        self._refresh()
-        
-        while not self.abortRequested():
-            if self.waitForAbort(60 * 15):
-                break
-
-            if not self._refresh():
-                continue
-                
-    def _update_labels(self):
-        for widget_def in manage.find_defined_widgets():
-            path_def = manage.get_path_by_id(widget_def.get('path'),
-                                             group_id=widget_def['group'])
-            if not path_def:
-                continue
-            
-            if widget_def.get('updated', 0) > 0:
-                _update_strings(widget_def['id'], path_def)
-                
-        utils.update_container()
-
 
 def _update_strings(_id, path_def):
     if not path_def:
@@ -108,7 +116,7 @@ def _update_strings(_id, path_def):
     utils.log('Setting {} to {}'.format(action_string, action))
         
     utils.set_property(label_string, label)
-    utils.set_property(action_string, path_def['path'])
+    utils.set_property(action_string, path_def['id'])
 
 
 def refresh(widget_id, widget_def=None, paths=None, force=False):
@@ -120,7 +128,7 @@ def refresh(widget_id, widget_def=None, paths=None, force=False):
     
     default_refresh = utils.get_setting_float('service.refresh_duration')
     refresh_duration = float(widget_def.get('refresh', default_refresh))
-            
+    
     if updated_at <= current_time - (3600 * refresh_duration) or force:
         path_def = {}
         
@@ -128,6 +136,8 @@ def refresh(widget_id, widget_def=None, paths=None, force=False):
         group_id = widget_def['group']
         action = widget_def.get('action')
         current = int(widget_def.get('current', -1))
+        widget_def['stack'] = []
+        widget_def['label'] = ''
         
         if not paths:
             paths = manage.find_defined_paths(group_id)
