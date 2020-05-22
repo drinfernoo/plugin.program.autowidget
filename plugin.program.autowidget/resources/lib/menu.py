@@ -297,13 +297,17 @@ def show_path(group_id, path_id, titles=None, num=1):
             sort_to_end = next_item and hide_next == 1
             
             if not next_item or hide_next != 2:
-                if next_item and num > 1:
-                    labels['title'] = '{} - {}'.format(labels['title'],
-                                                       path_def['label'])
+                if next_item:
+                    labels['title'] = 'Next Page'
+                    labels['art'] = share
                     
+                    if num > 1:
+                        labels['title'] = '{} - {}'.format(labels['title'],
+                                                           path_def['label'])
+
                 directory.add_menu_item(title=labels['title'],
                                         path=file['file'],
-                                        art=file['art'],
+                                        art=labels['art'],
                                         info=labels,
                                         isFolder=file['filetype'] == 'directory',
                                         props={'specialsort': 'bottom' if sort_to_end else '',
