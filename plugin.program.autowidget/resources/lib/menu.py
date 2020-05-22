@@ -121,14 +121,16 @@ def group_menu(group_id, target, _id):
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/', sort='bottom')
 
+            path_param = '$INFO[Window(10000).Property(autowidget-{}-action)]'
+                         .format(_id)
+
             directory.add_menu_item(title=utils.get_string(32028)
                                           .format(group_name),
                                     params={'mode': 'path',
                                             'action': 'random',
                                             'group': group_id,
                                             'id': six.text_type(_id),
-                                            'path': '$INFO[Window(10000).Property(autowidget-{}-action)]'
-                                                    .format(_id)},
+                                            'path': path_param},
                                     art=shuffle,
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
@@ -138,8 +140,7 @@ def group_menu(group_id, target, _id):
                                             'action': 'next',
                                             'group': group_id,
                                             'id': six.text_type(_id),
-                                            'path': '$INFO[Window(10000).Property(autowidget-{}-action)]'
-                                                    .format(_id)},
+                                            'path': path_param},
                                     art=next,
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
