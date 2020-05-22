@@ -283,12 +283,12 @@ msgid "This will remove [B]all[/B] data for AutoWidget. Any current AutoWidgets 
 msgstr "Esto eliminará [B]todos los datos[/B] de AutoWidget. Cualquier AutoWidgets actual ya no se actualizará y es posible que no funcione de manera correcta. Se recomienda que esto solo se haga si tiene la intención de volver a nombrar todos esos widgets. Esto [COLOR firebrick]no se puede deshacer[/COLOR]."
 
 msgctxt "#32066"
-msgid "Clear Old References"
-msgstr "Limpiar viejas referencias"
+msgid "UNUSED"
+msgstr "NO UTILIZADO"
 
 msgctxt "#32067"
-msgid "This will try to delete references to widgets that are no longer active. This [COLOR firebrick]cannot[/COLOR] be undone."
-msgstr "Esto intentará eliminar referencias a widgets que ya no estén activas. [COLOR firebrick]Esto no se puede deshacer[/COLOR]."
+msgid "UNUSED"
+msgstr "NO UTILIZADO"
 
 msgctxt "#32068"
 msgid "No groups have been defined."
@@ -311,8 +311,8 @@ msgid "No widgets have been initialized."
 msgstr "No se han inicializado widgets."
 
 msgctxt "#32073"
-msgid "The unique identifier in the number in this path's label is [B]necessary[/B] for AutoWidget to refresh it correctly. Don't change the label given to this widget, or it may be unable to update correctly. This wessage [COLOR firebrick]will not[/COLOR] be shown again."
-msgstr "El identificador único en el número de la etiqueta de esta ruta es [B]necesario[/B] para que AutoWidget lo actualice correctamente. No cambie la etiqueta dada a este widget, o es posible que no pueda actualizarse correctamente. [COLOR firebrick]Este mensaje no se volverá a mostrar[/COLOR]."
+msgid "UNUSED"
+msgstr "NO UTILIZADO"
 
 msgctxt "#32074"
 msgid "Active Widgets"
@@ -377,3 +377,79 @@ msgstr "Ruta combinado"
 msgctxt "#32089" 
 msgid "Merged Path from {}" 
 msgstr "Ruta combinado de {}"
+
+msgctxt "#32090"
+msgid "Backup / Restore"
+msgstr "Apoyo / Restaurar"
+
+msgctxt "#32091"
+msgid "Choose Backup Location"
+msgstr "Elegir ubicación de respaldo"
+
+msgctxt "#32092"
+msgid "Backup My Groups"
+msgstr "Copia de seguridad de mis grupos"
+
+msgctxt "#32093"
+msgid "Restore from Backup"
+msgstr "Reinstalar desde el respaldo"
+
+msgctxt "#32094"
+msgid "Do you want to backup your groups? This will not backup any widgets defined in the skin."
+msgstr "¿Quieres hacer una copia de seguridad de tus grupos? Esto no hará una copia de seguridad de los widgets definidos en la máscara."
+
+msgctxt "#32095"
+msgid "Backup Name"
+msgstr "Nombre de respaldo"
+
+msgctxt "#32096"
+msgid "Backup Cancelled."
+msgstr "Copia de seguridad cancelada."
+
+msgctxt "#32097"
+msgid "Could not create backup location."
+msgstr "No se pudo crear la ubicación de la copia de seguridad."
+
+msgctxt "#32098"
+msgid "Choose Backup to Restore"
+msgstr "Elija Copia de seguridad para restaurar"
+
+msgctxt "#32099"
+msgid "Would you like to restore {} group{} from this backup?"
+msgstr "¿Desea restaurar {} grupo {} de esta copia de seguridad?"
+
+msgctxt "#32100"
+msgid "Would you like to erase your current groups before restoring?"
+msgstr "¿Te gustaría borrar tus grupos actuales antes de restaurar?"
+
+msgctxt "#32101"
+msgid "Restore Cancelled."
+msgstr "Restauración cancelada."
+
+msgctxt "#32102"
+msgid "Unsorted"
+msgstr "Sin clasificar"
+
+msgctxt "#32103"
+msgid "Sorted to End"
+msgstr "Ordenado para terminar"
+
+msgctxt "#32104"
+msgid "Don't Show"
+msgstr "No mostrar"
+
+msgctxt "#32105"
+msgid "Widget Settings"
+msgstr "Configuraciones de widgets"
+
+msgctxt "#32106"
+msgid "Hide Watched Items"
+msgstr "Ocultar elementos vistos"
+
+msgctxt "#32107"
+msgid "Show 'Next Page' in Merged Widgets"
+msgstr "Mostrar 'Página siguiente' en widgets combinados"
+
+msgctxt "#32108"
+msgid "Notification Sound"
+msgstr "Sonido de notificación"

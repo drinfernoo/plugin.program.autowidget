@@ -3,9 +3,9 @@
     <category label="$ADDON[plugin.program.autowidget 32000]">
         
         <!-- Widget Settings -->
-        <setting label="Widget Settings" type="lsep" />
-        <setting label="Hide Watched Items" type="bool" id="widgets.hide_watched" default="false" />
-        <setting label="Show 'Next' in Merged Paths" type="enum" id="widgets.hide_next" values="Unsorted|Sorted to End|Don't Show" default="1" />
+        <setting label="$ADDON[plugin.program.autowidget 32105]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 32106]" type="bool" id="widgets.hide_watched" default="false" />
+        <setting label="$ADDON[plugin.program.autowidget 32107]" type="enum" id="widgets.hide_next" values="32102|32103|32104" default="1" />
         
         <!-- Path Service -->
         <setting label="$ADDON[plugin.program.autowidget 32001]" type="lsep" />
@@ -19,7 +19,7 @@
         <!--------------------->
     </category>
     
-    <category label="Tools">
+    <category label="$ADDON[plugin.program.autowidget 32008]">
         
         <!-- Management -->
         <setting label="$ADDON[plugin.program.autowidget 32056]" type="lsep" />
