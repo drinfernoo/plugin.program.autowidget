@@ -16,7 +16,6 @@
         
         <!-- Hidden Settings -->
         <setting type="bool" id="context.warning" default="false" visible="false" />
-        <setting type="bool" id="label.warning" default="false" visible="false" />
         <!--------------------->
     </category>
     

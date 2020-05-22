@@ -33,16 +33,6 @@ unpack = utils.get_art('unpack.png')
 
 _addon = xbmcaddon.Addon()
 
-label_warning_shown = utils.get_setting_bool('label.warning')
-
-
-def _warn():
-    dialog = xbmcgui.Dialog()
-    dialog.ok('AutoWidget', utils.get_string(32073))
-    
-    utils.set_setting('label.warning', 'true')
-    label_warning_shown = True
-
 
 def root_menu():
     directory.add_menu_item(title=32007,
@@ -371,8 +361,6 @@ def call_path(group_id, path_id):
 
 def path_menu(group_id, action, _id):
     _window = utils.get_active_window()
-    if _window not in ['home', 'media'] and not label_warning_shown:
-        _warn()
     
     group_def = manage.get_group_by_id(group_id)
     if not group_def:
