@@ -485,7 +485,12 @@ def merged_path(group_id, _id):
     group_name = group_def.get('label', '')
     paths = manage.find_defined_paths(group_id)
     
-    if len(paths) > 0:
+    widget_def = manage.get_widget_by_id(_id, group_id)
+    
+    if not widget_def:
+        widget_def = _initialize(group_def, 'merged', _id, save=_window not in ['dialog', 'media'])
+    
+    if len(paths) > 0 and widget_def:
         titles = []
 
         for path_def in paths:
