@@ -67,7 +67,15 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     _params = sys.argv[2][1:]
 
     if params is not None:
-        _plugin += '?{}'.format(urlencode(params))
+        if 'path' in params:
+            encode = {k: params[k] for k, v in params.items() if k != 'path'}
+        else:
+            encode = params
+        
+        _plugin += '?{}'.format(urlencode(encode))
+        
+        if 'path' in params:
+            _plugin += '&path={}'.format(params['path'])
     elif path is not None:
         _plugin = path
 
