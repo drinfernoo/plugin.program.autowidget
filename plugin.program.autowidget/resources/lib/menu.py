@@ -380,7 +380,7 @@ def call_path(group_id, path_id):
                                         and path_def['content'] != 'addons':
         if path_def['path'] == 'addons://install/':
             final_path = 'InstallFromZip'
-        elif 'plugin.video.youtube' in path_def['path']:
+        elif path_def['content'] == 'files': 
             final_path = 'RunPlugin({})'.format(path_def['path'])
         elif path_def['path'].startswith('androidapp://sources/apps/'):
             final_path = 'StartAndroidActivity({})'.format(path_def['path']
