@@ -30,7 +30,7 @@ _exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
                  'runtime', 'showtitle', 'specialsortepisode',
                  'specialsortseason', 'track', 'tvshowid', 'watchedepisodes']
 
-info_replace_pattern = '(\%24INFO\%5B.*\%29\%5D)'
+info_replace_pattern = '(\%24INFO\%5B.*\%5D)'
 
     
 def add_separator(title='', char='-', sort=''):
