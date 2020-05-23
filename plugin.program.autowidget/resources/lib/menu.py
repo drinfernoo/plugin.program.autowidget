@@ -4,6 +4,7 @@ import xbmcgui
 
 import json
 import random
+import re
 import time
 import uuid
 
@@ -298,7 +299,7 @@ def show_path(group_id, path_id, _id, titles=None, num=1):
     files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
     stack = widget_def.get('stack', [])
     if stack:
-        directory.add_menu_item(title='Back',
+        directory.add_menu_item(title='Previous Page',
                                 params={'mode': 'path',
                                         'action': 'update',
                                         'id': _id,
@@ -323,8 +324,13 @@ def show_path(group_id, path_id, _id, titles=None, num=1):
             hide_watched = utils.get_setting_bool('widgets.hide_watched')
             show_next = utils.get_setting_bool('widgets.show_next')
             sort_next = utils.get_setting_int('widgets.sort_next')
-            next_item = labels['title'].lower() in ['next', 'next page']
+            
+            next_item = re.sub('[^\w \xC0-\xFF]', '', labels['title'].lower()).strip() in ['next', 'next page']
+            prev_item = re.sub('[^\w \xC0-\xFF]', '', labels['title'].lower()).strip() in ['previous', 'previous page', 'back']
+            
             sort_to_end = next_item and sort_next == 1
+            if prev_item and stack:
+                continue
             
             if not next_item or sort_next != 2:
                 props = {'widget': path_label}
@@ -361,7 +367,7 @@ def show_path(group_id, path_id, _id, titles=None, num=1):
                                             info=labels,
                                             isFolder=file['filetype'] == 'directory',
                                             props=props)
-                                        
+                    
                     titles.append(labels['title'])
          
     return titles, path_label
