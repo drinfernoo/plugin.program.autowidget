@@ -253,7 +253,7 @@ def tools_menu():
     return True, utils.get_string(32008)
     
     
-def _initialize(group_def, action, _id):
+def _initialize(group_def, action, _id, save=True):
     duration = utils.get_setting_float('service.refresh_duration')
     
     paths = group_def['paths']
@@ -265,10 +265,12 @@ def _initialize(group_def, action, _id):
               'group': group_def['id'],
               'refresh': duration,
               'path': init_path}
-    details = manage.save_path_details(params)
-    refresh.refresh(_id)
-    
-    return details
+    if save:
+        details = manage.save_path_details(params)
+        refresh.refresh(_id)
+        return details
+    else:
+        return params
     
 def show_path(group_id, path_id, _id, titles=None, num=1):
     params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
@@ -435,6 +437,7 @@ def update_path(_id, path, target):
         
     utils.set_property('autowidget-{}-action'.format(_id), widget_def['path'])
     manage.save_path_details(widget_def, _id)
+    utils.update_container()
 
 
 def path_menu(group_id, action, _id, path=None):
@@ -452,15 +455,14 @@ def path_menu(group_id, action, _id, path=None):
     
     widget_def = manage.get_widget_by_id(_id, group_id)
     
-    if not widget_def and _window == 'home':
-        widget_def = _initialize(group_def, action, _id)
+    if not widget_def:
+        widget_def = _initialize(group_def, action, _id, save=_window not in ['dialog', 'media'])
     
     if len(paths) > 0 and widget_def:
         if _window == 'media':
             rand = random.randrange(len(paths))
             return call_path(group_id, paths[rand]['id'])
         else:
-            utils.log(path, xbmc.LOGNOTICE)
             path_id = path if path else widget_def.get('path', '')
             titles, cat = show_path(group_id, path_id, _id)
             return titles, cat
