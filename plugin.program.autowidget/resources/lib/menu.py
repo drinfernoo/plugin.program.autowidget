@@ -1,5 +1,4 @@
 import xbmc
-import xbmcaddon
 import xbmcgui
 
 import json
@@ -33,8 +32,6 @@ shuffle = utils.get_art('shuffle.png')
 sync = utils.get_art('sync.png')
 tools = utils.get_art('tools.png')
 unpack = utils.get_art('unpack.png')
-
-_addon = xbmcaddon.Addon()
 
 
 def root_menu():
@@ -124,7 +121,7 @@ def group_menu(group_id, target, _id):
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/', sort='bottom')
 
-            path_param = '\"$INFO[Window(10000).Property(autowidget-{}-action)]\"'.format(_id)
+            path_param = '$INFO[Window(10000).Property(autowidget-{}-action)]'.format(_id)
 
             directory.add_menu_item(title=utils.get_string(32028)
                                           .format(group_name),

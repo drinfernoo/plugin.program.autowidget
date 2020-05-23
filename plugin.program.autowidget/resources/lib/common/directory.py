@@ -2,7 +2,6 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 
-import re
 import string
 import sys
 
@@ -29,8 +28,6 @@ _exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
                  'filetype', 'lastmodified', 'productioncode', 'firstaired',
                  'runtime', 'showtitle', 'specialsortepisode',
                  'specialsortseason', 'track', 'tvshowid', 'watchedepisodes']
-
-info_replace_pattern = '(\%24INFO\%5B.*\%5D)'
 
     
 def add_separator(title='', char='-', sort=''):
@@ -71,13 +68,6 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
 
     if params is not None:
         _plugin += '?{}'.format(urlencode(params))
-        info_match = re.search(info_replace_pattern, _plugin)
-        if info_match:
-            groups = info_match.groups()
-            for group in groups:
-                _plugin = re.sub(info_replace_pattern,
-                                 unquote(group),
-                                 _plugin)
     elif path is not None:
         _plugin = path
 

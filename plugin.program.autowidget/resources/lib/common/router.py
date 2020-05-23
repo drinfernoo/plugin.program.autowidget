@@ -1,15 +1,10 @@
 import xbmc
 import xbmcplugin
 
-import re
-import sys
-
 try:
     from urllib.parse import parse_qsl
-    from urllib.parse import quote_plus
 except ImportError:
     from urlparse import parse_qsl
-    from urllib import quote_plus
     
 from resources.lib import backup
 from resources.lib import edit
@@ -19,14 +14,8 @@ from resources.lib import refresh
 from resources.lib.common import directory
 from resources.lib.common import utils
 
-path_pattern = '\&path=%22(.*)%22'
-
 
 def _log_params(_plugin, _handle, _params):
-    path_param = re.search(path_pattern, _params)
-    if path_param:
-        _params = re.sub(path_pattern, '&path={}'.format(quote_plus(path_param.groups()[0])),
-                         _params)
     params = dict(parse_qsl(_params))
     logstring = ''
     
