@@ -21,16 +21,22 @@ from resources.lib.common import directory
 from resources.lib.common import utils
 
 info_match_pattern = '\$INFO\[(.*)\]'
+encoded_info_match_pattern = '%24INFO\%5b(.*)\%5d'
 path_match_pattern = '\&path=(.*)'
 path_sub_pattern = '&path={}'
-reload_match_pattern = '(%26reload%3D.*)'
+reload_match_pattern = '(%26reload%3d.*)'
 
 
 def _log_params(_plugin, _handle, _params):
     info_match = re.search(info_match_pattern, _params, flags=re.I)
+    encoded_info_match = re.search(encoded_info_match_pattern, _params, flags=re.I)
     if info_match:
         label_match = info_match.groups()[0]
         _params = re.sub(info_match_pattern, utils.get_infolabel(label_match),
+                         _params, flags=re.I)
+    elif encoded_info_match:
+        label_match = unquote(encoded_info_match.groups()[0])
+        _params = re.sub(encoded_info_match_pattern, utils.get_infolabel(label_match),
                          _params, flags=re.I)
     
     path_match = re.search(path_match_pattern, _params, flags=re.I)
