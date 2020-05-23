@@ -307,7 +307,7 @@ def show_path(group_id, path_id, _id, titles=None, num=1):
                                 art=back,
                                 isFolder=num > 1,
                                 props={'specialsort': 'top',
-                                       'autoLabel': path_label})
+                                       'widget': path_label})
     
     if 'error' not in files:
         files = files['result']['files']
@@ -327,7 +327,7 @@ def show_path(group_id, path_id, _id, titles=None, num=1):
             sort_to_end = next_item and sort_next == 1
             
             if not next_item or sort_next != 2:
-                props = {'autoLabel': path_label}
+                props = {'widget': path_label}
                 if next_item:
                     if not show_next:
                         continue
