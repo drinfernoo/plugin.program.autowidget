@@ -70,7 +70,7 @@ class RefreshService(xbmc.Monitor):
         utils.update_container()
 
     def _update_widgets(self):
-        self._refresh()
+        self._refresh(True)
         
         while not self.abortRequested():
             if self.waitForAbort(60 * 15):
@@ -79,7 +79,7 @@ class RefreshService(xbmc.Monitor):
             if not self._refresh():
                 continue
                 
-    def _refresh(self):
+    def _refresh(self, startup=False):
         if self.refresh_enabled in [0, 1] and manage.find_defined_widgets():
             notification = False
             if self.refresh_enabled == 1:
@@ -95,7 +95,7 @@ class RefreshService(xbmc.Monitor):
                         notification = True
             
             utils.log('+++++ REFRESHING AUTOWIDGETS +++++', level=xbmc.LOGNOTICE)
-            refresh_paths(notify=notification)
+            refresh_paths(notify=notification and not startup)
         else:
             utils.log('+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++',
                       level=xbmc.LOGNOTICE)
