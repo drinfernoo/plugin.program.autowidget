@@ -18,7 +18,7 @@ class RefreshService(xbmc.Monitor):
         self.player = xbmc.Player()
         utils.ensure_addon_data()
         self._update_properties()
-        # self._clean_widgets()
+        self._clean_widgets()
         self._update_labels()
         self._update_widgets()
 
@@ -49,6 +49,10 @@ class RefreshService(xbmc.Monitor):
         
     def _clean_widgets(self):
         for widget_def in manage.find_defined_widgets():
+            if 'stack' in widget_def:
+                if len(widget_def['stack']) > 0:
+                    widget_def['path'] = widget_def['stack'][0]
+                    
             widget_def['stack'] = []
             widget_def['label'] = ''
             manage.save_path_details(widget_def, widget_def['id'])
