@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.532" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.581" provider-name="drinfernoo">
     <requires>
-        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
+        <import addon="script.module.web-pdb" optional="true" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -30,6 +31,11 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.4.5
+ - Refresh Shortcut widgets Automatically
+ - Add "Next Path" widget action
+ - Add "Clone" and "Explode" widget modes
+ - Allow refreshing between 15m-2h, at 15m intervals
 1.4.3
  - Add context menu on more items
  - Fix some log spam
@@ -115,25 +121,14 @@
  - First stable release
         </news>
         <assets>
-            <icon>resources/media/sync.png</icon>
+            <icon>resources/media/icon/sync.png</icon>
             <fanart>resources/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
 </addon>
-
- - Better handling of art
- - Better add-on art added
- - Redesigned path addition dialog
- - Settings shortcuts added
-1.1.2
- - Add art editing for paths
- - Add group renaming
-1.1.1
- - Add setting to disable notification
-1.1.0
- - Remove Skin Shortcuts dependency
+ove Skin Shortcuts dependency
  - Expand context menu options
  - Add support for skins with "basic" Skin Shortcuts integration
  - Add setting to pause AutoWidget's service
