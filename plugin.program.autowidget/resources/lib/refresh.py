@@ -31,6 +31,7 @@ class RefreshService(xbmc.Monitor):
         self.refresh_enabled = utils.get_setting_int('service.refresh_enabled')
         self.refresh_duration = utils.get_setting_float('service.refresh_duration')
         self.refresh_notification = utils.get_setting_int('service.refresh_notification')
+        self.refresh_sound = utils.get_setting_bool('service.refresh_sound')
 
     def _update_properties(self, window=10000):
 
@@ -189,7 +190,8 @@ def refresh_paths(notify=False, force=False):
 
     if notify:
         dialog = xbmcgui.Dialog()
-        dialog.notification('AutoWidget', utils.get_string(32033))
+        dialog.notification('AutoWidget', utils.get_string(32033),
+                            sound=utils.get_setting_bool('service.refresh_sound'))
     
     for group_def in manage.find_defined_groups():
         paths = []

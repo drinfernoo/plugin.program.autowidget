@@ -368,4 +368,8 @@ msgstr "Mientras no haya nada en reproducción"
 
 msgctxt "#32087"
 msgid "Never"
-msgstr "Nunca"
+msgstr "Nunca" 
+ 
+msgctxt "#32108"
+msgid "Notification Sound"
+msgstr "Sonido de notificación"

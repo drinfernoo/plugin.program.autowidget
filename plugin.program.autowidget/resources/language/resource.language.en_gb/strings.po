@@ -407,7 +407,7 @@ msgid "Choose Backup to Restore"
 msgstr ""
 
 msgctxt "#32099"
-msgid "Would you like to restore {} group{} from this backup?"
+msgid "Would you like to restore {} group {} from this backup?"
 msgstr ""
 
 msgctxt "#32100"
@@ -416,4 +416,8 @@ msgstr ""
 
 msgctxt "#32101"
 msgid "Restore Cancelled."
+msgstr ""
+
+msgctxt "#32108"
+msgid "Notification Sound"
 msgstr ""
