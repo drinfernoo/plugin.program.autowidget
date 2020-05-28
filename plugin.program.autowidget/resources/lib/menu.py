@@ -251,7 +251,7 @@ def call_path(group_id, path_id):
             final_path = 'PlayMedia({})'.format(path_def['path'])
     elif path_def['target'] == 'widget' or path_def['is_folder'] == 1 \
                                         or path_def['content'] == 'addons':
-        final_path = 'ActivateWindow({},{},return)'.format(path_def['window'],
+        final_path = 'ActivateWindow({},{},return)'.format(path_def.get('window', 'Videos'),
                                                            path_def['path'])
     elif path_def['target'] == 'settings':
         final_path = 'Addon.OpenSettings({})'.format(path_def['path']
