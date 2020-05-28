@@ -28,6 +28,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.6.8
+ - Add setting for notification sound
 1.6.7
  - Fix crash when window cannot be detected. Notably fixes Disney+ support.
 1.6.6
