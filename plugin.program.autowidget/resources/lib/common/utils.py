@@ -51,6 +51,8 @@ info_types = ['artist', 'albumartist', 'genre', 'year', 'rating',
               'albumartistid', 'description', 'albumlabel', 'sorttitle', 'episodeguide',
               'dateadded', 'lastmodified', 'specialsortseason', 'specialsortepisode']
               
+prop_types = ['tmdb_id', 'tvdb_id', 'imdb_id', 'trakt_id', 'widget', 'autoLabel']
+              
 art_types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
              'poster', 'thumb']
 
