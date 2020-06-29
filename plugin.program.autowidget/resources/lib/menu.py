@@ -269,14 +269,11 @@ def _initialize(group_def, action, _id, save=True):
     else:
         return params
     
-def show_path(group_id, path_id, _id, titles=None, num=1, props=False):
+def show_path(group_id, path_id, _id, titles=None, num=1):
     params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
               'params': {'properties': utils.info_types},
               'id': 1}
-              
-    if props:
-        params['params']['additionalProperties'] = utils.prop_types
-    
+
     widget_def = manage.get_widget_by_id(_id)
     path_def = manage.get_path_by_id(path_id, group_id=group_id)
     if not widget_def:
@@ -318,8 +315,13 @@ def show_path(group_id, path_id, _id, titles=None, num=1, props=False):
 
         for file in filtered_files:
             labels = {}
-            for label in file:
+            properties = {'autoLabel': path_label}
+            for label in [x for x in file if x != 'customproperties']:
                 labels[label] = file[label]
+                
+            if 'customproperties' in file:
+                for prop in file['customproperties']:
+                    properties[prop] = file['customproperties'][prop]
             
             labels['title'] = file['label']
             
@@ -335,11 +337,6 @@ def show_path(group_id, path_id, _id, titles=None, num=1, props=False):
                 continue
             
             if not next_item or sort_next != 2:
-                properties = {'autoLabel': path_label}
-                if props:
-                    for prop in [x for x in utils.prop_types if x in file]:
-                        properties[prop] = file[prop]
-                        
                 if next_item:
                     if not show_next:
                         continue
