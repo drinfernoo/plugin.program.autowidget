@@ -1,6 +1,5 @@
-import xbmc
-
 from resources.lib import refresh
 
-_monitor = refresh.RefreshService()
-_monitor.waitForAbort()
+if __name__ == '__main__':
+    _monitor = refresh.RefreshService()
+    _monitor.waitForAbort()
