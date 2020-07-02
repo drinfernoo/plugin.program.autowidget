@@ -273,6 +273,10 @@ def show_path(group_id, path_id, _id, titles=None, num=1):
     params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
               'params': {'properties': utils.info_types},
               'id': 1}
+    
+    version = utils.get_json_version()
+    if version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12):
+        params['params']['properties'].append('customproperties')
 
     widget_def = manage.get_widget_by_id(_id)
     path_def = manage.get_path_by_id(path_id, group_id=group_id)

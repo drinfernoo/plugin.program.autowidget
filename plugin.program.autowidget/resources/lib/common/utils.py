@@ -49,9 +49,8 @@ info_types = ['artist', 'albumartist', 'genre', 'year', 'rating',
               'firstaired', 'episode', 'showtitle', 'artistid', 'albumid',
               'tvshowid', 'setid', 'watchedepisodes', 'displayartist', 'mimetype',
               'albumartistid', 'description', 'albumlabel', 'sorttitle', 'episodeguide',
-              'dateadded', 'lastmodified', 'specialsortseason', 'specialsortepisode',
-              'customproperties']
-              
+              'dateadded', 'lastmodified', 'specialsortseason', 'specialsortepisode']
+
 art_types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
              'poster', 'thumb']
 
@@ -293,3 +292,10 @@ def clear_property(property, window=10000):
 
 def get_infolabel(label):
     return xbmc.getInfoLabel(label)
+
+
+def get_json_version():
+    params = {'jsonrpc': '2.0', 'id': 1,
+              'method': 'JSONRPC.Version'}
+    result = json.loads(xbmc.executeJSONRPC(json.dumps(params)))['result']
+    return (result['major'], result['minor'], result['patch'])
