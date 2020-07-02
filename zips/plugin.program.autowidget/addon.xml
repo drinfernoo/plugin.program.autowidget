@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.309" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.396" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
     </requires>
@@ -14,7 +14,7 @@
         <menu id="kodi.core.main">
             <item library="context.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(10000).Property(context.autowidget))</visible>
+                <visible>String.IsEmpty(ListItem.DbType) + String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
             </item>
         </menu>
     </extension>
@@ -26,6 +26,32 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.2.5
+ - Update some skin localizations
+ - Add more widget artwork
+ - Update documentation
+1.2.3
+ - Fix paths made from add-on browser
+ - Add ability to set plot
+1.2.2
+ - Fix group dialog calls
+1.2.1
+ - Fix imports
+1.2.0
+ - Better handling of art
+ - Better add-on art added
+ - Redesigned path addition dialog
+ - Settings shortcuts added
+1.1.2
+ - Add art editing for paths
+ - Add group renaming
+1.1.1
+ - Add setting to disable notification
+1.1.0
+ - Remove Skin Shortcuts dependency
+ - Expand context menu options
+ - Add support for skins with "basic" Skin Shortcuts integration
+ - Add setting to pause AutoWidget's service
 1.0.7
  - Fix context menu option not showing
 1.0.6
@@ -45,37 +71,14 @@
  - First stable release
         </news>
         <assets>
-            <icon>icon.png</icon>
+            <icon>resources/media/sync.png</icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
 </addon>
-hortcuts
- - Change main menu layout
-1.3.9
- - Fix label bug in Embuary (and maybe elsewhere)
-1.3.8
- - Add "Wipe Add-on Data" shortcuts
- - Allow Unicode characters in labels
-1.3.7
- - Fix typo in path handling
-1.3.6
- - Fix error handling
-1.3.5
- - Add extra error checking for file operations
-1.3.4
- - Add proper migration from old JSON to current
-1.3.3
- - Rewrite editor dialog
- - Fix path conversion for skin string paths
-1.3.2
- - Fixes and cleanup in editor dialog
-1.3.1
- - Cleanup skin string conversion
-1.3.0
- - Add group editing dialog
- - Non-Skin Shortcuts skin support
- - Fix issues with groups and paths with the same name
- - Fix settings shortcuts
+ts
  - Add rudimentary JSON migration
 1.2.5
  - Update some skin localizations
@@ -129,9 +132,7 @@ hortcuts
         </assets>
     </extension>
 </addon>
-gs shortcuts added
-1.1.2
- - Add art editing for paths
+iting for paths
  - Add group renaming
 1.1.1
  - Add setting to disable notification
@@ -162,11 +163,6 @@ gs shortcuts added
             <icon>resources/media/icon/sync.png</icon>
             <fanart>resources/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-a/poster/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
