@@ -65,7 +65,7 @@ def build_labels(source, path_def=None, target=''):
             info = utils.get_infolabel('ListItem.{}'.format(i.capitalize()))
             if info and not info.startswith('ListItem'):
                 labels['info'][i] = info
-                                 
+
         labels['art'] = {}
         for i in utils.art_types:
             art = utils.get_infolabel('ListItem.Art({})'.format(i.capitalize()))

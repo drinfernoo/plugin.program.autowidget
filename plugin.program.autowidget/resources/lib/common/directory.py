@@ -23,21 +23,18 @@ _sort_methods = [xbmcplugin.SORT_METHOD_UNSORTED,
                  xbmcplugin.SORT_METHOD_TITLE,
                  xbmcplugin.SORT_METHOD_TITLE_IGNORE_THE,
                  xbmcplugin.SORT_METHOD_LASTPLAYED]
-                 
+
 _exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
                  'filetype', 'lastmodified', 'productioncode', 'firstaired',
                  'runtime', 'showtitle', 'specialsortepisode',
                  'specialsortseason', 'track', 'tvshowid', 'watchedepisodes']
 
-    
-def add_separator(title='', char='-', sort=''):
-    _window = utils.get_active_window()
-    sync = utils.get_art('sync.png')
+sync = utils.get_art('sync.png')
 
-    props = None
-    if sort:
-        props = {'specialsort': sort}
-    
+
+def add_separator(title='', char='-'):
+    _window = utils.get_active_window()
+
     if _window != 'media':
         return
 
@@ -49,10 +46,9 @@ def add_separator(title='', char='-', sort=''):
         edge = char * int(40 - split)
         add_menu_item(title='{0} {1} {0}'.format(edge,
                                                  string.capwords(title)),
-                      art=sync,
-                      props=props)
+                      art=sync)
     else:
-        add_menu_item(title=char * 80, art=sync, props=props)
+        add_menu_item(title=char * 80, art=sync)
 
 
 def add_sort_methods(handle):
@@ -62,8 +58,7 @@ def add_sort_methods(handle):
     
 def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
                   isFolder=False, props=None):
-    _plugin = sys.argv[0]
-    _handle = int(sys.argv[1])
+    _plugin, _handle = sys.argv[:1]
     _params = sys.argv[2][1:]
 
     if params is not None:
