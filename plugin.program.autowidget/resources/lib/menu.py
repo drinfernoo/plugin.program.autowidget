@@ -442,7 +442,6 @@ def update_path(_id, path, target):
         
     utils.set_property('autowidget-{}-action'.format(_id), widget_def['path'])
     manage.save_path_details(widget_def, _id)
-    utils.update_container()
 
 
 def path_menu(group_id, action, _id, path=None):
