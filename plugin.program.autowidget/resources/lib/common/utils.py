@@ -297,5 +297,5 @@ def get_infolabel(label):
 def get_json_version():
     params = {'jsonrpc': '2.0', 'id': 1,
               'method': 'JSONRPC.Version'}
-    result = json.loads(xbmc.executeJSONRPC(json.dumps(params)))['result']
+    result = json.loads(xbmc.executeJSONRPC(json.dumps(params)))['result']['version']
     return (result['major'], result['minor'], result['patch'])
