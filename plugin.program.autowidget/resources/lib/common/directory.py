@@ -31,10 +31,14 @@ _exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
 
 sync = utils.get_art('sync.png')
 
-
-def add_separator(title='', char='-'):
+    
+def add_separator(title='', char='-', sort=''):
     _window = utils.get_active_window()
 
+    props = None
+    if sort:
+        props = {'specialsort': sort}
+    
     if _window != 'media':
         return
 
@@ -46,9 +50,10 @@ def add_separator(title='', char='-'):
         edge = char * int(40 - split)
         add_menu_item(title='{0} {1} {0}'.format(edge,
                                                  string.capwords(title)),
-                      art=sync)
+                      art=sync,
+                      props=props)
     else:
-        add_menu_item(title=char * 80, art=sync)
+        add_menu_item(title=char * 80, art=sync, props=props)
 
 
 def add_sort_methods(handle):
