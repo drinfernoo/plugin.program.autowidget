@@ -465,3 +465,11 @@ msgstr "Regresar a la página {}"
 msgctxt "#32111"
 msgid "Next Page"
 msgstr "Siguiente página"
+
+msgctxt "#32112"
+msgid "Shift Path to Top"
+msgstr "Cambiar el camino hacia arriba"
+
+msgctxt "#32113"
+msgid "Shift Page to Bottom"
+msgstr "Cambiar el camino hacia abajo"

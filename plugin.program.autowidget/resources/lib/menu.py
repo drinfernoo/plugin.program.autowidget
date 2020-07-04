@@ -465,29 +465,27 @@ def merged_path(group_id, _id):
 
 def _create_context_items(group_id, path_id, idx, length):
     cm = [(utils.get_string(32048),
-          ('RunPlugin('
-           'plugin://plugin.program.autowidget/'
-           '?mode=manage'
-           '&action=edit'
-           '&group={}'
-           '&path={})').format(group_id, path_id))]
-    if idx > 0:
-        cm.append((utils.get_string(32026),
-                  ('RunPlugin('
-                   'plugin://plugin.program.autowidget/'
-                   '?mode=manage'
-                   '&action=shift_path'
-                   '&target=up'
-                   '&group={}'
-                   '&path={})').format(group_id, path_id)))
-    if idx < length - 1:
-        cm.append((utils.get_string(32027),
-                  ('RunPlugin('
-                   'plugin://plugin.program.autowidget/'
-                   '?mode=manage'
-                   '&action=shift_path'
-                   '&target=down'
-                   '&group={}'
-                   '&path={})').format(group_id, path_id)))
-                                                      
+              ('RunPlugin('
+               'plugin://plugin.program.autowidget/'
+               '?mode=manage'
+               '&action=edit'
+               '&group={}'
+               '&path={})').format(group_id, path_id)),
+          (utils.get_string(32026) if idx > 0 else utils.get_string(32113),
+              ('RunPlugin('
+               'plugin://plugin.program.autowidget/'
+               '?mode=manage'
+               '&action=shift_path'
+               '&target=up'
+               '&group={}'
+               '&path={})').format(group_id, path_id)),
+          (utils.get_string(32027) if idx < length - 1 else utils.get_string(32112),
+              ('RunPlugin('
+               'plugin://plugin.program.autowidget/'
+               '?mode=manage'
+               '&action=shift_path'
+               '&target=down'
+               '&group={}'
+               '&path={})').format(group_id, path_id))]
+
     return cm

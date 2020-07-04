@@ -465,3 +465,11 @@ msgstr ""
 msgctxt "#32111"
 msgid "Next Page"
 msgstr ""
+
+msgctxt "#32112"
+msgid "Shift Path to Top"
+msgstr ""
+
+msgctxt "#32113"
+msgid "Shift Page to Bottom"
+msgstr ""

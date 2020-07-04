@@ -25,14 +25,20 @@ def shift_path(group_id, path_id, target):
     paths = group_def['paths']
     for idx, path_def in enumerate(paths):
         if path_def['id'] == path_id:
-            if target == 'up' and idx > 0:
-                temp = paths[idx - 1]
-                paths[idx - 1] = path_def
-                paths[idx] = temp
-            elif target == 'down' and idx < len(paths) - 1: 
-                temp = paths[idx + 1]
-                paths[idx + 1] = path_def
-                paths[idx] = temp
+            if target == 'up' and idx >= 0:
+                if idx > 0:
+                    temp = paths[idx - 1]
+                    paths[idx - 1] = path_def
+                    paths[idx] = temp
+                else:
+                    paths.append(paths.pop(idx))
+            elif target == 'down' and idx <= len(paths) - 1: 
+                if idx < len(paths) - 1:
+                    temp = paths[idx + 1]
+                    paths[idx + 1] = path_def
+                    paths[idx] = temp
+                else:
+                    paths.insert(0, paths.pop())
             break
 
     group_def['paths'] = paths
