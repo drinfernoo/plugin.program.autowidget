@@ -1,7 +1,6 @@
 import xbmc
 import xbmcgui
 
-import json
 import random
 import re
 import time
@@ -269,15 +268,11 @@ def _initialize(group_def, action, _id, save=True):
     else:
         return params
     
-def show_path(group_id, path_id, _id, titles=None, num=1):
-    params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
-              'params': {'properties': utils.info_types},
-              'id': 1}
+def show_path(group_id, path_id, _id, titles=[], num=1):
+    hide_watched = utils.get_setting_bool('widgets.hide_watched')
+    show_next = utils.get_setting_int('widgets.show_next')
+    paged_widgets = utils.get_setting_bool('widgets.paged')
     
-    version = utils.get_json_version()
-    if version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12):
-        params['params']['properties'].append('customproperties')
-
     widget_def = manage.get_widget_by_id(_id)
     path_def = manage.get_path_by_id(path_id, group_id=group_id)
     if not widget_def:
@@ -287,22 +282,19 @@ def show_path(group_id, path_id, _id, titles=None, num=1):
         if widget_def:
             path_def = manage.get_path_by_id(widget_def['path'],
                                              group_id=widget_def['group'])
-        params['params']['directory'] = path_id
+        path = path_id
     else:
-        params['params']['directory'] = path_def['path']
+        path = path_def['path']
     
     if path_def:
         path_label = path_def.get('label', 'AutoWidget')
     else:
         path_label = widget_def.get('label', '')
     
-    if not titles:
-        titles = []
-    
-    files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
     stack = widget_def.get('stack', [])
     if stack:
-        directory.add_menu_item(title='Previous Page',
+        title = utils.get_string(32110).format(len(stack))
+        directory.add_menu_item(title=title,
                                 params={'mode': 'path',
                                         'action': 'update',
                                         'id': _id,
@@ -311,71 +303,59 @@ def show_path(group_id, path_id, _id, titles=None, num=1):
                                 art=back,
                                 isFolder=num > 1,
                                 props={'specialsort': 'top',
-                                       'widget': path_label})
+                                       'autoLabel': path_label})
     
-    if 'error' not in files:
-        files = files['result']['files']
-        filtered_files = [x for x in files if x['label'] not in titles]
-
-        for file in filtered_files:
-            labels = {}
-            properties = {'autoLabel': path_label}
-            for label in [x for x in file if x != 'customproperties']:
-                labels[label] = file[label]
-                
-            if 'customproperties' in file:
-                for prop in file['customproperties']:
-                    properties[prop] = file['customproperties'][prop]
+    files = utils.get_files_list(path, titles)
+    for file in files:
+        labels = {}
+        properties = {'autoLabel': path_label}
+        for label in [x for x in file if x != 'customproperties']:
+            labels[label] = file[label]
             
-            labels['title'] = file['label']
+        if 'customproperties' in file:
+            for prop in file['customproperties']:
+                properties[prop] = file['customproperties'][prop]
+        
+        labels['title'] = file['label']
+        next_item = re.sub('[^\w \xC0-\xFF]', '', labels['title'].lower()).strip() in ['next', 'next page']
+        prev_item = re.sub('[^\w \xC0-\xFF]', '', labels['title'].lower()).strip() in ['previous', 'previous page', 'back']
+        
+        if (prev_item and stack) or (next_item and show_next == 0):
+            continue
+        elif next_item and show_next > 0:
+            labels['title'] = utils.get_string(32111)
+            properties['specialsort'] = 'bottom'
             
-            hide_watched = utils.get_setting_bool('widgets.hide_watched')
-            show_next = utils.get_setting_bool('widgets.show_next')
-            sort_next = utils.get_setting_int('widgets.sort_next')
+            if num > 1:
+                if show_next == 1:
+                    continue
+                    
+                labels['title'] = '{} - {}'.format(labels['title'],
+                                                   path_label)
             
-            next_item = re.sub('[^\w \xC0-\xFF]', '', labels['title'].lower()).strip() in ['next', 'next page']
-            prev_item = re.sub('[^\w \xC0-\xFF]', '', labels['title'].lower()).strip() in ['previous', 'previous page', 'back']
-            
-            sort_to_end = next_item and sort_next == 1
-            if prev_item and stack:
+            directory.add_menu_item(title=labels['title'],
+                                    params={'mode': 'path',
+                                            'action': 'update',
+                                            'id': _id,
+                                            'path': file['file'],
+                                            'target': 'next'} if num == 1 and paged_widgets else None,
+                                    path=file['file'] if (num > 1 or paged_widgets) or (num == 1 and not paged_widgets) else None,
+                                    art=next_page,
+                                    info=labels,
+                                    isFolder=num > 1 or not paged_widgets,
+                                    props=properties)
+        else:
+            if hide_watched and labels.get('playcount', 0) > 0:
                 continue
+        
+            directory.add_menu_item(title=labels['title'],
+                                    path=file['file'],
+                                    art=labels['art'],
+                                    info=labels,
+                                    isFolder=file['filetype'] == 'directory',
+                                    props=properties)
             
-            if not next_item or sort_next != 2:
-                if next_item:
-                    if not show_next:
-                        continue
-                
-                    labels['title'] = 'Next Page'
-                    if sort_to_end:
-                        properties['specialsort'] = 'bottom'
-                    
-                    if num > 1:
-                        labels['title'] = '{} - {}'.format(labels['title'],
-                                                           path_label)
-                    
-                    directory.add_menu_item(title=labels['title'],
-                                            params={'mode': 'path',
-                                                    'action': 'update',
-                                                    'id': _id,
-                                                    'path': file['file'],
-                                                    'target': 'next'} if num == 1 else None,
-                                            path=file['file'] if num > 1 else None,
-                                            art=next_page,
-                                            info=labels,
-                                            isFolder=num > 1,
-                                            props=properties)
-                else:
-                    if hide_watched and labels.get('playcount', 0) > 0:
-                        continue
-                
-                    directory.add_menu_item(title=labels['title'],
-                                            path=file['file'],
-                                            art=labels['art'],
-                                            info=labels,
-                                            isFolder=file['filetype'] == 'directory',
-                                            props=properties)
-                    
-                    titles.append(labels['title'])
+            titles.append(labels['title'])
          
     return titles, path_label
     
@@ -414,34 +394,6 @@ def call_path(group_id, path_id):
         xbmc.executebuiltin(final_path)
         
     return False, path_def['label']
-
-
-def update_path(_id, path, target):
-    widget_def = manage.get_widget_by_id(_id)
-    if not widget_def:
-        return
-        
-    stack = widget_def.get('stack', [])
-    
-    if target == 'next':
-        path_id = widget_def['path'].split('-')
-        if len(path_id) > 1:
-            if time.ctime(float(path_id[1])):
-                path_def = manage.get_path_by_id(widget_def['path'], group_id=widget_def['group'])
-                widget_def['label'] = path_def['label']
-        
-        stack.append(widget_def['path'])
-        widget_def['stack'] = stack
-        widget_def['path'] = path
-    elif target == 'back':
-        widget_def['path'] = widget_def['stack'][-1]
-        widget_def['stack'] = widget_def['stack'][:-1]
-        
-        if len(widget_def['stack']) == 0:
-            widget_def['label'] = ''
-        
-    utils.set_property('autowidget-{}-action'.format(_id), widget_def['path'])
-    manage.save_path_details(widget_def, _id)
 
 
 def path_menu(group_id, action, _id, path=None):
@@ -503,12 +455,12 @@ def merged_path(group_id, _id):
         for path_def in paths:
             titles, cat = show_path(group_id, path_def['id'], _id, num=len(paths))
                     
-        return True, group_name
+        return titles, group_name
     else:
         directory.add_menu_item(title=32032,
                                 art=alert,
                                 isFolder=False)
-        return False, group_name
+        return True, group_name
 
 
 def _create_context_items(group_id, path_id, idx, length):

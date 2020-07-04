@@ -110,7 +110,7 @@ def dispatch(_plugin, _handle, _params):
             is_dir, category = menu.merged_path(group, _id)
             is_type = 'videos'
         elif action == 'update' and path and target:
-            menu.update_path(_id, path, target)
+            refresh.update_path(_id, path, target)
     elif mode == 'group':
         if not group:
             is_dir, category = menu.my_groups_menu()

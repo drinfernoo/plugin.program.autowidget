@@ -18,7 +18,6 @@ class RefreshService(xbmc.Monitor):
         self.player = xbmc.Player()
         utils.ensure_addon_data()
         self._update_properties()
-        self._clean_widgets()
         self._update_labels()
         self._update_widgets()
 
@@ -26,7 +25,6 @@ class RefreshService(xbmc.Monitor):
         self._update_properties()
 
     def _update_properties(self):
-
         for property in _properties:
             setting = utils.get_setting(property)
             utils.log('{}: {}'.format(property, setting))
@@ -45,17 +43,13 @@ class RefreshService(xbmc.Monitor):
         self.refresh_notification = utils.get_setting_int('service.refresh_notification')
         self.refresh_sound = utils.get_setting_bool('service.refresh_sound')
         
+        self._clean_widgets()
         utils.update_container()
         
     def _clean_widgets(self):
         for widget_def in manage.find_defined_widgets():
-            if 'stack' in widget_def:
-                if len(widget_def['stack']) > 0:
-                    widget_def['path'] = widget_def['stack'][0]
-                    
-            widget_def['stack'] = []
-            widget_def['label'] = ''
-            manage.save_path_details(widget_def, widget_def['id'])
+            utils.log('Resetting {}'.format(widget_def['id']), level=xbmc.LOGDEBUG)
+            update_path(widget_def['id'], None, 'reset')
 
     def _update_labels(self):
         for widget_def in manage.find_defined_widgets():
@@ -121,6 +115,39 @@ def _update_strings(_id, path_def):
         
     utils.set_property(label_string, label)
     utils.set_property(action_string, path_def['id'])
+
+
+def update_path(_id, path, target):
+    widget_def = manage.get_widget_by_id(_id)
+    if not widget_def:
+        return
+        
+    stack = widget_def.get('stack', [])
+    
+    if target == 'next':
+        path_id = widget_def['path'].split('-')
+        if len(path_id) > 1:
+            if time.ctime(float(path_id[1])):
+                path_def = manage.get_path_by_id(widget_def['path'], group_id=widget_def['group'])
+                widget_def['label'] = path_def['label']
+        
+        stack.append(widget_def['path'])
+        widget_def['stack'] = stack
+        widget_def['path'] = path
+    elif target == 'back':
+        widget_def['path'] = widget_def['stack'][-1]
+        widget_def['stack'] = widget_def['stack'][:-1]
+        
+        if len(widget_def['stack']) == 0:
+            widget_def['label'] = ''
+    elif target == 'reset':
+            if len(stack) > 0:
+                widget_def['path'] = widget_def['stack'][0]
+                widget_def['stack'] = []
+                widget_def['label'] = ''
+        
+    utils.set_property('autowidget-{}-action'.format(_id), widget_def['path'])
+    manage.save_path_details(widget_def, _id)
 
 
 def refresh(widget_id, widget_def=None, paths=None, force=False):

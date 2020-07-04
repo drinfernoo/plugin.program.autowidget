@@ -447,9 +447,21 @@ msgid "Hide Watched Items"
 msgstr ""
 
 msgctxt "#32107"
-msgid "Show 'Next Page' in Merged Widgets"
+msgid "Use Paged Widgets (Doesn't Affect Merged Widgets)"
 msgstr ""
 
 msgctxt "#32108"
 msgid "Notification Sound"
+msgstr ""
+
+msgctxt "#32109"
+msgid "Not on Merged Widgets"
+msgstr ""
+
+msgctxt "#32110"
+msgid "Back to Page {}"
+msgstr ""
+
+msgctxt "#32111"
+msgid "Next Page"
 msgstr ""

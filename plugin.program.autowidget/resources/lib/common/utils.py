@@ -294,8 +294,25 @@ def get_infolabel(label):
     return xbmc.getInfoLabel(label)
 
 
-def get_json_version():
+def _get_json_version():
     params = {'jsonrpc': '2.0', 'id': 1,
               'method': 'JSONRPC.Version'}
     result = json.loads(xbmc.executeJSONRPC(json.dumps(params)))['result']['version']
     return (result['major'], result['minor'], result['patch'])
+
+
+def get_files_list(path, titles=[]):
+    version = _get_json_version()
+    props = version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12)
+    props_info = info_types + ['customproperties']
+    params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
+              'params': {'properties': info_types if not props else props_info,
+                         'directory': path},
+              'id': 1}
+    
+    files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
+    if 'error' not in files:
+        files = files['result']['files']
+        filtered_files = [x for x in files if x['label'] not in titles]
+        
+        return filtered_files
