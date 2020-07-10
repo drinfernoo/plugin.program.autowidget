@@ -188,9 +188,10 @@ def _group_dialog(_type, group_id=None):
         return groups[choice - offset]
 
 
-def add_group(target):
+def add_group(target, group_name=''):
     dialog = xbmcgui.Dialog()
-    group_name = dialog.input(heading=utils.get_string(32037))
+    group_name = dialog.input(heading=utils.get_string(32037),
+                              defaultt=group_name)
     group_id = ''
     
     if group_name:
@@ -233,7 +234,7 @@ def _copy_path(path_def):
               'params': {'directory': path_def['path'],
                          'properties': utils.info_types},
               'id': 1}
-    group_id = add_group(path_def['target'])
+    group_id = add_group(path_def['target'], path_def['label'])
     if not group_id:
         return
         
