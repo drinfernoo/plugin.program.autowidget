@@ -284,7 +284,7 @@ def show_path(group_id, path_id, _id, titles=[], num=1):
                                              group_id=widget_def['group'])
         path = path_id
     else:
-        path = path_def['path']
+        path = path_def['file']['file']
     
     if path_def:
         path_label = path_def.get('label', 'AutoWidget')
@@ -307,33 +307,31 @@ def show_path(group_id, path_id, _id, titles=[], num=1):
     
     files = utils.get_files_list(path, titles)
     for file in files:
-        labels = {}
         properties = {'autoLabel': path_label}
-        for label in [x for x in file if x != 'customproperties']:
-            labels[label] = file[label]
-            
+
+        import json
+        utils.log(json.dumps(file['art']), xbmc.LOGNOTICE)
         if 'customproperties' in file:
             for prop in file['customproperties']:
                 properties[prop] = file['customproperties'][prop]
         
-        labels['title'] = file['label']
-        next_item = re.sub('[^\w \xC0-\xFF]', '', labels['title'].lower()).strip() in ['next', 'next page']
-        prev_item = re.sub('[^\w \xC0-\xFF]', '', labels['title'].lower()).strip() in ['previous', 'previous page', 'back']
+        next_item = re.sub('[^\w \xC0-\xFF]', '', file['label'].lower()).strip() in ['next', 'next page']
+        prev_item = re.sub('[^\w \xC0-\xFF]', '', file['label'].lower()).strip() in ['previous', 'previous page', 'back']
         
         if (prev_item and stack) or (next_item and show_next == 0):
             continue
         elif next_item and show_next > 0:
-            labels['title'] = utils.get_string(32111)
+            label = utils.get_string(32111)
             properties['specialsort'] = 'bottom'
             
             if num > 1:
                 if show_next == 1:
                     continue
                     
-                labels['title'] = '{} - {}'.format(labels['title'],
+                label = '{} - {}'.format(label,
                                                    path_label)
             
-            directory.add_menu_item(title=labels['title'],
+            directory.add_menu_item(title=label,
                                     params={'mode': 'path',
                                             'action': 'update',
                                             'id': _id,
@@ -341,21 +339,21 @@ def show_path(group_id, path_id, _id, titles=[], num=1):
                                             'target': 'next'} if num == 1 and paged_widgets else None,
                                     path=file['file'] if (num > 1 or paged_widgets) or (num == 1 and not paged_widgets) else None,
                                     art=next_page,
-                                    info=labels,
+                                    info=file,
                                     isFolder=num > 1 or not paged_widgets,
                                     props=properties)
         else:
-            if hide_watched and labels.get('playcount', 0) > 0:
+            if hide_watched and file.get('playcount', 0) > 0:
                 continue
         
-            directory.add_menu_item(title=labels['title'],
+            directory.add_menu_item(title=file['label'],
                                     path=file['file'],
-                                    art=labels['art'],
-                                    info=labels,
+                                    art=file['art'],
+                                    info=file,
                                     isFolder=file['filetype'] == 'directory',
                                     props=properties)
             
-            titles.append(labels['title'])
+            titles.append(file.get('title'))
          
     return titles, path_label
     
@@ -369,25 +367,25 @@ def call_path(group_id, path_id):
     xbmc.sleep(500)
     final_path = ''
     
-    if path_def['target'] == 'shortcut' and path_def['is_folder'] == 0 \
+    if path_def['target'] == 'shortcut' and path_def['file']['filetype'] == 'file' \
                                         and path_def['content'] != 'addons':
-        if path_def['path'] == 'addons://install/':
+        if path_def['file']['file'] == 'addons://install/':
             final_path = 'InstallFromZip'
         elif path_def['content'] == 'files': 
-            final_path = 'RunPlugin({})'.format(path_def['path'])
-        elif path_def['path'].startswith('androidapp://sources/apps/'):
-            final_path = 'StartAndroidActivity({})'.format(path_def['path']
+            final_path = 'RunPlugin({})'.format(path_def['file']['file'])
+        elif path_def['file']['file'].startswith('androidapp://sources/apps/'):
+            final_path = 'StartAndroidActivity({})'.format(path_def['file']['file']
                                                            .replace('androidapp://sources/apps/', ''))
-        elif all(i in path_def['path'] for i in ['(', ')']) and '://' not in path_def['path']:
-            final_path = path_def['path']
+        elif all(i in path_def['file']['file'] for i in ['(', ')']) and '://' not in path_def['file']['file']:
+            final_path = path_def['file']['file']
         else:
-            final_path = 'PlayMedia({})'.format(path_def['path'])
-    elif path_def['target'] == 'widget' or path_def['is_folder'] == 1 \
+            final_path = 'PlayMedia({})'.format(path_def['file']['file'])
+    elif path_def['target'] == 'widget' or path_def['file']['filetype'] == 'directory' \
                                         or path_def['content'] == 'addons':
         final_path = 'ActivateWindow({},{},return)'.format(path_def.get('window', 'Videos'),
-                                                           path_def['path'])
+                                                           path_def['file']['file'])
     elif path_def['target'] == 'settings':
-        final_path = 'Addon.OpenSettings({})'.format(path_def['path']
+        final_path = 'Addon.OpenSettings({})'.format(path_def['file']['file']
                                                      .replace('plugin://', ''))
         
     if final_path:

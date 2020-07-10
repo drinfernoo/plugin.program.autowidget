@@ -14,7 +14,7 @@ _home = xbmc.translatePath('special://home/')
 advanced = utils.get_setting_bool('context.advanced')
 warning_shown = utils.get_setting_bool('context.warning')
 
-safe = ['label', 'art', 'info', 'path']
+safe = ['label', 'file', 'art']
 widget_safe = ['action', 'refresh']
 exclude = ['paths']
 
@@ -113,12 +113,11 @@ def _get_options(edit_def, base_key='', use_thumbs=False):
     options = []
     
     all_keys = sorted([i for i in edit_def.keys() if i not in exclude])
-    base_keys = sorted([i for i in all_keys if any(i in x for x in [safe, utils.art_types, utils.info_types])])
+    base_keys = sorted([i for i in all_keys if any(i in x for x in [safe, utils.art_types])])
     keys = all_keys if advanced else base_keys
     
     for key in keys:
         disp = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in safe else key
-        disp = disp if key not in utils.info_types else key
         _def = edit_def[key]
         
         if isinstance(_def, dict):
@@ -127,8 +126,8 @@ def _get_options(edit_def, base_key='', use_thumbs=False):
             if key == 'art':
                 arts = [i for i in _keys if _def[i]]
                 label = ' / '.join(arts)
-            elif key == 'info':
-                label = ', '.join(_keys)
+            elif key == 'file':
+                label = ', '.join(_keys if advanced else [i for i in _keys if i in safe])
         elif key in edit_def:
             if key in utils.art_types:
                 if edit_def[key]:
@@ -150,7 +149,7 @@ def _get_options(edit_def, base_key='', use_thumbs=False):
         if base_key != 'art':
             options.append('{}: {}'.format(disp, label))
     
-    if base_key == 'info':    
+    if base_key == 'file' and advanced:
         options.append(utils.get_string(32077))
     elif base_key == 'art':
         options.append(utils.get_string(32078))
@@ -208,15 +207,15 @@ def _get_value(edit_def, key):
         if key == 'art':
             options = _get_options(_def, base_key=key, use_thumbs=True)
             idx = dialog.select(utils.get_string(32046), options, useDetails=True)
-        elif key == 'info':
+        elif key == 'file':
             options = _get_options(_def, base_key=key)
             idx = dialog.select(utils.get_string(32047), options)
         
         if idx < 0:
             return
         elif idx == len(options) - 1:
-            if key == 'info':
-                label = dialog.select(utils.get_string(32077), utils.info_types)
+            if key == 'file':
+                label = dialog.select(utils.get_string(32077), [i for i in utils.info_types if i not in _def])
                 if label < 0:
                     return
                     

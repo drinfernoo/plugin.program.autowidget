@@ -33,7 +33,7 @@ folder_explode = utils.get_art('folder-explode.png')
 
 
 def add(labels):
-    _type = _add_as(labels['path'], labels['is_folder'])
+    _type = _add_as(labels['file'])
     if not _type:
         return
     
@@ -55,68 +55,44 @@ def add(labels):
 def build_labels(source, path_def=None, target=''):
     if source == 'context' and not path_def and not target:
         labels = {'label': utils.get_infolabel('ListItem.Label'),
-                  'is_folder': xbmc.getCondVisibility('Container.ListItem.IsFolder'),
                   'content': xbmc.getInfoLabel('Container.Content')}
-        
-        path = utils.get_infolabel('ListItem.FolderPath')
-        
-        labels['info'] = {}
-        for i in utils.info_types:
-            info = utils.get_infolabel('ListItem.{}'.format(i.capitalize()))
-            if info and not info.startswith('ListItem'):
-                labels['info'][i] = info
-
-        labels['art'] = {}
-        for i in utils.art_types:
-            art = utils.get_infolabel('ListItem.Art({})'.format(i.capitalize()))
-            if art:
-                labels['art'][i] = art
-        for i in ['icon', 'thumb']:
-            art = utils.get_infolabel('ListItem.{}'.format(i.capitalize()))
-            if art:
-                labels['art'][i] = art
+                  
+        parent = utils.get_infolabel('Container.FolderPath')
+        current_item = int(utils.get_infolabel('Container.CurrentItem'))
+        path_def = utils.get_files_list(parent)[current_item - 1]
     elif source == 'json' and path_def and target:
         labels = {'label': path_def['label'],
-                  'is_folder': path_def['filetype'] == 'directory',
                   'content': '',
                   'target': target}
         
-        path = path_def['file']
+    labels['file'] = {key: path_def[key] for key in path_def if path_def[key]}
+    path = labels['file']['file']
         
-        labels['info'] = {}
-        for i in [i for i in utils.info_types if i not in utils.art_types]:
-            if i in path_def and i != 'art':
-                if path_def[i]:
-                    labels['info'][i] = path_def[i]
-        
-        labels['art'] = {}
-        for i in utils.art_types:
-            if i in path_def['art'] and path_def['art'][i]:
-                labels['art'][i] = path_def['art'][i]
-    
     if path != 'addons://user/':
         path = path.replace('addons://user/', 'plugin://')
-    if 'plugin://plugin.video.themoviedb.helper' in path:
-        path += '&widget=True'
-    labels['path'] = path
+    if 'plugin://plugin.video.themoviedb.helper' in path and not '&widget=True' in path:
+        path += '&widget=True'            
+    labels['file']['file'] = path
     
     for _key in utils.windows:
             if any(i in path for i in utils.windows[_key]):
                 labels['window'] = _key
-                
-    for label in labels['art']:
-        labels['art'][label] = unquote(labels['art'][label]).replace(_home, 'special://home/').replace('image://', '')
-        if labels['art'][label].endswith('/'):
-            labels['art'][label] = labels['art'][label][:-1]
+
+    if path_def:
+        for art in path_def['art']:
+            labels['file']['art'][art] = unquote(labels['file']['art'][art]).replace(_home, 'special://home/')
+            if labels['file']['art'][art].endswith('/'):
+                labels['file']['art'][art] = labels['file']['art'][art][:-1]
         
     return labels
             
             
-def _add_as(path, is_folder):
+def _add_as(path_def):
     art = [folder_shortcut, folder_sync, folder_clone, folder_explode, folder_settings]
     
+    path = path_def['file']
     types = shortcut_types[:]
-    if is_folder:
+    if path_def['filetype'] == 'directory':
         types = shortcut_types[:4]
     else:
         if any(i in path for i in ['addons://user', 'plugin://']) and not parse_qsl(path):
@@ -231,7 +207,7 @@ def _add_path(group_def, labels, over=False):
     
 def _copy_path(path_def):
     params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
-              'params': {'directory': path_def['path'],
+              'params': {'directory': path_def['file']['file'],
                          'properties': utils.info_types},
               'id': 1}
     group_id = add_group(path_def['target'], path_def['label'])
@@ -239,12 +215,10 @@ def _copy_path(path_def):
         return
         
     group_def = manage.get_group_by_id(group_id)
-    files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
-    if 'error' not in files:
-        files = files['result']['files']
-        for file in files:
-            if file['type'] in ['movie', 'episode', 'musicvideo', 'song']:
-                continue
+    files = utils.get_files_list(path_def['file']['file'])
+    for file in files:
+        if file['type'] in ['movie', 'episode', 'musicvideo', 'song']:
+            continue
             
-            labels = build_labels('json', file, path_def['target'])
-            _add_path(group_def, labels, over=True)
+        labels = build_labels('json', file, path_def['target'])
+        _add_path(group_def, labels, over=True)
