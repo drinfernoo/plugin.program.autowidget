@@ -30,11 +30,7 @@ _addon_id = _addon.getAddonInfo('id')
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
 _art_path = os.path.join(_addon_root, 'resources', 'media')
-if xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
-    _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
-    shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
-else:
-    shortcuts_path = ''
+_home = xbmc.translatePath('special://home/')
 
 windows = {'programs': ['program', 'script'],
             'addonbrowser': ['addon', 'addons'],
@@ -66,10 +62,8 @@ def log(msg, level=xbmc.LOGDEBUG):
 
 
 def ensure_addon_data():
-    for path in [_addon_path, shortcuts_path]:
-        if path:
-            if not os.path.exists(path):
-                os.makedirs(path)
+    if not os.path.exists(_addon_path):
+        os.makedirs(_addon_path)
 
 
 def wipe(folder=_addon_path):
@@ -299,6 +293,13 @@ def get_infolabel(label):
     return xbmc.getInfoLabel(label)
 
 
+def clean_artwork_url(url):
+    url = unquote(url).replace(_home, 'special://home/').replace('image://', '')
+    if url.endswith('/'):
+        url = url[:-1]
+    return url
+
+
 def _get_json_version():
     params = {'jsonrpc': '2.0', 'id': 1,
               'method': 'JSONRPC.Version'}
@@ -321,6 +322,6 @@ def get_files_list(path, titles=[]):
         filtered_files = [x for x in files if x['label'] not in titles]
         for file in [i for i in filtered_files if 'art' in i]:
             for art in file['art']:
-                file['art'][art] = unquote(file['art'][art]).replace('image://', '')
+                file['art'][art] = clean_artwork_url(file['art'][art])
                 
         return filtered_files

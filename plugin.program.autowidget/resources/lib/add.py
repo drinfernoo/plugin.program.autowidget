@@ -19,7 +19,6 @@ from resources.lib.common import utils
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_version = _addon.getAddonInfo('version')
-_home = xbmc.translatePath('special://home/')
 
 shortcut_types = [utils.get_string(32051), utils.get_string(32052),
                   utils.get_string(32082), utils.get_string(32083),
@@ -80,9 +79,7 @@ def build_labels(source, path_def=None, target=''):
 
     if path_def:
         for art in path_def['art']:
-            labels['file']['art'][art] = unquote(labels['file']['art'][art]).replace(_home, 'special://home/')
-            if labels['file']['art'][art].endswith('/'):
-                labels['file']['art'][art] = labels['file']['art'][art][:-1]
+            labels['file']['art'][art] = clean_artwork_url(labels['file']['art'][art])
         
     return labels
             

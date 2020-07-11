@@ -1,27 +1,14 @@
 import xbmc
 import xbmcaddon
-import xbmcgui
 
 import json
 import os
-import re
-
-try:
-    from urllib.parse import parse_qsl
-except ImportError:
-    from urlparse import parse_qsl
 
 from resources.lib.common import utils
 
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_version = _addon.getAddonInfo('version')
-_home = xbmc.translatePath('special://home/')
-if xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
-    _shortcuts = xbmcaddon.Addon('script.skinshortcuts')
-    _shortcuts_path = xbmc.translatePath(_shortcuts.getAddonInfo('profile'))
-else:
-    _shortcuts_path = ''
 
 def write_path(group_def, path_def=None, update=''):
     filename = os.path.join(_addon_path, '{}.group'.format(group_def['id']))
