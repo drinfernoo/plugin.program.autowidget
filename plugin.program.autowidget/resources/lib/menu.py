@@ -260,7 +260,7 @@ def _initialize(group_def, action, _id, save=True):
               'id': _id,
               'group': group_def['id'],
               'refresh': duration,
-              'path': init_path}
+              'path': [init_path]}
     if save:
         details = manage.save_path_details(params)
         refresh.refresh(_id)
@@ -437,12 +437,27 @@ def merged_path(group_id, _id):
         return False, 'AutoWidget'
     
     group_name = group_def.get('label', '')
-    paths = manage.find_defined_paths(group_id)
-    
     widget_def = manage.get_widget_by_id(_id, group_id)
+    paths = manage.find_defined_paths(group_id)
     
     if not widget_def:
         widget_def = _initialize(group_def, 'merged', _id, save=_window not in ['dialog', 'media'])
+        if _window == 'dialog':
+            dialog = xbmcgui.Dialog()
+            
+            idxs = dialog.multiselect('Choose which to merge',
+                                      [i['label'] for i in paths],
+                                      preselect=range(len(paths)))
+            if len(idxs) == 0:
+                pass
+            else:
+                widget_def['path'] = []
+                for idx in idxs:
+                    widget_def['path'].append(paths[idx])
+                paths = widget_def['path']
+                manage.save_path_details(widget_def, _id)
+    else:
+        paths = widget_def['path'] if len(widget_def['path']) > 1 else paths
     
     if len(paths) > 0 and widget_def:
         titles = []
