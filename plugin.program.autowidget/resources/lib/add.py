@@ -55,35 +55,46 @@ def build_labels(source, path_def=None, target=''):
     if source == 'context' and not path_def and not target:
         labels = {'label': utils.get_infolabel('ListItem.Label'),
                   'content': xbmc.getInfoLabel('Container.Content')}
-                  
-        parent = utils.get_infolabel('Container.FolderPath')
-        current_item = int(utils.get_infolabel('Container.CurrentItem'))
-        path_def = utils.get_files_list(parent)[current_item - 1]
+        
+        path_def = {'file': utils.get_infolabel('ListItem.FolderPath'),
+                    'filetype': 'directory' if xbmc.getCondVisibility('Container.ListItem.IsFolder') else 'file',
+                    'art': {}}  # would be fun to set some "placeholder" art here
+
+        for i in utils.info_types:
+            info = utils.get_infolabel('ListItem.{}'.format(i.capitalize()))
+            if info and not info.startswith('ListItem'):
+                path_def[i] = info
+
+        for i in utils.art_types:
+            # import web_pdb; web_pdb.set_trace()
+            art = utils.get_infolabel('ListItem.Art({})'.format(i))
+            if art:
+                path_def['art'][i] = art
+        for i in ['icon', 'thumb']:
+            art = utils.get_infolabel('ListItem.{}'.format(i))
+            if art:
+                path_def['art'][i] = art
     elif source == 'json' and path_def and target:
         labels = {'label': path_def['label'],
                   'content': '',
                   'target': target}
-        
-    labels['file'] = {key: path_def[key] for key in path_def if path_def[key]}
+
+    labels['file'] = path_def if path_def else {key: path_def[key] for key in path_def if path_def[key]}
     path = labels['file']['file']
-        
+
     if path != 'addons://user/':
         path = path.replace('addons://user/', 'plugin://')
     if 'plugin://plugin.video.themoviedb.helper' in path and not '&widget=True' in path:
         path += '&widget=True'            
     labels['file']['file'] = path
-    
-    for _key in utils.windows:
-            if any(i in path for i in utils.windows[_key]):
-                labels['window'] = _key
 
-    if path_def:
-        for art in path_def['art']:
-            labels['file']['art'][art] = clean_artwork_url(labels['file']['art'][art])
-        
+    for _key in utils.windows:
+        if any(i in path for i in utils.windows[_key]):
+            labels['window'] = _key
+
     return labels
-            
-            
+
+
 def _add_as(path_def):
     art = [folder_shortcut, folder_sync, folder_clone, folder_explode, folder_settings]
     
