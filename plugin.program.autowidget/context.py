@@ -1,5 +1,3 @@
-import xbmc
-
 from resources.lib import add
 from resources.lib.common import utils
 

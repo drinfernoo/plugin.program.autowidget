@@ -19,7 +19,6 @@ from resources.lib.common import utils
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_version = _addon.getAddonInfo('version')
-_home = xbmc.translatePath('special://home/')
 
 shortcut_types = [utils.get_string(32051), utils.get_string(32052),
                   utils.get_string(32082), utils.get_string(32083),
@@ -33,7 +32,7 @@ folder_explode = utils.get_art('folder-explode.png')
 
 
 def add(labels):
-    _type = _add_as(labels['path'], labels['is_folder'])
+    _type = _add_as(labels['file'])
     if not _type:
         return
     
@@ -54,67 +53,54 @@ def add(labels):
             
 def build_labels(source, path_def=None, target=''):
     if source == 'context' and not path_def and not target:
-        labels = {'label': xbmc.getInfoLabel('ListItem.Label'),
-                  'is_folder': xbmc.getCondVisibility('Container.ListItem.IsFolder'),
+        labels = {'label': utils.get_infolabel('ListItem.Label'),
                   'content': xbmc.getInfoLabel('Container.Content')}
         
-        path = xbmc.getInfoLabel('ListItem.FolderPath')
-        
-        labels['info'] = {}
+        path_def = {'file': utils.get_infolabel('ListItem.FolderPath'),
+                    'filetype': 'directory' if xbmc.getCondVisibility('Container.ListItem.IsFolder') else 'file',
+                    'art': {}}  # would be fun to set some "placeholder" art here
+
         for i in utils.info_types:
-            info = xbmc.getInfoLabel('ListItem.{}'.format(i.capitalize()))
+            info = utils.get_infolabel('ListItem.{}'.format(i.capitalize()))
             if info and not info.startswith('ListItem'):
-                labels['info'][i] = info
-                                 
-        labels['art'] = {}
+                path_def[i] = info
+
         for i in utils.art_types:
-            art = xbmc.getInfoLabel('ListItem.Art({})'.format(i.capitalize()))
+            # import web_pdb; web_pdb.set_trace()
+            art = utils.get_infolabel('ListItem.Art({})'.format(i))
             if art:
-                labels['art'][i] = art
+                path_def['art'][i] = art
         for i in ['icon', 'thumb']:
-            art = xbmc.getInfoLabel('ListItem.{}'.format(i.capitalize()))
+            art = utils.get_infolabel('ListItem.{}'.format(i))
             if art:
-                labels['art'][i] = art
+                path_def['art'][i] = art
     elif source == 'json' and path_def and target:
         labels = {'label': path_def['label'],
-                  'is_folder': path_def['filetype'] == 'directory',
                   'content': '',
                   'target': target}
-        
-        path = path_def['file']
-        
-        labels['info'] = {}
-        for i in [i for i in utils.info_types if i not in utils.art_types]:
-            if i in path_def and i != 'art':
-                if path_def[i]:
-                    labels['info'][i] = path_def[i]
-        
-        labels['art'] = {}
-        for i in utils.art_types:
-            if i in path_def['art'] and path_def['art'][i]:
-                labels['art'][i] = path_def['art'][i]
-    
+
+    labels['file'] = path_def if path_def else {key: path_def[key] for key in path_def if path_def[key]}
+    path = labels['file']['file']
+
     if path != 'addons://user/':
         path = path.replace('addons://user/', 'plugin://')
-    labels['path'] = path
-    
+    if 'plugin://plugin.video.themoviedb.helper' in path and not '&widget=True' in path:
+        path += '&widget=True'            
+    labels['file']['file'] = path
+
     for _key in utils.windows:
-            if any(i in path for i in utils.windows[_key]):
-                labels['window'] = _key
-                
-    for label in labels['art']:
-        labels['art'][label] = unquote(labels['art'][label]).replace(_home, 'special://home/').replace('image://', '')
-        if labels['art'][label].endswith('/'):
-            labels['art'][label] = labels['art'][label][:-1]
-        
+        if any(i in path for i in utils.windows[_key]):
+            labels['window'] = _key
+
     return labels
-            
-            
-def _add_as(path, is_folder):
+
+
+def _add_as(path_def):
     art = [folder_shortcut, folder_sync, folder_clone, folder_explode, folder_settings]
     
+    path = path_def['file']
     types = shortcut_types[:]
-    if is_folder:
+    if path_def['filetype'] == 'directory':
         types = shortcut_types[:4]
     else:
         if any(i in path for i in ['addons://user', 'plugin://']) and not parse_qsl(path):
@@ -186,9 +172,10 @@ def _group_dialog(_type, group_id=None):
         return groups[choice - offset]
 
 
-def add_group(target):
+def add_group(target, group_name=''):
     dialog = xbmcgui.Dialog()
-    group_name = dialog.input(heading=utils.get_string(32037))
+    group_name = dialog.input(heading=utils.get_string(32037),
+                              defaultt=group_name)
     group_id = ''
     
     if group_name:
@@ -228,20 +215,18 @@ def _add_path(group_def, labels, over=False):
     
 def _copy_path(path_def):
     params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
-              'params': {'directory': path_def['path'],
+              'params': {'directory': path_def['file']['file'],
                          'properties': utils.info_types},
               'id': 1}
-    group_id = add_group(path_def['target'])
+    group_id = add_group(path_def['target'], path_def['label'])
     if not group_id:
         return
         
     group_def = manage.get_group_by_id(group_id)
-    files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
-    if 'error' not in files:
-        files = files['result']['files']
-        for file in files:
-            if file['type'] in ['movie', 'episode', 'musicvideo', 'song']:
-                continue
+    files = utils.get_files_list(path_def['file']['file'])
+    for file in files:
+        if file['type'] in ['movie', 'episode', 'musicvideo', 'song']:
+            continue
             
-            labels = build_labels('json', file, path_def['target'])
-            _add_path(group_def, labels, over=True)
+        labels = build_labels('json', file, path_def['target'])
+        _add_path(group_def, labels, over=True)

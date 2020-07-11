@@ -1,5 +1,4 @@
 import xbmc
-import xbmcaddon
 import xbmcgui
 
 import os
@@ -7,18 +6,15 @@ import re
 
 import six
 
-from resources.lib import convert
 from resources.lib import manage
 from resources.lib.common import utils
 
-_addon = xbmcaddon.Addon()
-_addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _home = xbmc.translatePath('special://home/')
 
 advanced = utils.get_setting_bool('context.advanced')
 warning_shown = utils.get_setting_bool('context.warning')
 
-safe = ['label', 'art', 'info', 'path']
+safe = ['label', 'file', 'art']
 widget_safe = ['action', 'refresh']
 exclude = ['paths']
 
@@ -29,14 +25,20 @@ def shift_path(group_id, path_id, target):
     paths = group_def['paths']
     for idx, path_def in enumerate(paths):
         if path_def['id'] == path_id:
-            if target == 'up' and idx > 0:
-                temp = paths[idx - 1]
-                paths[idx - 1] = path_def
-                paths[idx] = temp
-            elif target == 'down' and idx < len(paths) - 1: 
-                temp = paths[idx + 1]
-                paths[idx + 1] = path_def
-                paths[idx] = temp
+            if target == 'up' and idx >= 0:
+                if idx > 0:
+                    temp = paths[idx - 1]
+                    paths[idx - 1] = path_def
+                    paths[idx] = temp
+                else:
+                    paths.append(paths.pop(idx))
+            elif target == 'down' and idx <= len(paths) - 1: 
+                if idx < len(paths) - 1:
+                    temp = paths[idx + 1]
+                    paths[idx + 1] = path_def
+                    paths[idx] = temp
+                else:
+                    paths.insert(0, paths.pop())
             break
 
     group_def['paths'] = paths
@@ -53,7 +55,7 @@ def _remove_group(group_id, over=False):
         choice = dialog.yesno('AutoWidget', utils.get_string(32039))
     
     if over or choice:
-        file = os.path.join(_addon_path, '{}.group'.format(group_id))
+        file = os.path.join(utils._addon_path, '{}.group'.format(group_id))
         utils.remove_file(file)
             
         dialog.notification('AutoWidget', utils.get_string(32045)
@@ -84,7 +86,7 @@ def _remove_widget(widget_id):
     choice = dialog.yesno('AutoWidget', utils.get_string(32039))
     
     if choice:
-        file = os.path.join(_addon_path, '{}.widget'.format(widget_id))
+        file = os.path.join(utils._addon_path, '{}.widget'.format(widget_id))
         utils.remove_file(file)
             
         dialog.notification('AutoWidget', utils.get_string(32045)
@@ -97,12 +99,12 @@ def _warn():
                           yeslabel=utils.get_string(32059),
                           nolabel=utils.get_string(32060))
     if choice < 1:
-        _addon.setSetting('context.advanced', 'false')
-        _addon.setSetting('context.warning', 'true')
+        utils.set_setting('context.advanced', 'false')
+        utils.set_setting('context.warning', 'true')
         advanced = False
         warning = True
     else:
-        _addon.setSetting('context.warning', 'true')
+        utils.set_setting('context.warning', 'true')
         warning = True
         
         
@@ -111,12 +113,11 @@ def _get_options(edit_def, base_key='', use_thumbs=False):
     options = []
     
     all_keys = sorted([i for i in edit_def.keys() if i not in exclude])
-    base_keys = sorted([i for i in all_keys if any(i in x for x in [safe, utils.art_types, utils.info_types])])
+    base_keys = sorted([i for i in all_keys if any(i in x for x in [safe, utils.art_types])])
     keys = all_keys if advanced else base_keys
     
     for key in keys:
         disp = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in safe else key
-        disp = disp if key not in utils.info_types else key
         _def = edit_def[key]
         
         if isinstance(_def, dict):
@@ -125,8 +126,8 @@ def _get_options(edit_def, base_key='', use_thumbs=False):
             if key == 'art':
                 arts = [i for i in _keys if _def[i]]
                 label = ' / '.join(arts)
-            elif key == 'info':
-                label = ', '.join(_keys)
+            elif key == 'file':
+                label = ', '.join(_keys if advanced else [i for i in _keys if i in safe])
         elif key in edit_def:
             if key in utils.art_types:
                 if edit_def[key]:
@@ -148,7 +149,7 @@ def _get_options(edit_def, base_key='', use_thumbs=False):
         if base_key != 'art':
             options.append('{}: {}'.format(disp, label))
     
-    if base_key == 'info':    
+    if base_key == 'file' and advanced:
         options.append(utils.get_string(32077))
     elif base_key == 'art':
         options.append(utils.get_string(32078))
@@ -169,7 +170,12 @@ def _get_widget_options(edit_def):
         label = _def
         
         if key == 'action':
-            label = utils.get_string(32079) if label == 'random' else utils.get_string(32080)
+            if label == 'random':
+                label = utils.get_string(32079)
+            elif label == 'next':
+                label = utils.get_string(32080)
+            elif label == 'merged':
+                label = utils.get_string(32088)
         elif key == 'refresh':
             hh = int(_def)
             mm = int((_def * 60)  % 60)
@@ -201,15 +207,15 @@ def _get_value(edit_def, key):
         if key == 'art':
             options = _get_options(_def, base_key=key, use_thumbs=True)
             idx = dialog.select(utils.get_string(32046), options, useDetails=True)
-        elif key == 'info':
+        elif key == 'file':
             options = _get_options(_def, base_key=key)
             idx = dialog.select(utils.get_string(32047), options)
         
         if idx < 0:
             return
         elif idx == len(options) - 1:
-            if key == 'info':
-                label = dialog.select(utils.get_string(32077), utils.info_types)
+            if key == 'file':
+                label = dialog.select(utils.get_string(32077), [i for i in utils.info_types if i not in _def])
                 if label < 0:
                     return
                     
@@ -265,7 +271,7 @@ def _get_widget_value(edit_def, key):
         title = key.capitalize()
     
     if key == 'action':
-        actions = [utils.get_string(32079), utils.get_string(32080)]
+        actions = [utils.get_string(32079), utils.get_string(32080), utils.get_string(32088)]
         choice = dialog.select(utils.get_string(32081), actions)
         if choice < 0:
             return
@@ -349,7 +355,7 @@ def edit_widget_dialog(widget_id):
     utils.log(updated, xbmc.LOGNOTICE)
     
     if updated:
-        convert.save_path_details(widget_def, widget_id)
+        manage.save_path_details(widget_def, widget_id)
         utils.update_container()
     edit_widget_dialog(widget_id)
 
