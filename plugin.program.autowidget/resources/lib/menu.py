@@ -308,9 +308,6 @@ def show_path(group_id, path_id, _id, titles=[], num=1):
     files = utils.get_files_list(path, titles)
     for file in files:
         properties = {'autoLabel': path_label}
-
-        import json
-        utils.log(json.dumps(file['art']), xbmc.LOGNOTICE)
         if 'customproperties' in file:
             for prop in file['customproperties']:
                 properties[prop] = file['customproperties'][prop]
