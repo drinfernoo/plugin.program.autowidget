@@ -20,6 +20,11 @@ import six
 from xml.dom import minidom
 from xml.etree import ElementTree
 
+try:
+    from urllib.parse import unquote
+except ImportError:
+    from urlparse import unquote
+
 _addon = xbmcaddon.Addon()
 _addon_id = _addon.getAddonInfo('id')
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
@@ -314,5 +319,8 @@ def get_files_list(path, titles=[]):
     if 'error' not in files:
         files = files['result']['files']
         filtered_files = [x for x in files if x['label'] not in titles]
-        
+        for file in [i for i in filtered_files if 'art' in i]:
+            for art in file['art']:
+                file['art'][art] = unquote(file['art'][art]).replace('image://', '')
+                
         return filtered_files
