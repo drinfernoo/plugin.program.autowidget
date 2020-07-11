@@ -27,7 +27,8 @@ _sort_methods = [xbmcplugin.SORT_METHOD_UNSORTED,
 _exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
                  'filetype', 'lastmodified', 'productioncode', 'firstaired',
                  'runtime', 'showtitle', 'specialsortepisode',
-                 'specialsortseason', 'track', 'tvshowid', 'watchedepisodes']
+                 'specialsortseason', 'track', 'tvshowid', 'watchedepisodes',
+                 'customproperties']
 
 sync = utils.get_art('sync.png')
 
