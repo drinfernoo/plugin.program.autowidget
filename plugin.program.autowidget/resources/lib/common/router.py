@@ -99,8 +99,8 @@ def dispatch(_plugin, _handle, _params):
             edit.shift_path(group, path, target)
         elif action == 'edit':
             edit.edit_dialog(group, path)
-        elif action == 'edit_widget':
-            edit.edit_widget_dialog(target)
+        # elif action == 'edit_widget':
+            # edit.edit_widget_dialog(target)
     elif mode == 'path':
         if action == 'call' and group and path:
             menu.call_path(group, path)
