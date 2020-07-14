@@ -2,6 +2,7 @@ import xbmc
 import xbmcgui
 
 import os
+import re
 
 from resources.lib import manage
 from resources.lib.common import utils
@@ -11,6 +12,7 @@ warning_shown = utils.get_setting_bool('context.warning')
 
 filter = {'include': ['label', 'file', 'art'],
           'exclude': ['paths']}
+color_tag = '\[COLOR \w+\](\w+)\[\/COLOR\]'
 
 
 def shift_path(group_id, path_id, target):
@@ -126,15 +128,20 @@ def _get_options(edit_def, useThumbs=False):
     all_keys = sorted(edit_def.keys())
     base_keys = [i for i in all_keys if i in filter['include'] and i not in filter['exclude']]
 
-    option_keys = (all_keys if advanced else base_keys) + utils.art_types
+    option_keys = (all_keys if advanced else base_keys)
     for key in option_keys:
         if key in edit_def:
-            formatted_key = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in filter['include'] else key
-            if isinstance(edit_def[key], dict):
-                label = ', '.join(edit_def[key].keys())
-                options.append('{}: {}'.format(formatted_key, label))
+            if key in utils.art_types:
+                li = xbmcgui.ListItem('{}: {}'.format(key, edit_def[key]))
+                li.setArt({'icon': edit_def[key]})
+                options.append(li)
             else:
-                options.append('{}: {}'.format(formatted_key, edit_def[key]))
+                formatted_key = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in filter['include'] else key
+                if isinstance(edit_def[key], dict):
+                    label = ', '.join(edit_def[key].keys())
+                    options.append('{}: {}'.format(formatted_key, label))
+                else:
+                    options.append('{}: {}'.format(formatted_key, edit_def[key]))
     return options
 
 
@@ -159,14 +166,25 @@ def _get_value(edit_def, key):
                 edit_def[key][subkey] = value
                 return edit_def[key]
     else:
-        value = dialog.input('New Value for {}:'.format(key))
+        if key in utils.art_types:
+            value = dialog.browse(2, utils.get_string(32049).format(key.capitalize()), 
+                          shares='files', mask='.jpg|.png', useThumbs=True)
+        else:
+            value = dialog.input('New Value for {}:'.format(key))
+
         if value:
             edit_def[key] = value
-
-        return value
+            return value
 
 
 def _clean_key(key):
+    if isinstance(key, xbmcgui.ListItem):
+        key = key.getLabel()
+    split = key.split(': ')[0]
+    match = re.match(color_tag, split)
+    if match:
+        clean = re.sub(color_tag, split, match.group(1))
+        return clean
     return key.split(': ')[0]
 
 
