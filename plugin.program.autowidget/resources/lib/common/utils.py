@@ -54,6 +54,12 @@ info_types = ['artist', 'albumartist', 'genre', 'year', 'rating',
 
 art_types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
              'poster', 'thumb']
+             
+exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
+                'filetype', 'lastmodified', 'productioncode', 'firstaired',
+                'runtime', 'showtitle', 'specialsortepisode',
+                'specialsortseason', 'track', 'tvshowid', 'watchedepisodes',
+                'customproperties', 'id']
 
 
 def log(msg, level=xbmc.LOGDEBUG):
@@ -323,5 +329,28 @@ def get_files_list(path, titles=[]):
         for file in [i for i in filtered_files if 'art' in i]:
             for art in file['art']:
                 file['art'][art] = clean_artwork_url(file['art'][art])
+            
+            def_info = {x: file[x] for x in file if x not in exclude_keys}
+            mediatype = file.get('type', 'video')
+            if mediatype != 'unknown':
+                def_info['mediatype'] = mediatype 
+
+            for key in def_info:
+                i = def_info.get(key)
+                if any(key == x for x in ['artist', 'cast']):
+                    if not i:
+                        def_info[key] = []
+                    elif not isinstance(i, list):
+                        def_info[key] = [i]
+                    elif isinstance(i, list) and key == 'cast':
+                        cast = []
+                        for actor in i:
+                            cast.append((actor['name'], actor['role']))
+                        def_info[key] = cast
+                elif isinstance(i, list):
+                    def_info[key] = ' / '.join(i)
+                else:
+                    def_info[key] = six.text_type(i)
+            file = json.dumps(def_info)
                 
         return filtered_files

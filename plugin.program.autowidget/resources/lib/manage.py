@@ -63,7 +63,7 @@ def get_group_by_id(group_id):
 def get_path_by_id(path_id, group_id=None):
     if not path_id:
         return
-    
+
     for defined in find_defined_paths(group_id):
         if defined.get('id', '') == path_id:
             return defined
