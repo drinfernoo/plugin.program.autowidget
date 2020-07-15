@@ -457,11 +457,13 @@ def merged_path(group_id, _id):
                 paths = widget_def['path']
                 manage.save_path_details(widget_def, _id)
     else:
-        paths = widget_def['path'] if len(widget_def['path']) > 1 else paths
+        if not isinstance(widget_def['path'], list):
+            paths = [manage.get_path_by_id(widget_def['path'], group_id=group_id)]
+        else:
+            paths = widget_def['path']
     
     if len(paths) > 0 and widget_def:
         titles = []
-
         for path_def in paths:
             titles, cat = show_path(group_id, path_def['id'], _id, num=len(paths))
                     
