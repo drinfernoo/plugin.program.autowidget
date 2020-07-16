@@ -24,6 +24,12 @@ _sort_methods = [xbmcplugin.SORT_METHOD_UNSORTED,
                  xbmcplugin.SORT_METHOD_TITLE_IGNORE_THE,
                  xbmcplugin.SORT_METHOD_LASTPLAYED]
 
+_exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
+                 'filetype', 'lastmodified', 'productioncode', 'firstaired',
+                 'runtime', 'showtitle', 'specialsortepisode',
+                 'specialsortseason', 'track', 'tvshowid', 'watchedepisodes',
+                 'customproperties', 'id']
+
 sync = utils.get_art('sync.png')
 
     
@@ -77,17 +83,45 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
 
     if isinstance(title, int):
         title = utils.get_string(title)
-
+    
     def_info = {}
     if info:
-        def_info = info
+        def_info = {x: info[x] for x in info if x not in _exclude_keys}
+        mediatype = info.get('type', 'video')
+        if mediatype != 'unknown':
+            def_info['mediatype'] = mediatype 
 
+        for key in def_info:
+            i = def_info.get(key)
+            if any(key == x for x in ['artist', 'cast']):
+                if not i:
+                    def_info[key] = []
+                elif not isinstance(i, list):
+                    def_info[key] = [i]
+                elif isinstance(i, list) and key == 'cast':
+                    cast = []
+                    for actor in i:
+                        cast.append((actor['name'], actor['role']))
+                    def_info[key] = cast
+            elif isinstance(i, list):
+                def_info[key] = ' / '.join(i)
+            else:
+                def_info[key] = six.text_type(i)
+    
+    def_art = {}
+    if art:
+        def_art.update(art)
+    
+    def_cm = []
+    if cm:
+        def_cm.extend(cm)
+    
     # build list item
     item = xbmcgui.ListItem(title)
     item.setInfo('video', def_info)
     item.setMimeType(def_info.get('mimetype', ''))
-    item.setArt(art if art else {})
-    item.addContextMenuItems(cm if cm else [])
+    item.setArt(def_art)
+    item.addContextMenuItems(def_cm)
     
     if props:
         item.setProperties(props)
