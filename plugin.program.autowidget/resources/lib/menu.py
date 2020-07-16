@@ -284,6 +284,7 @@ def show_path(group_id, path_id, _id, titles=[], num=1):
                                              group_id=widget_def['group'])
         path = path_id
     else:
+        import json, xbmc; utils.log(json.dumps(path_def), xbmc.LOGNOTICE)
         path = path_def['file']['file']
     
     if path_def:
