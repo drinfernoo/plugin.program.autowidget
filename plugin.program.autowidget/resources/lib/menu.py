@@ -103,17 +103,18 @@ def group_menu(group_id, target, _id):
         cm = []
         art = folder_shortcut if target == 'shortcut' else folder_sync
         
-        for idx, path in enumerate(paths):
+        for idx, path_def in enumerate(paths):
             if _window == 'media':
-                cm = _create_context_items(group_id, path['id'], idx, len(paths))
+                cm = _create_context_items(group_id, path_def['id'], idx,
+                                           len(paths))
             
-            directory.add_menu_item(title=path['label'],
+            directory.add_menu_item(title=path_def['label'],
                                     params={'mode': 'path',
                                             'action': 'call',
                                             'group': group_id,
-                                            'path': path['id']},
-                                    info=path.get('info'),
-                                    art=path.get('art') or art,
+                                            'path': path_def['id']},
+                                    info=path_def.get('info'),
+                                    art=path_def.get('art') or art,
                                     cm=cm,
                                     isFolder=False)
                                     
@@ -168,7 +169,7 @@ def active_widgets_menu():
             _id = widget_def.get('id', '')
             action = widget_def.get('action', '')
             group = widget_def.get('group', '')
-            path = widget_def.get('path', '')
+            path = widget_def.get('path', [])
             updated = widget_def.get('updated', '')
             
             path_def = manage.get_path_by_id(path, group)
@@ -249,18 +250,24 @@ def tools_menu():
     return True, utils.get_string(32008)
     
     
-def _initialize(group_def, action, _id, save=True):
+def _initialize(group_def, action, _id, save=True, keep=[]):
     duration = utils.get_setting_float('service.refresh_duration')
     
     paths = group_def['paths']
+    
     rand_idx = random.randrange(len(paths))
-    init_path = paths[0]['id'] if action == 'next' else paths[rand_idx]['id']
+    if action != 'merged':
+        init_path = [paths[0 if action == 'next' else rand_idx]['id']]
+    elif action == 'merged' and keep:
+        init_path = []
+        for idx in keep:
+            init_path.append(paths[idx]['id'])
     
     params = {'action': action,
               'id': _id,
               'group': group_def['id'],
               'refresh': duration,
-              'path': [init_path]}
+              'path': init_path}
     if save:
         details = manage.save_path_details(params)
         refresh.refresh(_id)
@@ -277,14 +284,13 @@ def show_path(group_id, path_id, _id, titles=[], num=1):
     path_def = manage.get_path_by_id(path_id, group_id=group_id)
     if not widget_def:
         return True, 'AutoWidget'
-        
+    
     if not path_def:
         if widget_def:
             path_def = manage.get_path_by_id(widget_def['path'],
                                              group_id=widget_def['group'])
         path = path_id
     else:
-        import json, xbmc; utils.log(json.dumps(path_def), xbmc.LOGNOTICE)
         path = path_def['file']['file']
     
     if path_def:
@@ -442,21 +448,20 @@ def merged_path(group_id, _id):
     paths = manage.find_defined_paths(group_id)
     
     if not widget_def:
-        widget_def = _initialize(group_def, 'merged', _id, save=_window not in ['dialog', 'media'])
+        
         if _window == 'dialog':
             dialog = xbmcgui.Dialog()
-            
             idxs = dialog.multiselect('Choose which to merge',
                                       [i['label'] for i in paths],
                                       preselect=range(len(paths)))
             if len(idxs) == 0:
                 pass
             else:
-                widget_def['path'] = []
-                for idx in idxs:
-                    widget_def['path'].append(paths[idx])
+                widget_def = _initialize(group_def, 'merged', _id, save=_window not in ['dialog', 'media'], keep=idxs)
                 paths = widget_def['path']
                 manage.save_path_details(widget_def, _id)
+        else:
+            widget_def = _initialize(group_def, 'merged', _id, save=_window not in ['dialog', 'media'])
     else:
         if not isinstance(widget_def['path'], list):
             paths = [manage.get_path_by_id(widget_def['path'], group_id=group_id)]
@@ -466,7 +471,10 @@ def merged_path(group_id, _id):
     if len(paths) > 0 and widget_def:
         titles = []
         for path_def in paths:
-            titles, cat = show_path(group_id, path_def['id'], _id, num=len(paths))
+            if isinstance(path_def, dict):
+                titles, cat = show_path(group_id, path_def['id'], _id, num=len(paths))
+            else:
+                titles, cat = show_path(group_id, path_def, _id, num=len(paths))
                     
         return titles, group_name
     else:

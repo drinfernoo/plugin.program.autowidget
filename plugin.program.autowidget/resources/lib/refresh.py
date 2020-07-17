@@ -125,10 +125,13 @@ def update_path(_id, path, target):
     stack = widget_def.get('stack', [])
     
     if target == 'next':
-        path_id = widget_def['path'].split('-')
+        if not isinstance(widget_def['path'], list):
+            path_id = widget_def['path'].split('-')
+        else:
+            path_id = widget_def['path'][0].split('-')
         if len(path_id) > 1:
             if time.ctime(float(path_id[1])):
-                path_def = manage.get_path_by_id(widget_def['path'], group_id=widget_def['group'])
+                path_def = manage.get_path_by_id('-'.join(path_id), group_id=widget_def['group'])
                 widget_def['label'] = path_def['label']
         
         stack.append(widget_def['path'])
