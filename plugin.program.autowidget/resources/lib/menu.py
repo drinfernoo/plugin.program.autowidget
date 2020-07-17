@@ -170,7 +170,7 @@ def tools_menu():
     return True, utils.get_string(32008)
 
 
-def show_path(group_id, path_id, path_label, _id, titles=None, num=1):
+def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=False):
     hide_watched = utils.get_setting_bool('widgets.hide_watched')
     show_next = utils.get_setting_int('widgets.show_next')
     paged_widgets = utils.get_setting_bool('widgets.paged')
@@ -225,16 +225,18 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1):
                     
                 label = '{} - {}'.format(label, path_label)
 
+            update_params = {'mode': 'path',
+                             'action': 'update',
+                             'id': _id,
+                             'path': file['file'],
+                             'target': 'next'}
+
             directory.add_menu_item(title=label,
-                                    params={'mode': 'path',
-                                            'action': 'update',
-                                            'id': _id,
-                                            'path': file['file'],
-                                            'target': 'next'} if num == 1 and paged_widgets else None,
-                                    path=file['file'] if (num > 1 or paged_widgets) or (num == 1 and not paged_widgets) else None,
+                                    params=update_params if paged_widgets and not merged else None,
+                                    path=file['file'] if not paged_widgets or merged else None,
                                     art=next_page,
                                     info=file,
-                                    isFolder=num > 1 or not paged_widgets,
+                                    isFolder=not paged_widgets or merged,
                                     props=properties)
         else:
             if hide_watched and file.get('playcount', 0) > 0:
@@ -343,8 +345,8 @@ def merged_path(group_id, _id):
     if len(paths) > 0 and widget_def:
         titles = []
         for path_def in paths:
-            titles, cat = show_path(group_id, path_def['id'], path_def['label'], _id, num=len(
-                paths))
+            titles, cat = show_path(group_id, path_def['id'], path_def['label'],
+                                    _id, num=len(paths), merged=True)
 
         return titles, group_name
     else:
