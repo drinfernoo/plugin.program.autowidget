@@ -1,14 +1,39 @@
 import xbmc
 import xbmcaddon
 
-import json
 import os
+import random
 
 from resources.lib.common import utils
 
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_version = _addon.getAddonInfo('version')
+
+
+def initialize(group_def, action, _id, save=True, keep=None):
+    duration = utils.get_setting_float('service.refresh_duration')
+    paths = group_def.get('paths', [])
+    path_def = []
+
+    if action != 'merged':
+        path_idx = random.randrange(len(paths)) if action == 'random' else 0
+        path_def = paths[path_idx]
+    elif action == 'merged' and keep:
+        for idx in keep:
+            path_def.append(paths[idx])
+
+    params = {'action': action,
+              'id': _id,
+              'group': group_def['id'],
+              'refresh': duration,
+              'path': path_def,
+              'version': _addon_version}
+    if save:
+        save_path_details(params)
+
+    return params
+
 
 def write_path(group_def, path_def=None, update=''):
     filename = os.path.join(_addon_path, '{}.group'.format(group_def['id']))
@@ -24,22 +49,8 @@ def write_path(group_def, path_def=None, update=''):
     utils.write_json(filename, group_def)
     
     
-def save_path_details(params, _id=''):
-    for param in params:
-        if str(params[param]).endswith(',return)'):
-            return
-    
-    if not _id:
-        _id = params.get('id')
-        if not _id:
-            return
-    
-    path_to_saved = os.path.join(_addon_path, '{}.widget'.format(_id))
-    params['version'] = _addon_version
-    
-    if 'refresh' not in params:
-        params['refresh'] = utils.get_setting_float('service.refresh_duration')
-
+def save_path_details(params):
+    path_to_saved = os.path.join(_addon_path, '{}.widget'.format(params['id']))
     utils.write_json(path_to_saved, params)
 
     return params
@@ -56,6 +67,7 @@ def get_group_by_id(group_id):
         group_def = utils.read_json(path)
     except ValueError:
         utils.log('Unable to parse: {}'.format(path))
+        return
     
     return group_def
 
@@ -84,11 +96,7 @@ def find_defined_groups(_type=''):
     for filename in [x for x in os.listdir(_addon_path) if x.endswith('.group')]:
         path = os.path.join(_addon_path, filename)
         
-        try:
-            group_def = utils.read_json(path)
-        except ValueError:
-            utils.log('Unable to parse: {}'.format(path))
-        
+        group_def = utils.read_json(path)
         if group_def:
             if _type:
                 if group_def['type'] == _type:
@@ -100,23 +108,18 @@ def find_defined_groups(_type=''):
     
     
 def find_defined_paths(group_id=None):
-    paths = []
     if group_id:
         filename = '{}.group'.format(group_id)
         path = os.path.join(_addon_path, filename)
         
-        try:
-            group_def = utils.read_json(path)
-        except ValueError:
-            utils.log('Unable to parse: {}'.format(path))
-        
+        group_def = utils.read_json(path)
         if group_def:
             return group_def.get('paths', [])
     else:
+        paths = []
         for group in find_defined_groups():
             paths.append(find_defined_paths(group_id=group.get('id')))
-    
-    return paths
+        return paths
     
 
 def find_defined_widgets(group_id=None):

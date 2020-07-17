@@ -1,7 +1,6 @@
 import xbmc
 import xbmcgui
 
-import os
 import random
 import time
 
@@ -11,9 +10,11 @@ from resources.lib.common import utils
 skin_string_pattern = 'autowidget-{}-{}'
 _properties = ['context.autowidget']
 
+
 class RefreshService(xbmc.Monitor):
 
     def __init__(self):
+        super(RefreshService, self).__init__()
         utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
         self.player = xbmc.Player()
         utils.ensure_addon_data()
@@ -125,18 +126,13 @@ def update_path(_id, path, target):
     stack = widget_def.get('stack', [])
     
     if target == 'next':
-        if not isinstance(widget_def['path'], list):
-            path_id = widget_def['path'].split('-')
-        else:
-            path_id = widget_def['path'][0].split('-')
-        if len(path_id) > 1:
-            if time.ctime(float(path_id[1])):
-                path_def = manage.get_path_by_id('-'.join(path_id), group_id=widget_def['group'])
-                widget_def['label'] = path_def['label']
+        if isinstance(widget_def['path'], list) and len(widget_def['path']) == 1:
+            path_def = widget_def['path'][0]
+            widget_def['label'] = path_def['label']
         
         stack.append(widget_def['path'])
         widget_def['stack'] = stack
-        widget_def['path'] = path
+        widget_def['path'] = [path_def]
     elif target == 'back':
         widget_def['path'] = widget_def['stack'][-1]
         widget_def['stack'] = widget_def['stack'][:-1]
@@ -148,14 +144,17 @@ def update_path(_id, path, target):
                 widget_def['path'] = widget_def['stack'][0]
                 widget_def['stack'] = []
                 widget_def['label'] = ''
-        
-    utils.set_property('autowidget-{}-action'.format(_id), widget_def['path'])
-    manage.save_path_details(widget_def, _id)
+    
+    action = widget_def['path'] if widget_def['action'] != 'merged' else 'merged'
+    utils.set_property('autowidget-{}-action'.format(_id), action)
+    manage.save_path_details(widget_def)
 
 
 def refresh(widget_id, widget_def=None, paths=None, force=False):
     if not widget_def:
         widget_def = manage.get_widget_by_id(widget_id)
+    elif widget_def['action'] == 'merged':
+        return paths
     
     current_time = time.time()
     updated_at = widget_def.get('updated', 0)
@@ -164,8 +163,6 @@ def refresh(widget_id, widget_def=None, paths=None, force=False):
     refresh_duration = float(widget_def.get('refresh', default_refresh))
     
     if updated_at <= current_time - (3600 * refresh_duration) or force:
-        path_def = {}
-        
         _id = widget_def['id']
         group_id = widget_def['group']
         action = widget_def.get('action')
@@ -193,15 +190,13 @@ def refresh(widget_id, widget_def=None, paths=None, force=False):
                 if widget_def['path']:
                     widget_def['updated'] = 0 if force else current_time
                         
-                    manage.save_path_details(widget_def, _id)
+                    manage.save_path_details(widget_def)
                     _update_strings(_id, path_def)
     
     return paths
 
 
 def refresh_paths(notify=False, force=False):
-    current_time = time.time()
-    
     if notify:
         dialog = xbmcgui.Dialog()
         dialog.notification('AutoWidget', utils.get_string(32033),

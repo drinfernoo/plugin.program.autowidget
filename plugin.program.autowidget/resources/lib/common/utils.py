@@ -307,7 +307,9 @@ def _get_json_version():
     return (result['major'], result['minor'], result['patch'])
 
 
-def get_files_list(path, titles=[]):
+def get_files_list(path, titles=None):
+    if not titles:
+        titles = []
     version = _get_json_version()
     props = version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12)
     props_info = info_types + ['customproperties']

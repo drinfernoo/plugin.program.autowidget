@@ -66,7 +66,6 @@ def build_labels(source, path_def=None, target=''):
                 path_def[i] = info
 
         for i in utils.art_types:
-            # import web_pdb; web_pdb.set_trace()
             art = utils.get_infolabel('ListItem.Art({})'.format(i))
             if art:
                 path_def['art'][i] = art
