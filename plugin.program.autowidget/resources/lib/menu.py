@@ -125,7 +125,7 @@ def group_menu(group_id, target, _id):
                                             'group': group_id,
                                             'id': six.text_type(_id),
                                             'path': path_param},
-                                    art=shuffle,
+                                    art=folder,
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
             directory.add_menu_item(title='Cycling Path from {}'
@@ -135,7 +135,7 @@ def group_menu(group_id, target, _id):
                                             'group': group_id,
                                             'id': six.text_type(_id),
                                             'path': path_param},
-                                    art=next,
+                                    art=shuffle,
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
             directory.add_menu_item(title='Merged Path from {}'
@@ -198,6 +198,7 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=Fal
     
     if not titles:
         titles = []
+
     files = utils.get_files_list(path, titles)
     for file in files:
         properties = {'autoLabel': path_label}
@@ -298,19 +299,36 @@ def path_menu(group_id, action, _id, path=None):
     paths = group_def.get('paths', [])
     
     widget_def = manage.get_widget_by_id(_id, group_id)
+    if widget_def and _window != 'dialog':
+        path_def = widget_def['path']
+    elif _window == 'dialog':
+        dialog = xbmcgui.Dialog()
+        if action == 'static':
+            idx = dialog.select('Choose a Path', [i['label'] for i in paths])
+            if idx == -1:
+                return True, 'AutoWidget'
+            
+            widget_def = manage.initialize(group_def, action, _id, keep=idx)
+        elif action == 'cycling':
+            idx = dialog.select('Choose an Action', ['Random Path', 'Next Path'])
+            if idx == -1:
+                return True, 'AutoWidget'
+            
+            _action = 'random' if idx == 0 else 'next'
+            widget_def = manage.initialize(group_def, _action, _id)
     
-    if not widget_def:
-        widget_def = manage.initialize(group_def, action, _id,
-                                       save=_window not in ['dialog', 'media'])
-    
-    if len(paths) > 0:
+    if len(paths) > 0 and widget_def:
         if _window == 'media':
             rand = random.randrange(len(paths))
             return call_path(group_id, paths[rand]['id'])
         else:
-            path = path if path else widget_def.get('path', '')
-            label = widget_def.get('label', '')
-            titles, cat = show_path(group_id, path, label, _id)
+            _path = path if path else widget_def.get('path', {})
+            _label = widget_def.get('label', '')
+            
+            if isinstance(_path, dict):
+                _path = _path['file']['file']
+                _label = _path['label']
+            titles, cat = show_path(group_id, _path, _label, _id)
             return titles, cat
     else:
         directory.add_menu_item(title=32032,

@@ -122,17 +122,16 @@ def update_path(_id, path, target):
     widget_def = manage.get_widget_by_id(_id)
     if not widget_def:
         return
-        
-    stack = widget_def.get('stack', [])
     
+    stack = widget_def.get('stack', [])
+
     if target == 'next':
-        if isinstance(widget_def['path'], list) and len(widget_def['path']) == 1:
-            path_def = widget_def['path'][0]
-            widget_def['label'] = path_def['label']
+        path_def = widget_def['path']
+        widget_def['label'] = path_def['label']
         
         stack.append(widget_def['path'])
         widget_def['stack'] = stack
-        widget_def['path'] = [path_def]
+        widget_def['path'] = path
     elif target == 'back':
         widget_def['path'] = widget_def['stack'][-1]
         widget_def['stack'] = widget_def['stack'][:-1]
@@ -146,6 +145,8 @@ def update_path(_id, path, target):
                 widget_def['label'] = ''
     
     action = widget_def['path'] if widget_def['action'] != 'merged' else 'merged'
+    if isinstance(widget_def['path'], dict):
+        action = widget_def['path']['file']['file']
     utils.set_property('autowidget-{}-action'.format(_id), action)
     manage.save_path_details(widget_def)
 

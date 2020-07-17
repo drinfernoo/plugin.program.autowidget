@@ -17,7 +17,10 @@ def initialize(group_def, action, _id, save=True, keep=None):
     path_def = []
 
     if action != 'merged':
-        path_idx = random.randrange(len(paths)) if action == 'random' else 0
+        if action == 'static' and keep is not None:
+            path_idx = keep
+        elif action in ['random', 'next']:
+            path_idx = random.randrange(len(paths)) if action == 'random' else 0
         path_def = paths[path_idx]
     elif action == 'merged' and keep:
         for idx in keep:
