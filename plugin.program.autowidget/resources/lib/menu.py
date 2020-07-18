@@ -108,8 +108,8 @@ def group_menu(group_id, target, _id):
                                             'action': 'call',
                                             'group': group_id,
                                             'path': path_def['id']},
-                                    info=path_def.get('info'),
-                                    art=path_def.get('art') or art,
+                                    info=path_def['file'],
+                                    art=path_def['file']['art'] or art,
                                     cm=cm,
                                     isFolder=False)
                                     
