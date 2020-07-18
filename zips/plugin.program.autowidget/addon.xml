@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.788" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.303" provider-name="drinfernoo">
     <requires>
-        <import addon="script.module.six" />
+        <import addon="xbmc.python" version="2.25.0" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -14,33 +14,42 @@
         <menu id="kodi.core.main">
             <item library="context.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
+                <visible>String.IsEmpty(ListItem.DbType) + !String.IsEmpty(Window(10000).Property(context.autowidget))</visible>
             </item>
         </menu>
     </extension>
     
     <extension point="xbmc.addon.metadata">
-        <reuselanguageinvoker>true</reuselanguageinvoker>
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <summary lang="es_ES">Cambia automáticamente los widgets en la pantalla de inicio para una experiencia de navegación más interesante.</summary>
         <platform>all</platform>
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-1.6.8
- - Add setting for notification sound
-1.6.7
- - Fix crash when window cannot be detected. Notably fixes Disney+ support.
-1.6.6
- - Fix extract location
-1.6.5
- - Add backup/restore features
-1.6.4
- - Fix more rogue refreshes
- - Fix wording in Spanish translation (again, thanks to @roliverosc)
-1.6.3
- - Update settings localizations
+1.0.7
+ - Fix context menu option not showing
+1.0.6
+ - Fix paths not saving
+1.0.5
+ - Raise required Skin Shortcuts version to  1.0.19
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+ations
 1.6.2
  - Fix bug that caused Skin Shortcuts to not be able to rebuild the skin
 1.6.1
