@@ -301,7 +301,7 @@ def path_menu(group_id, action, _id, path=None):
     widget_def = manage.get_widget_by_id(_id, group_id)
     if widget_def and _window != 'dialog':
         path_def = widget_def['path']
-    elif _window == 'dialog':
+    elif not widget_def and _window == 'dialog':
         dialog = xbmcgui.Dialog()
         if action == 'static':
             idx = dialog.select('Choose a Path', [i['label'] for i in paths])
@@ -346,7 +346,7 @@ def merged_path(group_id, _id):
     widget_def = manage.get_widget_by_id(_id, group_id)
     if widget_def and _window != 'dialog':
         paths = widget_def['path']
-    elif _window == 'dialog':
+    elif not widget_def and _window == 'dialog':
         dialog = xbmcgui.Dialog()
         idxs = dialog.multiselect('Choose which to merge',
                                   [i['label'] for i in paths],

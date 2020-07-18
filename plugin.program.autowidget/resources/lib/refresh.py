@@ -127,7 +127,8 @@ def update_path(_id, path, target):
 
     if target == 'next':
         path_def = widget_def['path']
-        widget_def['label'] = path_def['label']
+        if isinstance(path_def, dict):
+            widget_def['label'] = path_def['label']
         
         stack.append(widget_def['path'])
         widget_def['stack'] = stack
@@ -154,7 +155,7 @@ def update_path(_id, path, target):
 def refresh(widget_id, widget_def=None, paths=None, force=False):
     if not widget_def:
         widget_def = manage.get_widget_by_id(widget_id)
-    elif widget_def['action'] == 'merged':
+    elif widget_def['action'] in ['static', 'merged']:
         return paths
     
     current_time = time.time()
@@ -187,7 +188,7 @@ def refresh(widget_id, widget_def=None, paths=None, force=False):
                 path_def = paths[next]
                 paths.remove(paths[next])
                 
-                widget_def['path'] = path_def.get('id')
+                widget_def['path'] = path_def
                 if widget_def['path']:
                     widget_def['updated'] = 0 if force else current_time
                         
