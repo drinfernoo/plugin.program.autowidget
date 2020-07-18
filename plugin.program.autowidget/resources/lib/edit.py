@@ -10,7 +10,7 @@ from resources.lib.common import utils
 advanced = utils.get_setting_bool('context.advanced')
 warning_shown = utils.get_setting_bool('context.warning')
 
-filter = {'include': ['label', 'file', 'art'],
+filter = {'include': ['label', 'file', 'art'] + utils.art_types,
           'exclude': ['paths']}
 color_tag = '\[COLOR \w+\](\w+)\[\/COLOR\]'
 
@@ -128,7 +128,8 @@ def _get_options(edit_def, useThumbs=False):
     all_keys = sorted(edit_def.keys())
     base_keys = [i for i in all_keys if i in filter['include'] and i not in filter['exclude']]
 
-    option_keys = (all_keys if advanced else base_keys)
+    option_keys = (all_keys if advanced else base_keys) 
+    
     for key in option_keys:
         if key in edit_def:
             if key in utils.art_types:
