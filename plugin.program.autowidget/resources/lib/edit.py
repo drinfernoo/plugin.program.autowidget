@@ -170,7 +170,7 @@ def _get_value(edit_def, key):
             value = dialog.browse(2, utils.get_string(32049).format(key.capitalize()), 
                           shares='files', mask='.jpg|.png', useThumbs=True)
         else:
-            value = dialog.input('New Value for {}:'.format(key))
+            value = dialog.input('New Value for {}:'.format(key), defaultt=edit_def[key])
 
         if value:
             edit_def[key] = value
