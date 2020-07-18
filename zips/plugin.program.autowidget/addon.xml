@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.303" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.330" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
     </requires>
@@ -26,6 +26,13 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+1.1.1
+ - Add setting to disable notification
+1.1.0
+ - Remove Skin Shortcuts dependency
+ - Expand context menu options
+ - Add support for skins with "basic" Skin Shortcuts integration
+ - Add setting to pause AutoWidget's service
 1.0.7
  - Fix context menu option not showing
 1.0.6
@@ -49,30 +56,6 @@
         </assets>
     </extension>
 </addon>
-ations
-1.6.2
- - Fix bug that caused Skin Shortcuts to not be able to rebuild the skin
-1.6.1
- - Fix bug with shortcut widgets being "converted"
-1.6.0
- - Android App shortcut support (thanks to @Sandmann79)
- - Add Spanish translation (thanks to @roliverosc)
- - Fix bug with empty action nodes
- - Reduce refreshes
- - Prettify .props file output
-1.5.5
- - Fix regex for labels in some skins
-1.5.4
- - Fix recursion crash during refresh
-1.5.3
- - Fix indent error
-1.5.2
- - Fix shortcut calls for YouTube
-1.5.1
- - Fix error in editor dialog
- - Fix changelog
-1.5.0
- - Add "Active Widgets" menu
  - Consistency fixes during initialization and refresh
  - Allow adding playable items as shortcuts
  - Fix crashes in Krypton
