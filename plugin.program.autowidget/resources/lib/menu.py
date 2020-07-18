@@ -324,10 +324,9 @@ def path_menu(group_id, action, _id, path=None):
         else:
             _path = path if path else widget_def.get('path', {})
             _label = widget_def.get('label', '')
-            
             if isinstance(_path, dict):
-                _path = _path['file']['file']
                 _label = _path['label']
+                _path = _path['file']['file']
             titles, cat = show_path(group_id, _path, _label, _id)
             return titles, cat
     else:
