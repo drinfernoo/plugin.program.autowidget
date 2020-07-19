@@ -10,7 +10,7 @@ from resources.lib.common import utils
 advanced = utils.get_setting_bool('context.advanced')
 warning_shown = utils.get_setting_bool('context.warning')
 
-filter = {'include': ['label', 'file', 'art'],
+filter = {'include': ['label', 'file', 'art'] + utils.art_types,
           'exclude': ['paths', 'version', 'type']}
 widget_filter = {'include': ['action', 'refresh'],
                  'exclude': ['stack', 'path', 'version', 'label', 'current',
