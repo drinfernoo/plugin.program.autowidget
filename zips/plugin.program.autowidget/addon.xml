@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.557" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.545" provider-name="drinfernoo">
     <requires>
         <!-- <import addon="xbmc.python" version="2.25.0" /> -->
-        <import addon="script.module.six" />
         <import addon="script.module.web-pdb" />
     </requires>
     
@@ -129,7 +128,9 @@
         </assets>
     </extension>
 </addon>
-ext menu options
+
+ove Skin Shortcuts dependency
+ - Expand context menu options
  - Add support for skins with "basic" Skin Shortcuts integration
  - Add setting to pause AutoWidget's service
 1.0.7
@@ -154,11 +155,6 @@ ext menu options
             <icon>resources/media/icon/sync.png</icon>
             <fanart>resources/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-r/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
