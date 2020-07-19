@@ -10,8 +10,10 @@ from resources.lib.common import utils
 advanced = utils.get_setting_bool('context.advanced')
 warning_shown = utils.get_setting_bool('context.warning')
 
-filter = {'include': ['label', 'file', 'art'] + utils.art_types,
-          'exclude': ['paths']}
+filter = {'include': ['label', 'file', 'art'],
+          'exclude': ['paths', 'version', 'type']}
+widget_filter = {'include': ['action', 'refresh'],
+                 'exclude': ['stack', 'path', 'version']}
 color_tag = '\[COLOR \w+\](\w+)\[\/COLOR\]'
 
 
@@ -121,14 +123,34 @@ def _show_options(group_def, path_def=None):
         key = _clean_key(options[idx])
 
     return _get_value(edit_def, key)
+    
+    
+def _show_widget_options(edit_def):
+    dialog = xbmcgui.Dialog()
+    options = _get_widget_options(edit_def)
+    remove_label = 'Remove Widget'
+    options.append('[COLOR firebrick]{}[/COLOR]'.format(remove_label))
+
+    idx = dialog.select(utils.get_string(32048), options)
+    if idx < 0:
+        return
+    elif idx == len(options) - 1:
+        _remove_widget(edit_def['id'])
+        utils.update_container()
+        return
+    else:
+        key = _clean_key(options[idx])
+
+    return _get_widget_value(edit_def, key)
 
 
 def _get_options(edit_def, useThumbs=False):
     options = []
     all_keys = sorted(edit_def.keys())
-    base_keys = [i for i in all_keys if i in filter['include'] and i not in filter['exclude']]
+    base_keys = [i for i in all_keys if i in filter['include']]
 
-    option_keys = (all_keys if advanced else base_keys)
+    option_keys = [i for i in (all_keys if advanced else base_keys)
+                      if i not in filter['exclude']]
     for key in option_keys:
         if key in edit_def:
             if key in utils.art_types:
@@ -142,6 +164,41 @@ def _get_options(edit_def, useThumbs=False):
                     options.append('{}: {}'.format(formatted_key, label))
                 else:
                     options.append('{}: {}'.format(formatted_key, edit_def[key]))
+    return options
+
+
+def _get_widget_options(edit_def): 
+    options = []
+    all_keys = sorted(edit_def.keys())
+    base_keys = [i for i in all_keys if i in widget_filter['include']]
+
+    option_keys = [i for i in (all_keys if advanced else base_keys)
+                      if i not in widget_filter['exclude']]
+    for key in option_keys:
+        if key in edit_def:
+            formatted_key = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in widget_filter['include'] else key
+            _def = edit_def[key]
+            label = _def
+            
+            if key == 'action':
+                if label == 'random':
+                    label = utils.get_string(32079) 
+                elif label == 'next': 
+                    label = utils.get_string(32080) 
+                elif label in ['merged', 'static']: 
+                    continue
+            elif key == 'refresh':
+                hh = int(_def) 
+                mm = int((_def * 60)  % 60) 
+                if hh and mm: 
+                    label = '{}h {}m'.format(hh, mm) 
+                elif not mm: 
+                    label = '{}h'.format(hh) 
+                elif not hh: 
+                    label = '{}m'.format(mm)
+            
+        options.append('{}: {}'.format(formatted_key, label)) 
+             
     return options
 
 
@@ -170,65 +227,19 @@ def _get_value(edit_def, key):
             value = dialog.browse(2, utils.get_string(32049).format(key.capitalize()), 
                           shares='files', mask='.jpg|.png', useThumbs=True)
         else:
-            value = dialog.input('New Value for {}:'.format(key), defaultt=edit_def[key])
+            value = dialog.input('New Value for {}:'.format(key))
 
         if value:
             edit_def[key] = value
             return value
 
 
-def _get_widget_options(edit_def): 
-    options = [] 
-     
-    all_keys = sorted([i for i in edit_def.keys() if i not in exclude]) 
-    base_keys = sorted([i for i in all_keys if i in widget_safe]) 
-    keys = all_keys if advanced else base_keys 
-     
-    for key in keys: 
-        disp = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in widget_safe else key 
-        _def = edit_def[key] 
-        label = _def 
-         
-        if key == 'action': 
-            if label == 'random': 
-                label = utils.get_string(32079) 
-            elif label == 'next': 
-                label = utils.get_string(32080) 
-            elif label == 'merged': 
-                label = utils.get_string(32088) 
-        elif key == 'refresh': 
-            hh = int(_def) 
-            mm = int((_def * 60)  % 60) 
-            if hh and mm: 
-                label = '{}h {}m'.format(hh, mm) 
-            elif not mm: 
-                label = '{}h'.format(hh) 
-            elif not hh: 
-                label = '{}m'.format(mm) 
-             
-        if not label: 
-            label = 'n/a' 
-             
-        try: 
-            label = label.encode('utf-8') 
-        except: 
-            pass 
-                 
-        options.append('{}: {}'.format(disp, label)) 
-             
-    return options 
-
-
 def _get_widget_value(edit_def, key): 
-    dialog = xbmcgui.Dialog() 
-     
-    if key not in widget_safe: 
-        title = utils.get_string(32063).format(key.capitalize()) 
-    elif key in edit_def: 
-        title = key.capitalize() 
-     
-    if key == 'action': 
-        actions = [utils.get_string(32079), utils.get_string(32080), utils.get_string(32088)] 
+    dialog = xbmcgui.Dialog()
+    
+    
+    if key == 'action':
+        actions = [utils.get_string(32079), utils.get_string(32080)] 
         choice = dialog.select(utils.get_string(32081), actions) 
         if choice < 0: 
             return 
@@ -266,10 +277,10 @@ def _get_widget_value(edit_def, key):
     else: 
         default = edit_def.get(key) 
         value = dialog.input(title, defaultt=six.text_type(default)) 
-     
-    if value: 
-        edit_def[key] = value 
-        return edit_def[key]
+
+    if value:
+        edit_def[key] = value
+        return value
 
 
 def _clean_key(key):
@@ -296,7 +307,6 @@ def edit_dialog(group_id, path_id=None, base_key=None):
     
     updated = _show_options(group_def, path_def)
     if updated:
-        utils.log(updated, xbmc.LOGNOTICE)
         manage.write_path(group_def, path_def=path_def, update=path_id)
         utils.update_container(group_def['type'])
 
@@ -312,26 +322,9 @@ def edit_widget_dialog(widget_id):
     widget_def = manage.get_widget_by_id(widget_id) 
     if not widget_def: 
         return 
-     
-    options = _get_widget_options(widget_def) 
-     
-    remove_label = utils.get_string(32025) if widget_id else utils.get_string(32023) 
-    options.append('[COLOR firebrick]{}[/COLOR]'.format(remove_label)) 
-     
-    idx = dialog.select(utils.get_string(32048), options) 
-    if idx < 0: 
-        return 
-    elif idx == len(options) - 1: 
-        _remove_widget(widget_id) 
-        utils.update_container() 
-        return 
-    else: 
-        key = _clean_key(options[idx]) 
-         
-    updated = _get_widget_value(widget_def, key) 
-    utils.log(updated, xbmc.LOGNOTICE) 
-     
-    if updated: 
-        manage.save_path_details(widget_def, widget_id) 
-        utils.update_container() 
-    edit_widget_dialog(widget_id)
+    
+    updated = _show_widget_options(widget_def)
+    if updated:
+        manage.save_path_details(widget_def)
+        utils.update_container()
+        edit_widget_dialog(widget_id)

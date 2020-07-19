@@ -160,6 +160,81 @@ def group_menu(group_id, target, _id):
     return True, group_name
     
     
+def active_widgets_menu():
+    widgets = manage.find_defined_widgets()
+    
+    if len(widgets) > 0:
+        for widget_def in widgets:
+            _id = widget_def.get('id', '')
+            action = widget_def.get('action', '')
+            group = widget_def.get('group', '')
+            path = widget_def.get('path', [])
+            updated = widget_def.get('updated', '')
+            
+            path_def = manage.get_path_by_id(path, group)
+            group_def = manage.get_group_by_id(group)
+            
+            title = ''
+            if path_def and group_def:
+                try:
+                    path_def['label'] = path_def['label'].encode('utf-8')
+                    group_def['label'] = group_def['label'].encode('utf-8')
+                except:
+                    pass
+            
+                title = '{} - {}'.format(path_def['label'], group_def['label'])
+            elif group_def:
+                title = group_def.get('label')
+
+            art = {}
+            params = {}
+            if not action:
+                art = folder_shortcut
+                params = {'mode': 'group',
+                          'group': group,
+                          'target': 'shortcut',
+                          'id': six.text_type(_id)}
+                title = utils.get_string(32030).format(title)
+            elif action in ['random', 'next', 'merged']:
+                if action == 'random':
+                    art = folder_sync
+                elif action == 'next':
+                    art = folder_next
+                elif action == 'merged':
+                    art = folder_merged
+                
+                params = {'mode': 'group',
+                          'group': group,
+                          'target': 'widget',
+                          'id': six.text_type(_id)}
+                
+            cm = [(utils.get_string(32069), ('RunPlugin('
+                                            'plugin://plugin.program.autowidget/'
+                                            '?mode=refresh'
+                                            '&target={})').format(_id)),
+                  (utils.get_string(32070), ('RunPlugin('
+                                            'plugin://plugin.program.autowidget/'
+                                            '?mode=manage'
+                                            '&action=edit_widget'
+                                            '&target={})').format(_id))]
+            
+            if not group_def:
+                title = '{} - [COLOR firebrick]{}[/COLOR]'.format(_id, utils.get_string(32071))
+                
+            directory.add_menu_item(title=title,
+                                    art=art,
+                                    params=params,
+                                    cm=cm[1:] if not action else cm,
+                                    isFolder=True)
+    else:
+        directory.add_menu_item(title=32072,
+                                art=alert,
+                                isFolder=False,
+                                props={'specialsort': 'bottom'})
+
+    return True, utils.get_string(32074)
+    
+    
 def tools_menu():
     directory.add_menu_item(title=32006,
                             params={'mode': 'force'},
