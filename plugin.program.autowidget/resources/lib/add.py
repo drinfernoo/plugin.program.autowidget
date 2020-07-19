@@ -184,7 +184,6 @@ def add_group(target, group_name=''):
                      'type': target,
                      'paths': [],
                      'id': group_id,
-                     'info': {},
                      'art': folder_sync if target == 'widget' else folder_shortcut,
                      'version': _addon_version}
     

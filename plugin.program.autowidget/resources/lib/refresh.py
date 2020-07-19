@@ -158,7 +158,7 @@ def back_to_top(target):
         return
     actions = ['back', 'firstpage', 'right']
     for action in actions:
-        xbmc.sleep(10)
+        xbmc.sleep(100)
         xbmc.executebuiltin('Action({})'.format(action))
 
 

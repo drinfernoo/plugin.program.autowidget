@@ -13,7 +13,7 @@ warning_shown = utils.get_setting_bool('context.warning')
 filter = {'include': ['label', 'file', 'art'],
           'exclude': ['paths', 'version', 'type']}
 widget_filter = {'include': ['action', 'refresh'],
-                 'exclude': ['stack', 'path', 'version']}
+                 'exclude': ['stack', 'path', 'version', 'label']}
 color_tag = '\[COLOR \w+\](\w+)\[\/COLOR\]'
 
 

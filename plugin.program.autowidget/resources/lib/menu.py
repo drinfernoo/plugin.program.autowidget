@@ -168,10 +168,12 @@ def active_widgets_menu():
             _id = widget_def.get('id', '')
             action = widget_def.get('action', '')
             group = widget_def.get('group', '')
-            path = widget_def.get('path', [])
+            path_def = widget_def.get('path', {})
             updated = widget_def.get('updated', '')
             
-            path_def = manage.get_path_by_id(path, group)
+            if action not in ['random', 'next']:
+                continue
+            
             group_def = manage.get_group_by_id(group)
             
             title = ''
@@ -195,13 +197,11 @@ def active_widgets_menu():
                           'target': 'shortcut',
                           'id': six.text_type(_id)}
                 title = utils.get_string(32030).format(title)
-            elif action in ['random', 'next', 'merged']:
+            elif action in ['random', 'next']:
                 if action == 'random':
                     art = folder_sync
                 elif action == 'next':
                     art = folder_next
-                elif action == 'merged':
-                    art = folder_merged
                 
                 params = {'mode': 'group',
                           'group': group,
