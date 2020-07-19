@@ -150,6 +150,16 @@ def update_path(_id, path, target):
         action = widget_def['path']['file']['file']
     utils.set_property('autowidget-{}-action'.format(_id), action)
     manage.save_path_details(widget_def)
+    back_to_top(target)
+
+
+def back_to_top(target):
+    if target != 'next':
+        return
+    actions = ['back', 'firstpage', 'right']
+    for action in actions:
+        xbmc.sleep(10)
+        xbmc.executebuiltin('Action({})'.format(action))
 
 
 def refresh(widget_id, widget_def=None, paths=None, force=False):
