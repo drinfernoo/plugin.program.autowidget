@@ -70,7 +70,7 @@ def my_groups_menu():
                                             'group': group_id,
                                             'target': group_type,
                                             'id': six.text_type(_id)},
-                                    info=group.get('info'),
+                                    info=group.get('info', {}),
                                     art=group.get('art') or (folder_shortcut
                                                              if group_type == 'shortcut'
                                                              else folder_sync),

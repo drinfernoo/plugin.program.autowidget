@@ -222,6 +222,9 @@ def _copy_path(path_def):
         
     group_def = manage.get_group_by_id(group_id)
     files = utils.get_files_list(path_def['file']['file'])
+    if not files:
+        return
+    
     for file in files:
         if file['type'] in ['movie', 'episode', 'musicvideo', 'song']:
             continue
