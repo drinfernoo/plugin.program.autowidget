@@ -45,12 +45,17 @@ def backup():
         if len(files) == 0:
             dialog.notification('AutoWidget', utils.get_string(32068))
             return
-            
+        
         path = os.path.join(backup_location, '{}.zip'.format(filename.replace('.zip', '')))
-        with zipfile.ZipFile(path, 'w', zipfile.ZIP_DEFLATED) as zip:
+        content = six.BytesIO()
+        with zipfile.ZipFile(content, 'w', zipfile.ZIP_DEFLATED) as zip:
             for file in files:
-                with closing(xbmcvfs.File(file)) as f:
-                    zip.writestr(file, six.ensure_text(f.read()))
+                with open(os.path.join(utils._addon_path, file), 'r') as f:
+                    c = f.read()
+                    zip.writestr(file, six.ensure_text(c))
+                
+        with open(path, 'wb') as f:
+            f.write(content.getvalue())
 
 
 def restore():
