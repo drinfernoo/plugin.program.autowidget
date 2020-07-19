@@ -200,6 +200,9 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=Fal
         titles = []
 
     files = utils.get_files_list(path, titles)
+    if not files:
+        return titles, path_label
+        
     for file in files:
         properties = {'autoLabel': path_label}
         if 'customproperties' in file:
