@@ -179,12 +179,15 @@ def active_widgets_menu():
             title = ''
             if path_def and group_def:
                 try:
-                    path_def['label'] = path_def['label'].encode('utf-8')
+                    if isinstance(path_def, dict):
+                        label = path_def['label'].encode('utf-8')
+                    else:
+                        label = widget_def['stack'][0]['label'].encode('utf-8')
                     group_def['label'] = group_def['label'].encode('utf-8')
                 except:
                     pass
-            
-                title = '{} - {}'.format(path_def['label'], group_def['label'])
+                
+                title = '{} - {}'.format(label, group_def['label'])
             elif group_def:
                 title = group_def.get('label')
 
@@ -260,7 +263,7 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=Fal
 
     path_def = manage.get_path_by_id(path_id, group_id=group_id)
     path = path_def['file']['file'] if path_def else path_id
-
+    
     stack = widget_def.get('stack', [])
     if stack:
         title = utils.get_string(32110).format(len(stack))
@@ -404,11 +407,19 @@ def path_menu(group_id, action, _id, path=None):
             rand = random.randrange(len(paths))
             return call_path(group_id, paths[rand]['id'])
         else:
-            _path = path if path else widget_def.get('path', {})
-            _label = widget_def.get('label', '')
-            if isinstance(_path, dict):
-                _label = _path['label']
-                _path = _path['file']['file']
+            widget_path = widget_def.get('path', {})
+            _path = path if path else widget_path
+            
+            if isinstance(widget_path, dict):
+                _label = widget_path['label']
+                _path = widget_path['file']['file']
+            else:
+                stack = widget_def.get('stack', [])
+                if stack:
+                    _label = stack[0]['label']
+                else:
+                    _label = widget_def.get('label', '')
+            
             titles, cat = show_path(group_id, _path, _label, _id)
             return titles, cat
     else:
