@@ -37,6 +37,10 @@ def root_menu():
                             params={'mode': 'group'},
                             art=folder,
                             isFolder=True)
+    directory.add_menu_item(title=32074,
+                            params={'mode': 'widget'},
+                            art=folder,
+                            isFolder=True)
     directory.add_menu_item(title=32008,
                             params={'mode': 'tools'},
                             art=tools,

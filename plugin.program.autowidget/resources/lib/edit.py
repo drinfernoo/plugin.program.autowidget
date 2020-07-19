@@ -177,6 +177,101 @@ def _get_value(edit_def, key):
             return value
 
 
+def _get_widget_options(edit_def): 
+    options = [] 
+     
+    all_keys = sorted([i for i in edit_def.keys() if i not in exclude]) 
+    base_keys = sorted([i for i in all_keys if i in widget_safe]) 
+    keys = all_keys if advanced else base_keys 
+     
+    for key in keys: 
+        disp = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in widget_safe else key 
+        _def = edit_def[key] 
+        label = _def 
+         
+        if key == 'action': 
+            if label == 'random': 
+                label = utils.get_string(32079) 
+            elif label == 'next': 
+                label = utils.get_string(32080) 
+            elif label == 'merged': 
+                label = utils.get_string(32088) 
+        elif key == 'refresh': 
+            hh = int(_def) 
+            mm = int((_def * 60)  % 60) 
+            if hh and mm: 
+                label = '{}h {}m'.format(hh, mm) 
+            elif not mm: 
+                label = '{}h'.format(hh) 
+            elif not hh: 
+                label = '{}m'.format(mm) 
+             
+        if not label: 
+            label = 'n/a' 
+             
+        try: 
+            label = label.encode('utf-8') 
+        except: 
+            pass 
+                 
+        options.append('{}: {}'.format(disp, label)) 
+             
+    return options 
+
+
+def _get_widget_value(edit_def, key): 
+    dialog = xbmcgui.Dialog() 
+     
+    if key not in widget_safe: 
+        title = utils.get_string(32063).format(key.capitalize()) 
+    elif key in edit_def: 
+        title = key.capitalize() 
+     
+    if key == 'action': 
+        actions = [utils.get_string(32079), utils.get_string(32080), utils.get_string(32088)] 
+        choice = dialog.select(utils.get_string(32081), actions) 
+        if choice < 0: 
+            return 
+             
+        value = actions[choice].split(' ')[0].lower() 
+    elif key == 'refresh': 
+        durations = [] 
+        d = 0.25 
+        while d <= 12: 
+            hh = int(d) 
+            mm = int((d * 60) % 60) 
+            if hh and mm: 
+                label = '{}h {}m'.format(hh, mm) 
+            elif not mm: 
+                label = '{}h'.format(hh) 
+            elif not hh: 
+                label = '{}m'.format(mm) 
+             
+            durations.append(label) 
+            d = d + 0.25 
+             
+        choice = dialog.select('Refresh Duration', durations) 
+         
+        if choice < 0: 
+            return 
+             
+        duration = durations[choice].split(' ') 
+        if len(duration) > 1: 
+            value = float(duration[0][:-1]) + (float(duration[1][:-1]) / 60) 
+        else: 
+            if 'm' in duration[0]: 
+                value = float(duration[0][:-1]) / 60 
+            elif 'h' in duration[0]: 
+                value = float(duration[0][:-1]) 
+    else: 
+        default = edit_def.get(key) 
+        value = dialog.input(title, defaultt=six.text_type(default)) 
+     
+    if value: 
+        edit_def[key] = value 
+        return edit_def[key]
+
+
 def _clean_key(key):
     if isinstance(key, xbmcgui.ListItem):
         key = key.getLabel()
@@ -206,3 +301,37 @@ def edit_dialog(group_id, path_id=None, base_key=None):
         utils.update_container(group_def['type'])
 
         edit_dialog(group_id, path_id)
+        
+        
+def edit_widget_dialog(widget_id): 
+    dialog = xbmcgui.Dialog() 
+    updated = False 
+    if advanced and not warning_shown: 
+        _warn() 
+         
+    widget_def = manage.get_widget_by_id(widget_id) 
+    if not widget_def: 
+        return 
+     
+    options = _get_widget_options(widget_def) 
+     
+    remove_label = utils.get_string(32025) if widget_id else utils.get_string(32023) 
+    options.append('[COLOR firebrick]{}[/COLOR]'.format(remove_label)) 
+     
+    idx = dialog.select(utils.get_string(32048), options) 
+    if idx < 0: 
+        return 
+    elif idx == len(options) - 1: 
+        _remove_widget(widget_id) 
+        utils.update_container() 
+        return 
+    else: 
+        key = _clean_key(options[idx]) 
+         
+    updated = _get_widget_value(widget_def, key) 
+    utils.log(updated, xbmc.LOGNOTICE) 
+     
+    if updated: 
+        manage.save_path_details(widget_def, widget_id) 
+        utils.update_container() 
+    edit_widget_dialog(widget_id)
