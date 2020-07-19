@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.184" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.57" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
+        <import addon="script.module.six" />
         <import addon="script.skinshortcuts" />
     </requires>
-    
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>executable</provides>
     </extension>
-    
     <extension point="xbmc.service" library="service.py" />
-    
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
         <description lang="en_GB"></description>
@@ -20,24 +18,16 @@
         <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
         <email></email>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <source></source>
         <news></news>
         <disclaimer></disclaimer>
         <assets>
-            <icon>icon.png</icon>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
         </assets>
     </extension>
 </addon>
-.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news></news>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-3.0</license>
-        <website>https://www.github.com/drinfernoo/</website>
-        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+ernoo/plugin.program.autowidget/</source>
         <news>
 1.4.5
  - Refresh Shortcut widgets Automatically
@@ -136,16 +126,33 @@
         </assets>
     </extension>
 </addon>
-      </assets>
-    </extension>
-</addon>
- <fanart>resources/media/fanart/sync.png</fanart>
+art>
             <poster>resources/media/poster/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
 </addon>
-se required Skin Shortcuts version to  1.0.19
+   <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+ts added
+1.1.2
+ - Add art editing for paths
+ - Add group renaming
+1.1.1
+ - Add setting to disable notification
+1.1.0
+ - Remove Skin Shortcuts dependency
+ - Expand context menu options
+ - Add support for skins with "basic" Skin Shortcuts integration
+ - Add setting to pause AutoWidget's service
+1.0.7
+ - Fix context menu option not showing
+1.0.6
+ - Fix paths not saving
+1.0.5
+ - Raise required Skin Shortcuts version to  1.0.19
 1.0.4
  - Allow custom labels
  - Add removal notifications    
@@ -162,11 +169,6 @@ se required Skin Shortcuts version to  1.0.19
             <icon>resources/media/icon/sync.png</icon>
             <fanart>resources/media/fanart/sync.png</fanart>
             <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-r/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
