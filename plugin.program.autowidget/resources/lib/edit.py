@@ -233,6 +233,7 @@ def _get_value(edit_def, key):
                 keep = dialog.yesno('AutoWidget', 'Do you want to clear or keep the current art?', yeslabel='Keep', nolabel='Clear')
                 if not keep:
                     value = utils.get_art('folder')[key]
+                value = value.replace(utils._home, 'special://home/')
         else:
             value = dialog.input('New Value for {}:'.format(key), defaultt=default)
 
