@@ -24,11 +24,11 @@ shortcut_types = [utils.get_string(32051), utils.get_string(32052),
                   utils.get_string(32082), utils.get_string(32083),
                   utils.get_string(32053)]
 
-folder_shortcut = utils.get_art('folder-shortcut.png')
-folder_sync = utils.get_art('folder-sync.png')
-folder_settings = utils.get_art('folder-settings.png')
-folder_clone = utils.get_art('folder-clone.png')
-folder_explode = utils.get_art('folder-explode.png')
+folder_shortcut = utils.get_art('folder-shortcut')
+folder_sync = utils.get_art('folder-sync')
+folder_settings = utils.get_art('folder-settings')
+folder_clone = utils.get_art('folder-clone')
+folder_explode = utils.get_art('folder-explode')
 
 
 def add(labels):

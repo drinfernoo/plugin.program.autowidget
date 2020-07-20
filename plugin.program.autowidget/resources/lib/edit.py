@@ -224,11 +224,17 @@ def _get_value(edit_def, key):
                 edit_def[key][subkey] = value
                 return edit_def[key]
     else:
+        default = edit_def[key]
         if key in utils.art_types:
             value = dialog.browse(2, utils.get_string(32049).format(key.capitalize()), 
-                          shares='files', mask='.jpg|.png', useThumbs=True)
+                          shares='files', mask='.jpg|.png', useThumbs=True,
+                          defaultt=default)
+            if value == default:
+                keep = dialog.yesno('AutoWidget', 'Do you want to clear or keep the current art?', yeslabel='Keep', nolabel='Clear')
+                if not keep:
+                    value = utils.get_art('folder')[key]
         else:
-            value = dialog.input('New Value for {}:'.format(key))
+            value = dialog.input('New Value for {}:'.format(key), defaultt=default)
 
         if value:
             edit_def[key] = value

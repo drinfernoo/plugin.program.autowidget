@@ -86,7 +86,10 @@ def wipe(folder=_addon_path):
 def get_art(filename):
     art = {}
     for i in art_types:
-        path = os.path.join(_art_path, i, filename)
+        _i = i
+        if i == 'thumb':
+            _i = 'icon'
+        path = os.path.join(_art_path, _i, '{}.png'.format(filename))
         if os.path.exists(path):
             art[i] = path
 
