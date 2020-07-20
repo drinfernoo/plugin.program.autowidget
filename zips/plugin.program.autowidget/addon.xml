@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.565" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.599" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.six" />
         <import addon="script.module.web-pdb" optional="true" />
@@ -128,7 +128,17 @@
         </assets>
     </extension>
 </addon>
-etting to pause AutoWidget's service
+ts added
+1.1.2
+ - Add art editing for paths
+ - Add group renaming
+1.1.1
+ - Add setting to disable notification
+1.1.0
+ - Remove Skin Shortcuts dependency
+ - Expand context menu options
+ - Add support for skins with "basic" Skin Shortcuts integration
+ - Add setting to pause AutoWidget's service
 1.0.7
  - Fix context menu option not showing
 1.0.6
@@ -153,17 +163,5 @@ etting to pause AutoWidget's service
             <poster>resources/media/poster/sync.png</poster>
             <banner>resources/media/banner/sync.png</banner>
         </assets>
-    </extension>
-</addon>
-sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-ter>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-       </assets>
     </extension>
 </addon>
