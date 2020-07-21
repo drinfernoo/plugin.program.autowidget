@@ -131,8 +131,8 @@ msgid "Shift Path Down"
 msgstr "Mover abajo"
 
 msgctxt "#32028"
-msgid "Random Path from {}"
-msgstr "Ruta aleatoria desde {}"
+msgid "Cycling Path from {}"
+msgstr "Ciclovía desde {}"
 
 msgctxt "#32029"
 msgid "Use a random path from the {} group."
@@ -323,8 +323,8 @@ msgid "UNUSED"
 msgstr "NO UTILIZADO"
 
 msgctxt "#32076"
-msgid "Next Path from {}"
-msgstr "Próxima ruta de {}"
+msgid "Static Path from {}"
+msgstr "Ruta estática desde {}"
 
 msgctxt "#32077"
 msgid "Add New InfoLabel"
@@ -343,8 +343,8 @@ msgid "Next Path"
 msgstr "Próxima ruta"
 
 msgctxt "#32081"
-msgid "Action"
-msgstr "Acción"
+msgid "Choose an Action"
+msgstr "Elige una acción"
 
 msgctxt "#32082"
 msgid "Clone as Shortcut Group"
@@ -473,3 +473,55 @@ msgstr "Cambiar el camino hacia arriba"
 msgctxt "#32113"
 msgid "Shift Page to Bottom"
 msgstr "Cambiar el camino hacia abajo"
+
+msgctxt "#32114" 
+msgid "Choose a Path" 
+msgstr "Elige un camino" 
+ 
+msgctxt "#32115" 
+msgid "Choose Paths to Merge" 
+msgstr "Elija caminos para combinar" 
+ 
+msgctxt "#32116" 
+msgid "Remove Widget" 
+msgstr "Eliminar widget" 
+ 
+msgctxt "#32117" 
+msgid "Edit Artwork" 
+msgstr "Editar ilustraciones" 
+ 
+msgctxt "#32118" 
+msgid "Edit InfoLabels" 
+msgstr "Editar etiquetas de información" 
+ 
+msgctxt "#32119" 
+msgid "Select Artwork to Add" 
+msgstr "Seleccione ilustraciones para agregar" 
+ 
+msgctxt "#32120" 
+msgid "Select InfoLabel to Add" 
+msgstr "Seleccione InfoLabel para agregar" 
+ 
+msgctxt "#32121" 
+msgid "New Value for {}:" 
+msgstr "Nuevo valor para" 
+ 
+msgctxt "#32122" 
+msgid "Select Filetype" 
+msgstr "Seleccionar tipo de archivo" 
+ 
+msgctxt "#32123" 
+msgid "¿Quieres borrar o mantener el actual {}?\n\n[B]{}[/B]: {}" 
+msgstr "" 
+ 
+msgctxt "#32124" 
+msgid "Clear" 
+msgstr "Claro" 
+ 
+msgctxt "#32125" 
+msgid "Keep" 
+msgstr "Mantener" 
+ 
+msgctxt "#32126" 
+msgid "Refresh Duration" 
+msgstr "Duración de actualización" 

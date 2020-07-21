@@ -122,7 +122,7 @@ def group_menu(group_id, target, _id):
 
             path_param = '$INFO[Window(10000).Property(autowidget-{}-action)]'.format(_id)
 
-            directory.add_menu_item(title='Static Path from {}'
+            directory.add_menu_item(title=utils.get_string(32076)
                                           .format(group_name),
                                     params={'mode': 'path',
                                             'action': 'static',
@@ -132,7 +132,7 @@ def group_menu(group_id, target, _id):
                                     art=folder,
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
-            directory.add_menu_item(title='Cycling Path from {}'
+            directory.add_menu_item(title=utils.get_string(32028)
                                           .format(group_name),
                                     params={'mode': 'path',
                                             'action': 'cycling',
@@ -142,7 +142,7 @@ def group_menu(group_id, target, _id):
                                     art=shuffle,
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
-            directory.add_menu_item(title='Merged Path from {}'
+            directory.add_menu_item(title=utils.get_string(32089)
                                           .format(group_name),
                                     params={'mode': 'path',
                                             'action': 'merged',
@@ -389,13 +389,14 @@ def path_menu(group_id, action, _id, path=None):
     elif not widget_def and _window == 'dialog':
         dialog = xbmcgui.Dialog()
         if action == 'static':
-            idx = dialog.select('Choose a Path', [i['label'] for i in paths])
+            idx = dialog.select(utils.get_string(32114), [i['label'] for i in paths])
             if idx == -1:
                 return True, 'AutoWidget'
             
             widget_def = manage.initialize(group_def, action, _id, keep=idx)
         elif action == 'cycling':
-            idx = dialog.select('Choose an Action', ['Random Path', 'Next Path'])
+            idx = dialog.select(utils.get_string(32081), [utils.get_string(32079),
+                                                          utils.get_string(32080)])
             if idx == -1:
                 return True, 'AutoWidget'
             
@@ -441,7 +442,7 @@ def merged_path(group_id, _id):
         paths = widget_def['path']
     elif not widget_def and _window == 'dialog':
         dialog = xbmcgui.Dialog()
-        idxs = dialog.multiselect('Choose which to merge',
+        idxs = dialog.multiselect(utils.get_string(32115),
                                   [i['label'] for i in paths],
                                   preselect=list(range(len(paths))))
         if idxs is not None:

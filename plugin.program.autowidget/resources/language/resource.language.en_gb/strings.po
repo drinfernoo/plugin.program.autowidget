@@ -131,7 +131,7 @@ msgid "Shift Path Down"
 msgstr ""
 
 msgctxt "#32028"
-msgid "Random Path from {}"
+msgid "Cycling Path from {}"
 msgstr ""
 
 msgctxt "#32029"
@@ -323,7 +323,7 @@ msgid "UNUSED"
 msgstr ""
 
 msgctxt "#32076"
-msgid "Next Path from {}"
+msgid "Static Path from {}"
 msgstr ""
 
 msgctxt "#32077"
@@ -343,7 +343,7 @@ msgid "Next Path"
 msgstr ""
 
 msgctxt "#32081"
-msgid "Action"
+msgid "Choose an Action"
 msgstr ""
 
 msgctxt "#32082"
@@ -472,4 +472,56 @@ msgstr ""
 
 msgctxt "#32113"
 msgid "Shift Page to Bottom"
+msgstr ""
+
+msgctxt "#32114"
+msgid "Choose a Path"
+msgstr ""
+
+msgctxt "#32115"
+msgid "Choose Paths to Merge"
+msgstr ""
+
+msgctxt "#32116"
+msgid "Remove Widget"
+msgstr ""
+
+msgctxt "#32117"
+msgid "Edit Artwork"
+msgstr ""
+
+msgctxt "#32118"
+msgid "Edit InfoLabels"
+msgstr ""
+
+msgctxt "#32119"
+msgid "Select Artwork to Add"
+msgstr ""
+
+msgctxt "#32120"
+msgid "Select InfoLabel to Add"
+msgstr ""
+
+msgctxt "#32121"
+msgid "New Value for {}:"
+msgstr ""
+
+msgctxt "#32122"
+msgid "Select Filetype"
+msgstr ""
+
+msgctxt "#32123"
+msgid "Do you want to clear or keep the current {}?\n\n[B]{}[/B]: {}"
+msgstr ""
+
+msgctxt "#32124"
+msgid "Clear"
+msgstr ""
+
+msgctxt "#32125"
+msgid "Keep"
+msgstr ""
+
+msgctxt "#32126"
+msgid "Refresh Duration"
 msgstr ""

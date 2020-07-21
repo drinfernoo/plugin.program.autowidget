@@ -130,8 +130,7 @@ def _show_options(group_def, path_def=None):
 def _show_widget_options(edit_def):
     dialog = xbmcgui.Dialog()
     options = _get_widget_options(edit_def)
-    remove_label = 'Remove Widget'
-    options.append('[COLOR firebrick]{}[/COLOR]'.format(remove_label))
+    options.append('[COLOR firebrick]{}[/COLOR]'.format(utils.get_string(32116)))
 
     idx = dialog.select(utils.get_string(32048), options)
     if idx < 0:
@@ -168,7 +167,7 @@ def _get_options(edit_def, useThumbs=None):
                     options.append('[B]{}[/B]: {}'.format(formatted_key, edit_def[key]))
     
     if useThumbs is not None:
-        new_item = xbmcgui.ListItem('Add New {}'.format('InfoLabel' if not useThumbs else 'Artwork'))
+        new_item = xbmcgui.ListItem(utils.get_string(32077) if not useThumbs else utils.get_string(32078))
         new_item.setArt(plus)
         options.append(new_item)
     
@@ -215,36 +214,32 @@ def _get_value(edit_def, key):
     
     if isinstance(edit_def[_clean_key(key)], dict):
         is_art = key == 'art'
-        label = 'Edit {}'.format('Artwork' if is_art else 'InfoLabel')
+        label = utils.get_string(32117) if is_art else utils.get_string(32118)
         options =_get_options(edit_def[key], useThumbs=is_art)
         idx = dialog.select(label, options, useDetails=is_art)
             
         if idx < 0:
             return
         elif idx == len(options) - 1:
+            add_options = [i for i in utils.info_types
+                                   if key == 'file' else utils.art_types
+                             if (i not in edit_def[key]
+                                 or edit_def[key][i] == -1)]
+            add_idx = dialog.select(utils.get_string(32120) if key == 'file'
+                                                            else utils.get_string(32119), add_options)
+            if add_idx < 0:
+                return
             if key == 'file':
-                add_options = [i for i in utils.info_types if (i not in edit_def[key]
-                               or edit_def[key][i] == -1)]
-                add_idx = dialog.select('Select InfoLabel to Add', add_options)
-                if add_idx < 0:
-                    return
-                
-                value = dialog.input('New Value for {}:'.format(add_options[add_idx]))
+                value = dialog.input(utils.get_string(32121).format(add_options[add_idx]))
                 if value is not None:
                     edit_def[key][add_options[add_idx]] = value
                     return edit_def[key][add_options[add_idx]]
             elif key == 'art':
-                add_options = [i for i in utils.art_types if (i not in edit_def[key]
-                               or edit_def[key][i] == -1)]
-                add_idx = dialog.select('Select Artwork to Add', add_options)
-                if add_idx < 0:
-                    return
-                
                 value = dialog.browse(2, utils.get_string(32049)
                                          .format(add_options[add_idx].capitalize()),
                                       shares='files', mask='.jpg|.png', useThumbs=True)
                 if value is not None:
-                    edit_def[key][add_options[add_idx]] = value.replace(utils._home, 'special://').replace('image://', '')
+                    edit_def[key][add_options[add_idx]] = utils.clean_artwork_url(value)
                     return edit_def[key]
         else:
             subkey = _clean_key(options[idx])
@@ -260,21 +255,21 @@ def _get_value(edit_def, key):
                           defaultt=default)
         elif key == 'filetype':
             options = ['file', 'directory']
-            type = dialog.select('Select File Type', options, preselect=options.index(default))
+            type = dialog.select(utils.get_string(32122), options, preselect=options.index(default))
             value = options[type]
         else:
-            value = dialog.input('New Value for {}:'.format(key), defaultt=default)
+            value = dialog.input(utils.get_string(32121).format(key), defaultt=default)
 
         if value == default:
             keep = dialog.yesno('AutoWidget',
-                                ('Do you want to clear or keep the current {}?\n\n'
-                                 '[B]{}[/B]: {}').format('art' if key in utils.art_types else 'value',
+                                utils.get_string(32123).format('art' if key in utils.art_types else 'value',
                                                   key, default),
-                                yeslabel='Clear', nolabel='Keep')
+                                yeslabel=utils.get_string(32124),
+                                nolabel=utils.get_string(32124))
             if keep:
                 value = ''
         if value is not None:
-            edit_def[key] = value.replace(utils._home, 'special://').replace('image://', '')
+            edit_def[key] = utils.clean_artwork_url(value)
             return value
 
 
@@ -304,7 +299,7 @@ def _get_widget_value(edit_def, key):
             durations.append(label) 
             d = d + 0.25 
              
-        choice = dialog.select('Refresh Duration', durations) 
+        choice = dialog.select(utils.get_string(32126), durations) 
          
         if choice < 0: 
             return 
