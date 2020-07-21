@@ -124,7 +124,7 @@ def update_path(_id, path, target):
         return
     
     stack = widget_def.get('stack', [])
-
+    
     if target == 'next':
         path_def = widget_def['path']
         if isinstance(path_def, dict):
@@ -151,6 +151,7 @@ def update_path(_id, path, target):
     utils.set_property('autowidget-{}-action'.format(_id), action)
     manage.save_path_details(widget_def)
     back_to_top(target)
+    utils.update_container()
 
 
 def back_to_top(target):
