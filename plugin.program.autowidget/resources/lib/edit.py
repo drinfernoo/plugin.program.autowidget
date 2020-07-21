@@ -15,7 +15,8 @@ filter = {'include': ['label', 'file', 'art'] + utils.art_types,
 widget_filter = {'include': ['action', 'refresh'],
                  'exclude': ['stack', 'path', 'version', 'label', 'current',
                              'updated']}
-color_tag = '\[COLOR \w+\](\w+)\[\/COLOR\]'
+color_tag = '\[\w+(?: \w+)*\](?:\[\w+(?: \w+)*\])?(\w+)(?:\[\/\w+\])?\[\/\w+\]'
+plus = utils.get_art('plus')
 
 
 def shift_path(group_id, path_id, target):
@@ -145,7 +146,7 @@ def _show_widget_options(edit_def):
     return _get_widget_value(edit_def, key)
 
 
-def _get_options(edit_def, useThumbs=False):
+def _get_options(edit_def, useThumbs=None):
     options = []
     all_keys = sorted(edit_def.keys())
     base_keys = [i for i in all_keys if i in filter['include']]
@@ -153,18 +154,24 @@ def _get_options(edit_def, useThumbs=False):
     option_keys = [i for i in (all_keys if advanced else base_keys)
                       if i not in filter['exclude']]
     for key in option_keys:
-        if key in edit_def:
+        if key in edit_def and (edit_def[key] and edit_def[key] != -1):
             if key in utils.art_types:
-                li = xbmcgui.ListItem('{}: {}'.format(key, edit_def[key]))
+                li = xbmcgui.ListItem('[B]{}[/B]: {}'.format(key, edit_def[key]))
                 li.setArt({'icon': edit_def[key]})
                 options.append(li)
             else:
                 formatted_key = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in filter['include'] else key
                 if isinstance(edit_def[key], dict):
                     label = ', '.join(edit_def[key].keys())
-                    options.append('{}: {}'.format(formatted_key, label))
+                    options.append('[B]{}[/B]: {}'.format(formatted_key, label))
                 else:
-                    options.append('{}: {}'.format(formatted_key, edit_def[key]))
+                    options.append('[B]{}[/B]: {}'.format(formatted_key, edit_def[key]))
+    
+    if useThumbs is not None:
+        new_item = xbmcgui.ListItem('Add New {}'.format('InfoLabel' if not useThumbs else 'Artwork'))
+        new_item.setArt(plus)
+        options.append(new_item)
+    
     return options
 
 
@@ -176,7 +183,7 @@ def _get_widget_options(edit_def):
     option_keys = [i for i in (all_keys if advanced else base_keys)
                       if i not in widget_filter['exclude']]
     for key in option_keys:
-        if key in edit_def:
+        if key in edit_def and (edit_def[key] and edit_def[key] != -1):
             formatted_key = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in widget_filter['include'] else key
             _def = edit_def[key]
             label = _def
@@ -198,7 +205,7 @@ def _get_widget_options(edit_def):
                 elif not hh: 
                     label = '{}m'.format(mm)
             
-        options.append('{}: {}'.format(formatted_key, label)) 
+        options.append('[B]{}[/B]: {}'.format(formatted_key, label)) 
              
     return options
 
@@ -206,21 +213,43 @@ def _get_widget_options(edit_def):
 def _get_value(edit_def, key):
     dialog = xbmcgui.Dialog()
     
-    if isinstance(edit_def[key], dict):
+    if isinstance(edit_def[_clean_key(key)], dict):
         is_art = key == 'art'
-        if is_art:
-            label = 'Select Artwork to Edit:'
-        else:
-            label = 'Select {} to Edit:'.format('Key' if key != 'file' else 'InfoLabel')
+        label = 'Edit {}'.format('Artwork' if is_art else 'InfoLabel')
         options =_get_options(edit_def[key], useThumbs=is_art)
         idx = dialog.select(label, options, useDetails=is_art)
             
         if idx < 0:
             return
+        elif idx == len(options) - 1:
+            if key == 'file':
+                add_options = [i for i in utils.info_types if (i not in edit_def[key]
+                               or edit_def[key][i] == -1)]
+                add_idx = dialog.select('Select InfoLabel to Add', add_options)
+                if add_idx < 0:
+                    return
+                
+                value = dialog.input('New Value for {}:'.format(add_options[add_idx]))
+                if value is not None:
+                    edit_def[key][add_options[add_idx]] = value
+                    return edit_def[key][add_options[add_idx]]
+            elif key == 'art':
+                add_options = [i for i in utils.art_types if (i not in edit_def[key]
+                               or edit_def[key][i] == -1)]
+                add_idx = dialog.select('Select Artwork to Add', add_options)
+                if add_idx < 0:
+                    return
+                
+                value = dialog.browse(2, utils.get_string(32049)
+                                         .format(add_options[add_idx].capitalize()),
+                                      shares='files', mask='.jpg|.png', useThumbs=True)
+                if value is not None:
+                    edit_def[key][add_options[add_idx]] = value.replace(utils._home, 'special://').replace('image://', '')
+                    return edit_def[key]
         else:
             subkey = _clean_key(options[idx])
             value = _get_value(edit_def[key], _clean_key(options[idx]))
-            if value:
+            if value is not None:
                 edit_def[key][subkey] = value
                 return edit_def[key]
     else:
@@ -229,22 +258,28 @@ def _get_value(edit_def, key):
             value = dialog.browse(2, utils.get_string(32049).format(key.capitalize()), 
                           shares='files', mask='.jpg|.png', useThumbs=True,
                           defaultt=default)
-            if value == default:
-                keep = dialog.yesno('AutoWidget', 'Do you want to clear or keep the current art?', yeslabel='Keep', nolabel='Clear')
-                if not keep:
-                    value = utils.get_art('folder')[key]
-                value = value.replace(utils._home, 'special://home/')
+        elif key == 'filetype':
+            options = ['file', 'directory']
+            type = dialog.select('Select File Type', options, preselect=options.index(default))
+            value = options[type]
         else:
             value = dialog.input('New Value for {}:'.format(key), defaultt=default)
 
-        if value:
-            edit_def[key] = value
+        if value == default:
+            keep = dialog.yesno('AutoWidget',
+                                ('Do you want to clear or keep the current {}?\n\n'
+                                 '[B]{}[/B]: {}').format('art' if key in utils.art_types else 'value',
+                                                  key, default),
+                                yeslabel='Clear', nolabel='Keep')
+            if keep:
+                value = ''
+        if value is not None:
+            edit_def[key] = value.replace(utils._home, 'special://').replace('image://', '')
             return value
 
 
 def _get_widget_value(edit_def, key): 
     dialog = xbmcgui.Dialog()
-    
     
     if key == 'action':
         actions = [utils.get_string(32079), utils.get_string(32080)] 
