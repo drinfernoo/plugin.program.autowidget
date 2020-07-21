@@ -287,7 +287,7 @@ msgid "Clear Old References"
 msgstr ""
 
 msgctxt "#32067"
-msgid "UNUSED"
+msgid "Point a widget here to show items."
 msgstr ""
 
 msgctxt "#32068"
@@ -311,7 +311,7 @@ msgid "No widgets have been initialized."
 msgstr ""
 
 msgctxt "#32073"
-msgid "UNUSED"
+msgid "Broken Widget"
 msgstr ""
 
 msgctxt "#32074"
@@ -319,7 +319,7 @@ msgid "Active Widgets"
 msgstr ""
 
 msgctxt "#32075"
-msgid "UNUSED"
+msgid "This widget is broken, repoint or remove it to stop seeing this."
 msgstr ""
 
 msgctxt "#32076"

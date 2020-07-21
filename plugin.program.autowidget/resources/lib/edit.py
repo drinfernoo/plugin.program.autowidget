@@ -221,8 +221,8 @@ def _get_value(edit_def, key):
         if idx < 0:
             return
         elif idx == len(options) - 1:
-            add_options = [i for i in utils.info_types
-                                   if key == 'file' else utils.art_types
+            keys = utils.info_types if key == 'file' else utils.art_types
+            add_options = [i for i in keys
                              if (i not in edit_def[key]
                                  or edit_def[key][i] == -1)]
             add_idx = dialog.select(utils.get_string(32120) if key == 'file'

@@ -287,8 +287,8 @@ msgid "UNUSED"
 msgstr "NO UTILIZADO"
 
 msgctxt "#32067"
-msgid "UNUSED"
-msgstr "NO UTILIZADO"
+msgid "Point a widget here to show items."
+msgstr "Apunte un widget aquí para mostrar elementos."
 
 msgctxt "#32068"
 msgid "No groups have been defined."
@@ -311,16 +311,16 @@ msgid "No widgets have been initialized."
 msgstr "No se han inicializado widgets."
 
 msgctxt "#32073"
-msgid "UNUSED"
-msgstr "NO UTILIZADO"
+msgid "Broken Widget"
+msgstr "Widget roto"
 
 msgctxt "#32074"
 msgid "Active Widgets"
 msgstr "Widgets activos"
 
 msgctxt "#32075"
-msgid "UNUSED"
-msgstr "NO UTILIZADO"
+msgid "This widget is broken, repoint or remove it to stop seeing this."
+msgstr "Este widget está roto, repórtalo o elimínalo para dejar de ver esto."
 
 msgctxt "#32076"
 msgid "Static Path from {}"

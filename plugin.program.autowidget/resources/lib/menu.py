@@ -20,6 +20,7 @@ folder_shortcut = utils.get_art('folder-shortcut')
 folder_sync = utils.get_art('folder-sync')
 folder_next = utils.get_art('folder-next')
 folder_merged = utils.get_art('folder-dots')
+info = utils.get_art('information_outline')
 merge = utils.get_art('merge')
 next = utils.get_art('next')
 next_page = utils.get_art('next_page')
@@ -380,8 +381,20 @@ def path_menu(group_id, action, _id, path=None):
     _window = utils.get_active_window()
     
     group_def = manage.get_group_by_id(group_id)
+    if not group_def:
+        directory.add_menu_item(title=32073,
+                                info={'plot': utils.get_string(32075)},
+                                art=alert,
+                                isFolder=True)
+        return True, 'AutoWidget'
+        
     group_name = group_def.get('label', '')
     paths = group_def.get('paths', [])
+    if len(paths) == 0:
+        directory.add_menu_item(title=32032,
+                                art=alert,
+                                isFolder=True)
+        return True, group_name
     
     widget_def = manage.get_widget_by_id(_id, group_id)
     if widget_def and _window != 'dialog':
@@ -403,30 +416,26 @@ def path_menu(group_id, action, _id, path=None):
             _action = 'random' if idx == 0 else 'next'
             widget_def = manage.initialize(group_def, _action, _id)
     
-    if len(paths) > 0 and widget_def:
-        if _window == 'media':
-            rand = random.randrange(len(paths))
-            return call_path(group_id, paths[rand]['id'])
+    if widget_def:
+        widget_path = widget_def.get('path', {})
+        _path = path if path else widget_path
+        
+        if isinstance(widget_path, dict):
+            _label = widget_path['label']
+            _path = widget_path['file']['file']
         else:
-            widget_path = widget_def.get('path', {})
-            _path = path if path else widget_path
-            
-            if isinstance(widget_path, dict):
-                _label = widget_path['label']
-                _path = widget_path['file']['file']
+            stack = widget_def.get('stack', [])
+            if stack:
+                _label = stack[0]['label']
             else:
-                stack = widget_def.get('stack', [])
-                if stack:
-                    _label = stack[0]['label']
-                else:
-                    _label = widget_def.get('label', '')
-            
-            titles, cat = show_path(group_id, _path, _label, _id)
-            return titles, cat
+                _label = widget_def.get('label', '')
+        
+        titles, cat = show_path(group_id, _path, _label, _id)
+        return titles, cat
     else:
-        directory.add_menu_item(title=32032,
-                                art=alert,
-                                isFolder=False)
+        directory.add_menu_item(title=32067,
+                                art=info,
+                                isFolder=True)
         return True, group_name
         
         
@@ -436,6 +445,11 @@ def merged_path(group_id, _id):
     group_def = manage.get_group_by_id(group_id)
     group_name = group_def.get('label', '')
     paths = group_def.get('paths', [])
+    if len(paths) == 0:
+        directory.add_menu_item(title=32032,
+                                art=alert,
+                                isFolder=False)
+        return True, group_name
     
     widget_def = manage.get_widget_by_id(_id, group_id)
     if widget_def and _window != 'dialog':
@@ -453,17 +467,17 @@ def merged_path(group_id, _id):
                                                _id, keep=idxs)
                 paths = widget_def['path']
         
-    if len(paths) > 0 and widget_def:
+    if widget_def:
         titles = []
         for path_def in paths:
             titles, cat = show_path(group_id, path_def['id'], path_def['label'],
                                     _id, num=len(paths), merged=True)
 
-        return titles, group_name
+        return titles, cat
     else:
-        directory.add_menu_item(title=32032 if len(paths) < 1 else 'Broken Widget',
-                                art=alert,
-                                isFolder=False)
+        directory.add_menu_item(title=32067,
+                                art=info,
+                                isFolder=True)
         return True, group_name
 
 
