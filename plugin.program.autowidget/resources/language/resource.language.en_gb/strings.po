@@ -131,7 +131,7 @@ msgid "Shift Path Down"
 msgstr ""
 
 msgctxt "#32028"
-msgid "Random Path from {} ({})"
+msgid "Cycling Path from {}"
 msgstr ""
 
 msgctxt "#32029"
@@ -279,7 +279,7 @@ msgid "Wipe Add-on Data"
 msgstr ""
 
 msgctxt "#32065"
-msgid "This will remove [B]all[/B] data for AutoWidget. Any current AutoWidgets will no longer refresh and may not work reliably. It is recommended that this only be done if you intend on repointing all of those widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
+msgid "This will remove [B]all[/B] data for AutoWidget, excluding backups. Any current AutoWidgets will no longer refresh and may not work reliably. It is recommended that this only be done if you intend on repointing all of those widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
 msgstr ""
 
 msgctxt "#32066"
@@ -287,7 +287,7 @@ msgid "Clear Old References"
 msgstr ""
 
 msgctxt "#32067"
-msgid "This will try to delete references to widgets that are no longer active. This [COLOR firebrick]cannot[/COLOR] be undone."
+msgid "Point a widget here to show items."
 msgstr ""
 
 msgctxt "#32068"
@@ -311,7 +311,7 @@ msgid "No widgets have been initialized."
 msgstr ""
 
 msgctxt "#32073"
-msgid "The unique identifier in the number in this path's label is [B]necessary[/B] for AutoWidget to refresh it correctly. Don't change the label given to this widget, or it may be unable to update correctly. This message [COLOR firebrick]will not[/COLOR] be shown again."
+msgid "Broken Widget"
 msgstr ""
 
 msgctxt "#32074"
@@ -319,11 +319,11 @@ msgid "Active Widgets"
 msgstr ""
 
 msgctxt "#32075"
-msgid "UNUSED"
+msgid "This widget is broken, repoint or remove it to stop seeing this."
 msgstr ""
 
 msgctxt "#32076"
-msgid "Next Path from {} ({})"
+msgid "Static Path from {}"
 msgstr ""
 
 msgctxt "#32077"
@@ -343,7 +343,7 @@ msgid "Next Path"
 msgstr ""
 
 msgctxt "#32081"
-msgid "Action"
+msgid "Choose an Action"
 msgstr ""
 
 msgctxt "#32082"
@@ -368,6 +368,14 @@ msgstr ""
 
 msgctxt "#32087"
 msgid "Never"
+msgstr ""
+
+msgctxt "#32088"
+msgid "Merged Path"
+msgstr ""
+
+msgctxt "#32089"
+msgid "Merged Path from {}"
 msgstr ""
 
 msgctxt "#32090"
@@ -418,6 +426,102 @@ msgctxt "#32101"
 msgid "Restore Cancelled."
 msgstr ""
 
+msgctxt "#32102"
+msgid "Unsorted"
+msgstr ""
+
+msgctxt "#32103"
+msgid "Sorted to End"
+msgstr ""
+
+msgctxt "#32104"
+msgid "Show 'Next Page' Items"
+msgstr ""
+
+msgctxt "#32105"
+msgid "Widget Settings"
+msgstr ""
+
+msgctxt "#32106"
+msgid "Hide Watched Items"
+msgstr ""
+
+msgctxt "#32107"
+msgid "Use Paged Widgets (Doesn't Affect Merged Widgets)"
+msgstr ""
+
 msgctxt "#32108"
 msgid "Notification Sound"
+msgstr ""
+
+msgctxt "#32109"
+msgid "Not on Merged Widgets"
+msgstr ""
+
+msgctxt "#32110"
+msgid "Back to Page {}"
+msgstr ""
+
+msgctxt "#32111"
+msgid "Next Page"
+msgstr ""
+
+msgctxt "#32112"
+msgid "Shift Path to Top"
+msgstr ""
+
+msgctxt "#32113"
+msgid "Shift Page to Bottom"
+msgstr ""
+
+msgctxt "#32114"
+msgid "Choose a Path"
+msgstr ""
+
+msgctxt "#32115"
+msgid "Choose Paths to Merge"
+msgstr ""
+
+msgctxt "#32116"
+msgid "Remove Widget"
+msgstr ""
+
+msgctxt "#32117"
+msgid "Edit Artwork"
+msgstr ""
+
+msgctxt "#32118"
+msgid "Edit InfoLabels"
+msgstr ""
+
+msgctxt "#32119"
+msgid "Select Artwork to Add"
+msgstr ""
+
+msgctxt "#32120"
+msgid "Select InfoLabel to Add"
+msgstr ""
+
+msgctxt "#32121"
+msgid "New Value for {}:"
+msgstr ""
+
+msgctxt "#32122"
+msgid "Select Filetype"
+msgstr ""
+
+msgctxt "#32123"
+msgid "Do you want to clear or keep the current {}?\n\n[B]{}[/B]: {}"
+msgstr ""
+
+msgctxt "#32124"
+msgid "Clear"
+msgstr ""
+
+msgctxt "#32125"
+msgid "Keep"
+msgstr ""
+
+msgctxt "#32126"
+msgid "Refresh Duration"
 msgstr ""

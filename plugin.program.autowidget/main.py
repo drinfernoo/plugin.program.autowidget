@@ -1,5 +1,7 @@
 import sys
+
 from resources.lib.common import router
+
 
 if __name__ == '__main__':    
     _plugin = sys.argv[0]

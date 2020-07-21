@@ -3,8 +3,11 @@ import xbmcgui
 import xbmcvfs
 
 import os
-
 import zipfile
+
+from contextlib import closing
+
+import six
 
 from resources.lib.common import utils
 
@@ -42,13 +45,18 @@ def backup():
         if len(files) == 0:
             dialog.notification('AutoWidget', utils.get_string(32068))
             return
-            
+        
         path = os.path.join(backup_location, '{}.zip'.format(filename.replace('.zip', '')))
-        with zipfile.ZipFile(path, 'w', zipfile.ZIP_DEFLATED) as zip:
+        content = six.BytesIO()
+        with zipfile.ZipFile(content, 'w', zipfile.ZIP_DEFLATED) as zip:
             for file in files:
-                zip.write(os.path.join(utils._addon_path, file), file)
+                with open(os.path.join(utils._addon_path, file), 'r') as f:
+                    zip.writestr(file, six.ensure_text(f.read()))
                 
-                
+        with open(path, 'wb') as f:
+            f.write(content.getvalue())
+
+
 def restore():
     dialog = xbmcgui.Dialog()
     backup = dialog.browse(1, utils.get_string(32098), 'files', mask='.zip', defaultt=backup_location)
