@@ -5,7 +5,7 @@
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
-        <provides>executable</provides>
+        <provides>executable video</provides>
     </extension>
     
     <extension point="xbmc.service" library="service.py" />
@@ -28,6 +28,14 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+2.0.0
+ - Rewrite most of add-on functions
+ - Add "Static Path" option
+ - Add "Merged Path" option
+ - Add "Paged Widgets"
+ - Revamp editor dialog
+ - More complete skin compatibility
+ - More miscellaneous fixes
 1.6.8
  - Add setting for notification sound
 1.6.7
