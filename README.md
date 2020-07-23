@@ -11,6 +11,3 @@ and interesting experience to using skin widgets.
    b. For AutoWidget's Dev repo (for testing purposes **only**), install `repository.autowidget.dev-1.0.zip`.
 6. Return to "Add-ons", and choose "Install from repository".
 7. Choose the repository you installed (stable or dev), and install AutoWidget from Program Add-ons.
-
-## How to Use
-Full instructions for using AutoWidget can be found [on the wiki](https://www.github.com/drinfernoo/plugin.program.autowidget/wiki/).
