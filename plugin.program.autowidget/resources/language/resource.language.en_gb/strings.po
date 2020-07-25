@@ -525,3 +525,7 @@ msgstr ""
 msgctxt "#32126"
 msgid "Refresh Duration"
 msgstr ""
+
+msgctxt "#32127"
+msgid "Toggle Skin Debugging"
+msgstr ""

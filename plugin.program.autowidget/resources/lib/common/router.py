@@ -128,6 +128,8 @@ def dispatch(_plugin, _handle, _params):
         is_dir, category = menu.tools_menu()
     elif mode == 'force':
         refresh.refresh_paths(notify=True, force=True)
+    elif mode == 'skindebug':
+        xbmc.executebuiltin('Skin.ToggleDebug')
     elif mode == 'wipe':
         utils.wipe()
     elif mode == 'clean':

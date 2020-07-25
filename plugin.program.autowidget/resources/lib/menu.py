@@ -15,6 +15,7 @@ from resources.lib.common import utils
 add = utils.get_art('add')
 alert = utils.get_art('alert')
 back = utils.get_art('back')
+bug = utils.get_art('bug-outline')
 folder = utils.get_art('folder')
 folder_shortcut = utils.get_art('folder-shortcut')
 folder_sync = utils.get_art('folder-sync')
@@ -248,6 +249,10 @@ def tools_menu():
     directory.add_menu_item(title=32064,
                             params={'mode': 'wipe'},
                             art=remove,
+                            isFolder=False)
+    directory.add_menu_item(title=32127,
+                            params={'mode': 'skindebug'},
+                            art=bug,
                             isFolder=False)
                             
     return True, utils.get_string(32008)
