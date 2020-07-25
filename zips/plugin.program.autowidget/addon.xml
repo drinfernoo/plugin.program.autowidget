@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.188" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.658" provider-name="drinfernoo">
     <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
+        <import addon="script.module.six" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -14,51 +13,19 @@
     <extension point="kodi.context.item">
         <menu id="kodi.core.main">
             <item library="context.py">
-                <label>Add to AutoWidget</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
             </item>
         </menu>
     </extension>
     
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB"></description>
-        <language></language>
         <platform>all</platform>
         <license>LGPL-3.0</license>
-        <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
-        <email></email>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news></news>
-        <disclaimer></disclaimer>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
-ected. Notably fixes Disney+ support.
-1.6.6
- - Fix extract location
-1.6.5
- - Add backup/restore features
-1.6.4
- - Fix more rogue refreshes
- - Fix wording in Spanish translation (again, thanks to @roliverosc)
-1.6.3
- - Update settings localizations
-1.6.2
- - Fix bug that caused Skin Shortcuts to not be able to rebuild the skin
-1.6.1
- - Fix bug with shortcut widgets being "converted"
-1.6.0
- - Android App shortcut support (thanks to @Sandmann79)
- - Add Spanish translation (thanks to @roliverosc)
- - Fix bug with empty action nodes
- - Reduce refreshes
- - Prettify .props file output
-1.5.5
- - Fix regex for labels in some skins
+        <news>
 1.5.4
  - Fix recursion crash during refresh
 1.5.3
@@ -140,6 +107,39 @@ ected. Notably fixes Disney+ support.
  - Add art editing for paths
  - Add group renaming
 1.1.1
+ - Add setting to disable notification
+1.1.0
+ - Remove Skin Shortcuts dependency
+ - Expand context menu options
+ - Add support for skins with "basic" Skin Shortcuts integration
+ - Add setting to pause AutoWidget's service
+1.0.7
+ - Fix context menu option not showing
+1.0.6
+ - Fix paths not saving
+1.0.5
+ - Raise required Skin Shortcuts version to  1.0.19
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>resources/media/icon/sync.png</icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+1.1
  - Add setting to disable notification
 1.1.0
  - Remove Skin Shortcuts dependency
