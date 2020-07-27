@@ -153,7 +153,7 @@ def _get_options(edit_def, useThumbs=None):
     option_keys = [i for i in (all_keys if advanced else base_keys)
                       if i not in filter['exclude']]
     for key in option_keys:
-        if key in edit_def and (edit_def[key] and edit_def[key] != -1):
+        if key in edit_def and (edit_def[key] not in [None, "", -1]):
             if key in utils.art_types:
                 li = xbmcgui.ListItem('[B]{}[/B]: {}'.format(key, edit_def[key]))
                 li.setArt({'icon': edit_def[key]})
@@ -223,8 +223,7 @@ def _get_value(edit_def, key):
         elif idx == len(options) - 1:
             keys = utils.info_types if key == 'file' else utils.art_types
             add_options = [i for i in keys
-                             if (i not in edit_def[key]
-                                 or edit_def[key][i] == -1)]
+                             if (i not in edit_def[key] or edit_def[key][i] in [None, "", -1])]
             add_idx = dialog.select(utils.get_string(32120) if key == 'file'
                                                             else utils.get_string(32119), add_options)
             if add_idx < 0:

@@ -297,13 +297,12 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=Fal
             for prop in file['customproperties']:
                 properties[prop] = file['customproperties'][prop]
         
-        next_item = re.sub('[^\w \xC0-\xFF]',
-                           '', file['label'].lower()).strip() in ['next',
-                                                                  'next page']
-        prev_item = re.sub('[^\w \xC0-\xFF]',
-                           '', file['label'].lower()).strip() in ['previous',
-                                                                  'previous page',
-                                                                  'back']
+        clean_pattern = '[^\w \xC0-\xFF]'
+        next_pattern = '^(?:next(?: page)?)$|^(?:page \d+ (?:out )?(?:of){1} \d+(?: \(\d+ results\)$)?)$'
+        prev_pattern = '^(?:previous(?: page)?)$|^(?:back)$'
+        cleaned_title = re.sub(clean_pattern, '', file['label'].lower()).strip()
+        next_item =  re.search(next_pattern, cleaned_title)
+        prev_item = re.search(prev_pattern, cleaned_title)
         
         if (prev_item and stack) or (next_item and show_next == 0):
             continue
