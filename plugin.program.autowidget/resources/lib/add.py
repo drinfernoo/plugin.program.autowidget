@@ -68,9 +68,9 @@ def build_labels(source, path_def=None, target=''):
         for i in utils.art_types:
             art = utils.get_infolabel('ListItem.Art({})'.format(i))
             if art:
-                path_def['art'][i] = art
+                path_def['art'][i] = utils.clean_artwork_url(art)
         for i in ['icon', 'thumb']:
-            art = utils.get_infolabel('ListItem.{}'.format(i))
+            art = utils.clean_artwork_url(utils.get_infolabel('ListItem.{}'.format(i)))
             if art:
                 path_def['art'][i] = art
     elif source == 'json' and path_def and target:

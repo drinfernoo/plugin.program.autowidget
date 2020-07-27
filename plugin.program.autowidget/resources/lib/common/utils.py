@@ -91,7 +91,7 @@ def get_art(filename):
             _i = 'icon'
         path = os.path.join(_art_path, _i, '{}.png'.format(filename))
         if os.path.exists(path):
-            art[i] = path
+            art[i] = clean_artwork_url(path)
 
     return art
 
