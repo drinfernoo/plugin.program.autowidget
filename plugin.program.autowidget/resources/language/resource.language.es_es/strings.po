@@ -529,3 +529,7 @@ msgstr "Duración de actualización"
 msgctxt "#32127"
 msgid "Toggle Skin Debugging"
 msgstr "Alternar depuración de máscaras"
+
+msgctxt "#32128"
+msgid "{} caminos fusionados"
+msgstr ""

@@ -13,7 +13,7 @@ warning_shown = utils.get_setting_bool('context.warning')
 filter = {'include': ['label', 'file', 'art'] + utils.art_types,
           'exclude': ['paths', 'version', 'type']}
 widget_filter = {'include': ['action', 'refresh'],
-                 'exclude': ['stack', 'path', 'version', 'label', 'current',
+                 'exclude': ['stack', 'version', 'label', 'current',
                              'updated']}
 color_tag = '\[\w+(?: \w+)*\](?:\[\w+(?: \w+)*\])?(\w+)(?:\[\/\w+\])?\[\/\w+\]'
 plus = utils.get_art('plus')
@@ -182,7 +182,7 @@ def _get_widget_options(edit_def):
     option_keys = [i for i in (all_keys if advanced else base_keys)
                       if i not in widget_filter['exclude']]
     for key in option_keys:
-        if key in edit_def and (edit_def[key] and edit_def[key] != -1):
+        if key in edit_def and (edit_def[key] and edit_def[key] != -1):            
             formatted_key = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in widget_filter['include'] else key
             _def = edit_def[key]
             label = _def
@@ -203,6 +203,17 @@ def _get_widget_options(edit_def):
                     label = '{}h'.format(hh) 
                 elif not hh: 
                     label = '{}m'.format(mm)
+            elif key == 'path':
+                if edit_def['action'] not in ['static', 'merged']:
+                    continue
+                    
+                paths = []
+                if isinstance(_def, list):
+                    for i in _def:
+                        paths.append(i['label'])
+                    label = ', '.join(paths)
+                else:
+                    label = _def['label']
             
         options.append('[B]{}[/B]: {}'.format(formatted_key, label)) 
              
@@ -311,6 +322,21 @@ def _get_widget_value(edit_def, key):
                 value = float(duration[0][:-1]) / 60 
             elif 'h' in duration[0]: 
                 value = float(duration[0][:-1]) 
+    elif key == 'path':
+        groups = manage.find_defined_paths(edit_def['group'])
+        labels = [i['label'] for i in groups]
+        if isinstance(edit_def[key], list):
+            paths = []
+            choice = dialog.multiselect(utils.get_string(32115), labels)
+            if choice:
+                for i in choice:
+                    paths.append(groups[i])
+                value = paths
+        else:
+            choice = dialog.select(utils.get_string(32114), labels)
+            if choice < 0:
+                return
+            value = groups[choice]
     else: 
         default = edit_def.get(key) 
         value = dialog.input(title, defaultt=six.text_type(default)) 

@@ -173,19 +173,19 @@ def active_widgets_menu():
             path_def = widget_def.get('path', {})
             updated = widget_def.get('updated', '')
             
-            if action not in ['random', 'next']:
-                continue
-            
             group_def = manage.get_group_by_id(group)
             
             title = ''
             if path_def and group_def:
                 try:
-                    if isinstance(path_def, dict):
-                        label = path_def['label'].encode('utf-8')
+                    if action != 'merged':
+                        if isinstance(path_def, dict):
+                            label = path_def['label'].encode('utf-8')
+                        else:
+                            label = widget_def['stack'][0]['label'].encode('utf-8')
+                        group_def['label'] = group_def['label'].encode('utf-8')
                     else:
-                        label = widget_def['stack'][0]['label'].encode('utf-8')
-                    group_def['label'] = group_def['label'].encode('utf-8')
+                        label = utils.get_string(32128).format(len(path_def))
                 except:
                     pass
                 
@@ -202,11 +202,15 @@ def active_widgets_menu():
                           'target': 'shortcut',
                           'id': six.text_type(_id)}
                 title = utils.get_string(32030).format(title)
-            elif action in ['random', 'next']:
+            elif action in ['random', 'next', 'merged', 'static']:
                 if action == 'random':
                     art = folder_sync
                 elif action == 'next':
                     art = folder_next
+                elif action == 'merged':
+                    art = folder_merged
+                elif action == 'static':
+                    art = folder
                 
                 params = {'mode': 'group',
                           'group': group,

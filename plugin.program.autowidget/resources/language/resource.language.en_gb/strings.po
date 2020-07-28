@@ -529,3 +529,7 @@ msgstr ""
 msgctxt "#32127"
 msgid "Toggle Skin Debugging"
 msgstr ""
+
+msgctxt "#32128"
+msgid "{} Paths Merged"
+msgstr ""
