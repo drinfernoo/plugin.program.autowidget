@@ -60,7 +60,7 @@ msgstr "Rutas"
 
 msgctxt "#32010"
 msgid "Actions"
-msgstr "Comportamiento"
+msgstr "Acciones"
 
 msgctxt "#32011"
 msgid "Point a widget at this directory to get a widget containing the following:"
@@ -132,7 +132,7 @@ msgstr "Mover abajo"
 
 msgctxt "#32028"
 msgid "Cycling Path from {}"
-msgstr "Ciclovía desde {}"
+msgstr "Ruta ciclica de {}"
 
 msgctxt "#32029"
 msgid "Use a random path from the {} group."
@@ -144,7 +144,7 @@ msgstr "Accesos directos de {}"
 
 msgctxt "#32031"
 msgid "Show a list of shortcuts from the {} group."
-msgstr "Mostrar una lista de accesos directos del grupo {}."
+msgstr "Muestra una lista de accesos directos del grupo {}."
 
 msgctxt "#32032"
 msgid "No paths have been defined for this group."
@@ -192,11 +192,11 @@ msgstr "Mostrar notificación 'Actualizando ruta'"
 
 msgctxt "#32043"
 msgid "Shortcut Label"
-msgstr "Etiqueta de acceso directo"
+msgstr "Etiqueta del acceso directo"
 
 msgctxt "#32044"
 msgid "Widget Label"
-msgstr "Etiqueta de widget"
+msgstr "Etiqueta del widget"
 
 msgctxt "#32045"
 msgid "{} removed."
@@ -260,7 +260,7 @@ msgstr "[COLOR firebrick][B]Continuar[/B][/COLOR]"
 
 msgctxt "#32060"
 msgid "[COLOR lawngreen][B]Disable[/B][/COLOR]"
-msgstr "[COLOR lawngreen][B]Inhabilitar[/B][/COLOR]"
+msgstr "[COLOR lawngreen][B]Desactivar[/B][/COLOR]"
 
 msgctxt "#32061"
 msgid "Edit Group"
@@ -279,12 +279,12 @@ msgid "Wipe Add-on Data"
 msgstr "Eliminar datos del complemento"
 
 msgctxt "#32065"
-msgid "This will remove [B]all[/B] data for AutoWidget. Any current AutoWidgets will no longer refresh and may not work reliably. It is recommended that this only be done if you intend on repointing all of those widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
-msgstr "Esto eliminará [B]todos los datos[/B] de AutoWidget. Cualquier AutoWidgets actual ya no se actualizará y es posible que no funcione de manera correcta. Se recomienda que esto solo se haga si tiene la intención de volver a nombrar todos esos widgets. Esto [COLOR firebrick]no se puede deshacer[/COLOR]."
+msgid "This will remove [B]all[/B] data for AutoWidget, excluding backups. Any current AutoWidgets will no longer refresh and may not work reliably. It is recommended that this only be done if you intend on repointing all of those widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
+msgstr "Esto eliminará [B]todos los datos[/B] de AutoWidget, excluyendo copias de seguridad. Cualquier AutoWidgets actual ya no se actualizará y es posible que no funcione de manera correcta. Se recomienda que esto solo se haga si tiene la intención de volver a nombrar todos esos widgets. Esto [COLOR firebrick]no se puede deshacer[/COLOR]."
 
 msgctxt "#32066"
-msgid "UNUSED"
-msgstr "NO UTILIZADO"
+msgid "Clear Old References"
+msgstr "Borrar referencias antiguas"
 
 msgctxt "#32067"
 msgid "Point a widget here to show items."
@@ -320,7 +320,7 @@ msgstr "Widgets activos"
 
 msgctxt "#32075"
 msgid "This widget is broken, repoint or remove it to stop seeing this."
-msgstr "Este widget está roto, repórtalo o elimínalo para dejar de ver esto."
+msgstr "Este widget está roto, vuelva a definirlo o elimínelo para dejar de ver esto."
 
 msgctxt "#32076"
 msgid "Static Path from {}"
@@ -368,39 +368,40 @@ msgstr "Mientras no haya nada en reproducción"
 
 msgctxt "#32087"
 msgid "Never"
-msgstr "Nunca" 
- 
-msgctxt "#32088" 
-msgid "Merged Path" 
-msgstr "Ruta combinado" 
- 
-msgctxt "#32089" 
-msgid "Merged Path from {}" 
-msgstr "Ruta combinado de {}"
+msgstr "Nunca"
+
+msgctxt "#32088"
+msgid "Merged Path"
+msgstr "Ruta combinada"
+
+msgctxt "#32089"
+msgid "Merged Path from {}"
+msgstr "Ruta combinada desde {}"
+
 
 msgctxt "#32090"
 msgid "Backup / Restore"
-msgstr "Apoyo / Restaurar"
+msgstr "Copia de seguridad / Restaurar"
 
 msgctxt "#32091"
 msgid "Choose Backup Location"
-msgstr "Elegir ubicación de respaldo"
+msgstr "Elegir ubicación"
 
 msgctxt "#32092"
 msgid "Backup My Groups"
-msgstr "Copia de seguridad de mis grupos"
+msgstr "Copia de seguridad de Mis Grupos"
 
 msgctxt "#32093"
 msgid "Restore from Backup"
-msgstr "Reinstalar desde el respaldo"
+msgstr "Restaurar desde copia"
 
 msgctxt "#32094"
 msgid "Do you want to backup your groups? This will not backup any widgets defined in the skin."
-msgstr "¿Quieres hacer una copia de seguridad de tus grupos? Esto no hará una copia de seguridad de los widgets definidos en la máscara."
+msgstr "¿Quieres hacer una copia de seguridad de tus grupos? Esto no hará una copia de seguridad de los widgets definidos en el skin."
 
 msgctxt "#32095"
 msgid "Backup Name"
-msgstr "Nombre de respaldo"
+msgstr "Nombre de la copia de seguridad"
 
 msgctxt "#32096"
 msgid "Backup Cancelled."
@@ -412,15 +413,15 @@ msgstr "No se pudo crear la ubicación de la copia de seguridad."
 
 msgctxt "#32098"
 msgid "Choose Backup to Restore"
-msgstr "Elija Copia de seguridad para restaurar"
+msgstr "Elija la Copia de seguridad a restaurar"
 
 msgctxt "#32099"
-msgid "Would you like to restore {} group{} from this backup?"
+msgid "Would you like to restore {} group {} from this backup?"
 msgstr "¿Desea restaurar {} grupo {} de esta copia de seguridad?"
 
 msgctxt "#32100"
 msgid "Would you like to erase your current groups before restoring?"
-msgstr "¿Te gustaría borrar tus grupos actuales antes de restaurar?"
+msgstr "¿Le gustaría borrar sus grupos actuales antes de restaurar?"
 
 msgctxt "#32101"
 msgid "Restore Cancelled."
@@ -428,11 +429,11 @@ msgstr "Restauración cancelada."
 
 msgctxt "#32102"
 msgid "Unsorted"
-msgstr "Sin clasificar"
+msgstr "Sin orden"
 
 msgctxt "#32103"
 msgid "Sorted to End"
-msgstr "Ordenado para terminar"
+msgstr "Ordenado por el último"
 
 msgctxt "#32104"
 msgid "Show 'Next Page' Items"
@@ -468,20 +469,20 @@ msgstr "Siguiente página"
 
 msgctxt "#32112"
 msgid "Shift Path to Top"
-msgstr "Cambiar el camino hacia arriba"
+msgstr "Mover al inicio"
 
 msgctxt "#32113"
 msgid "Shift Page to Bottom"
-msgstr "Cambiar el camino hacia abajo"
+msgstr "Mover al fondo"
 
-msgctxt "#32114" 
-msgid "Choose a Path" 
-msgstr "Elige un camino" 
- 
-msgctxt "#32115" 
-msgid "Choose Paths to Merge" 
-msgstr "Elija caminos para combinar" 
- 
+msgctxt "#32114"
+msgid "Choose a Path"
+msgstr "Elige una ruta"
+
+msgctxt "#32115"
+msgid "Choose Paths to Merge"
+msgstr "Elija rutas para combinar"
+
 msgctxt "#32116" 
 msgid "Remove Widget" 
 msgstr "Eliminar widget" 
@@ -504,19 +505,19 @@ msgstr "Seleccione InfoLabel para agregar"
  
 msgctxt "#32121" 
 msgid "New Value for {}:" 
-msgstr "Nuevo valor para" 
+msgstr "Nuevo valor para {}:" 
  
 msgctxt "#32122" 
 msgid "Select Filetype" 
 msgstr "Seleccionar tipo de archivo" 
  
 msgctxt "#32123" 
-msgid "¿Quieres borrar o mantener el actual {}?\n\n[B]{}[/B]: {}" 
-msgstr "" 
+msgid "Do you want to clear or keep the current {}?\n\n[B]{}[/B]: {}" 
+msgstr "¿Quieres borrar o mantener el actual {}?\n\n[B]{}[/B]: {}" 
  
 msgctxt "#32124" 
 msgid "Clear" 
-msgstr "Claro" 
+msgstr "Limpiar" 
  
 msgctxt "#32125" 
 msgid "Keep" 
@@ -528,7 +529,7 @@ msgstr "Duración de actualización"
 
 msgctxt "#32127"
 msgid "Toggle Skin Debugging"
-msgstr "Alternar depuración de máscaras"
+msgstr "Activar modo depuración de skin"
 
 msgctxt "#32128"
 msgid "{} Paths Merged"
