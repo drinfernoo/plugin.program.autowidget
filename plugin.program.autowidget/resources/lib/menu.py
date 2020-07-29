@@ -354,8 +354,8 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=Fal
     return titles, path_label
     
     
-def call_path(group_id, path_id):
-    path_def = manage.get_path_by_id(path_id, group_id=group_id)
+def call_path(path_id):
+    path_def = manage.get_path_by_id(path_id)
     if not path_def:
         return
     
