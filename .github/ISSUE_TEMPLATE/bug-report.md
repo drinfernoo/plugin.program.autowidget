@@ -24,10 +24,10 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Details:**
--  What version of Kodi?
--  What skin is being used?
--  What device? (PC, Smartphone, Fire TV, Nvidia Shield, etc...)
--  What platform? (Android, iOS, Windows, OS X, Linux, etc...)
+  - What version of Kodi?
+  - What skin is being used?
+  - What device? (PC, Smartphone, Fire TV, Nvidia Shield, etc...)
+  - What platform? (Android, iOS, Windows, OS X, Linux, etc...)
 
 **Additional context**
 Add any other context about the problem here.
