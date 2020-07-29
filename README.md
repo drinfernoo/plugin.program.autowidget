@@ -1,4 +1,7 @@
 # AutoWidget
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/840a4c0ed72e4d25b3d82c984e3c4b84)](https://app.codacy.com/manual/drinfernoo/plugin.program.autowidget?utm_source=github.com&utm_medium=referral&utm_content=drinfernoo/plugin.program.autowidget&utm_campaign=Badge_Grade_Dashboard)
+
 AutoWidget is a program add-on for Kodi, designed to give a more dynamic
 and interesting experience to using skin widgets. 
 
