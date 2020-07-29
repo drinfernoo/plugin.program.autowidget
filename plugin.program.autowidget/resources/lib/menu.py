@@ -197,6 +197,7 @@ def active_widgets_menu():
 
             art = {}
             params = {}
+            cm = []
             if not action:
                 art = folder_shortcut
                 params = {'mode': 'group',
@@ -204,13 +205,15 @@ def active_widgets_menu():
                           'target': 'shortcut',
                           'id': six.text_type(_id)}
                 title = utils.get_string(32030).format(title)
-            elif action in ['random', 'next', 'merged', 'static']:
-                if action == 'random':
-                    art = folder_sync
-                elif action == 'next':
-                    art = folder_next
+            else:
+                if action in ['random', 'next']:
+                    art = shuffle
+                    cm.append((utils.get_string(32069), ('RunPlugin('
+                                                         'plugin://plugin.program.autowidget/'
+                                                         '?mode=refresh'
+                                                         '&target={})').format(_id)))
                 elif action == 'merged':
-                    art = folder_merged
+                    art = merge
                 elif action == 'static':
                     art = folder
                 
@@ -219,15 +222,11 @@ def active_widgets_menu():
                           'target': 'widget',
                           'id': six.text_type(_id)}
                 
-            cm = [(utils.get_string(32069), ('RunPlugin('
-                                            'plugin://plugin.program.autowidget/'
-                                            '?mode=refresh'
-                                            '&target={})').format(_id)),
-                  (utils.get_string(32070), ('RunPlugin('
-                                            'plugin://plugin.program.autowidget/'
-                                            '?mode=manage'
-                                            '&action=edit_widget'
-                                            '&target={})').format(_id))]
+            cm.append((utils.get_string(32070), ('RunPlugin('
+                                                 'plugin://plugin.program.autowidget/'
+                                                 '?mode=manage'
+                                                 '&action=edit_widget'
+                                                 '&target={})').format(_id)))
             
             if not group_def:
                 title = '{} - [COLOR firebrick]{}[/COLOR]'.format(_id, utils.get_string(32071))
