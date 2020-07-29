@@ -178,7 +178,6 @@
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
-            <clearart>resources/media/clearart.png</clearart>
         </assets>
     </extension>
 </addon>
