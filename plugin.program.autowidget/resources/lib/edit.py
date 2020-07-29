@@ -1,8 +1,9 @@
-import xbmc
 import xbmcgui
 
 import os
 import re
+
+import six
 
 from resources.lib import manage
 from resources.lib.common import utils
@@ -96,11 +97,8 @@ def _warn():
     if choice < 1:
         utils.set_setting('context.advanced', 'false')
         utils.set_setting('context.warning', 'true')
-        advanced = False
-        warning = True
     else:
         utils.set_setting('context.warning', 'true')
-        warning = True
 
 
 def _show_options(group_def, path_def=None):
@@ -339,7 +337,7 @@ def _get_widget_value(edit_def, key):
             value = groups[choice]
     else: 
         default = edit_def.get(key) 
-        value = dialog.input(title, defaultt=six.text_type(default)) 
+        value = dialog.input(utils.get_string(32121).format(key), defaultt=six.text_type(default)) 
 
     if value:
         edit_def[key] = value
@@ -358,34 +356,32 @@ def _clean_key(key):
 
 
 def edit_dialog(group_id, path_id=None, base_key=None):
-    dialog = xbmcgui.Dialog()
     updated = False
     if advanced and not warning_shown:
         _warn()
-    
+
     group_def = manage.get_group_by_id(group_id)
     path_def = manage.get_path_by_id(path_id, group_id)
     if not group_def or path_id and not path_def:
         return
-    
+
     updated = _show_options(group_def, path_def)
     if updated:
         manage.write_path(group_def, path_def=path_def, update=path_id)
         utils.update_container(group_def['type'])
 
         edit_dialog(group_id, path_id)
-        
-        
+
+
 def edit_widget_dialog(widget_id): 
-    dialog = xbmcgui.Dialog() 
     updated = False 
     if advanced and not warning_shown: 
         _warn() 
-         
+
     widget_def = manage.get_widget_by_id(widget_id) 
     if not widget_def: 
         return 
-    
+
     updated = _show_widget_options(widget_def)
     if updated:
         manage.save_path_details(widget_def)

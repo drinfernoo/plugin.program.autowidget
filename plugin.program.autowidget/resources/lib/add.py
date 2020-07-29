@@ -2,9 +2,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
-import json
 import os
-import re
 
 try:
     from urllib.parse import parse_qsl
@@ -133,7 +131,6 @@ def _add_as(path_def):
 def _group_dialog(_type, group_id=None):
     _type = 'shortcut' if _type == 'settings' else _type
     groups = manage.find_defined_groups(_type)
-    names = [group['label'] for group in groups]
     ids = [group['id'] for group in groups]
     
     index = -1
@@ -212,10 +209,6 @@ def _add_path(group_def, labels, over=False):
     
     
 def _copy_path(path_def):
-    params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
-              'params': {'directory': path_def['file']['file'],
-                         'properties': utils.info_types},
-              'id': 1}
     group_id = add_group(path_def['target'], path_def['label'])
     if not group_id:
         return

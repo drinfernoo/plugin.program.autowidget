@@ -1,4 +1,3 @@
-import xbmc
 import xbmcgui
 import xbmcplugin
 
@@ -66,7 +65,6 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
                   isFolder=False, props=None):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
-    _params = sys.argv[2][1:]
 
     if params is not None:
         if 'path' in params:

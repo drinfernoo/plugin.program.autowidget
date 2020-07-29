@@ -14,6 +14,7 @@ _properties = ['context.autowidget']
 class RefreshService(xbmc.Monitor):
 
     def __init__(self):
+        """Starts all of the actions of AutoWidget's service."""
         super(RefreshService, self).__init__()
         utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
         self.player = xbmc.Player()

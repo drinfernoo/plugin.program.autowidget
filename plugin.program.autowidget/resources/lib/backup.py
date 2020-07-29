@@ -1,11 +1,8 @@
 import xbmc
 import xbmcgui
-import xbmcvfs
 
 import os
 import zipfile
-
-from contextlib import closing
 
 import six
 
@@ -17,7 +14,6 @@ backup_location = xbmc.translatePath(utils.get_setting('backup.location'))
 def location():
     dialog = xbmcgui.Dialog()
     folder = dialog.browse(0, utils.get_string(32091), 'files', defaultt=backup_location)
-    
     if folder:
         utils.set_setting('backup.location', folder)
 
@@ -48,10 +44,10 @@ def backup():
         
         path = os.path.join(backup_location, '{}.zip'.format(filename.replace('.zip', '')))
         content = six.BytesIO()
-        with zipfile.ZipFile(content, 'w', zipfile.ZIP_DEFLATED) as zip:
+        with zipfile.ZipFile(content, 'w', zipfile.ZIP_DEFLATED) as z:
             for file in files:
                 with open(os.path.join(utils._addon_path, file), 'r') as f:
-                    zip.writestr(file, six.ensure_text(f.read()))
+                    z.writestr(file, six.ensure_text(f.read()))
                 
         with open(path, 'wb') as f:
             f.write(content.getvalue())
@@ -62,8 +58,8 @@ def restore():
     backup = dialog.browse(1, utils.get_string(32098), 'files', mask='.zip', defaultt=backup_location)
     
     if backup.endswith('zip'):
-        with zipfile.ZipFile(backup, 'r') as zip:
-            info = zip.infolist()
+        with zipfile.ZipFile(backup, 'r') as z:
+            info = z.infolist()
             choice = dialog.yesno('AutoWidget', utils.get_string(32099).format(len(info), 's' if len(info) > 1 else ''))
             
             if choice:
@@ -73,7 +69,7 @@ def restore():
                     files = [x for x in os.listdir(utils._addon_path) if x.endswith('.group')]
                     for file in files:
                         utils.remove_file(file)
-                zip.extractall(utils._addon_path)
+                z.extractall(utils._addon_path)
             else:
                 dialog.notification('AutoWidget', utils.get_string(32101))
     else:

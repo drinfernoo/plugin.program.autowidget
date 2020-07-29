@@ -2,18 +2,13 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
-import ast
 import codecs
 import io
 import json
 import os
-import re
-import shutil
 import string
-import sys
 import time
 import unicodedata
-import zipfile
 
 import six
 
@@ -238,7 +233,7 @@ def write_xml(file, content):
 
     try:
         tree.write(file)
-    except:
+    except Exception as e:
         log('Could not write to {}: {}'.format(file, e),
                   level=xbmc.LOGERROR)
 

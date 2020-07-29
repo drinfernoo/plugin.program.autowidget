@@ -1,14 +1,12 @@
 import xbmc
 import xbmcgui
 
-import random
 import re
 import uuid
 
 import six
 
 from resources.lib import manage
-from resources.lib import refresh
 from resources.lib.common import directory
 from resources.lib.common import utils
 
@@ -173,7 +171,6 @@ def active_widgets_menu():
             action = widget_def.get('action', '')
             group = widget_def.get('group', '')
             path_def = widget_def.get('path', {})
-            updated = widget_def.get('updated', '')
             
             group_def = manage.get_group_by_id(group)
             
@@ -391,8 +388,6 @@ def call_path(path_id):
 
 
 def path_menu(group_id, action, _id, path=None):
-    _window = utils.get_active_window()
-    
     group_def = manage.get_group_by_id(group_id)
     if not group_def:
         directory.add_menu_item(title=32073,
@@ -410,9 +405,7 @@ def path_menu(group_id, action, _id, path=None):
         return True, group_name
     
     widget_def = manage.get_widget_by_id(_id, group_id)
-    if widget_def and _window != 'dialog':
-        path_def = widget_def['path']
-    elif not widget_def:
+    if not widget_def:
         dialog = xbmcgui.Dialog()
         if action == 'static':
             idx = dialog.select(utils.get_string(32114), [i['label'] for i in paths])
