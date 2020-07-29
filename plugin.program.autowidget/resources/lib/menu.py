@@ -29,6 +29,7 @@ refresh_art = utils.get_art('refresh')
 remove = utils.get_art('remove')
 share = utils.get_art('share')
 shuffle = utils.get_art('shuffle')
+spray_bottle = utils.get_art('spray-bottle')
 sync = utils.get_art('sync')
 tools = utils.get_art('tools')
 unpack = utils.get_art('unpack')
@@ -163,6 +164,7 @@ def group_menu(group_id, target, _id):
     
     
 def active_widgets_menu():
+    manage.clean()
     widgets = manage.find_defined_widgets()
     
     if len(widgets) > 0:
@@ -249,6 +251,10 @@ def tools_menu():
                             params={'mode': 'force'},
                             art=refresh_art,
                             info={'plot': utils.get_string(32020)},
+                            isFolder=False)
+    directory.add_menu_item(title=32129,
+                            params={'mode': 'clean'},
+                            art=spray_bottle,
                             isFolder=False)
     directory.add_menu_item(title=32064,
                             params={'mode': 'wipe'},

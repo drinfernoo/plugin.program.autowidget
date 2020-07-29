@@ -533,3 +533,7 @@ msgstr ""
 msgctxt "#32128"
 msgid "{} Paths Merged"
 msgstr ""
+
+msgctxt "#32129"
+msgid "Clean Old Widget Files"
+msgstr ""

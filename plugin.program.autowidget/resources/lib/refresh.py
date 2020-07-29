@@ -48,6 +48,7 @@ class RefreshService(xbmc.Monitor):
         utils.update_container()
         
     def _clean_widgets(self):
+        manage.clean()
         for widget_def in manage.find_defined_widgets():
             utils.log('Resetting {}'.format(widget_def['id']), level=xbmc.LOGDEBUG)
             update_path(widget_def['id'], None, 'reset')

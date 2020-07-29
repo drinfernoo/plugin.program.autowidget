@@ -531,5 +531,9 @@ msgid "Toggle Skin Debugging"
 msgstr "Alternar depuración de máscaras"
 
 msgctxt "#32128"
-msgid "{} caminos fusionados"
-msgstr ""
+msgid "{} Paths Merged"
+msgstr "{} caminos fusionados"
+
+msgctxt "#32129"
+msgid "Clean Old Widget Files"
+msgstr "Limpiar archivos de widgets antiguos"
