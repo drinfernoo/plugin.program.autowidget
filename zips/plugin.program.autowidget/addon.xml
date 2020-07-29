@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.196" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.528" provider-name="drinfernoo">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
-        <import addon="script.skinshortcuts" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -14,65 +13,23 @@
     <extension point="kodi.context.item">
         <menu id="kodi.core.main">
             <item library="context.py">
-                <label>Add to AutoWidget</label>
-                <visible>!String.IsEmpty(Window(Home).Property(context.autowidget))</visible>
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <visible>[!String.IsEqual(ListItem.DbType,movie) +
+                         !String.IsEqual(ListItem.DbType,episode) +
+                         !String.IsEqual(ListItem.DbType,musicvideo) +
+                         !String.IsEqual(ListItem.DbType,song)] +
+                          String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
             </item>
         </menu>
     </extension>
     
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <description lang="en_GB"></description>
-        <language></language>
         <platform>all</platform>
         <license>LGPL-3.0</license>
-        <forum></forum>
         <website>https://www.github.com/drinfernoo/</website>
-        <email></email>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
-        <news></news>
-        <disclaimer></disclaimer>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
-</addon>
- @roliverosc)
-1.6.3
- - Update settings localizations
-1.6.2
- - Fix bug that caused Skin Shortcuts to not be able to rebuild the skin
-1.6.1
- - Fix bug with shortcut widgets being "converted"
-1.6.0
- - Android App shortcut support (thanks to @Sandmann79)
- - Add Spanish translation (thanks to @roliverosc)
- - Fix bug with empty action nodes
- - Reduce refreshes
- - Prettify .props file output
-1.5.5
- - Fix regex for labels in some skins
-1.5.4
- - Fix recursion crash during refresh
-1.5.3
- - Fix indent error
-1.5.2
- - Fix shortcut calls for YouTube
-1.5.1
- - Fix error in editor dialog
- - Fix changelog
-1.5.0
- - Add "Active Widgets" menu
- - Consistency fixes during initialization and refresh
- - Allow adding playable items as shortcuts
- - Fix crashes in Krypton
- - Fix crashes from invalid group/widget files
- - Fix Unicode compatibility
-1.4.5
- - Refresh Shortcut widgets Automatically
- - Add "Next Path" widget action
- - Add "Clone" and "Explode" widget modes
- - Allow refreshing between 15m-2h, at 15m intervals
+        <news>
 1.4.3
  - Add context menu on more items
  - Fix some log spam
@@ -156,6 +113,57 @@
  - Fix crash from non-existent context menu setting
 1.0.0
  - First stable release
+        </news>
+        <assets>
+            <icon>resources/media/sync.png</icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+/icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+etting to pause AutoWidget's service
+1.0.7
+ - Fix context menu option not showing
+1.0.6
+ - Fix paths not saving
+1.0.5
+ - Raise required Skin Shortcuts version to  1.0.19
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>resources/media/icon/sync.png</icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+urces/media/icon/sync.png</icon>
+            <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
+        </assets>
+    </extension>
+</addon>
+elease
         </news>
         <assets>
             <icon>resources/media/icon/sync.png</icon>
