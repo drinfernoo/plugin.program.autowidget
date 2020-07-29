@@ -171,10 +171,12 @@
  - First stable release
         </news>
         <assets>
-            <icon>resources/media/icon/sync.png</icon>
-            <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
+            <icon>resources/media/icon.png</icon>
+            <fanart>resources/media/fanart.png</fanart>
+            <poster>resources/media/poster.png</poster>
+            <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+            <clearart>resources/media/clearart.png</clearart>
         </assets>
     </extension>
 </addon>
