@@ -2,6 +2,7 @@
 <addon id="plugin.program.autowidget" name="AutoWidget" version="CURRENT_VERSION" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.six" />
+        <import addon="script.module.pil" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
