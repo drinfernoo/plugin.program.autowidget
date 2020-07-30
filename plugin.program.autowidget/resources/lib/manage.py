@@ -166,7 +166,9 @@ def find_defined_paths(group_id=None):
     else:
         paths = []
         for group in find_defined_groups():
-            paths.append(find_defined_paths(group_id=group.get('id')))
+            group_paths = find_defined_paths(group_id=group.get('id'))
+            for path in group_paths:
+                paths.append(path)
         return paths
     
 
