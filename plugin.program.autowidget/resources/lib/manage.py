@@ -1,5 +1,6 @@
 import xbmc
 import xbmcaddon
+import xbmcgui
 
 import json
 import os
@@ -14,6 +15,7 @@ _addon_version = _addon.getAddonInfo('version')
 
 def clean():
     files = []
+    dialog = xbmcgui.Dialog()
     addon_data = xbmc.translatePath('special://profile/addon_data/')
     skin_shortcuts = os.path.join(addon_data, 'script.skinshortcuts')
     
@@ -33,6 +35,7 @@ def clean():
                 files.append(path)
     
     remove = []
+    removed = 0
     for widget in find_defined_widgets():
         if not get_group_by_id(widget['group']):
             remove.append(widget['id'])
@@ -42,11 +45,16 @@ def clean():
             with open(file, 'r') as f:
                 if widget['id'] in f.read():
                     found = True
+                    utils.log('{} found in {}; not cleaning'
+                              .format(widget['id'], file))
                     break
         if not found:
+            utils.log('{} not found; cleaning'.format(widget['id']))
             utils.remove_file(os.path.join(_addon_path,
                                            '{}.widget'.format(widget['id'])))
-
+            removed += 1
+    dialog.notification('AutoWidget', '{} unused widgets removed.'
+                                      .format('No' if removed == 0 else removed))
 
 def initialize(group_def, action, _id, save=True, keep=None):
     duration = utils.get_setting_float('service.refresh_duration')

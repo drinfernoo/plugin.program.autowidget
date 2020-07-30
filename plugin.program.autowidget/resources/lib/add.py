@@ -209,6 +209,8 @@ def _add_path(group_def, labels, over=False):
     
     
 def _copy_path(path_def):
+    dialog = xbmcgui.Dialog()
+    
     group_id = add_group(path_def['target'], path_def['label'])
     if not group_id:
         return
@@ -224,3 +226,5 @@ def _copy_path(path_def):
             
         labels = build_labels('json', file, path_def['target'])
         _add_path(group_def, labels, over=True)
+    dialog.notification('AutoWidget', '{} paths added to {}'
+                                      .format(len(files), group_def['label']))
