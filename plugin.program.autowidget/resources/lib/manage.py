@@ -54,7 +54,7 @@ def clean(notify=False):
                                            '{}.widget'.format(widget['id'])))
             removed += 1
     if notify:
-        dialog.notification('AutoWidget', utils.get_string(32122)
+        dialog.notification('AutoWidget', utils.get_string(32132)
                                           .format('No' if removed == 0 else removed))
 
 
@@ -78,6 +78,7 @@ def initialize(group_def, action, _id, save=True, keep=None):
               'group': group_def['id'],
               'refresh': duration,
               'path': path_def,
+              'color': utils.get_setting('ui.color'),
               'version': _addon_version}
     if save:
         save_path_details(params)
