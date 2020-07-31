@@ -97,8 +97,11 @@ def _warn():
     if choice < 1:
         utils.set_setting('context.advanced', 'false')
         utils.set_setting('context.warning', 'true')
+        advanced = False
+        warning = True
     else:
         utils.set_setting('context.warning', 'true')
+        warning = True
 
 
 def _show_options(group_def, path_def=None):
