@@ -541,3 +541,36 @@ msgstr ""
 msgctxt "#32130"
 msgid "Icon Color"
 msgstr ""
+
+msgctxt "#32131"
+msgid "{} paths added to {}"
+msgstr ""
+
+msgctxt "#32132"
+msgid "{} unused widgets removed."
+msgstr ""
+
+msgctxt "#32133"
+msgid "Choose from a predefined color or hexcode input?"
+msgstr ""
+
+msgctxt "#32134"
+msgid "Hex Input"
+msgstr ""
+
+msgctxt "#32135"
+msgid "Predefined Color"
+msgstr ""
+
+msgctxt "#32136"
+msgid "Hex codes must be of the format "#RRGGBB"."
+msgstr ""
+
+msgctxt "#32137"
+msgid "Select a Color"
+msgstr ""
+
+msgctxt "#32138"
+msgid "Invalid color code."
+msgstr ""
+

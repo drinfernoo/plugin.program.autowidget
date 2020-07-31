@@ -226,5 +226,5 @@ def _copy_path(path_def):
             
         labels = build_labels('json', file, path_def['target'])
         _add_path(group_def, labels, over=True)
-    dialog.notification('AutoWidget', '{} paths added to {}'
+    dialog.notification('AutoWidget', utils.get_string(32131)
                                       .format(len(files), group_def['label']))

@@ -54,7 +54,7 @@ def clean(notify=False):
                                            '{}.widget'.format(widget['id'])))
             removed += 1
     if notify:
-        dialog.notification('AutoWidget', '{} unused widgets removed.'
+        dialog.notification('AutoWidget', utils.get_string(32122)
                                           .format('No' if removed == 0 else removed))
 
 

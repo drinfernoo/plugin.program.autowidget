@@ -123,13 +123,13 @@ def set_color():
     dialog = xbmcgui.Dialog()
     color = get_setting('ui.color')
     
-    choice = dialog.yesno('AutoWidget', 'Choose from a predefined color or hexcode input?',
-                 yeslabel='Hex Input', nolabel='Predefined Color')
+    choice = dialog.yesno('AutoWidget', utils.get_string(32133),
+                          yeslabel=utils.get_string(32134), nolabel=utils.get_string(32135))
     
     if choice:
-        value = dialog.input('Hex codes must be of the format "#RRGGBB".').lower()
+        value = dialog.input(utils.get_string(32136)).lower()
     else:
-        value = dialog.select('Select a Color',
+        value = dialog.select(utils.get_string(32137),
                               ['[COLOR {0}]{0}[/COLOR]'.format(i) for i in colors],
                               preselect=colors.index(color) if color in colors else -1)
         if value > -1:
@@ -138,7 +138,7 @@ def set_color():
     if value:
         if value not in colors:
             if len(value) < 6:
-                dialog.notification('AutoWidget', 'Invalid color code.')
+                dialog.notification('AutoWidget', utils.get_string(32138))
                 return
             elif len(value) == 6 and not value.startswith('#'):
                 value = '#{}'.format(value)
