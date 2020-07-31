@@ -11,6 +11,7 @@ import time
 import unicodedata
 
 import six
+from PIL import Image
 
 from xml.dom import minidom
 from xml.etree import ElementTree
@@ -49,6 +50,19 @@ info_types = ['artist', 'albumartist', 'genre', 'year', 'rating',
 
 art_types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
              'poster', 'thumb']
+             
+# from https://www.rapidtables.com/web/css/css-color.html
+colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'crimson', 'firebrick', 'red', 'darkred',  # red
+          'coral', 'tomato', 'orangered', 'gold', 'orange', 'darkorange',  # orange
+          'lightyellow', 'lemonchiffon', 'lightgoldenrodyellow', 'papayawhip', 'moccasin', 'peachpuff', 'palegoldenrod', 'khaki', 'darkkhaki', 'yellow',  # yellow
+          'lawngreen', 'chartreuse', 'limegreen', 'lime', 'forestgreen', 'green', 'darkgreen', 'greenyellow', 'yellowgreen', 'springgreen', 'mediumspringgreen', 'lightgreen', 'palegreen', 'darkseagreen', 'mediumseagreen', 'seagreen', 'olive', 'darkolivegreen', 'olivedrab',  # green
+          'lightcyan', 'cyan', 'aqua', 'aquamarine', 'mediumaquamarine', 'paleturquoise', 'turquoise', 'mediumturquoise', 'darkturquoise', 'lightseagreen', 'cadetblue', 'darkcyan', 'teal',  # cyan
+          'powderblue', 'lightblue', 'lightskyblue', 'skyblue', 'deepskyblue', 'lightsteelblue', 'dodgerblue', 'cornflowerblue', 'steelblue', 'royalblue', 'blue', 'mediumblue', 'darkblue', 'navy', 'midnightblue', 'mediumslateblue', 'slateblue', 'darkslateblue',  # blue
+          'lavender', 'thistle', 'plum', 'violet', 'orchid', 'fuschia', 'magenta', 'mediumorchid', 'mediumpurple', 'blueviolet', 'darkviolet', 'darkorchid', 'darkmagenta', 'purple', 'indigo',  # purple
+          'pink', 'lightpink', 'hotpink', 'deeppink', 'palevioletred', 'mediumvioletred',  # pink
+          'white', 'snow', 'honeydew', 'mintcream', 'azure', 'aliceblue', 'ghostwhite', 'whitesmoke', 'seashell', 'beige', 'oldlace', 'floralwhite', 'ivory', 'antiquewhite', 'linen', 'lavenderblush', 'mistyrose',  # white
+          'gainsboro', 'lightgray', 'silver', 'darkgray', 'gray', 'dimgray', 'lightslategray', 'slategray', 'darkslategray', 'black',  # black
+          'cornsilk', 'blanchedalmond', 'bisque', 'navajowhite', 'wheat', 'burlywood', 'tan', 'rosybrown', 'sandybrown', 'goldenrod', 'peru', 'chocolate', 'saddlebrown', 'sienna', 'brown', 'maroon']  # brown
 
 
 def log(msg, level=xbmc.LOGDEBUG):
@@ -80,15 +94,56 @@ def wipe(folder=_addon_path):
 
 def get_art(filename):
     art = {}
+    color = get_setting('ui.color')
+    
+    themed_path = os.path.join(_addon_path, color)
+    if not os.path.exists(themed_path):
+        os.makedirs(themed_path)
+    
     for i in art_types:
         _i = i
         if i == 'thumb':
             _i = 'icon'
         path = os.path.join(_art_path, _i, '{}.png'.format(filename))
+        new_path = ''
+        
         if os.path.exists(path):
-            art[i] = clean_artwork_url(path)
+            if color.lower() not in ['white', '#ffffff']:
+                new_path = os.path.join(themed_path, '{}-{}.png'.format(filename, _i))
+                if not os.path.exists(new_path):
+                    icon = Image.open(path).convert('RGBA')
+                    overlay = Image.new('RGBA', icon.size, color)
+                    Image.composite(overlay, icon, icon).save(new_path)
+            art[i] = clean_artwork_url(new_path if os.path.exists(new_path) else path)
 
     return art
+
+
+def set_color():
+    dialog = xbmcgui.Dialog()
+    color = get_setting('ui.color')
+    
+    choice = dialog.yesno('AutoWidget', 'Choose from a predefined color or hexcode input?',
+                 yeslabel='Hex Input', nolabel='Predefined Color')
+    
+    if choice:
+        value = dialog.input('Hex codes must be of the format "#RRGGBB".').lower()
+    else:
+        value = dialog.select('Select a Color',
+                              ['[COLOR {0}]{0}[/COLOR]'.format(i) for i in colors],
+                              preselect=colors.index(color) if color in colors else -1)
+        if value > -1:
+            value = colors[value]
+            
+    if value:
+        if value not in colors:
+            if len(value) < 6:
+                dialog.notification('AutoWidget', 'Invalid color code.')
+                return
+            elif len(value) == 6 and not value.startswith('#'):
+                value = '#{}'.format(value)
+                
+        set_setting('ui.color', value)
 
 
 def get_active_window():

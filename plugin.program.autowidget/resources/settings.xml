@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
     <category label="$ADDON[plugin.program.autowidget 32000]">
+        <setting label="$ADDON[plugin.program.autowidget 32130]" type="action" id="ui.color" default="white" action="RunPlugin(plugin://plugin.program.autowidget/?mode=set_color)" option="close" />
+        
         <!-- Widget Settings -->
         <setting label="$ADDON[plugin.program.autowidget 32105]" type="lsep" />
         <setting label="$ADDON[plugin.program.autowidget 32106]" type="bool" id="widgets.hide_watched" default="false" />
