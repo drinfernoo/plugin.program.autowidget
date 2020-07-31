@@ -31,6 +31,13 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+2.1.0
+ - New artwork for add-on
+ - Add icon coloring
+ - Improved "Active Widgets" menu
+ - Added "Clean Old Widget Files" shortcut in Tools
+ - Fix shortcut paths
+ - Fix missing InfoLabels
 2.0.2
  - Make artwork for groups and paths more consistent
 2.0.1
