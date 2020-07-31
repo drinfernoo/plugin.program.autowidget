@@ -92,9 +92,10 @@ def wipe(folder=_addon_path):
                     os.rmdir(dir)
 
 
-def get_art(filename):
+def get_art(filename, color=None):
     art = {}
-    color = get_setting('ui.color')
+    if not color:
+        color = get_setting('ui.color')
     
     themed_path = os.path.join(_addon_path, color)
     if not os.path.exists(themed_path):

@@ -78,6 +78,7 @@ def initialize(group_def, action, _id, save=True, keep=None):
               'group': group_def['id'],
               'refresh': duration,
               'path': path_def,
+              'color': utils.get_setting('ui.color'),
               'version': _addon_version}
     if save:
         save_path_details(params)
