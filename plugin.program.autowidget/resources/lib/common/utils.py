@@ -375,8 +375,10 @@ def get_files_list(path, titles=None):
     if 'error' not in files:
         files = files['result']['files']
         filtered_files = [x for x in files if x['label'] not in titles]
-        for file in [i for i in filtered_files if 'art' in i]:
-            for art in file['art']:
-                file['art'][art] = clean_artwork_url(file['art'][art])
+        for file in filtered_files:
+            file = {k: v for k, v in file.items() if v not in [None, '', -1, [], {}]}
+            if 'art' in file:
+                for art in file['art']:
+                    file['art'][art] = clean_artwork_url(file['art'][art])
                 
         return filtered_files
