@@ -40,7 +40,7 @@ info_types = ['artist', 'albumartist', 'genre', 'year', 'rating',
               'musicbrainzartistid', 'set', 'showlink', 'top250', 'votes',
               'musicbrainzalbumid', 'disc', 'tag', 'genreid', 'season',
               'musicbrainzalbumartistid', 'size', 'theme', 'mood', 'style',
-              'playcount', 'director', 'trailer', 'tagline',
+              'playcount', 'director', 'trailer', 'tagline', 'title',
               'plotoutline', 'originaltitle', 'lastplayed', 'writer', 'studio',
               'country', 'imdbnumber', 'premiered', 'productioncode', 'runtime',
               'firstaired', 'episode', 'showtitle', 'artistid', 'albumid',
@@ -372,13 +372,15 @@ def get_files_list(path, titles=None):
               'id': 1}
     
     files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
+    new_files = []
     if 'error' not in files:
         files = files['result']['files']
-        filtered_files = [x for x in files if x['label'] not in titles]
+        filtered_files = [x for x in files if x['title'] not in titles]
         for file in filtered_files:
-            file = {k: v for k, v in file.items() if v not in [None, '', -1, [], {}]}
-            if 'art' in file:
-                for art in file['art']:
-                    file['art'][art] = clean_artwork_url(file['art'][art])
+            new_file = {k: v for k, v in file.items() if v not in [None, '', -1, [], {}]}
+            if 'art' in new_file:
+                for art in new_file['art']:
+                    new_file['art'][art] = clean_artwork_url(file['art'][art])
+            new_files.append(new_file)
                 
-        return filtered_files
+        return new_files
