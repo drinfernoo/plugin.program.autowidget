@@ -102,8 +102,8 @@ def dispatch(_plugin, _handle, _params):
         elif action == 'edit_widget':
             edit.edit_widget_dialog(target)
     elif mode == 'path':
-        if action == 'call' and group and path:
-            menu.call_path(group, path)
+        if action == 'call' and path:
+            menu.call_path(path)
         elif action in ['static', 'cycling'] and group:
             is_dir, category = menu.path_menu(group, action, _id, path)
         elif action == 'merged' and group:
@@ -133,7 +133,9 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'wipe':
         utils.wipe()
     elif mode == 'clean':
-        manage.clean()
+        manage.clean(notify=True)
+    elif mode == 'set_color':
+        utils.set_color()
     elif mode == 'backup' and action:
         if action == 'location':
             backup.location()

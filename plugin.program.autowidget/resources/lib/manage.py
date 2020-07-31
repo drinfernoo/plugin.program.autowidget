@@ -1,6 +1,8 @@
 import xbmc
 import xbmcaddon
+import xbmcgui
 
+import json
 import os
 import random
 
@@ -9,6 +11,51 @@ from resources.lib.common import utils
 _addon = xbmcaddon.Addon()
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_version = _addon.getAddonInfo('version')
+
+
+def clean(notify=False):
+    files = []
+    dialog = xbmcgui.Dialog()
+    addon_data = xbmc.translatePath('special://profile/addon_data/')
+    skin_shortcuts = os.path.join(addon_data, 'script.skinshortcuts')
+    
+    params = {"jsonrpc": "2.0", "id": 1, "method": "Addons.GetAddons",
+              "params": {"type": "xbmc.gui.skin"}}
+    addons = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
+    if 'error' not in addons:
+        for addon in addons['result']['addons']:
+            path = os.path.join(addon_data, addon['addonid'], 'settings.xml')
+            if os.path.exists(path):
+                files.append(path)
+    if os.path.exists(skin_shortcuts):
+        for xml in os.listdir(skin_shortcuts):
+            ext = xml.split('.')
+            if ext[-1] in ['xml', 'properties']:
+                path = os.path.join(skin_shortcuts, xml)
+                files.append(path)
+    
+    remove = []
+    removed = 0
+    for widget in find_defined_widgets():
+        if not get_group_by_id(widget['group']):
+            remove.append(widget['id'])
+        
+        found = False
+        for file in files:
+            with open(file, 'r') as f:
+                if widget['id'] in f.read():
+                    found = True
+                    utils.log('{} found in {}; not cleaning'
+                              .format(widget['id'], file))
+                    break
+        if not found:
+            utils.log('{} not found; cleaning'.format(widget['id']))
+            utils.remove_file(os.path.join(_addon_path,
+                                           '{}.widget'.format(widget['id'])))
+            removed += 1
+    if notify:
+        dialog.notification('AutoWidget', utils.get_string(32122)
+                                          .format('No' if removed == 0 else removed))
 
 
 def initialize(group_def, action, _id, save=True, keep=None):
@@ -121,7 +168,9 @@ def find_defined_paths(group_id=None):
     else:
         paths = []
         for group in find_defined_groups():
-            paths.append(find_defined_paths(group_id=group.get('id')))
+            group_paths = find_defined_paths(group_id=group.get('id'))
+            for path in group_paths:
+                paths.append(path)
         return paths
     
 

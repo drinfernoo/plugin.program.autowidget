@@ -2,6 +2,7 @@
 <addon id="plugin.program.autowidget" name="AutoWidget" version="CURRENT_VERSION" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.six" />
+        <import addon="script.module.pil" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -21,9 +22,11 @@
     
     <extension point="xbmc.addon.metadata">
         <reuselanguageinvoker>true</reuselanguageinvoker>
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-        <summary lang="es_ES">Cambia automáticamente los widgets en la pantalla de inicio para una experiencia de navegación más interesante.</summary>
-        <platform>all</platform>
+        <summary lang="en_GB">Automatically changes out widgets</summary>
+        <description lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</description>
+		<summary lang="es_ES">Cambia los widgets automáticamente</summary>
+		<description lang="es_ES">Cambia los widgets en la pantalla de inicio automáticamente para una experiencia de navegación más interesante.</description>        
+		<platform>all</platform>
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
@@ -171,10 +174,11 @@
  - First stable release
         </news>
         <assets>
-            <icon>resources/media/icon/sync.png</icon>
-            <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
+            <icon>resources/media/icon.png</icon>
+            <fanart>resources/media/fanart.png</fanart>
+            <poster>resources/media/poster.png</poster>
+            <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
         </assets>
     </extension>
 </addon>

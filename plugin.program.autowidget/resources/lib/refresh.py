@@ -14,6 +14,7 @@ _properties = ['context.autowidget']
 class RefreshService(xbmc.Monitor):
 
     def __init__(self):
+        """Starts all of the actions of AutoWidget's service."""
         super(RefreshService, self).__init__()
         utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
         self.player = xbmc.Player()
@@ -48,6 +49,7 @@ class RefreshService(xbmc.Monitor):
         utils.update_container()
         
     def _clean_widgets(self):
+        manage.clean()
         for widget_def in manage.find_defined_widgets():
             utils.log('Resetting {}'.format(widget_def['id']), level=xbmc.LOGDEBUG)
             update_path(widget_def['id'], None, 'reset')
@@ -166,7 +168,8 @@ def back_to_top(target):
 def refresh(widget_id, widget_def=None, paths=None, force=False):
     if not widget_def:
         widget_def = manage.get_widget_by_id(widget_id)
-    elif widget_def['action'] in ['static', 'merged']:
+    
+    if widget_def['action'] in ['static', 'merged']:
         return paths
     
     current_time = time.time()

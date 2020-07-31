@@ -1,8 +1,9 @@
-import xbmc
 import xbmcgui
 
 import os
 import re
+
+import six
 
 from resources.lib import manage
 from resources.lib.common import utils
@@ -13,7 +14,7 @@ warning_shown = utils.get_setting_bool('context.warning')
 filter = {'include': ['label', 'file', 'art'] + utils.art_types,
           'exclude': ['paths', 'version', 'type']}
 widget_filter = {'include': ['action', 'refresh'],
-                 'exclude': ['stack', 'path', 'version', 'label', 'current',
+                 'exclude': ['stack', 'version', 'label', 'current',
                              'updated']}
 color_tag = '\[\w+(?: \w+)*\](?:\[\w+(?: \w+)*\])?(\w+)(?:\[\/\w+\])?\[\/\w+\]'
 plus = utils.get_art('plus')
@@ -96,11 +97,8 @@ def _warn():
     if choice < 1:
         utils.set_setting('context.advanced', 'false')
         utils.set_setting('context.warning', 'true')
-        advanced = False
-        warning = True
     else:
         utils.set_setting('context.warning', 'true')
-        warning = True
 
 
 def _show_options(group_def, path_def=None):
@@ -182,7 +180,7 @@ def _get_widget_options(edit_def):
     option_keys = [i for i in (all_keys if advanced else base_keys)
                       if i not in widget_filter['exclude']]
     for key in option_keys:
-        if key in edit_def and (edit_def[key] and edit_def[key] != -1):
+        if key in edit_def and (edit_def[key] and edit_def[key] != -1):            
             formatted_key = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in widget_filter['include'] else key
             _def = edit_def[key]
             label = _def
@@ -203,6 +201,17 @@ def _get_widget_options(edit_def):
                     label = '{}h'.format(hh) 
                 elif not hh: 
                     label = '{}m'.format(mm)
+            elif key == 'path':
+                if edit_def['action'] not in ['static', 'merged']:
+                    continue
+                    
+                paths = []
+                if isinstance(_def, list):
+                    for i in _def:
+                        paths.append(i['label'])
+                    label = ', '.join(paths)
+                else:
+                    label = _def['label']
             
         options.append('[B]{}[/B]: {}'.format(formatted_key, label)) 
              
@@ -311,9 +320,24 @@ def _get_widget_value(edit_def, key):
                 value = float(duration[0][:-1]) / 60 
             elif 'h' in duration[0]: 
                 value = float(duration[0][:-1]) 
+    elif key == 'path':
+        groups = manage.find_defined_paths(edit_def['group'])
+        labels = [i['label'] for i in groups]
+        if isinstance(edit_def[key], list):
+            paths = []
+            choice = dialog.multiselect(utils.get_string(32115), labels)
+            if choice:
+                for i in choice:
+                    paths.append(groups[i])
+                value = paths
+        else:
+            choice = dialog.select(utils.get_string(32114), labels)
+            if choice < 0:
+                return
+            value = groups[choice]
     else: 
         default = edit_def.get(key) 
-        value = dialog.input(title, defaultt=six.text_type(default)) 
+        value = dialog.input(utils.get_string(32121).format(key), defaultt=six.text_type(default)) 
 
     if value:
         edit_def[key] = value
@@ -332,34 +356,32 @@ def _clean_key(key):
 
 
 def edit_dialog(group_id, path_id=None, base_key=None):
-    dialog = xbmcgui.Dialog()
     updated = False
     if advanced and not warning_shown:
         _warn()
-    
+
     group_def = manage.get_group_by_id(group_id)
     path_def = manage.get_path_by_id(path_id, group_id)
     if not group_def or path_id and not path_def:
         return
-    
+
     updated = _show_options(group_def, path_def)
     if updated:
         manage.write_path(group_def, path_def=path_def, update=path_id)
         utils.update_container(group_def['type'])
 
         edit_dialog(group_id, path_id)
-        
-        
+
+
 def edit_widget_dialog(widget_id): 
-    dialog = xbmcgui.Dialog() 
     updated = False 
     if advanced and not warning_shown: 
         _warn() 
-         
+
     widget_def = manage.get_widget_by_id(widget_id) 
     if not widget_def: 
         return 
-    
+
     updated = _show_widget_options(widget_def)
     if updated:
         manage.save_path_details(widget_def)

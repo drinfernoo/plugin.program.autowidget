@@ -1,14 +1,12 @@
 import xbmc
 import xbmcgui
 
-import random
 import re
 import uuid
 
 import six
 
 from resources.lib import manage
-from resources.lib import refresh
 from resources.lib.common import directory
 from resources.lib.common import utils
 
@@ -29,6 +27,7 @@ refresh_art = utils.get_art('refresh')
 remove = utils.get_art('remove')
 share = utils.get_art('share')
 shuffle = utils.get_art('shuffle')
+spray_bottle = utils.get_art('spray-bottle')
 sync = utils.get_art('sync')
 tools = utils.get_art('tools')
 unpack = utils.get_art('unpack')
@@ -163,6 +162,7 @@ def group_menu(group_id, target, _id):
     
     
 def active_widgets_menu():
+    manage.clean()
     widgets = manage.find_defined_widgets()
     
     if len(widgets) > 0:
@@ -171,21 +171,20 @@ def active_widgets_menu():
             action = widget_def.get('action', '')
             group = widget_def.get('group', '')
             path_def = widget_def.get('path', {})
-            updated = widget_def.get('updated', '')
-            
-            if action not in ['random', 'next']:
-                continue
             
             group_def = manage.get_group_by_id(group)
             
             title = ''
             if path_def and group_def:
                 try:
-                    if isinstance(path_def, dict):
-                        label = path_def['label'].encode('utf-8')
+                    if action != 'merged':
+                        if isinstance(path_def, dict):
+                            label = path_def['label'].encode('utf-8')
+                        else:
+                            label = widget_def['stack'][0]['label'].encode('utf-8')
+                        group_def['label'] = group_def['label'].encode('utf-8')
                     else:
-                        label = widget_def['stack'][0]['label'].encode('utf-8')
-                    group_def['label'] = group_def['label'].encode('utf-8')
+                        label = utils.get_string(32128).format(len(path_def))
                 except:
                     pass
                 
@@ -195,6 +194,7 @@ def active_widgets_menu():
 
             art = {}
             params = {}
+            cm = []
             if not action:
                 art = folder_shortcut
                 params = {'mode': 'group',
@@ -202,26 +202,28 @@ def active_widgets_menu():
                           'target': 'shortcut',
                           'id': six.text_type(_id)}
                 title = utils.get_string(32030).format(title)
-            elif action in ['random', 'next']:
-                if action == 'random':
-                    art = folder_sync
-                elif action == 'next':
-                    art = folder_next
+            else:
+                if action in ['random', 'next']:
+                    art = shuffle
+                    cm.append((utils.get_string(32069), ('RunPlugin('
+                                                         'plugin://plugin.program.autowidget/'
+                                                         '?mode=refresh'
+                                                         '&target={})').format(_id)))
+                elif action == 'merged':
+                    art = merge
+                elif action == 'static':
+                    art = folder
                 
                 params = {'mode': 'group',
                           'group': group,
                           'target': 'widget',
                           'id': six.text_type(_id)}
                 
-            cm = [(utils.get_string(32069), ('RunPlugin('
-                                            'plugin://plugin.program.autowidget/'
-                                            '?mode=refresh'
-                                            '&target={})').format(_id)),
-                  (utils.get_string(32070), ('RunPlugin('
-                                            'plugin://plugin.program.autowidget/'
-                                            '?mode=manage'
-                                            '&action=edit_widget'
-                                            '&target={})').format(_id))]
+            cm.append((utils.get_string(32070), ('RunPlugin('
+                                                 'plugin://plugin.program.autowidget/'
+                                                 '?mode=manage'
+                                                 '&action=edit_widget'
+                                                 '&target={})').format(_id)))
             
             if not group_def:
                 title = '{} - [COLOR firebrick]{}[/COLOR]'.format(_id, utils.get_string(32071))
@@ -245,6 +247,10 @@ def tools_menu():
                             params={'mode': 'force'},
                             art=refresh_art,
                             info={'plot': utils.get_string(32020)},
+                            isFolder=False)
+    directory.add_menu_item(title=32129,
+                            params={'mode': 'clean'},
+                            art=spray_bottle,
                             isFolder=False)
     directory.add_menu_item(title=32064,
                             params={'mode': 'wipe'},
@@ -345,8 +351,8 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=Fal
     return titles, path_label
     
     
-def call_path(group_id, path_id):
-    path_def = manage.get_path_by_id(path_id, group_id=group_id)
+def call_path(path_id):
+    path_def = manage.get_path_by_id(path_id)
     if not path_def:
         return
     
@@ -382,8 +388,6 @@ def call_path(group_id, path_id):
 
 
 def path_menu(group_id, action, _id, path=None):
-    _window = utils.get_active_window()
-    
     group_def = manage.get_group_by_id(group_id)
     if not group_def:
         directory.add_menu_item(title=32073,
@@ -401,9 +405,7 @@ def path_menu(group_id, action, _id, path=None):
         return True, group_name
     
     widget_def = manage.get_widget_by_id(_id, group_id)
-    if widget_def and _window != 'dialog':
-        path_def = widget_def['path']
-    elif not widget_def:
+    if not widget_def:
         dialog = xbmcgui.Dialog()
         if action == 'static':
             idx = dialog.select(utils.get_string(32114), [i['label'] for i in paths])

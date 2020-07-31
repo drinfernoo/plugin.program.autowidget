@@ -2,20 +2,16 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
-import ast
 import codecs
 import io
 import json
 import os
-import re
-import shutil
 import string
-import sys
 import time
 import unicodedata
-import zipfile
 
 import six
+from PIL import Image
 
 from xml.dom import minidom
 from xml.etree import ElementTree
@@ -44,7 +40,7 @@ info_types = ['artist', 'albumartist', 'genre', 'year', 'rating',
               'musicbrainzartistid', 'set', 'showlink', 'top250', 'votes',
               'musicbrainzalbumid', 'disc', 'tag', 'genreid', 'season',
               'musicbrainzalbumartistid', 'size', 'theme', 'mood', 'style',
-              'playcount', 'director', 'trailer', 'tagline',
+              'playcount', 'director', 'trailer', 'tagline', 'title',
               'plotoutline', 'originaltitle', 'lastplayed', 'writer', 'studio',
               'country', 'imdbnumber', 'premiered', 'productioncode', 'runtime',
               'firstaired', 'episode', 'showtitle', 'artistid', 'albumid',
@@ -54,6 +50,19 @@ info_types = ['artist', 'albumartist', 'genre', 'year', 'rating',
 
 art_types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
              'poster', 'thumb']
+             
+# from https://www.rapidtables.com/web/css/css-color.html
+colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'crimson', 'firebrick', 'red', 'darkred',  # red
+          'coral', 'tomato', 'orangered', 'gold', 'orange', 'darkorange',  # orange
+          'lightyellow', 'lemonchiffon', 'lightgoldenrodyellow', 'papayawhip', 'moccasin', 'peachpuff', 'palegoldenrod', 'khaki', 'darkkhaki', 'yellow',  # yellow
+          'lawngreen', 'chartreuse', 'limegreen', 'lime', 'forestgreen', 'green', 'darkgreen', 'greenyellow', 'yellowgreen', 'springgreen', 'mediumspringgreen', 'lightgreen', 'palegreen', 'darkseagreen', 'mediumseagreen', 'seagreen', 'olive', 'darkolivegreen', 'olivedrab',  # green
+          'lightcyan', 'cyan', 'aqua', 'aquamarine', 'mediumaquamarine', 'paleturquoise', 'turquoise', 'mediumturquoise', 'darkturquoise', 'lightseagreen', 'cadetblue', 'darkcyan', 'teal',  # cyan
+          'powderblue', 'lightblue', 'lightskyblue', 'skyblue', 'deepskyblue', 'lightsteelblue', 'dodgerblue', 'cornflowerblue', 'steelblue', 'royalblue', 'blue', 'mediumblue', 'darkblue', 'navy', 'midnightblue', 'mediumslateblue', 'slateblue', 'darkslateblue',  # blue
+          'lavender', 'thistle', 'plum', 'violet', 'orchid', 'fuschia', 'magenta', 'mediumorchid', 'mediumpurple', 'blueviolet', 'darkviolet', 'darkorchid', 'darkmagenta', 'purple', 'indigo',  # purple
+          'pink', 'lightpink', 'hotpink', 'deeppink', 'palevioletred', 'mediumvioletred',  # pink
+          'white', 'snow', 'honeydew', 'mintcream', 'azure', 'aliceblue', 'ghostwhite', 'whitesmoke', 'seashell', 'beige', 'oldlace', 'floralwhite', 'ivory', 'antiquewhite', 'linen', 'lavenderblush', 'mistyrose',  # white
+          'gainsboro', 'lightgray', 'silver', 'darkgray', 'gray', 'dimgray', 'lightslategray', 'slategray', 'darkslategray', 'black',  # black
+          'cornsilk', 'blanchedalmond', 'bisque', 'navajowhite', 'wheat', 'burlywood', 'tan', 'rosybrown', 'sandybrown', 'goldenrod', 'peru', 'chocolate', 'saddlebrown', 'sienna', 'brown', 'maroon']  # brown
 
 
 def log(msg, level=xbmc.LOGDEBUG):
@@ -85,15 +94,56 @@ def wipe(folder=_addon_path):
 
 def get_art(filename):
     art = {}
+    color = get_setting('ui.color')
+    
+    themed_path = os.path.join(_addon_path, color)
+    if not os.path.exists(themed_path):
+        os.makedirs(themed_path)
+    
     for i in art_types:
         _i = i
         if i == 'thumb':
             _i = 'icon'
         path = os.path.join(_art_path, _i, '{}.png'.format(filename))
+        new_path = ''
+        
         if os.path.exists(path):
-            art[i] = clean_artwork_url(path)
+            if color.lower() not in ['white', '#ffffff']:
+                new_path = os.path.join(themed_path, '{}-{}.png'.format(filename, _i))
+                if not os.path.exists(new_path):
+                    icon = Image.open(path).convert('RGBA')
+                    overlay = Image.new('RGBA', icon.size, color)
+                    Image.composite(overlay, icon, icon).save(new_path)
+            art[i] = clean_artwork_url(new_path if os.path.exists(new_path) else path)
 
     return art
+
+
+def set_color():
+    dialog = xbmcgui.Dialog()
+    color = get_setting('ui.color')
+    
+    choice = dialog.yesno('AutoWidget', utils.get_string(32133),
+                          yeslabel=utils.get_string(32134), nolabel=utils.get_string(32135))
+    
+    if choice:
+        value = dialog.input(utils.get_string(32136)).lower()
+    else:
+        value = dialog.select(utils.get_string(32137),
+                              ['[COLOR {0}]{0}[/COLOR]'.format(i) for i in colors],
+                              preselect=colors.index(color) if color in colors else -1)
+        if value > -1:
+            value = colors[value]
+            
+    if value:
+        if value not in colors:
+            if len(value) < 6:
+                dialog.notification('AutoWidget', utils.get_string(32138))
+                return
+            elif len(value) == 6 and not value.startswith('#'):
+                value = '#{}'.format(value)
+                
+        set_setting('ui.color', value)
 
 
 def get_active_window():
@@ -238,7 +288,7 @@ def write_xml(file, content):
 
     try:
         tree.write(file)
-    except:
+    except Exception as e:
         log('Could not write to {}: {}'.format(file, e),
                   level=xbmc.LOGERROR)
 
@@ -322,11 +372,15 @@ def get_files_list(path, titles=None):
               'id': 1}
     
     files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
+    new_files = []
     if 'error' not in files:
         files = files['result']['files']
-        filtered_files = [x for x in files if x['label'] not in titles]
-        for file in [i for i in filtered_files if 'art' in i]:
-            for art in file['art']:
-                file['art'][art] = clean_artwork_url(file['art'][art])
+        filtered_files = [x for x in files if x['title'] not in titles]
+        for file in filtered_files:
+            new_file = {k: v for k, v in file.items() if v not in [None, '', -1, [], {}]}
+            if 'art' in new_file:
+                for art in new_file['art']:
+                    new_file['art'][art] = clean_artwork_url(file['art'][art])
+            new_files.append(new_file)
                 
-        return filtered_files
+        return new_files
