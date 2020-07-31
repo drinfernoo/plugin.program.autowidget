@@ -31,8 +31,10 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+2.1.2
+ - Add per-widget icon color
 2.1.1
- - Fix "Icon Select"
+ - Fix "Icon Color"
 2.1.0
  - New artwork for add-on
  - Add icon coloring
