@@ -13,7 +13,7 @@ _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_version = _addon.getAddonInfo('version')
 
 
-def clean():
+def clean(notify=False):
     files = []
     dialog = xbmcgui.Dialog()
     addon_data = xbmc.translatePath('special://profile/addon_data/')
@@ -53,8 +53,10 @@ def clean():
             utils.remove_file(os.path.join(_addon_path,
                                            '{}.widget'.format(widget['id'])))
             removed += 1
-    dialog.notification('AutoWidget', '{} unused widgets removed.'
-                                      .format('No' if removed == 0 else removed))
+    if notify:
+        dialog.notification('AutoWidget', '{} unused widgets removed.'
+                                          .format('No' if removed == 0 else removed))
+
 
 def initialize(group_def, action, _id, save=True, keep=None):
     duration = utils.get_setting_float('service.refresh_duration')

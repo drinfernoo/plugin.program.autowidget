@@ -133,7 +133,7 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'wipe':
         utils.wipe()
     elif mode == 'clean':
-        manage.clean()
+        manage.clean(notify=True)
     elif mode == 'set_color':
         utils.set_color()
     elif mode == 'backup' and action:
