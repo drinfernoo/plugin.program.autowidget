@@ -29,11 +29,10 @@ _exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
                  'specialsortseason', 'track', 'tvshowid', 'watchedepisodes',
                  'customproperties', 'id']
 
-sync = utils.get_art('sync')
 
-    
 def add_separator(title='', char='-', sort=''):
     _window = utils.get_active_window()
+    sync = utils.get_art('sync')
 
     props = None
     if sort:

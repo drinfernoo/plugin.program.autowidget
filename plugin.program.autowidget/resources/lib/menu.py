@@ -10,11 +10,6 @@ from resources.lib import manage
 from resources.lib.common import directory
 from resources.lib.common import utils
 
-add = utils.get_art('add')
-alert = utils.get_art('alert')
-back = utils.get_art('back')
-bug = utils.get_art('bug-outline')
-folder = utils.get_art('folder')
 folder_shortcut = utils.get_art('folder-shortcut')
 folder_sync = utils.get_art('folder-sync')
 folder_next = utils.get_art('folder-next')
@@ -36,15 +31,15 @@ unpack = utils.get_art('unpack')
 def root_menu():
     directory.add_menu_item(title=32007,
                             params={'mode': 'group'},
-                            art=folder,
+                            art=utils.get_art('folder'),
                             isFolder=True)
     directory.add_menu_item(title=32074,
                             params={'mode': 'widget'},
-                            art=folder,
+                            art=utils.get_art('folder'),
                             isFolder=True)
     directory.add_menu_item(title=32008,
                             params={'mode': 'tools'},
-                            art=tools,
+                            art=utils.get_art('tools'),
                             isFolder=True)
                             
     return True, 'AutoWidget'
@@ -72,14 +67,14 @@ def my_groups_menu():
                                             'target': group_type,
                                             'id': six.text_type(_id)},
                                     info=group.get('info', {}),
-                                    art=group.get('art') or (folder_shortcut
+                                    art=group.get('art') or (utils.get_art('folder-shortcut')
                                                              if group_type == 'shortcut'
-                                                             else folder_sync),
+                                                             else utils.get_art('folder-sync')),
                                     cm=cm,
                                     isFolder=True)
     else:
         directory.add_menu_item(title=32068,
-                                art=alert,
+                                art=utils.get_art('alert'),
                                 isFolder=False,
                                 props={'specialsort': 'bottom'})
                                 
@@ -130,7 +125,7 @@ def group_menu(group_id, target, _id):
                                             'group': group_id,
                                             'id': six.text_type(_id),
                                             'path': path_param},
-                                    art=folder,
+                                    art=utils.get_art('folder'),
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
             directory.add_menu_item(title=utils.get_string(32028)
@@ -140,7 +135,7 @@ def group_menu(group_id, target, _id):
                                             'group': group_id,
                                             'id': six.text_type(_id),
                                             'path': path_param},
-                                    art=shuffle,
+                                    art=utils.get_art('shuffle'),
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
             directory.add_menu_item(title=utils.get_string(32089)
@@ -149,12 +144,12 @@ def group_menu(group_id, target, _id):
                                             'action': 'merged',
                                             'group': group_id,
                                             'id': six.text_type(_id)},
-                                    art=merge,
+                                    art=utils.get_art('merge'),
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
     else:
         directory.add_menu_item(title=32032,
-                                art=alert,
+                                art=utils.get_art('alert'),
                                 isFolder=False,
                                 props={'specialsort': 'bottom'})
     
@@ -212,7 +207,7 @@ def active_widgets_menu():
                 elif action == 'merged':
                     art = merge
                 elif action == 'static':
-                    art = folder
+                    art = utils.get_art('folder')
                 
                 params = {'mode': 'group',
                           'group': group,
@@ -235,7 +230,7 @@ def active_widgets_menu():
                                     isFolder=True)
     else:
         directory.add_menu_item(title=32072,
-                                art=alert,
+                                art=utils.get_art('alert'),
                                 isFolder=False,
                                 props={'specialsort': 'bottom'})
 
@@ -245,20 +240,20 @@ def active_widgets_menu():
 def tools_menu():
     directory.add_menu_item(title=32006,
                             params={'mode': 'force'},
-                            art=refresh_art,
+                            art=utils.get_art('refresh'),
                             info={'plot': utils.get_string(32020)},
                             isFolder=False)
     directory.add_menu_item(title=32129,
                             params={'mode': 'clean'},
-                            art=spray_bottle,
+                            art=utils.get_art('spray-bottle'),
                             isFolder=False)
     directory.add_menu_item(title=32064,
                             params={'mode': 'wipe'},
-                            art=remove,
+                            art=utils.get_art('remove'),
                             isFolder=False)
     directory.add_menu_item(title=32127,
                             params={'mode': 'skindebug'},
-                            art=bug,
+                            art=utils.get_art('bug-outline'),
                             isFolder=False)
                             
     return True, utils.get_string(32008)
@@ -392,7 +387,7 @@ def path_menu(group_id, action, _id, path=None):
     if not group_def:
         directory.add_menu_item(title=32073,
                                 info={'plot': utils.get_string(32075)},
-                                art=alert,
+                                art=utils.get_art('alert'),
                                 isFolder=True)
         return True, 'AutoWidget'
         
@@ -400,7 +395,7 @@ def path_menu(group_id, action, _id, path=None):
     paths = group_def.get('paths', [])
     if len(paths) == 0:
         directory.add_menu_item(title=32032,
-                                art=alert,
+                                art=utils.get_art('alert'),
                                 isFolder=True)
         return True, group_name
     
@@ -440,7 +435,7 @@ def path_menu(group_id, action, _id, path=None):
         return titles, cat
     else:
         directory.add_menu_item(title=32067,
-                                art=info,
+                                art=utils.get_art('information_outline'),
                                 isFolder=True)
         return True, group_name
         
@@ -453,7 +448,7 @@ def merged_path(group_id, _id):
     paths = group_def.get('paths', [])
     if len(paths) == 0:
         directory.add_menu_item(title=32032,
-                                art=alert,
+                                art=utils.get_art('alert'),
                                 isFolder=False)
         return True, group_name
     
@@ -482,7 +477,7 @@ def merged_path(group_id, _id):
         return titles, cat
     else:
         directory.add_menu_item(title=32067,
-                                art=info,
+                                art=utils.get_art('information_outline'),
                                 isFolder=True)
         return True, group_name
 
