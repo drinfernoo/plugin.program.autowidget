@@ -120,7 +120,7 @@ def get_art(filename, color=None):
     return art
 
 
-def set_color():
+def set_color(setting=False):
     dialog = xbmcgui.Dialog()
     color = get_setting('ui.color')
     
@@ -143,8 +143,10 @@ def set_color():
                 return
             elif len(value) == 6 and not value.startswith('#'):
                 value = '#{}'.format(value)
-                
-        set_setting('ui.color', value)
+        if setting:
+            set_setting('ui.color', value)
+            
+    return value
 
 
 def get_active_window():

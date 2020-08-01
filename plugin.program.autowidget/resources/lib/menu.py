@@ -268,7 +268,7 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=Fal
     if not widget_def:
         return True, 'AutoWidget'
 
-    path_def = manage.get_path_by_id(path_id, group_id=group_id)
+    path_def = manage.get_path_by_id(widget_def['path']['id'], group_id=widget_def['group'])
     path = path_def['file']['file'] if path_def else path_id
     
     stack = widget_def.get('stack', [])
@@ -280,7 +280,7 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=Fal
                                         'id': _id,
                                         'path': stack[-1],
                                         'target': 'back'},
-                                art=utils.get_art('back', widget_def.get('color')),
+                                art=utils.get_art('back', path_def.get('color')),
                                 isFolder=num > 1,
                                 props={'specialsort': 'top',
                                        'autoLabel': path_label})
@@ -326,7 +326,7 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=Fal
             directory.add_menu_item(title=label,
                                     params=update_params if paged_widgets and not merged else None,
                                     path=file['file'] if not paged_widgets or merged else None,
-                                    art=utils.get_art('next_page', widget_def.get('color')),
+                                    art=utils.get_art('next_page', path_def.get('color')),
                                     info=file,
                                     isFolder=not paged_widgets or merged,
                                     props=properties)
