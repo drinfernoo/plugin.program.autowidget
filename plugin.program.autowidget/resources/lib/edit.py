@@ -167,7 +167,13 @@ def _get_options(edit_def, useThumbs=None):
                     label = ', '.join(edit_def[key].keys())
                     options.append('[B]{}[/B]: {}'.format(formatted_key, label))
                 else:
-                    options.append('[B]{}[/B]: {}'.format(formatted_key, edit_def[key]))
+                    v = edit_def[key]
+                    try:
+                        v = edit_def[key].encode('utf-8')
+                    except:
+                        pass
+                    
+                    options.append('[B]{}[/B]: {}'.format(formatted_key, v))
     
     if useThumbs is not None:
         new_item = xbmcgui.ListItem(utils.get_string(32077) if not useThumbs else utils.get_string(32078))
