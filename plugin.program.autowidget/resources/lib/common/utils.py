@@ -120,7 +120,7 @@ def get_art(filename, color=None):
     return art
 
 
-def set_color():
+def set_color(setting=False):
     dialog = xbmcgui.Dialog()
     color = get_setting('ui.color')
     
@@ -143,8 +143,10 @@ def set_color():
                 return
             elif len(value) == 6 and not value.startswith('#'):
                 value = '#{}'.format(value)
-                
-        set_setting('ui.color', value)
+        if setting:
+            set_setting('ui.color', value)
+            
+    return value
 
 
 def get_active_window():
@@ -305,21 +307,21 @@ def get_setting(setting):
 def get_setting_bool(setting):
     try:
         return _addon.getSettingBool(setting)
-    except:
+    except AttributeError:
         return bool(_addon.getSetting(setting))
 
 
 def get_setting_int(setting):
     try:
         return _addon.getSettingInt(setting)
-    except:
+    except AttributeError:
         return int(_addon.getSetting(setting))
 
 
 def get_setting_float(setting):
     try:
         return _addon.getSettingNumber(setting)
-    except:
+    except AttributeError:
         return float(_addon.getSetting(setting))
 
 

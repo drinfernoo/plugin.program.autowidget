@@ -85,6 +85,8 @@ def build_labels(source, path_def=None, target=''):
         path += '&widget=True'            
     labels['file']['file'] = path
 
+    labels['color'] = utils.get_setting('ui.color')
+
     for _key in utils.windows:
         if any(i in path for i in utils.windows[_key]):
             labels['window'] = _key

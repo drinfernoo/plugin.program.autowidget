@@ -135,7 +135,7 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'clean':
         manage.clean(notify=True)
     elif mode == 'set_color':
-        utils.set_color()
+        utils.set_color(setting=True)
     elif mode == 'backup' and action:
         if action == 'location':
             backup.location()

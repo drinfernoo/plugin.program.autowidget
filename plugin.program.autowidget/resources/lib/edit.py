@@ -11,7 +11,7 @@ from resources.lib.common import utils
 advanced = utils.get_setting_bool('context.advanced')
 warning_shown = utils.get_setting_bool('context.warning')
 
-filter = {'include': ['label', 'file', 'art'] + utils.art_types,
+filter = {'include': ['label', 'file', 'art', 'color'] + utils.art_types,
           'exclude': ['paths', 'version', 'type']}
 widget_filter = {'include': ['action', 'refresh'],
                  'exclude': ['stack', 'version', 'label', 'current',
@@ -159,13 +159,21 @@ def _get_options(edit_def, useThumbs=None):
                 li = xbmcgui.ListItem('[B]{}[/B]: {}'.format(key, edit_def[key]))
                 li.setArt({'icon': edit_def[key]})
                 options.append(li)
+            elif key == 'color':
+                options.append('[B]{0}[/B]: [COLOR {1}]{1}[/COLOR]'.format(key, edit_def[key]))
             else:
                 formatted_key = '[COLOR goldenrod]{}[/COLOR]'.format(key) if key not in filter['include'] else key
                 if isinstance(edit_def[key], dict):
                     label = ', '.join(edit_def[key].keys())
                     options.append('[B]{}[/B]: {}'.format(formatted_key, label))
                 else:
-                    options.append('[B]{}[/B]: {}'.format(formatted_key, edit_def[key]))
+                    v = edit_def[key]
+                    try:
+                        v = edit_def[key].encode('utf-8')
+                    except:
+                        pass
+                    
+                    options.append('[B]{}[/B]: {}'.format(formatted_key, v))
     
     if useThumbs is not None:
         new_item = xbmcgui.ListItem(utils.get_string(32077) if not useThumbs else utils.get_string(32078))
@@ -268,6 +276,8 @@ def _get_value(edit_def, key):
             options = ['file', 'directory']
             type = dialog.select(utils.get_string(32122), options, preselect=options.index(default))
             value = options[type]
+        elif key == 'color':
+            value = utils.set_color()
         else:
             value = dialog.input(utils.get_string(32121).format(key), defaultt=default)
 

@@ -42,12 +42,11 @@ def clean(notify=False):
         
         found = False
         for file in files:
-            with open(file, 'r') as f:
-                if widget['id'] in f.read():
-                    found = True
-                    utils.log('{} found in {}; not cleaning'
-                              .format(widget['id'], file))
-                    break
+            if widget['id'] in utils.read_file(file):
+                found = True
+                utils.log('{} found in {}; not cleaning'
+                          .format(widget['id'], file))
+                break
         if not found:
             utils.log('{} not found; cleaning'.format(widget['id']))
             utils.remove_file(os.path.join(_addon_path,
@@ -78,7 +77,6 @@ def initialize(group_def, action, _id, save=True, keep=None):
               'group': group_def['id'],
               'refresh': duration,
               'path': path_def,
-              'color': utils.get_setting('ui.color'),
               'version': _addon_version}
     if save:
         save_path_details(params)

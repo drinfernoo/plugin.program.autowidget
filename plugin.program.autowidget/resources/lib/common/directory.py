@@ -121,7 +121,11 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     item.addContextMenuItems(def_cm)
     
     if props:
-        item.setProperties(props)
+        try:
+            item.setProperties(props)
+        except AttributeError:
+            for prop in props:
+                item.setProperty(prop, props[prop])
 
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
                                 isFolder=isFolder)
