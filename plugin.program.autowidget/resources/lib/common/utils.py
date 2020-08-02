@@ -307,21 +307,21 @@ def get_setting(setting):
 def get_setting_bool(setting):
     try:
         return _addon.getSettingBool(setting)
-    except:
+    except AttributeError:
         return bool(_addon.getSetting(setting))
 
 
 def get_setting_int(setting):
     try:
         return _addon.getSettingInt(setting)
-    except:
+    except AttributeError:
         return int(_addon.getSetting(setting))
 
 
 def get_setting_float(setting):
     try:
         return _addon.getSettingNumber(setting)
-    except:
+    except AttributeError:
         return float(_addon.getSetting(setting))
 
 
