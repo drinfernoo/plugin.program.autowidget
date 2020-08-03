@@ -259,7 +259,7 @@ def tools_menu():
     return True, utils.get_string(32008)
 
 
-def show_path(group_id, path_id, path_label, _id, idx=0, titles=None, num=1, merged=False):
+def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, merged=False):
     hide_watched = utils.get_setting_bool('widgets.hide_watched')
     show_next = utils.get_setting_int('widgets.show_next')
     paged_widgets = utils.get_setting_bool('widgets.paged')
@@ -267,13 +267,16 @@ def show_path(group_id, path_id, path_label, _id, idx=0, titles=None, num=1, mer
     widget_def = manage.get_widget_by_id(_id)
     if not widget_def:
         return True, 'AutoWidget'
-
+    
     if isinstance(widget_def['path'], list):
         _def = widget_def['path'][idx]
+    elif isinstance(widget_def['path'], six.text_type):
+        _def = widget_def['stack'][0]
     else:
         _def = widget_def['path']
+
     path_def = manage.get_path_by_id(_def['id'], group_id=group_id)
-    path = path_def['file']['file'] if path_def else path_id
+    path = path_def['file']['file'] if not path_id else path_id
     
     stack = widget_def.get('stack', [])
     if stack:
@@ -303,9 +306,11 @@ def show_path(group_id, path_id, path_label, _id, idx=0, titles=None, num=1, mer
                 properties[prop] = file['customproperties'][prop]
         
         clean_pattern = '[^\w \xC0-\xFF]'
-        next_pattern = '(?:next(?: page)?)|(?:page \d+ .* \d+(?: \(\d+ results\))?)'
+        tag_pattern = '(\[[^\]]*\])'
+        next_pattern = '^(?:next(?: page$)?)$|^(?:page \d+(.*\d+.*$)?(?:\(\d+ results\)$)?)$'
         prev_pattern = '^(?:previous(?: page)?)$|^(?:back)$'
-        cleaned_title = re.sub(clean_pattern, '', file['label'].lower()).strip()
+        
+        cleaned_title = re.sub(tag_pattern, '', file['label'].lower()).strip()
         next_item =  re.search(next_pattern, cleaned_title)
         prev_item = re.search(prev_pattern, cleaned_title)
         
@@ -435,7 +440,7 @@ def path_menu(group_id, action, _id, path=None):
             else:
                 _label = widget_def.get('label', '')
         
-        titles, cat = show_path(group_id, _path, _label, _id)
+        titles, cat = show_path(group_id, _label, _id, _path)
         return titles, cat
     else:
         directory.add_menu_item(title=32067,
@@ -475,8 +480,9 @@ def merged_path(group_id, _id):
     if widget_def:
         titles = []
         for idx, path_def in enumerate(paths):
-            titles, cat = show_path(group_id, path_def['id'], path_def['label'],
-                                    _id, idx=idx, num=len(paths), merged=True)
+            titles, cat = show_path(group_id, path_def['label'],
+                                    _id, path_def['id'], idx=idx,
+                                    num=len(paths), merged=True)
 
         return titles, cat
     else:
