@@ -31,6 +31,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+2.1.5
+ - Fix non-merged paths :D
 2.1.4
  - Support more add-ons' "Next Page" items
  - Fix merged paths
