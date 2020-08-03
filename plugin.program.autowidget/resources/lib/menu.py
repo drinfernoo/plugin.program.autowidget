@@ -259,7 +259,7 @@ def tools_menu():
     return True, utils.get_string(32008)
 
 
-def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=False):
+def show_path(group_id, path_id, path_label, _id, idx=0, titles=None, num=1, merged=False):
     hide_watched = utils.get_setting_bool('widgets.hide_watched')
     show_next = utils.get_setting_int('widgets.show_next')
     paged_widgets = utils.get_setting_bool('widgets.paged')
@@ -268,7 +268,11 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=Fal
     if not widget_def:
         return True, 'AutoWidget'
 
-    path_def = manage.get_path_by_id(path_id, group_id=group_id)
+    if isinstance(widget_def['path'], list):
+        _def = widget_def['path'][idx]
+    else:
+        _def = widget_def['path']
+    path_def = manage.get_path_by_id(_def['id'], group_id=group_id)
     path = path_def['file']['file'] if path_def else path_id
     
     stack = widget_def.get('stack', [])
@@ -470,9 +474,9 @@ def merged_path(group_id, _id):
         
     if widget_def:
         titles = []
-        for path_def in paths:
+        for idx, path_def in enumerate(paths):
             titles, cat = show_path(group_id, path_def['id'], path_def['label'],
-                                    _id, num=len(paths), merged=True)
+                                    _id, idx=idx, num=len(paths), merged=True)
 
         return titles, cat
     else:
