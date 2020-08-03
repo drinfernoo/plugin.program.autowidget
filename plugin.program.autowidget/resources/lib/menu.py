@@ -268,7 +268,7 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=Fal
     if not widget_def:
         return True, 'AutoWidget'
 
-    path_def = manage.get_path_by_id(widget_def['path']['id'], group_id=widget_def['group'])
+    path_def = manage.get_path_by_id(path_id, group_id=group_id)
     path = path_def['file']['file'] if path_def else path_id
     
     stack = widget_def.get('stack', [])
@@ -299,7 +299,7 @@ def show_path(group_id, path_id, path_label, _id, titles=None, num=1, merged=Fal
                 properties[prop] = file['customproperties'][prop]
         
         clean_pattern = '[^\w \xC0-\xFF]'
-        next_pattern = '^(?:next(?: page)?)$|^(?:page \d+ (?:out )?(?:of){1} \d+(?: \(\d+ results\)$)?)$'
+        next_pattern = '(?:next(?: page)?)|(?:page \d+ .* \d+(?: \(\d+ results\))?)'
         prev_pattern = '^(?:previous(?: page)?)$|^(?:back)$'
         cleaned_title = re.sub(clean_pattern, '', file['label'].lower()).strip()
         next_item =  re.search(next_pattern, cleaned_title)
