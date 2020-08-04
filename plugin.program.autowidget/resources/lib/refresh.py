@@ -46,7 +46,7 @@ class RefreshService(xbmc.Monitor):
         self.refresh_sound = utils.get_setting_bool('service.refresh_sound')
         
         self._clean_widgets()
-        utils.update_container()
+        utils.update_container(True)
         
     def _clean_widgets(self):
         manage.clean()
@@ -63,8 +63,6 @@ class RefreshService(xbmc.Monitor):
             
             if widget_def.get('updated', 0) > 0:
                 _update_strings(widget_def['id'], path_def)
-                
-        utils.update_container()
 
     def _update_widgets(self):
         self._refresh(True)
@@ -153,7 +151,6 @@ def update_path(_id, path, target):
     utils.set_property('autowidget-{}-action'.format(_id), action)
     manage.save_path_details(widget_def)
     back_to_top(target)
-    utils.update_container()
 
 
 def back_to_top(target):

@@ -123,7 +123,6 @@ def dispatch(_plugin, _handle, _params):
             refresh.refresh_paths()
         else:
             refresh.refresh(target, force=True)
-            utils.update_container()
     elif mode == 'tools':
         is_dir, category = menu.tools_menu()
     elif mode == 'force':

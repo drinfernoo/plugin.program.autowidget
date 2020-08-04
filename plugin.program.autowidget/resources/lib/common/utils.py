@@ -162,13 +162,10 @@ def get_active_window():
         pass
 
 
-def update_container(_type='', reload=False):
-    xbmc.executebuiltin('UpdateLibrary(video, AutoWidget)')
-
+def update_container(reload=False):
     if reload:
-        xbmc.executebuiltin('ReloadSkin()')
-    else:
-        xbmc.executebuiltin('Container.Refresh()')
+        xbmc.executebuiltin('UpdateLibrary(video, AutoWidget)')
+    xbmc.executebuiltin('Container.Refresh()')
 
 
 def _prettify(elem):

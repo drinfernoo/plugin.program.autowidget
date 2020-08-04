@@ -46,7 +46,7 @@ def add(labels):
         labels['target'] = 'widget'
         _copy_path(labels)
         
-    utils.update_container(_type)
+    utils.update_container(_type == 'shortcut')
             
             
 def build_labels(source, path_def=None, target=''):
@@ -187,7 +187,6 @@ def add_group(target, group_name=''):
                      'version': _addon_version}
     
         utils.write_json(filename, group_def)
-        utils.update_container()
     else:
         dialog.notification('AutoWidget', utils.get_string(32038))
     
