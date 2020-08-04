@@ -222,7 +222,6 @@ def refresh_paths(notify=False, force=False):
         for widget_def in widgets:
             paths = refresh(widget_def['id'], widget_def=widget_def, paths=paths, force=force)
             
-    if utils.get_active_window() == 'media':
-        utils.update_container()
+    utils.update_container(True)
 
     return True, 'AutoWidget'
