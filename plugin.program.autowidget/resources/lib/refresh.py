@@ -163,7 +163,7 @@ def back_to_top(target):
         xbmc.executebuiltin('Action({})'.format(action))
 
 
-def refresh(widget_id, widget_def=None, paths=None, force=False):
+def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
     if not widget_def:
         widget_def = manage.get_widget_by_id(widget_id)
     
@@ -206,6 +206,9 @@ def refresh(widget_id, widget_def=None, paths=None, force=False):
                         
                     manage.save_path_details(widget_def)
                     _update_strings(_id, path_def)
+                    
+        if single and utils.get_active_window() == 'media':
+            utils.update_container()
     
     return paths
 

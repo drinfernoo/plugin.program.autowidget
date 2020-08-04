@@ -122,7 +122,7 @@ def dispatch(_plugin, _handle, _params):
         if not target:
             refresh.refresh_paths()
         else:
-            refresh.refresh(target, force=True)
+            refresh.refresh(target, force=True, single=True)
     elif mode == 'tools':
         is_dir, category = menu.tools_menu()
     elif mode == 'force':
