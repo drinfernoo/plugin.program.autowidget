@@ -368,7 +368,7 @@ def call_path(path_id):
                                         and path_def['content'] != 'addons':
         if path_def['file']['file'] == 'addons://install/':
             final_path = 'InstallFromZip'
-        elif path_def['content'] == 'files': 
+        elif not path_def['content']: 
             final_path = 'RunPlugin({})'.format(path_def['file']['file'])
         elif path_def['file']['file'].startswith('androidapp://sources/apps/'):
             final_path = 'StartAndroidActivity({})'.format(path_def['file']['file']
