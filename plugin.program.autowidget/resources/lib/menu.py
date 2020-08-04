@@ -276,7 +276,9 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
         _def = widget_def['path']
 
     path_def = manage.get_path_by_id(_def['id'], group_id=group_id)
-    path = path_def['file']['file'] if not path_id else path_id
+    if not path_def:
+        path_def = manage.get_path_by_id(path_id, group_id=group_id)
+    path = path_def['file']['file'] if path_def else path_id
     
     stack = widget_def.get('stack', [])
     if stack:
@@ -469,10 +471,9 @@ def merged_path(group_id, _id):
         idxs = dialog.multiselect(utils.get_string(32115),
                                   [i['label'] for i in paths],
                                   preselect=list(range(len(paths))) if len(paths) <= 5 else [])
+
         if idxs is not None:
-            if len(idxs) == 0:
-                pass
-            else:
+            if len(idxs) > 0:
                 widget_def = manage.initialize(group_def, 'merged',
                                                _id, keep=idxs)
                 paths = widget_def['path']

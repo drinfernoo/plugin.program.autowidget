@@ -124,7 +124,7 @@ def update_path(_id, path, target):
         return
     
     stack = widget_def.get('stack', [])
-    
+
     if target == 'next':
         path_def = widget_def['path']
         if isinstance(path_def, dict):
