@@ -267,17 +267,15 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
     widget_def = manage.get_widget_by_id(_id)
     if not widget_def:
         return True, 'AutoWidget'
-    
+    # import web_pdb; web_pdb.set_trace()
     if isinstance(widget_def['path'], list):
-        _def = widget_def['path'][idx]
+        color = widget_def['path'][idx]['color']
     elif isinstance(widget_def['path'], six.text_type):
-        _def = widget_def['stack'][0]
+        color = widget_def['stack'][0]['color']
     else:
-        _def = widget_def['path']
+        color = widget_def['path']['color']
 
-    path_def = manage.get_path_by_id(_def['id'], group_id=group_id)
-    if not path_def:
-        path_def = manage.get_path_by_id(path_id, group_id=group_id)
+    path_def = manage.get_path_by_id(path_id, group_id=group_id)
     path = path_def['file']['file'] if path_def else path_id
     
     stack = widget_def.get('stack', [])
@@ -289,7 +287,7 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
                                         'id': _id,
                                         'path': stack[-1],
                                         'target': 'back'},
-                                art=utils.get_art('back', path_def.get('color')),
+                                art=utils.get_art('back', color),
                                 isFolder=num > 1,
                                 props={'specialsort': 'top',
                                        'autoLabel': path_label})
@@ -337,7 +335,7 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
             directory.add_menu_item(title=label,
                                     params=update_params if paged_widgets and not merged else None,
                                     path=file['file'] if not paged_widgets or merged else None,
-                                    art=utils.get_art('next_page', path_def.get('color')),
+                                    art=utils.get_art('next_page', color),
                                     info=file,
                                     isFolder=not paged_widgets or merged,
                                     props=properties)
@@ -409,7 +407,7 @@ def path_menu(group_id, action, _id, path=None):
                                 art=utils.get_art('alert'),
                                 isFolder=True)
         return True, group_name
-    
+
     widget_def = manage.get_widget_by_id(_id, group_id)
     if not widget_def:
         dialog = xbmcgui.Dialog()

@@ -151,6 +151,7 @@ def update_path(_id, path, target):
     utils.set_property('autowidget-{}-action'.format(_id), action)
     manage.save_path_details(widget_def)
     back_to_top(target)
+    utils.update_container(True)
 
 
 def back_to_top(target):
