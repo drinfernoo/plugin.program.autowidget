@@ -31,6 +31,10 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+2.2.0
+ - Reduce library updates to improve overall speed
+ - Sort "Active Widgets" by most recently refreshed
+ - Fix any straggling widget errors, I hope :D
 2.1.6
  - Fix "Next Page" error
 2.1.5
