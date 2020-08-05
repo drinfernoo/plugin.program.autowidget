@@ -158,7 +158,8 @@ def group_menu(group_id, target, _id):
     
 def active_widgets_menu():
     manage.clean()
-    widgets = manage.find_defined_widgets()
+    widgets = sorted(manage.find_defined_widgets(),
+                     key=lambda x: x.get('updated'), reverse=True)
     
     if len(widgets) > 0:
         for widget_def in widgets:
@@ -268,15 +269,16 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
     if not widget_def:
         return True, 'AutoWidget'
     
+    default_color = utils.get_setting('ui.color')
     if isinstance(widget_def['path'], list):
-        _def = widget_def['path'][idx]
+        color = widget_def['path'][idx].get('color', default_color)
     elif isinstance(widget_def['path'], six.text_type):
-        _def = widget_def['stack'][0]
+        color = widget_def['stack'][0].get('color', default_color)
     else:
-        _def = widget_def['path']
+        color = widget_def['path'].get('color', default_color)
 
-    path_def = manage.get_path_by_id(_def['id'], group_id=group_id)
-    path = path_def['file']['file'] if not path_id else path_id
+    path_def = manage.get_path_by_id(path_id, group_id=group_id)
+    path = path_def['file']['file'] if path_def else path_id
     
     stack = widget_def.get('stack', [])
     if stack:
@@ -287,7 +289,7 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
                                         'id': _id,
                                         'path': stack[-1],
                                         'target': 'back'},
-                                art=utils.get_art('back', path_def.get('color')),
+                                art=utils.get_art('back', color),
                                 isFolder=num > 1,
                                 props={'specialsort': 'top',
                                        'autoLabel': path_label})
@@ -335,7 +337,7 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
             directory.add_menu_item(title=label,
                                     params=update_params if paged_widgets and not merged else None,
                                     path=file['file'] if not paged_widgets or merged else None,
-                                    art=utils.get_art('next_page', path_def.get('color')),
+                                    art=utils.get_art('next_page', color),
                                     info=file,
                                     isFolder=not paged_widgets or merged,
                                     props=properties)
@@ -368,7 +370,7 @@ def call_path(path_id):
                                         and path_def['content'] != 'addons':
         if path_def['file']['file'] == 'addons://install/':
             final_path = 'InstallFromZip'
-        elif path_def['content'] == 'files': 
+        elif not path_def['content']: 
             final_path = 'RunPlugin({})'.format(path_def['file']['file'])
         elif path_def['file']['file'].startswith('androidapp://sources/apps/'):
             final_path = 'StartAndroidActivity({})'.format(path_def['file']['file']
@@ -407,7 +409,7 @@ def path_menu(group_id, action, _id, path=None):
                                 art=utils.get_art('alert'),
                                 isFolder=True)
         return True, group_name
-    
+
     widget_def = manage.get_widget_by_id(_id, group_id)
     if not widget_def:
         dialog = xbmcgui.Dialog()
@@ -469,10 +471,9 @@ def merged_path(group_id, _id):
         idxs = dialog.multiselect(utils.get_string(32115),
                                   [i['label'] for i in paths],
                                   preselect=list(range(len(paths))) if len(paths) <= 5 else [])
+
         if idxs is not None:
-            if len(idxs) == 0:
-                pass
-            else:
+            if len(idxs) > 0:
                 widget_def = manage.initialize(group_def, 'merged',
                                                _id, keep=idxs)
                 paths = widget_def['path']

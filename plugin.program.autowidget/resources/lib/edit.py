@@ -42,7 +42,7 @@ def shift_path(group_id, path_id, target):
             break
     group_def['paths'] = paths
     manage.write_path(group_def)
-    utils.update_container(group_def['type'])
+    utils.update_container(group_def['type'] == 'shortcut')
 
 
 def _remove_group(group_id, over=False):
@@ -117,10 +117,10 @@ def _show_options(group_def, path_def=None):
     elif idx == len(options) - 1:
         if path_def:
             _remove_path(path_def['id'], group_def['id'])
-            utils.update_container(group_def['type'])
+            utils.update_container(group_def['type'] == 'shortcut')
         else:
             _remove_group(group_def['id'])
-            utils.update_container(group_def['type'])
+            utils.update_container(group_def['type'] == 'shortcut')
         return
     else:
         key = _clean_key(options[idx])
@@ -381,7 +381,7 @@ def edit_dialog(group_id, path_id=None, base_key=None):
     updated = _show_options(group_def, path_def)
     if updated:
         manage.write_path(group_def, path_def=path_def, update=path_id)
-        utils.update_container(group_def['type'])
+        utils.update_container(group_def['type'] == 'shortcut')
 
         edit_dialog(group_id, path_id)
 

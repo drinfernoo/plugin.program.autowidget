@@ -46,7 +46,7 @@ class RefreshService(xbmc.Monitor):
         self.refresh_sound = utils.get_setting_bool('service.refresh_sound')
         
         self._clean_widgets()
-        utils.update_container()
+        utils.update_container(True)
         
     def _clean_widgets(self):
         manage.clean()
@@ -63,8 +63,6 @@ class RefreshService(xbmc.Monitor):
             
             if widget_def.get('updated', 0) > 0:
                 _update_strings(widget_def['id'], path_def)
-                
-        utils.update_container()
 
     def _update_widgets(self):
         self._refresh(True)
@@ -126,7 +124,7 @@ def update_path(_id, path, target):
         return
     
     stack = widget_def.get('stack', [])
-    
+
     if target == 'next':
         path_def = widget_def['path']
         if isinstance(path_def, dict):
@@ -153,7 +151,7 @@ def update_path(_id, path, target):
     utils.set_property('autowidget-{}-action'.format(_id), action)
     manage.save_path_details(widget_def)
     back_to_top(target)
-    utils.update_container()
+    utils.update_container(True)
 
 
 def back_to_top(target):
@@ -165,7 +163,7 @@ def back_to_top(target):
         xbmc.executebuiltin('Action({})'.format(action))
 
 
-def refresh(widget_id, widget_def=None, paths=None, force=False):
+def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
     if not widget_def:
         widget_def = manage.get_widget_by_id(widget_id)
     
@@ -208,6 +206,9 @@ def refresh(widget_id, widget_def=None, paths=None, force=False):
                         
                     manage.save_path_details(widget_def)
                     _update_strings(_id, path_def)
+                    
+        if single and utils.get_active_window() == 'media':
+            utils.update_container()
     
     return paths
 
@@ -225,7 +226,6 @@ def refresh_paths(notify=False, force=False):
         for widget_def in widgets:
             paths = refresh(widget_def['id'], widget_def=widget_def, paths=paths, force=force)
             
-    if utils.get_active_window() == 'media':
-        utils.update_container()
+    utils.update_container(True)
 
     return True, 'AutoWidget'
