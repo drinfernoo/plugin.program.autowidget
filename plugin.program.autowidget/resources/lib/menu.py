@@ -268,13 +268,14 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
     widget_def = manage.get_widget_by_id(_id)
     if not widget_def:
         return True, 'AutoWidget'
-    # import web_pdb; web_pdb.set_trace()
+    
+    default_color = utils.get_setting('ui.color')
     if isinstance(widget_def['path'], list):
-        color = widget_def['path'][idx]['color']
+        color = widget_def['path'][idx].get('color', default_color)
     elif isinstance(widget_def['path'], six.text_type):
-        color = widget_def['stack'][0]['color']
+        color = widget_def['stack'][0].get('color', default_color)
     else:
-        color = widget_def['path']['color']
+        color = widget_def['path'].get('color', default_color)
 
     path_def = manage.get_path_by_id(path_id, group_id=group_id)
     path = path_def['file']['file'] if path_def else path_id
