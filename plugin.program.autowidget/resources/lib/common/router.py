@@ -57,11 +57,11 @@ def _log_params(_plugin, _handle, _params):
                              _params,
                              flags=re.I)
     
+    
     params = dict(parse_qsl(_params))
     logstring = ''
     
     for param in params:
-        params[param] = unquote(params[param])
         logstring += '[ {0}: {1} ] '.format(param, params[param])
     
     if not logstring:
