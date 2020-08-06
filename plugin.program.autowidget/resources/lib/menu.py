@@ -309,7 +309,8 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
         
         clean_pattern = '[^\w \xC0-\xFF]'
         tag_pattern = '(\[[^\]]*\])'
-        next_pattern = '^(?:next(?: page$)?)$|^(?:page \d+(.*\d+.*$)?(?:\(\d+ results\)$)?)$'
+        
+        next_pattern = '^(?:next(?: page\s*\({0,1}\d{0,2}\){0,1}$)?)$|^(?:page \d+(.*\d+.*$)?(?:\(\d+ results\)$)?)$'
         prev_pattern = '^(?:previous(?: page)?)$|^(?:back)$'
         
         cleaned_title = re.sub(tag_pattern, '', file['label'].lower()).strip()
