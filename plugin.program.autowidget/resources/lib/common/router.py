@@ -7,10 +7,12 @@ try:
     from urllib.parse import parse_qsl
     from urllib.parse import quote_plus
     from urllib.parse import unquote
+    from urllib.parse import unquote_plus
 except ImportError:
     from urllib import quote_plus
     from urlparse import parse_qsl
     from urlparse import unquote
+    from urllib import unquote_plus
     
 from resources.lib import backup
 from resources.lib import edit
@@ -62,7 +64,7 @@ def _log_params(_plugin, _handle, _params):
     logstring = ''
     
     for param in params:
-        logstring += '[ {0}: {1} ] '.format(param, params[param])
+        logstring += '[ {0}: {1} ] '.format(param, unquote_plus(params[param]))
     
     if not logstring:
         logstring = '[ Root Menu ]'
@@ -108,8 +110,8 @@ def dispatch(_plugin, _handle, _params):
             is_dir, category = menu.path_menu(group, action, _id, path)
         elif action == 'merged' and group:
             is_dir, category = menu.merged_path(group, _id)
-        elif action == 'update' and path and target:
-            refresh.update_path(_id, path, target)
+        elif action == 'update' and target:
+            refresh.update_path(_id, unquote_plus(path), target)
         is_type = 'videos'
     elif mode == 'group':
         if not group:

@@ -1,6 +1,7 @@
 import xbmcgui
 import xbmcplugin
 
+import re
 import string
 import sys
 
@@ -11,9 +12,11 @@ from resources.lib.common import utils
 try:
     from urllib.parse import urlencode
     from urllib.parse import unquote
+    from urllib.parse import quote_plus
 except ImportError:
     from urllib import urlencode
     from urllib import unquote
+    from urllib import quote_plus
 
 _sort_methods = [xbmcplugin.SORT_METHOD_UNSORTED,
                  xbmcplugin.SORT_METHOD_LABEL,
@@ -28,6 +31,8 @@ _exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
                  'runtime', 'showtitle', 'specialsortepisode',
                  'specialsortseason', 'track', 'tvshowid', 'watchedepisodes',
                  'customproperties', 'id']
+
+info_match_pattern = '\$INFO\[(.*)\]'
 
 
 def add_separator(title='', char='-', sort=''):
@@ -74,7 +79,10 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
         _plugin += '?{}'.format(urlencode(encode))
         
         if 'path' in params:
-            _plugin += '&path={}'.format(params['path'])
+            if re.match(info_match_pattern, params['path']):
+                _plugin += '&path={}'.format(params['path'])
+            else:
+                _plugin += '&path={}'.format(quote_plus(params['path']))
     elif path is not None:
         _plugin = path
 
