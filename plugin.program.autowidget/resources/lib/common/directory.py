@@ -71,18 +71,15 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     _handle = int(sys.argv[1])
 
     if params is not None:
-        if 'path' in params:
-            encode = {k: params[k] for k, v in params.items() if k != 'path'}
+        if 'refresh' in params:
+            encode = {k: params[k] for k, v in params.items() if k != 'refresh'}
         else:
             encode = params
         
         _plugin += '?{}'.format(urlencode(encode))
         
-        if 'path' in params:
-            if re.match(info_match_pattern, params['path']):
-                _plugin += '&path={}'.format(params['path'])
-            else:
-                _plugin += '&path={}'.format(quote_plus(params['path']))
+        if 'refresh' in params:
+            _plugin += '&refresh={}'.format(params['refresh'])
     elif path is not None:
         _plugin = path
 

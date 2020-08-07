@@ -107,7 +107,7 @@ def group_menu(group_id, target, _id):
                                     params={'mode': 'path',
                                             'action': 'call',
                                             'group': group_id,
-                                            'path': path_def['id']},
+                                            'path_id': path_def['id']},
                                     info=path_def['file'],
                                     art=path_def['file']['art'] or art,
                                     cm=cm,
@@ -116,7 +116,7 @@ def group_menu(group_id, target, _id):
         if target == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/', sort='bottom')
 
-            path_param = '$INFO[Window(10000).Property(autowidget-{}-action)]'.format(_id)
+            refresh = '$INFO[Window(10000).Property(autowidget-{}-refresh)]'.format(_id)
 
             directory.add_menu_item(title=utils.get_string(32076)
                                           .format(group_name),
@@ -124,7 +124,7 @@ def group_menu(group_id, target, _id):
                                             'action': 'static',
                                             'group': group_id,
                                             'id': six.text_type(_id),
-                                            'path': path_param},
+                                            'refresh': refresh},
                                     art=utils.get_art('folder'),
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
@@ -134,7 +134,7 @@ def group_menu(group_id, target, _id):
                                             'action': 'cycling',
                                             'group': group_id,
                                             'id': six.text_type(_id),
-                                            'path': path_param},
+                                            'refresh': refresh},
                                     art=utils.get_art('shuffle'),
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
@@ -260,7 +260,7 @@ def tools_menu():
     return True, utils.get_string(32008)
 
 
-def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, merged=False):
+def show_path(group_id, path_label, _id, path, idx=0, titles=None, num=1, merged=False):
     hide_watched = utils.get_setting_bool('widgets.hide_watched')
     show_next = utils.get_setting_int('widgets.show_next')
     paged_widgets = utils.get_setting_bool('widgets.paged')
@@ -277,8 +277,8 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
     else:
         color = widget_def['path'].get('color', default_color)
 
-    path_def = manage.get_path_by_id(path_id, group_id=group_id)
-    path = path_def['file']['file'] if path_def else path_id
+    # path_def = manage.get_path_by_id(path_id, group_id=group_id)
+    # path = path_def['file']['file'] if path_def else path_id
     
     stack = widget_def.get('stack', [])
     if stack:
@@ -396,7 +396,7 @@ def call_path(path_id):
     return False, path_def['label']
 
 
-def path_menu(group_id, action, _id, path=None):
+def path_menu(group_id, action, _id):
     group_def = manage.get_group_by_id(group_id)
     if not group_def:
         directory.add_menu_item(title=32073,
@@ -433,11 +433,10 @@ def path_menu(group_id, action, _id, path=None):
     
     if widget_def:
         widget_path = widget_def.get('path', {})
-        _path = path if path else widget_path
         
         if isinstance(widget_path, dict):
             _label = widget_path['label']
-            _path = widget_path['file']['file']
+            widget_path = widget_path['file']['file']
         else:
             stack = widget_def.get('stack', [])
             if stack:
@@ -445,7 +444,7 @@ def path_menu(group_id, action, _id, path=None):
             else:
                 _label = widget_def.get('label', '')
         
-        titles, cat = show_path(group_id, _label, _id, _path)
+        titles, cat = show_path(group_id, _label, _id, widget_path)
         return titles, cat
     else:
         directory.add_menu_item(title=32067,
