@@ -312,7 +312,7 @@ def show_path(group_id, path_label, _id, path, idx=0, titles=None, num=1, merged
         
         next_pattern = ('(?:^(?:next)?\s*(?:(?:>>)|(?:\.*)$)?)\s*'
                         '(?:page\s*(?:(?:\d+\D*\d?)$|(?:(?:>>)|(?:\.*))$))?'
-                        '(?:\(\d+|.*\))?$')
+                        '(?:\(\d+(?:\s*results)\))?$')
         prev_pattern = '^(?:previous(?: page)?)$|^(?:back)$'
         
         cleaned_title = re.sub(tag_pattern, '', file['label'].lower()).strip()
