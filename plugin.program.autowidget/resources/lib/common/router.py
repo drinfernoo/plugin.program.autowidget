@@ -16,12 +16,6 @@ from resources.lib import refresh
 from resources.lib.common import directory
 from resources.lib.common import utils
 
-info_match_pattern = '\$INFO\[(.*)\]'
-encoded_info_match_pattern = '%24INFO\%5b(.*)\%5d'
-path_match_pattern = '\&path=(.*)'
-path_sub_pattern = '&path={}'
-reload_match_pattern = '(%26reload%3d.*)'
-
 
 def _log_params(_plugin, _handle, _params):
     params = dict(parse_qsl(_params))

@@ -160,7 +160,6 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
     refresh_duration = float(widget_def.get('refresh', default_refresh))
     
     if updated_at <= current_time - (3600 * refresh_duration) or force:
-        _id = widget_def['id']
         group_id = widget_def['group']
         action = widget_def.get('action')
         current = int(widget_def.get('current', -1))
@@ -188,7 +187,7 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
                     widget_def['updated'] = 0 if force else current_time
                         
                     manage.save_path_details(widget_def)
-                    _update_strings(_id)
+                    _update_strings(widget_id)
                     
         if single and utils.get_active_window() == 'media':
             utils.update_container()

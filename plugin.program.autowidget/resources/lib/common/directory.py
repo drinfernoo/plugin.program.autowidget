@@ -32,8 +32,6 @@ _exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
                  'specialsortseason', 'track', 'tvshowid', 'watchedepisodes',
                  'customproperties', 'id']
 
-info_match_pattern = '\$INFO\[(.*)\]'
-
 
 def add_separator(title='', char='-', sort=''):
     _window = utils.get_active_window()
