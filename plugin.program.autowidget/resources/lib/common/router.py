@@ -75,7 +75,7 @@ def dispatch(_plugin, _handle, _params):
             is_dir, category = menu.path_menu(group, action, widget_id)
         elif action == 'merged' and group:
             is_dir, category = menu.merged_path(group, widget_id)
-        elif action == 'update' and path and target:
+        elif action == 'update' and target:
             refresh.update_path(widget_id, path, target)
         is_type = 'videos'
     elif mode == 'group':
