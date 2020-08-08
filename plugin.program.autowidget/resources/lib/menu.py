@@ -502,7 +502,7 @@ def _create_context_items(group_id, path_id, idx, length):
                '?mode=manage'
                '&action=edit'
                '&group={}'
-               '&path={})').format(group_id, path_id)),
+               '&path_id={})').format(group_id, path_id)),
           (utils.get_string(32026) if idx > 0 else utils.get_string(32113),
               ('RunPlugin('
                'plugin://plugin.program.autowidget/'
@@ -510,7 +510,7 @@ def _create_context_items(group_id, path_id, idx, length):
                '&action=shift_path'
                '&target=up'
                '&group={}'
-               '&path={})').format(group_id, path_id)),
+               '&path_id={})').format(group_id, path_id)),
           (utils.get_string(32027) if idx < length - 1 else utils.get_string(32112),
               ('RunPlugin('
                'plugin://plugin.program.autowidget/'
@@ -518,6 +518,6 @@ def _create_context_items(group_id, path_id, idx, length):
                '&action=shift_path'
                '&target=down'
                '&group={}'
-               '&path={})').format(group_id, path_id))]
+               '&path_id={})').format(group_id, path_id))]
 
     return cm
