@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.604" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.124" provider-name="drinfernoo">
     <requires>
+        <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.six" />
-        <import addon="script.module.web-pdb" optional="true" />
+        <import addon="script.skinshortcuts" />
     </requires>
-    
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>executable</provides>
     </extension>
-    
     <extension point="xbmc.service" library="service.py" />
-    
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="context.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
-                <visible>[!String.IsEqual(ListItem.DbType,movie) +
-                         !String.IsEqual(ListItem.DbType,episode) +
-                         !String.IsEqual(ListItem.DbType,musicvideo) +
-                         !String.IsEqual(ListItem.DbType,song)] +
-                          String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
-            </item>
-        </menu>
-    </extension>
-    
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
+        <description lang="en_GB"></description>
+        <language></language>
+        <platform>all</platform>
+        <license>LGPL-3.0</license>
+        <forum></forum>
+        <website>https://www.github.com/drinfernoo/</website>
+        <email></email>
+        <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
+        <news></news>
+        <disclaimer></disclaimer>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+cally changes out widgets on the homescreen for a more interesting browsing experience.</summary>
         <platform>all</platform>
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
@@ -128,14 +129,7 @@
         </assets>
     </extension>
 </addon>
-ts added
-1.1.2
- - Add art editing for paths
- - Add group renaming
-1.1.1
- - Add setting to disable notification
-1.1.0
- - Remove Skin Shortcuts dependency
+ove Skin Shortcuts dependency
  - Expand context menu options
  - Add support for skins with "basic" Skin Shortcuts integration
  - Add setting to pause AutoWidget's service
@@ -165,39 +159,14 @@ ts added
         </assets>
     </extension>
 </addon>
-notifications    
-1.0.3
- - Fix shortcuts and widgets added from context menu
-1.0.2
- - Fix crash from non-XML files
-1.0.1
- - Fix crash from non-existent context menu setting
-1.0.0
- - First stable release
-        </news>
-        <assets>
-            <icon>resources/media/icon.png</icon>
-            <fanart>resources/media/fanart.png</fanart>
-            <poster>resources/media/poster.png</poster>
-            <banner>resources/media/banner.png</banner>
-            <clearlogo>resources/media/clearlogo.png</clearlogo>
+r/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
 </addon>
-widgets added from context menu
-1.0.2
- - Fix crash from non-XML files
-1.0.1
- - Fix crash from non-existent context menu setting
-1.0.0
- - First stable release
-        </news>
-        <assets>
-            <icon>resources/media/icon.png</icon>
-            <fanart>resources/media/fanart.png</fanart>
-            <poster>resources/media/poster.png</poster>
-            <banner>resources/media/banner.png</banner>
-            <clearlogo>resources/media/clearlogo.png</clearlogo>
+  <fanart>resources/media/fanart/sync.png</fanart>
+            <poster>resources/media/poster/sync.png</poster>
+            <banner>resources/media/banner/sync.png</banner>
         </assets>
     </extension>
 </addon>
