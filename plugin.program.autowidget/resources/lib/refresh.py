@@ -96,10 +96,9 @@ class RefreshService(xbmc.Monitor):
                       level=xbmc.LOGNOTICE)
 
 
-def _update_strings(widget_id, path_def):
-    if path_def:
-        refresh = skin_string_pattern.format(widget_id, 'refresh')
-        utils.set_property(refresh, '{}'.format(time.time()))
+def _update_strings(widget_id):
+    refresh = skin_string_pattern.format(widget_id, 'refresh')
+    utils.set_property(refresh, '{}'.format(time.time()))
 
 
 def update_path(widget_id, path, target):
