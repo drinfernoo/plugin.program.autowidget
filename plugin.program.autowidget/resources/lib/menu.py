@@ -484,7 +484,7 @@ def merged_path(group_id, _id):
         titles = []
         for idx, path_def in enumerate(paths):
             titles, cat = show_path(group_id, path_def['label'],
-                                    _id, path_def['id'], idx=idx,
+                                    _id, path_def['file']['file'], idx=idx,
                                     num=len(paths), merged=True)
 
         return titles, cat
