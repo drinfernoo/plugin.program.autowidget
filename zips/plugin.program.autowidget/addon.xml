@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.706" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.928" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.six" />
+        <import addon="script.module.pil" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
-        <provides>executable</provides>
+        <provides>executable video</provides>
     </extension>
     
     <extension point="xbmc.service" library="service.py" />
@@ -20,13 +21,36 @@
     </extension>
     
     <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</summary>
-	<summary lang="es_ES">Cambia automáticamente los widgets en la pantalla de inicio para una experiencia de navegación más interesante.</summary>
-        <platform>all</platform>
+        <reuselanguageinvoker>true</reuselanguageinvoker>
+        <summary lang="en_GB">Automatically changes out widgets</summary>
+        <description lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</description>
+		<summary lang="es_ES">Cambia los widgets automáticamente</summary>
+		<description lang="es_ES">Cambia los widgets en la pantalla de inicio automáticamente para una experiencia de navegación más interesante.</description>        
+		<platform>all</platform>
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+2.0.2
+ - Make artwork for groups and paths more consistent
+2.0.1
+ - Add "Toggle Skin Debugging" shortcut
+2.0.0
+ - Rewrite most of add-on functions
+ - Add "Static Path" option
+ - Add "Merged Path" option
+ - Add "Paged Widgets"
+ - Revamp editor dialog
+ - More complete skin compatibility
+ - More miscellaneous fixes
+1.6.8
+ - Add setting for notification sound
+1.6.7
+ - Fix crash when window cannot be detected. Notably fixes Disney+ support.
+1.6.6
+ - Fix extract location
+1.6.5
+ - Add backup/restore features
 1.6.4
  - Fix more rogue refreshes
  - Fix wording in Spanish translation (again, thanks to @roliverosc)
@@ -150,35 +174,11 @@
  - First stable release
         </news>
         <assets>
-            <icon>resources/media/icon/sync.png</icon>
-            <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
-urces/media/icon/sync.png</icon>
-            <fanart>resources/media/fanart/sync.png</fanart>
-            <poster>resources/media/poster/sync.png</poster>
-            <banner>resources/media/banner/sync.png</banner>
-        </assets>
-    </extension>
-</addon>
- widgets added from context menu
-1.0.2
- - Fix crash from non-XML files
-1.0.1
- - Fix crash from non-existent context menu setting
-1.0.0
- - First stable release
-        </news>
-        <assets>
             <icon>resources/media/icon.png</icon>
             <fanart>resources/media/fanart.png</fanart>
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
-            <clearart>resources/media/clearart.png</clearart>
         </assets>
     </extension>
 </addon>
