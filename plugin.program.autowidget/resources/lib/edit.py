@@ -398,5 +398,5 @@ def edit_widget_dialog(widget_id):
     updated = _show_widget_options(widget_def)
     if updated:
         manage.save_path_details(widget_def)
-        utils.update_container()
+        utils.update_container(True)
         edit_widget_dialog(widget_id)
