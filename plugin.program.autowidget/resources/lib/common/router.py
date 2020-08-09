@@ -58,10 +58,10 @@ def dispatch(_plugin, _handle, _params):
             manage.add_path(group, target)
         elif action == 'shift_path' and group and path_id and target:
             edit.shift_path(group, path_id, target)
-        elif action == 'edit':
+        elif action == 'edit_path':
             edit.edit_dialog(group, path_id)
         elif action == 'edit_widget':
-            edit.edit_widget_dialog(target)
+            edit.edit_widget_dialog(widget_id)
     elif mode == 'path':
         if path_id:
             menu.call_path(path_id)
@@ -70,20 +70,20 @@ def dispatch(_plugin, _handle, _params):
         elif action == 'merged' and group:
             is_dir, category = menu.merged_path(group, widget_id)
         elif action == 'update' and target:
-            refresh.update_path(widget_id, path, target)
+            refresh.update_path(widget_id, target, path)
         is_type = 'videos'
     elif mode == 'group':
         if not group:
             is_dir, category = menu.my_groups_menu()
-        elif target:
-            is_dir, category = menu.group_menu(group, target, widget_id)
+        else:
+            is_dir, category = menu.group_menu(group)
     elif mode == 'widget':
         is_dir, is_category = menu.active_widgets_menu()
     elif mode == 'refresh':
-        if not target:
+        if not widget_id:
             refresh.refresh_paths()
         else:
-            refresh.refresh(target, force=True, single=True)
+            refresh.refresh(widget_id, force=True, single=True)
     elif mode == 'tools':
         is_dir, category = menu.tools_menu()
     elif mode == 'force':
