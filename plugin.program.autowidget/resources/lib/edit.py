@@ -223,6 +223,11 @@ def _get_widget_options(edit_def):
                     label = ', '.join(paths)
                 else:
                     label = _def['label']
+                    
+                try:
+                    label = label.encode('utf-8')
+                except:
+                    pass
             
         options.append('[B]{}[/B]: {}'.format(formatted_key, label)) 
              
