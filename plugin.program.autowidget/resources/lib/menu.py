@@ -105,7 +105,6 @@ def group_menu(group_id, target, _id):
             
             directory.add_menu_item(title=path_def['label'],
                                     params={'mode': 'path',
-                                            'action': 'call',
                                             'group': group_id,
                                             'path_id': path_def['id']},
                                     info=path_def['file'],

@@ -63,7 +63,7 @@ def dispatch(_plugin, _handle, _params):
         elif action == 'edit_widget':
             edit.edit_widget_dialog(target)
     elif mode == 'path':
-        if action == 'call' and path_id:
+        if path_id:
             menu.call_path(path_id)
         elif action in ['static', 'cycling'] and group:
             is_dir, category = menu.path_menu(group, action, widget_id)
