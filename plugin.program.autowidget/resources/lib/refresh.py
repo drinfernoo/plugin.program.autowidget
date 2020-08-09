@@ -101,14 +101,14 @@ def _update_strings(widget_id):
     utils.set_property(refresh, '{}'.format(time.time()))
 
 
-def update_path(widget_id, path, target):
+def update_path(widget_id, target, path=None):
     widget_def = manage.get_widget_by_id(widget_id)
     if not widget_def:
         return
     
     stack = widget_def.get('stack', [])
 
-    if target == 'next':
+    if target == 'next' and path:
         path_def = widget_def['path']
         if isinstance(path_def, dict):
             widget_def['label'] = path_def['label']
