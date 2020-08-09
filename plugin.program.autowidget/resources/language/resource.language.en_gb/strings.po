@@ -574,3 +574,6 @@ msgctxt "#32138"
 msgid "Invalid color code."
 msgstr ""
 
+msgctxt "#32139"
+msgid "Debug Logging"
+msgstr ""
