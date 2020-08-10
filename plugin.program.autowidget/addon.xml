@@ -31,6 +31,12 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+2.3.0
+ - Huge simplification of plugin paths
+ - Speed improvements
+ - Better detection for "Next Page" items in various add-ons
+ - Add dedicated debug log
+ - Allow 'path' to be editing for static widgets
 2.2.0
  - Reduce library updates to improve overall speed
  - Sort "Active Widgets" by most recently refreshed
