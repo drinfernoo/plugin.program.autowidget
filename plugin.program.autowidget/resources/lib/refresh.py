@@ -96,36 +96,19 @@ class RefreshService(xbmc.Monitor):
                       level=xbmc.LOGNOTICE)
 
 
-def _update_strings(_id, path_def):
-    if not path_def:
-        return
-    
-    label = path_def['label']
-    action = path_def['id']
-    
-    try:
-        label = label.encode('utf-8')
-    except:
-        pass
-    
-    label_string = skin_string_pattern.format(_id, 'label')
-    action_string = skin_string_pattern.format(_id, 'action')
-    
-    utils.log('Setting {} to {}'.format(label_string, label))
-    utils.log('Setting {} to {}'.format(action_string, action))
-        
-    utils.set_property(label_string, label)
-    utils.set_property(action_string, path_def['id'])
+def _update_strings(widget_id):
+    refresh = skin_string_pattern.format(widget_id, 'refresh')
+    utils.set_property(refresh, '{}'.format(time.time()))
 
 
-def update_path(_id, path, target):
-    widget_def = manage.get_widget_by_id(_id)
+def update_path(widget_id, target, path=None):
+    widget_def = manage.get_widget_by_id(widget_id)
     if not widget_def:
         return
     
     stack = widget_def.get('stack', [])
 
-    if target == 'next':
+    if target == 'next' and path:
         path_def = widget_def['path']
         if isinstance(path_def, dict):
             widget_def['label'] = path_def['label']
@@ -148,7 +131,7 @@ def update_path(_id, path, target):
     action = widget_def['path'] if widget_def['action'] != 'merged' else 'merged'
     if isinstance(widget_def['path'], dict):
         action = widget_def['path']['file']['file']
-    utils.set_property('autowidget-{}-action'.format(_id), action)
+    _update_strings(widget_id)
     manage.save_path_details(widget_def)
     back_to_top(target)
     utils.update_container(True)
@@ -177,7 +160,6 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
     refresh_duration = float(widget_def.get('refresh', default_refresh))
     
     if updated_at <= current_time - (3600 * refresh_duration) or force:
-        _id = widget_def['id']
         group_id = widget_def['group']
         action = widget_def.get('action')
         current = int(widget_def.get('current', -1))
@@ -205,7 +187,7 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
                     widget_def['updated'] = 0 if force else current_time
                         
                     manage.save_path_details(widget_def)
-                    _update_strings(_id, path_def)
+                    _update_strings(widget_id)
                     
         if single and utils.get_active_window() == 'media':
             utils.update_container()

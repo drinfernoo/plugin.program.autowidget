@@ -5,14 +5,8 @@ import re
 
 try:
     from urllib.parse import parse_qsl
-    from urllib.parse import quote_plus
-    from urllib.parse import unquote
-    from urllib.parse import unquote_plus
 except ImportError:
-    from urllib import quote_plus
     from urlparse import parse_qsl
-    from urlparse import unquote
-    from urllib import unquote_plus
     
 from resources.lib import backup
 from resources.lib import edit
@@ -22,49 +16,13 @@ from resources.lib import refresh
 from resources.lib.common import directory
 from resources.lib.common import utils
 
-info_match_pattern = '\$INFO\[(.*)\]'
-encoded_info_match_pattern = '%24INFO\%5b(.*)\%5d'
-path_match_pattern = '\&path=(.*)'
-path_sub_pattern = '&path={}'
-reload_match_pattern = '(%26reload%3d.*)'
-
 
 def _log_params(_plugin, _handle, _params):
-    info_match = re.search(info_match_pattern, _params, flags=re.I)
-    encoded_info_match = re.search(encoded_info_match_pattern, _params, flags=re.I)
-    if info_match:
-        label_match = info_match.groups()[0]
-        _params = re.sub(info_match_pattern, utils.get_infolabel(label_match),
-                         _params, flags=re.I)
-    elif encoded_info_match:
-        label_match = unquote(encoded_info_match.groups()[0])
-        _params = re.sub(encoded_info_match_pattern, utils.get_infolabel(label_match),
-                         _params, flags=re.I)
-    
-    path_match = re.search(path_match_pattern, _params, flags=re.I)
-    if path_match:
-        match = path_match.groups()[0]
-        
-        
-        _params = re.sub(path_match_pattern,
-                         '',
-                         _params,
-                         flags=re.I)
-        _params += path_sub_pattern.format(quote_plus(match))
-        reload_match = re.search(reload_match_pattern, _params, flags=re.I)
-        if reload_match:
-            match = reload_match.groups()[0]
-            _params = re.sub(reload_match_pattern,
-                             unquote(match),
-                             _params,
-                             flags=re.I)
-    
-    
     params = dict(parse_qsl(_params))
     logstring = ''
     
     for param in params:
-        logstring += '[ {0}: {1} ] '.format(param, unquote_plus(params[param]))
+        logstring += '[ {0}: {1} ] '.format(param, params[param])
     
     if not logstring:
         logstring = '[ Root Menu ]'
@@ -87,8 +45,9 @@ def dispatch(_plugin, _handle, _params):
     action = params.get('action', '')
     group = params.get('group', '')
     path = params.get('path', '')
+    path_id = params.get('path_id', '')
     target = params.get('target', '')
-    _id = params.get('id', '')
+    widget_id = params.get('id', '')
     
     if not mode:
         is_dir, category = menu.root_menu()
@@ -97,34 +56,34 @@ def dispatch(_plugin, _handle, _params):
             manage.add_group(target)
         elif action == 'add_path' and group and target:
             manage.add_path(group, target)
-        elif action == 'shift_path' and group and path and target:
-            edit.shift_path(group, path, target)
-        elif action == 'edit':
-            edit.edit_dialog(group, path)
+        elif action == 'shift_path' and group and path_id and target:
+            edit.shift_path(group, path_id, target)
+        elif action == 'edit_path':
+            edit.edit_dialog(group, path_id)
         elif action == 'edit_widget':
-            edit.edit_widget_dialog(target)
+            edit.edit_widget_dialog(widget_id)
     elif mode == 'path':
-        if action == 'call' and path:
-            menu.call_path(path)
+        if path_id:
+            menu.call_path(path_id)
         elif action in ['static', 'cycling'] and group:
-            is_dir, category = menu.path_menu(group, action, _id, path)
+            is_dir, category = menu.path_menu(group, action, widget_id)
         elif action == 'merged' and group:
-            is_dir, category = menu.merged_path(group, _id)
+            is_dir, category = menu.merged_path(group, widget_id)
         elif action == 'update' and target:
-            refresh.update_path(_id, unquote_plus(path), target)
+            refresh.update_path(widget_id, target, path)
         is_type = 'videos'
     elif mode == 'group':
         if not group:
             is_dir, category = menu.my_groups_menu()
-        elif target:
-            is_dir, category = menu.group_menu(group, target, _id)
+        else:
+            is_dir, category = menu.group_menu(group)
     elif mode == 'widget':
         is_dir, is_category = menu.active_widgets_menu()
     elif mode == 'refresh':
-        if not target:
+        if not widget_id:
             refresh.refresh_paths()
         else:
-            refresh.refresh(target, force=True, single=True)
+            refresh.refresh(widget_id, force=True, single=True)
     elif mode == 'tools':
         is_dir, category = menu.tools_menu()
     elif mode == 'force':

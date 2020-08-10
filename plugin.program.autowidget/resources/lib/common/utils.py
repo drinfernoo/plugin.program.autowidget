@@ -66,8 +66,14 @@ colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'cri
 
 
 def log(msg, level=xbmc.LOGDEBUG):
+    debug = get_setting_bool('logging.debug')
+    logpath = os.path.join(_addon_path, 'aw_debug.log')
     msg = '{}: {}'.format(_addon_id, msg)
     xbmc.log(msg, level)
+    if debug:
+        debug_size = os.path.getsize(logpath)
+        debug_msg = time.ctime(time.time()) + msg[25:]
+        write_file(logpath, debug_msg + '\n', mode='a' if debug_size < 1048576 else 'w')
 
 
 def ensure_addon_data():
@@ -164,6 +170,7 @@ def get_active_window():
 
 def update_container(reload=False):
     if reload:
+        log('Triggering library update to refresh widgets...')
         xbmc.executebuiltin('UpdateLibrary(video, AutoWidget)')
     xbmc.executebuiltin('Container.Refresh()')
 
@@ -231,8 +238,8 @@ def read_file(file):
     return content
 
 
-def write_file(file, content):
-    with open(file, 'w') as f:
+def write_file(file, content, mode='w'):
+    with open(file, mode) as f:
         try:
             f.write(content)
             return True

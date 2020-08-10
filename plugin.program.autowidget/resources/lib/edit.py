@@ -13,7 +13,7 @@ warning_shown = utils.get_setting_bool('context.warning')
 
 filter = {'include': ['label', 'file', 'art', 'color'] + utils.art_types,
           'exclude': ['paths', 'version', 'type']}
-widget_filter = {'include': ['action', 'refresh'],
+widget_filter = {'include': ['action', 'refresh', 'path'],
                  'exclude': ['stack', 'version', 'label', 'current',
                              'updated']}
 color_tag = '\[\w+(?: \w+)*\](?:\[\w+(?: \w+)*\])?(\w+)(?:\[\/\w+\])?\[\/\w+\]'
@@ -223,6 +223,11 @@ def _get_widget_options(edit_def):
                     label = ', '.join(paths)
                 else:
                     label = _def['label']
+                    
+                try:
+                    label = label.encode('utf-8')
+                except:
+                    pass
             
         options.append('[B]{}[/B]: {}'.format(formatted_key, label)) 
              
@@ -398,5 +403,5 @@ def edit_widget_dialog(widget_id):
     updated = _show_widget_options(widget_def)
     if updated:
         manage.save_path_details(widget_def)
-        utils.update_container()
+        utils.update_container(True)
         edit_widget_dialog(widget_id)
