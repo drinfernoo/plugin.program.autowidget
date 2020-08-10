@@ -49,7 +49,6 @@ def my_groups_menu():
     groups = manage.find_defined_groups()
     if len(groups) > 0:
         for group in groups:
-            _id = uuid.uuid4()
             group_name = group['label']
             group_id = group['id']
             group_type = group['type']
@@ -63,9 +62,7 @@ def my_groups_menu():
             
             directory.add_menu_item(title=group_name,
                                     params={'mode': 'group',
-                                            'group': group_id,
-                                            'target': group_type,
-                                            'id': six.text_type(_id)},
+                                            'group': group_id},
                                     info=group.get('info', {}),
                                     art=group.get('art') or (utils.get_art('folder-shortcut')
                                                              if group_type == 'shortcut'
@@ -81,22 +78,24 @@ def my_groups_menu():
     return True, utils.get_string(32007)
     
     
-def group_menu(group_id, target, _id):
+def group_menu(group_id):
     _window = utils.get_active_window()
+    _id = uuid.uuid4()
     
-    group = manage.get_group_by_id(group_id)
-    if not group:
+    group_def = manage.get_group_by_id(group_id)
+    if not group_def:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'
                   .format(group_id),
                   level=xbmc.LOGERROR)
         return False, 'AutoWidget'
     
-    group_name = group['label']
+    group_name = group_def['label']
+    group_type = group_def['type']
     
     paths = manage.find_defined_paths(group_id)
     if len(paths) > 0:
         cm = []
-        art = folder_shortcut if target == 'shortcut' else folder_sync
+        art = folder_shortcut if group_type == 'shortcut' else folder_sync
         
         for idx, path_def in enumerate(paths):
             if _window == 'media':
@@ -105,18 +104,17 @@ def group_menu(group_id, target, _id):
             
             directory.add_menu_item(title=path_def['label'],
                                     params={'mode': 'path',
-                                            'action': 'call',
                                             'group': group_id,
-                                            'path': path_def['id']},
+                                            'path_id': path_def['id']},
                                     info=path_def['file'],
                                     art=path_def['file']['art'] or art,
                                     cm=cm,
                                     isFolder=False)
                                     
-        if target == 'widget' and _window != 'home':
+        if group_type == 'widget' and _window != 'home':
             directory.add_separator(title=32010, char='/', sort='bottom')
 
-            path_param = '$INFO[Window(10000).Property(autowidget-{}-action)]'.format(_id)
+            refresh = '$INFO[Window(10000).Property(autowidget-{}-refresh)]'.format(_id)
 
             directory.add_menu_item(title=utils.get_string(32076)
                                           .format(group_name),
@@ -124,7 +122,7 @@ def group_menu(group_id, target, _id):
                                             'action': 'static',
                                             'group': group_id,
                                             'id': six.text_type(_id),
-                                            'path': path_param},
+                                            'refresh': refresh},
                                     art=utils.get_art('folder'),
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
@@ -134,7 +132,7 @@ def group_menu(group_id, target, _id):
                                             'action': 'cycling',
                                             'group': group_id,
                                             'id': six.text_type(_id),
-                                            'path': path_param},
+                                            'refresh': refresh},
                                     art=utils.get_art('shuffle'),
                                     isFolder=True,
                                     props={'specialsort': 'bottom'})
@@ -163,7 +161,7 @@ def active_widgets_menu():
     
     if len(widgets) > 0:
         for widget_def in widgets:
-            _id = widget_def.get('id', '')
+            widget_id = widget_def.get('id', '')
             action = widget_def.get('action', '')
             group = widget_def.get('group', '')
             path_def = widget_def.get('path', {})
@@ -193,10 +191,6 @@ def active_widgets_menu():
             cm = []
             if not action:
                 art = folder_shortcut
-                params = {'mode': 'group',
-                          'group': group,
-                          'target': 'shortcut',
-                          'id': six.text_type(_id)}
                 title = utils.get_string(32030).format(title)
             else:
                 if action in ['random', 'next']:
@@ -204,29 +198,25 @@ def active_widgets_menu():
                     cm.append((utils.get_string(32069), ('RunPlugin('
                                                          'plugin://plugin.program.autowidget/'
                                                          '?mode=refresh'
-                                                         '&target={})').format(_id)))
+                                                         '&id={})').format(widget_id)))
                 elif action == 'merged':
                     art = merge
                 elif action == 'static':
                     art = utils.get_art('folder')
                 
-                params = {'mode': 'group',
-                          'group': group,
-                          'target': 'widget',
-                          'id': six.text_type(_id)}
-                
             cm.append((utils.get_string(32070), ('RunPlugin('
                                                  'plugin://plugin.program.autowidget/'
                                                  '?mode=manage'
                                                  '&action=edit_widget'
-                                                 '&target={})').format(_id)))
+                                                 '&id={})').format(widget_id)))
             
             if not group_def:
-                title = '{} - [COLOR firebrick]{}[/COLOR]'.format(_id, utils.get_string(32071))
+                title = '{} - [COLOR firebrick]{}[/COLOR]'.format(widget_id, utils.get_string(32071))
                 
             directory.add_menu_item(title=title,
                                     art=art,
-                                    params=params,
+                                    params={'mode': 'group',
+                                            'group': group},
                                     cm=cm[1:] if not action else cm,
                                     isFolder=True)
     else:
@@ -260,12 +250,12 @@ def tools_menu():
     return True, utils.get_string(32008)
 
 
-def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, merged=False):
+def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, merged=False):
     hide_watched = utils.get_setting_bool('widgets.hide_watched')
     show_next = utils.get_setting_int('widgets.show_next')
     paged_widgets = utils.get_setting_bool('widgets.paged')
     
-    widget_def = manage.get_widget_by_id(_id)
+    widget_def = manage.get_widget_by_id(widget_id)
     if not widget_def:
         return True, 'AutoWidget'
     
@@ -276,9 +266,6 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
         color = widget_def['stack'][0].get('color', default_color)
     else:
         color = widget_def['path'].get('color', default_color)
-
-    path_def = manage.get_path_by_id(path_id, group_id=group_id)
-    path = path_def['file']['file'] if path_def else path_id
     
     stack = widget_def.get('stack', [])
     if stack:
@@ -286,8 +273,8 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
         directory.add_menu_item(title=title,
                                 params={'mode': 'path',
                                         'action': 'update',
-                                        'id': _id,
-                                        'path': stack[-1],
+                                        'id': widget_id,
+                                        'path': '',
                                         'target': 'back'},
                                 art=utils.get_art('back', color),
                                 isFolder=num > 1,
@@ -309,7 +296,9 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
         
         clean_pattern = '[^\w \xC0-\xFF]'
         tag_pattern = '(\[[^\]]*\])'
-        next_pattern = '^(?:next(?: page$)?)$|^(?:page \d+(.*\d+.*$)?(?:\(\d+ results\)$)?)$'
+        
+        next_pattern = ('(?:^(?:next)?\s*(?:(?:>>)|(?:\.*)$)?)\s*'
+                        '(?:page\s*(?:(?:\d+\D*\d?$)|(?:(?:>>)|(?:\.*)$)|(?:\(\d+|.*\)$))?)?$')
         prev_pattern = '^(?:previous(?: page)?)$|^(?:back)$'
         
         cleaned_title = re.sub(tag_pattern, '', file['label'].lower()).strip()
@@ -330,7 +319,7 @@ def show_path(group_id, path_label, _id, path_id='', idx=0, titles=None, num=1, 
 
             update_params = {'mode': 'path',
                              'action': 'update',
-                             'id': _id,
+                             'id': widget_id,
                              'path': file['file'],
                              'target': 'next'}
 
@@ -393,7 +382,7 @@ def call_path(path_id):
     return False, path_def['label']
 
 
-def path_menu(group_id, action, _id, path=None):
+def path_menu(group_id, action, widget_id):
     group_def = manage.get_group_by_id(group_id)
     if not group_def:
         directory.add_menu_item(title=32073,
@@ -410,7 +399,7 @@ def path_menu(group_id, action, _id, path=None):
                                 isFolder=True)
         return True, group_name
 
-    widget_def = manage.get_widget_by_id(_id, group_id)
+    widget_def = manage.get_widget_by_id(widget_id, group_id)
     if not widget_def:
         dialog = xbmcgui.Dialog()
         if action == 'static':
@@ -418,7 +407,7 @@ def path_menu(group_id, action, _id, path=None):
             if idx == -1:
                 return True, 'AutoWidget'
             
-            widget_def = manage.initialize(group_def, action, _id, keep=idx)
+            widget_def = manage.initialize(group_def, action, widget_id, keep=idx)
         elif action == 'cycling':
             idx = dialog.select(utils.get_string(32081), [utils.get_string(32079),
                                                           utils.get_string(32080)])
@@ -426,15 +415,14 @@ def path_menu(group_id, action, _id, path=None):
                 return True, 'AutoWidget'
             
             _action = 'random' if idx == 0 else 'next'
-            widget_def = manage.initialize(group_def, _action, _id)
+            widget_def = manage.initialize(group_def, _action, widget_id)
     
     if widget_def:
         widget_path = widget_def.get('path', {})
-        _path = path if path else widget_path
         
         if isinstance(widget_path, dict):
             _label = widget_path['label']
-            _path = widget_path['file']['file']
+            widget_path = widget_path['file']['file']
         else:
             stack = widget_def.get('stack', [])
             if stack:
@@ -442,7 +430,7 @@ def path_menu(group_id, action, _id, path=None):
             else:
                 _label = widget_def.get('label', '')
         
-        titles, cat = show_path(group_id, _label, _id, _path)
+        titles, cat = show_path(group_id, _label, widget_id, widget_path)
         return titles, cat
     else:
         directory.add_menu_item(title=32067,
@@ -451,9 +439,9 @@ def path_menu(group_id, action, _id, path=None):
         return True, group_name
         
         
-def merged_path(group_id, _id):
+def merged_path(group_id, widget_id):
     _window = utils.get_active_window()
-    
+
     group_def = manage.get_group_by_id(group_id)
     group_name = group_def.get('label', '')
     paths = group_def.get('paths', [])
@@ -463,7 +451,7 @@ def merged_path(group_id, _id):
                                 isFolder=False)
         return True, group_name
     
-    widget_def = manage.get_widget_by_id(_id, group_id)
+    widget_def = manage.get_widget_by_id(widget_id, group_id)
     if widget_def and _window != 'dialog':
         paths = widget_def['path']
     elif not widget_def:
@@ -475,14 +463,14 @@ def merged_path(group_id, _id):
         if idxs is not None:
             if len(idxs) > 0:
                 widget_def = manage.initialize(group_def, 'merged',
-                                               _id, keep=idxs)
+                                               widget_id, keep=idxs)
                 paths = widget_def['path']
         
     if widget_def:
         titles = []
         for idx, path_def in enumerate(paths):
             titles, cat = show_path(group_id, path_def['label'],
-                                    _id, path_def['id'], idx=idx,
+                                    widget_id, path_def['file']['file'], idx=idx,
                                     num=len(paths), merged=True)
 
         return titles, cat
@@ -498,9 +486,9 @@ def _create_context_items(group_id, path_id, idx, length):
               ('RunPlugin('
                'plugin://plugin.program.autowidget/'
                '?mode=manage'
-               '&action=edit'
+               '&action=edit_path'
                '&group={}'
-               '&path={})').format(group_id, path_id)),
+               '&path_id={})').format(group_id, path_id)),
           (utils.get_string(32026) if idx > 0 else utils.get_string(32113),
               ('RunPlugin('
                'plugin://plugin.program.autowidget/'
@@ -508,7 +496,7 @@ def _create_context_items(group_id, path_id, idx, length):
                '&action=shift_path'
                '&target=up'
                '&group={}'
-               '&path={})').format(group_id, path_id)),
+               '&path_id={})').format(group_id, path_id)),
           (utils.get_string(32027) if idx < length - 1 else utils.get_string(32112),
               ('RunPlugin('
                'plugin://plugin.program.autowidget/'
@@ -516,6 +504,6 @@ def _create_context_items(group_id, path_id, idx, length):
                '&action=shift_path'
                '&target=down'
                '&group={}'
-               '&path={})').format(group_id, path_id))]
+               '&path_id={})').format(group_id, path_id))]
 
     return cm

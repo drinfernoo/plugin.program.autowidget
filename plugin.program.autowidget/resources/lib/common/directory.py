@@ -1,6 +1,7 @@
 import xbmcgui
 import xbmcplugin
 
+import re
 import string
 import sys
 
@@ -11,9 +12,11 @@ from resources.lib.common import utils
 try:
     from urllib.parse import urlencode
     from urllib.parse import unquote
+    from urllib.parse import quote_plus
 except ImportError:
     from urllib import urlencode
     from urllib import unquote
+    from urllib import quote_plus
 
 _sort_methods = [xbmcplugin.SORT_METHOD_UNSORTED,
                  xbmcplugin.SORT_METHOD_LABEL,
@@ -66,15 +69,15 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     _handle = int(sys.argv[1])
 
     if params is not None:
-        if 'path' in params:
-            encode = {k: params[k] for k, v in params.items() if k != 'path'}
+        if 'refresh' in params:
+            encode = {k: params[k] for k, v in params.items() if k != 'refresh'}
         else:
             encode = params
         
         _plugin += '?{}'.format(urlencode(encode))
         
-        if 'path' in params:
-            _plugin += '&path={}'.format(params['path'])
+        if 'refresh' in params:
+            _plugin += '&refresh={}'.format(params['refresh'])
     elif path is not None:
         _plugin = path
 

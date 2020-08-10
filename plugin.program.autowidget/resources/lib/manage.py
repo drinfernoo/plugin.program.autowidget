@@ -57,7 +57,7 @@ def clean(notify=False):
                                           .format('No' if removed == 0 else removed))
 
 
-def initialize(group_def, action, _id, save=True, keep=None):
+def initialize(group_def, action, widget_id, save=True, keep=None):
     duration = utils.get_setting_float('service.refresh_duration')
     paths = group_def.get('paths', [])
     path_def = []
@@ -73,7 +73,7 @@ def initialize(group_def, action, _id, save=True, keep=None):
             path_def.append(paths[idx])
 
     params = {'action': action,
-              'id': _id,
+              'id': widget_id,
               'group': group_def['id'],
               'refresh': duration,
               'path': path_def,
