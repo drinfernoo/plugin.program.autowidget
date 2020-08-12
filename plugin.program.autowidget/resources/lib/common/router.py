@@ -51,6 +51,8 @@ def dispatch(_plugin, _handle, _params):
             manage.add_path(group, target)
         elif action == 'shift_path' and group and path_id and target:
             edit.shift_path(group, path_id, target)
+        elif action == 'edit':
+            edit.edit_dialog(group)
         elif action == 'edit_path':
             edit.edit_dialog(group, path_id)
         elif action == 'edit_widget':
