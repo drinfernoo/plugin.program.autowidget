@@ -151,8 +151,8 @@ def set_color(setting=False):
                               preselect=colors.index(color) if color in colors else -1)
         if value > -1:
             value = colors[value]
-            
-    if value:
+
+    if value != -1:
         if value not in colors:
             if len(value) < 6:
                 dialog.notification('AutoWidget', get_string(32138))
