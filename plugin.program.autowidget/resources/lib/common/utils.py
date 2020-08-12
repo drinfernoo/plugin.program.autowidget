@@ -356,7 +356,7 @@ def clean_artwork_url(url):
 def _get_json_version():
     params = {'jsonrpc': '2.0', 'id': 1,
               'method': 'JSONRPC.Version'}
-    result = json.loads(xbmc.executeJSONRPC(json.dumps(params)))['result']['version']
+    result = json.loads(call_jsonrpc(json.dumps(params)))['result']['version']
     return (result['major'], result['minor'], result['patch'])
 
 
@@ -371,7 +371,7 @@ def get_files_list(path, titles=None):
                          'directory': path},
               'id': 1}
     
-    files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
+    files = json.loads(call_jsonrpc(json.dumps(params)))
     new_files = []
     if 'error' not in files:
         files = files['result']['files']
@@ -393,4 +393,4 @@ def call_builtin(action, delay=0):
 
 
 def call_jsonrpc(request):
-    ebmc.executeJSONRPC(six.text_type(request))
+    return xbmc.executeJSONRPC(request)
