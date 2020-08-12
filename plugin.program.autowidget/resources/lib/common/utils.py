@@ -179,9 +179,9 @@ def get_active_window():
 
 
 def update_container(reload=False):
-    if reload:
-        log('Triggering library update to refresh widgets...')
-        xbmc.executebuiltin('UpdateLibrary(video, AutoWidget)')
+    # if reload:
+        # log('Triggering library update to refresh widgets...')
+        # xbmc.executebuiltin('UpdateLibrary(video, AutoWidget)')
     xbmc.executebuiltin('Container.Refresh()')
 
 
