@@ -3,6 +3,7 @@ import xbmcaddon
 import xbmcgui
 
 import codecs
+import contextlib
 import io
 import json
 import os
@@ -394,3 +395,12 @@ def call_builtin(action, delay=0):
 
 def call_jsonrpc(request):
     return xbmc.executeJSONRPC(request)
+
+
+@contextlib.contextmanager
+def timing(description):
+    start = time.time()
+    yield
+    elapsed = time.time() - start
+
+    log('{}: {}'.format(description, elapsed))
