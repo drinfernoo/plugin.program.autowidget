@@ -142,8 +142,7 @@ def back_to_top(target):
         return
     actions = ['back', 'firstpage', 'right']
     for action in actions:
-        xbmc.sleep(100)
-        xbmc.executebuiltin('Action({})'.format(action))
+        utils.call_builtin('Action({})'.format(action), 100)
 
 
 def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):

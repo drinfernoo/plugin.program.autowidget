@@ -13,9 +13,6 @@ import unicodedata
 import six
 from PIL import Image
 
-from xml.dom import minidom
-from xml.etree import ElementTree
-
 try:
     from urllib.parse import unquote
 except ImportError:
@@ -25,6 +22,9 @@ _addon = xbmcaddon.Addon()
 _addon_id = _addon.getAddonInfo('id')
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
+_addon_version = _addon.getAddonInfo('version')
+_addon_data = xbmc.translatePath('special://profile/addon_data/')
+
 _art_path = os.path.join(_addon_root, 'resources', 'media')
 _home = xbmc.translatePath('special://home/')
 
@@ -93,10 +93,11 @@ def ensure_addon_data():
 def wipe(folder=_addon_path):
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno('AutoWidget', get_string(32065))
-    backup_location = xbmc.translatePath(get_setting('backup.location'))
 
     if choice:
         for root, dirs, files in os.walk(folder):
+            backup_location = xbmc.translatePath(
+                                  _addon.getSetting('backup.location'))
             for name in files:
                 file = os.path.join(root, name)
                 if backup_location not in file:
@@ -284,31 +285,6 @@ def write_json(file, content):
                 level=xbmc.LOGERROR)
 
 
-def read_xml(file):
-    xml = None
-    if os.path.exists(file):
-        try:
-            xml = ElementTree.parse(file).getroot()
-        except Exception as e:
-            log('Could not read XML from {}: {}'.format(file, e),
-                level=xbmc.LOGERROR)
-    else:
-        log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
-
-    return xml
-
-
-def write_xml(file, content):
-    _prettify(content)
-    tree = ElementTree.ElementTree(content)
-
-    try:
-        tree.write(file)
-    except Exception as e:
-        log('Could not write to {}: {}'.format(file, e),
-                  level=xbmc.LOGERROR)
-
-
 def set_setting(setting, value):
     return _addon.setSetting(setting, value)
 
@@ -346,6 +322,10 @@ def set_skin_string(string, value):
     xbmc.executebuiltin('Skin.SetString({},{})'.format(string, value))
 
 
+def translate_path(path):
+    return xbmc.translatePath(path)
+
+
 def get_string(_id):
     return six.text_type(_addon.getLocalizedString(_id))
 
@@ -360,6 +340,10 @@ def clear_property(property, window=10000):
 
 def get_infolabel(label):
     return xbmc.getInfoLabel(label)
+
+
+def get_condition(cond):
+    return xbmc.getCondVisibility(cond)
 
 
 def clean_artwork_url(url):
@@ -400,3 +384,13 @@ def get_files_list(path, titles=None):
             new_files.append(new_file)
                 
         return new_files
+
+
+def call_builtin(action, delay=0):
+    if delay:
+        xbmc.sleep(delay)
+    xbmc.executebuiltin(six.text_type(action))
+
+
+def call_jsonrpc(request):
+    ebmc.executeJSONRPC(six.text_type(request))

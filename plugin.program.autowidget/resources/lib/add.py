@@ -1,8 +1,4 @@
-import xbmc
-import xbmcaddon
 import xbmcgui
-
-import os
 
 try:
     from urllib.parse import parse_qsl
@@ -14,10 +10,6 @@ except ImportError:
 from resources.lib import manage
 from resources.lib.common import utils
 
-_addon = xbmcaddon.Addon()
-_addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
-_addon_version = _addon.getAddonInfo('version')
-
 shortcut_types = [utils.get_string(32051), utils.get_string(32052),
                   utils.get_string(32082), utils.get_string(32083),
                   utils.get_string(32053)]
@@ -27,6 +19,8 @@ folder_sync = utils.get_art('folder-sync')
 folder_settings = utils.get_art('folder-settings')
 folder_clone = utils.get_art('folder-clone')
 folder_explode = utils.get_art('folder-explode')
+
+dialog = xbmcgui.Dialog()
 
 
 def add(labels):
@@ -52,10 +46,10 @@ def add(labels):
 def build_labels(source, path_def=None, target=''):
     if source == 'context' and not path_def and not target:
         labels = {'label': utils.get_infolabel('ListItem.Label'),
-                  'content': xbmc.getInfoLabel('Container.Content')}
+                  'content': utils.get_infolabel('Container.Content')}
         
         path_def = {'file': utils.get_infolabel('ListItem.FolderPath'),
-                    'filetype': 'directory' if xbmc.getCondVisibility('Container.ListItem.IsFolder') else 'file',
+                    'filetype': 'directory' if utils.get_condition('Container.ListItem.IsFolder') else 'file',
                     'art': {}}  # would be fun to set some "placeholder" art here
 
         for i in utils.info_types:
@@ -114,7 +108,6 @@ def _add_as(path_def):
         li.setArt(art[idx])
         options.append(li)
     
-    dialog = xbmcgui.Dialog()
     idx = dialog.select(utils.get_string(32084), options, useDetails=True)
     if idx < 0:
         return
@@ -156,7 +149,6 @@ def _group_dialog(_type, group_id=None):
         item.setArt(folder_sync if group['type'] == 'widget' else folder_shortcut)
         options.append(item)
     
-    dialog = xbmcgui.Dialog()
     choice = dialog.select(utils.get_string(32054), options, preselect=index,
                            useDetails=True)
     
@@ -171,20 +163,19 @@ def _group_dialog(_type, group_id=None):
 
 
 def add_group(target, group_name=''):
-    dialog = xbmcgui.Dialog()
     group_name = dialog.input(heading=utils.get_string(32037),
                               defaultt=group_name)
     group_id = ''
     
     if group_name:
         group_id = utils.get_unique_id(group_name)
-        filename = os.path.join(_addon_path, '{}.group'.format(group_id))
+        filename = os.path.join(utils._addon_path, '{}.group'.format(group_id))
         group_def = {'label': group_name,
                      'type': target,
                      'paths': [],
                      'id': group_id,
                      'art': folder_sync if target == 'widget' else folder_shortcut,
-                     'version': _addon_version}
+                     'version': utils._addon_version}
     
         utils.write_json(filename, group_def)
     else:
@@ -200,18 +191,15 @@ def _add_path(group_def, labels, over=False):
         elif group_def['type'] == 'widget':
             heading = utils.get_string(32044)
         
-        labels['label'] = xbmcgui.Dialog().input(heading=heading,
-                                                 defaultt=labels['label'])
+        labels['label'] = dialog.input(heading=heading, defaultt=labels['label'])
                                                  
     labels['id'] = utils.get_unique_id(labels['label'])
-    labels['version'] = _addon_version
+    labels['version'] = utils._addon_version
     
     manage.write_path(group_def, path_def=labels)
     
     
 def _copy_path(path_def):
-    dialog = xbmcgui.Dialog()
-    
     group_id = add_group(path_def['target'], path_def['label'])
     if not group_id:
         return

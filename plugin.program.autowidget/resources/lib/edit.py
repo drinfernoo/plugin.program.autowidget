@@ -18,6 +18,7 @@ widget_filter = {'include': ['action', 'refresh', 'path'],
                              'updated']}
 color_tag = '\[\w+(?: \w+)*\](?:\[\w+(?: \w+)*\])?(\w+)(?:\[\/\w+\])?\[\/\w+\]'
 plus = utils.get_art('plus')
+dialog = xbmcgui.Dialog()
 
 
 def shift_path(group_id, path_id, target):
@@ -46,7 +47,6 @@ def shift_path(group_id, path_id, target):
 
 
 def _remove_group(group_id, over=False):
-    dialog = xbmcgui.Dialog()
     group_def = manage.get_group_by_id(group_id)
     group_name = group_def['label']
     if not over:
@@ -60,7 +60,6 @@ def _remove_group(group_id, over=False):
 
 
 def _remove_path(path_id, group_id, over=False):
-    dialog = xbmcgui.Dialog()
     if not over:
         choice = dialog.yesno('AutoWidget', utils.get_string(32035))
 
@@ -78,7 +77,6 @@ def _remove_path(path_id, group_id, over=False):
 
 
 def _remove_widget(widget_id, over=False):
-    dialog = xbmcgui.Dialog()
     if not over:
         choice = dialog.yesno('AutoWidget', utils.get_string(32039))
 
@@ -90,7 +88,6 @@ def _remove_widget(widget_id, over=False):
 
 
 def _warn():
-    dialog = xbmcgui.Dialog()
     choice = dialog.yesno('AutoWidget', utils.get_string(32058),
                           yeslabel=utils.get_string(32059),
                           nolabel=utils.get_string(32060))
@@ -105,7 +102,6 @@ def _warn():
 
 
 def _show_options(group_def, path_def=None):
-    dialog = xbmcgui.Dialog()
     edit_def = path_def if path_def else group_def
     options = _get_options(edit_def)
     remove_label = utils.get_string(32025) if path_def else utils.get_string(32023)
@@ -129,7 +125,6 @@ def _show_options(group_def, path_def=None):
     
     
 def _show_widget_options(edit_def):
-    dialog = xbmcgui.Dialog()
     options = _get_widget_options(edit_def)
     options.append('[COLOR firebrick]{}[/COLOR]'.format(utils.get_string(32116)))
 
@@ -235,8 +230,6 @@ def _get_widget_options(edit_def):
 
 
 def _get_value(edit_def, key):
-    dialog = xbmcgui.Dialog()
-    
     if isinstance(edit_def[_clean_key(key)], dict):
         is_art = key == 'art'
         label = utils.get_string(32117) if is_art else utils.get_string(32118)
@@ -300,8 +293,6 @@ def _get_value(edit_def, key):
 
 
 def _get_widget_value(edit_def, key): 
-    dialog = xbmcgui.Dialog()
-    
     if key == 'action':
         actions = [utils.get_string(32079), utils.get_string(32080)] 
         choice = dialog.select(utils.get_string(32081), actions) 

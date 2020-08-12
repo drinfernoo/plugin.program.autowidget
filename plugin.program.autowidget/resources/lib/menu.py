@@ -1,4 +1,3 @@
-import xbmc
 import xbmcgui
 
 import re
@@ -350,8 +349,7 @@ def call_path(path_id):
     if not path_def:
         return
     
-    xbmc.executebuiltin('Dialog.Close(busydialog)')
-    xbmc.sleep(500)
+    utils.call_builtin('Dialog.Close(busydialog)', 500)
     final_path = ''
     
     if path_def['target'] == 'shortcut' and path_def['file']['filetype'] == 'file' \
@@ -376,7 +374,7 @@ def call_path(path_id):
                                                      .replace('plugin://', ''))
         
     if final_path:
-        xbmc.executebuiltin(final_path)
+        utils.call_builtin(final_path)
         
     return False, path_def['label']
 

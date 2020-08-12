@@ -1,13 +1,8 @@
-import xbmc
-import xbmcplugin
-
-import re
-
 try:
     from urllib.parse import parse_qsl
 except ImportError:
     from urlparse import parse_qsl
-    
+
 from resources.lib import backup
 from resources.lib import edit
 from resources.lib import menu
@@ -87,7 +82,7 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'force':
         refresh.refresh_paths(notify=True, force=True)
     elif mode == 'skindebug':
-        xbmc.executebuiltin('Skin.ToggleDebug')
+        utils.call_builtin('Skin.ToggleDebug')
     elif mode == 'wipe':
         utils.wipe()
     elif mode == 'clean':
@@ -104,6 +99,4 @@ def dispatch(_plugin, _handle, _params):
 
     if is_dir:
         directory.add_sort_methods(_handle)
-        xbmcplugin.setPluginCategory(_handle, category)
-        xbmcplugin.setContent(_handle, is_type)
-        xbmcplugin.endOfDirectory(_handle)
+        directory.finish_directory(_handle, category, is_type)
