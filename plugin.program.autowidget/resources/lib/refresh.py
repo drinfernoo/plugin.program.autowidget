@@ -45,14 +45,13 @@ class RefreshService(xbmc.Monitor):
         self.refresh_notification = utils.get_setting_int('service.refresh_notification')
         self.refresh_sound = utils.get_setting_bool('service.refresh_sound')
         
-        self._clean_widgets()
         utils.update_container(True)
         
     def _clean_widgets(self):
-        manage.clean()
         for widget_def in manage.find_defined_widgets():
-            utils.log('Resetting {}'.format(widget_def['id']), level=xbmc.LOGDEBUG)
-            update_path(widget_def['id'], None, 'reset')
+            if not manage.clean(widget_def['id']):
+                utils.log('Resetting {}'.format(widget_def['id']))
+                update_path(widget_def['id'], None, 'reset')
 
     def _update_labels(self):
         for widget_def in manage.find_defined_widgets():
@@ -65,6 +64,7 @@ class RefreshService(xbmc.Monitor):
                 _update_strings(widget_def['id'], path_def)
 
     def _update_widgets(self):
+        self._clean_widgets()
         self._refresh(True)
         
         while not self.abortRequested():

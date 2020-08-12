@@ -8,12 +8,10 @@ import random
 from resources.lib.common import utils
 
 
-
-def clean(notify=False):
+def clean(widget_id=None, notify=False):
     files = []
     dialog = xbmcgui.Dialog()
-    addon_data = xbmc.translatePath('special://profile/addon_data/')
-    skin_shortcuts = os.path.join(addon_data, 'script.skinshortcuts')
+    skin_shortcuts = os.path.join(utils._addon_data, 'script.skinshortcuts')
     
     params = {"jsonrpc": "2.0", "id": 1, "method": "Addons.GetAddons",
               "params": {"type": "xbmc.gui.skin"}}
@@ -32,17 +30,33 @@ def clean(notify=False):
     
     remove = []
     removed = 0
-    for widget in find_defined_widgets():
-        if not get_group_by_id(widget['group']):
-            remove.append(widget['id'])
-        
+    
+    if widget_id:
         found = False
         for file in files:
-            if widget['id'] in utils.read_file(file):
+            if widget_id in utils.read_file(file):
                 found = True
                 utils.log('{} found in {}; not cleaning'
-                          .format(widget['id'], file))
+                          .format(widget_id, file))
                 break
+        if not found:
+            utils.log('{} not found; cleaning'.format(widget_id))
+            utils.remove_file(os.path.join(utils._addon_path,
+                                           '{}.widget'.format(widget_id)))
+            return True
+        return False
+    
+    for widget in find_defined_widgets():
+        found = False
+        if get_group_by_id(widget['group']):
+            found = True
+        else:
+            for file in files:
+                if widget['id'] in utils.read_file(file):
+                    found = True
+                    utils.log('{} found in {}; not cleaning'
+                              .format(widget['id'], file))
+                    break
         if not found:
             utils.log('{} not found; cleaning'.format(widget['id']))
             utils.remove_file(os.path.join(utils._addon_path,
