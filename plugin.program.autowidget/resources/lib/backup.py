@@ -33,7 +33,7 @@ def backup():
             try:
                 os.makedirs(backup_location)
             except Exception as e:
-                utils.log(str(e), level=xbmc.LOGERROR)
+                utils.log(str(e), 'error')
                 dialog.notification('AutoWidget', utils.get_string(32097))
                 return
                 

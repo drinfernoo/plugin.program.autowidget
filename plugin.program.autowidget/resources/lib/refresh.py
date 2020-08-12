@@ -16,7 +16,7 @@ class RefreshService(xbmc.Monitor):
     def __init__(self):
         """Starts all of the actions of AutoWidget's service."""
         super(RefreshService, self).__init__()
-        utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', level=xbmc.LOGNOTICE)
+        utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', 'notice')
         self.player = xbmc.Player()
         utils.ensure_addon_data()
         self._update_properties()
@@ -80,7 +80,7 @@ class RefreshService(xbmc.Monitor):
             if self.refresh_enabled == 1:
                 if self.player.isPlayingVideo():
                     utils.log('+++++ PLAYBACK DETECTED, SKIPPING AUTOWIDGET REFRESH +++++',
-                              level=xbmc.LOGNOTICE)
+                              'notice')
                     return
             else:
                 if self.refresh_notification == 0:
@@ -89,11 +89,11 @@ class RefreshService(xbmc.Monitor):
                     if not self.player.isPlayingVideo():
                         notification = True
             
-            utils.log('+++++ REFRESHING AUTOWIDGETS +++++', level=xbmc.LOGNOTICE)
+            utils.log('+++++ REFRESHING AUTOWIDGETS +++++', 'notice')
             refresh_paths(notify=notification and not startup)
         else:
             utils.log('+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++',
-                      level=xbmc.LOGNOTICE)
+                      'notice')
 
 
 def _update_strings(widget_id):

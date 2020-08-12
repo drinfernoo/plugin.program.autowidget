@@ -85,8 +85,7 @@ def group_menu(group_id):
     group_def = manage.get_group_by_id(group_id)
     if not group_def:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'
-                  .format(group_id),
-                  level=xbmc.LOGERROR)
+                  .format(group_id), 'error')
         return False, 'AutoWidget'
     
     group_name = group_def['label']

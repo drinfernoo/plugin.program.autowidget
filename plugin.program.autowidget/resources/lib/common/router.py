@@ -18,23 +18,21 @@ from resources.lib.common import utils
 
 
 def _log_params(_plugin, _handle, _params):
+    msg = '[{}]'
+    
     params = dict(parse_qsl(_params))
-    logstring = ''
+    if params:
+        msg = msg.format(']['.join([' {}: {} '.format(p, params[p])
+                                    for p in params]))
+    else:
+        msg = msg.format(' root ')
+    utils.log(msg)
     
-    for param in params:
-        logstring += '[ {0}: {1} ] '.format(param, params[param])
-    
-    if not logstring:
-        logstring = '[ Root Menu ]'
-
-    utils.log(logstring, level=xbmc.LOGNOTICE)
-
     return params
-    
-    
+
+
 def dispatch(_plugin, _handle, _params):
-    _handle = int(_handle)
-    params = _log_params(_plugin, _handle, _params)
+    params = _log_params(_plugin, int(_handle), _params)
     category = 'AutoWidget'
     is_dir = False
     is_type = 'files'
