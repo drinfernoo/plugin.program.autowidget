@@ -31,6 +31,10 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+2.3.1
+ - Fix editing and adding new groups
+ - Overall cleanup
+ - Trim as many library updates as possible
 2.3.0
  - Huge simplification of plugin paths
  - Speed improvements
