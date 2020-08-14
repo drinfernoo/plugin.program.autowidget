@@ -1,5 +1,7 @@
 import xbmcgui
 
+import os
+
 try:
     from urllib.parse import parse_qsl
     from urllib.parse import unquote

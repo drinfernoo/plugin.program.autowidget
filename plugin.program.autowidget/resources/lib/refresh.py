@@ -20,7 +20,7 @@ class RefreshService(xbmc.Monitor):
         self.player = xbmc.Player()
         utils.ensure_addon_data()
         self._update_properties()
-        self._update_labels()
+        self._clean_widgets()
         self._update_widgets()
 
     def onSettingsChanged(self):
@@ -53,18 +53,7 @@ class RefreshService(xbmc.Monitor):
                 utils.log('Resetting {}'.format(widget_def['id']))
                 update_path(widget_def['id'], None, 'reset')
 
-    def _update_labels(self):
-        for widget_def in manage.find_defined_widgets():
-            path_def = manage.get_path_by_id(widget_def.get('path'),
-                                             group_id=widget_def['group'])
-            if not path_def:
-                continue
-            
-            if widget_def.get('updated', 0) > 0:
-                _update_strings(widget_def['id'], path_def)
-
     def _update_widgets(self):
-        self._clean_widgets()
         self._refresh(True)
         
         while not self.abortRequested():
@@ -96,9 +85,10 @@ class RefreshService(xbmc.Monitor):
                       'notice')
 
 
-def _update_strings(widget_id):
-    refresh = skin_string_pattern.format(widget_id, 'refresh')
-    utils.set_property(refresh, '{}'.format(time.time()))
+def _update_strings(widget_def):
+    refresh = skin_string_pattern.format(widget_def['id'], 'refresh')
+    utils.set_property(refresh, '{}'.format(widget_def.get('updated',
+                                                           time.time())))
 
 
 def update_path(widget_id, target, path=None):
@@ -131,10 +121,10 @@ def update_path(widget_id, target, path=None):
     action = widget_def['path'] if widget_def['action'] != 'merged' else 'merged'
     if isinstance(widget_def['path'], dict):
         action = widget_def['path']['file']['file']
-    _update_strings(widget_id)
     manage.save_path_details(widget_def)
-    back_to_top(target)
+    _update_strings(widget_def)
     utils.update_container(True)
+    back_to_top(target)
 
 
 def back_to_top(target):
@@ -186,10 +176,10 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
                     widget_def['updated'] = 0 if force else current_time
                         
                     manage.save_path_details(widget_def)
-                    _update_strings(widget_id)
+                    _update_strings(widget_def)
                     
-        if single and utils.get_active_window() == 'media':
-            utils.update_container()
+        if single:
+            utils.update_container(True)
     
     return paths
 
@@ -199,14 +189,14 @@ def refresh_paths(notify=False, force=False):
         dialog = xbmcgui.Dialog()
         dialog.notification('AutoWidget', utils.get_string(32033),
                             sound=utils.get_setting_bool('service.refresh_sound'))
-    
+
     for group_def in manage.find_defined_groups():
         paths = []
         
         widgets = manage.find_defined_widgets(group_def['id'])
         for widget_def in widgets:
             paths = refresh(widget_def['id'], widget_def=widget_def, paths=paths, force=force)
-            
+
     utils.update_container(True)
 
     return True, 'AutoWidget'
