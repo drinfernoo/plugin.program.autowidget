@@ -1,8 +1,6 @@
 import xbmcgui
 import xbmcplugin
 
-import re
-import string
 import sys
 
 import six
@@ -11,12 +9,8 @@ from resources.lib.common import utils
 
 try:
     from urllib.parse import urlencode
-    from urllib.parse import unquote
-    from urllib.parse import quote_plus
 except ImportError:
     from urllib import urlencode
-    from urllib import unquote
-    from urllib import quote_plus
 
 _sort_methods = [xbmcplugin.SORT_METHOD_UNSORTED,
                  xbmcplugin.SORT_METHOD_LABEL,
@@ -50,8 +44,7 @@ def add_separator(title='', char='-', sort=''):
             
         split = (len(title) + 2) / 2
         edge = char * int(40 - split)
-        add_menu_item(title='{0} {1} {0}'.format(edge,
-                                                 string.capwords(title)),
+        add_menu_item(title='{0} {1} {0}'.format(edge, title),
                       art=sync,
                       props=props)
     else:
@@ -132,3 +125,9 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
 
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
                                 isFolder=isFolder)
+
+
+def finish_directory(handle, category, type):
+    xbmcplugin.setPluginCategory(handle, category)
+    xbmcplugin.setContent(handle, type)
+    xbmcplugin.endOfDirectory(handle)

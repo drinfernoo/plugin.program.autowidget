@@ -1,13 +1,8 @@
-import xbmc
-import xbmcplugin
-
-import re
-
 try:
     from urllib.parse import parse_qsl
 except ImportError:
     from urlparse import parse_qsl
-    
+
 from resources.lib import backup
 from resources.lib import edit
 from resources.lib import menu
@@ -18,23 +13,21 @@ from resources.lib.common import utils
 
 
 def _log_params(_plugin, _handle, _params):
+    msg = '[{}]'
+    
     params = dict(parse_qsl(_params))
-    logstring = ''
+    if params:
+        msg = msg.format(']['.join([' {}: {} '.format(p, params[p])
+                                    for p in params]))
+    else:
+        msg = msg.format(' root ')
+    utils.log(msg)
     
-    for param in params:
-        logstring += '[ {0}: {1} ] '.format(param, params[param])
-    
-    if not logstring:
-        logstring = '[ Root Menu ]'
-
-    utils.log(logstring, level=xbmc.LOGNOTICE)
-
     return params
-    
-    
+
+
 def dispatch(_plugin, _handle, _params):
-    _handle = int(_handle)
-    params = _log_params(_plugin, _handle, _params)
+    params = _log_params(_plugin, int(_handle), _params)
     category = 'AutoWidget'
     is_dir = False
     is_type = 'files'
@@ -58,6 +51,8 @@ def dispatch(_plugin, _handle, _params):
             manage.add_path(group, target)
         elif action == 'shift_path' and group and path_id and target:
             edit.shift_path(group, path_id, target)
+        elif action == 'edit':
+            edit.edit_dialog(group)
         elif action == 'edit_path':
             edit.edit_dialog(group, path_id)
         elif action == 'edit_widget':
@@ -89,7 +84,7 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'force':
         refresh.refresh_paths(notify=True, force=True)
     elif mode == 'skindebug':
-        xbmc.executebuiltin('Skin.ToggleDebug')
+        utils.call_builtin('Skin.ToggleDebug')
     elif mode == 'wipe':
         utils.wipe()
     elif mode == 'clean':
@@ -106,6 +101,4 @@ def dispatch(_plugin, _handle, _params):
 
     if is_dir:
         directory.add_sort_methods(_handle)
-        xbmcplugin.setPluginCategory(_handle, category)
-        xbmcplugin.setContent(_handle, is_type)
-        xbmcplugin.endOfDirectory(_handle)
+        directory.finish_directory(_handle, category, is_type)

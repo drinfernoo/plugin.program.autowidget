@@ -1,4 +1,3 @@
-import xbmc
 import xbmcaddon
 import xbmcgui
 
@@ -8,23 +7,18 @@ import random
 
 from resources.lib.common import utils
 
-_addon = xbmcaddon.Addon()
-_addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
-_addon_version = _addon.getAddonInfo('version')
 
-
-def clean(notify=False):
+def clean(widget_id=None, notify=False):
     files = []
     dialog = xbmcgui.Dialog()
-    addon_data = xbmc.translatePath('special://profile/addon_data/')
-    skin_shortcuts = os.path.join(addon_data, 'script.skinshortcuts')
+    skin_shortcuts = os.path.join(utils._addon_data, 'script.skinshortcuts')
     
     params = {"jsonrpc": "2.0", "id": 1, "method": "Addons.GetAddons",
               "params": {"type": "xbmc.gui.skin"}}
-    addons = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
+    addons = json.loads(utils.call_jsonrpc(json.dumps(params)))
     if 'error' not in addons:
         for addon in addons['result']['addons']:
-            path = os.path.join(addon_data, addon['addonid'], 'settings.xml')
+            path = os.path.join(utils._addon_data, addon['addonid'], 'settings.xml')
             if os.path.exists(path):
                 files.append(path)
     if os.path.exists(skin_shortcuts):
@@ -36,20 +30,36 @@ def clean(notify=False):
     
     remove = []
     removed = 0
-    for widget in find_defined_widgets():
-        if not get_group_by_id(widget['group']):
-            remove.append(widget['id'])
-        
+    
+    if widget_id:
         found = False
         for file in files:
-            if widget['id'] in utils.read_file(file):
+            if widget_id in utils.read_file(file):
                 found = True
                 utils.log('{} found in {}; not cleaning'
-                          .format(widget['id'], file))
+                          .format(widget_id, file))
                 break
         if not found:
+            utils.log('{} not found; cleaning'.format(widget_id))
+            utils.remove_file(os.path.join(utils._addon_path,
+                                           '{}.widget'.format(widget_id)))
+            return True
+        return False
+    
+    for widget in find_defined_widgets():
+        found = False
+        if get_group_by_id(widget['group']):
+            found = True
+        else:
+            for file in files:
+                if widget['id'] in utils.read_file(file):
+                    found = True
+                    utils.log('{} found in {}; not cleaning'
+                              .format(widget['id'], file))
+                    break
+        if not found:
             utils.log('{} not found; cleaning'.format(widget['id']))
-            utils.remove_file(os.path.join(_addon_path,
+            utils.remove_file(os.path.join(utils._addon_path,
                                            '{}.widget'.format(widget['id'])))
             removed += 1
     if notify:
@@ -77,7 +87,7 @@ def initialize(group_def, action, widget_id, save=True, keep=None):
               'group': group_def['id'],
               'refresh': duration,
               'path': path_def,
-              'version': _addon_version}
+              'version': utils._addon_version}
     if save:
         save_path_details(params)
 
@@ -85,7 +95,7 @@ def initialize(group_def, action, widget_id, save=True, keep=None):
 
 
 def write_path(group_def, path_def=None, update=''):
-    filename = os.path.join(_addon_path, '{}.group'.format(group_def['id']))
+    filename = os.path.join(utils._addon_path, '{}.group'.format(group_def['id']))
 
     if path_def:
         if update:
@@ -99,7 +109,7 @@ def write_path(group_def, path_def=None, update=''):
     
     
 def save_path_details(params):
-    path_to_saved = os.path.join(_addon_path, '{}.widget'.format(params['id']))
+    path_to_saved = os.path.join(utils._addon_path, '{}.widget'.format(params['id']))
     utils.write_json(path_to_saved, params)
 
     return params
@@ -110,7 +120,7 @@ def get_group_by_id(group_id):
         return
     
     filename = '{}.group'.format(group_id)
-    path = os.path.join(_addon_path, filename)
+    path = os.path.join(utils._addon_path, filename)
     
     try:
         group_def = utils.read_json(path)
@@ -142,8 +152,8 @@ def get_widget_by_id(widget_id, group_id=None):
 def find_defined_groups(_type=''):
     groups = []
     
-    for filename in [x for x in os.listdir(_addon_path) if x.endswith('.group')]:
-        path = os.path.join(_addon_path, filename)
+    for filename in [x for x in os.listdir(utils._addon_path) if x.endswith('.group')]:
+        path = os.path.join(utils._addon_path, filename)
         
         group_def = utils.read_json(path)
         if group_def:
@@ -159,7 +169,7 @@ def find_defined_groups(_type=''):
 def find_defined_paths(group_id=None):
     if group_id:
         filename = '{}.group'.format(group_id)
-        path = os.path.join(_addon_path, filename)
+        path = os.path.join(utils._addon_path, filename)
         
         group_def = utils.read_json(path)
         if group_def:
@@ -174,12 +184,12 @@ def find_defined_paths(group_id=None):
     
 
 def find_defined_widgets(group_id=None):
-    addon_files = os.listdir(_addon_path)
+    addon_files = os.listdir(utils._addon_path)
     widgets = []
     
     widget_files = [x for x in addon_files if x.endswith('.widget')]
     for widget_file in widget_files:
-        widget_def = utils.read_json(os.path.join(_addon_path, widget_file))
+        widget_def = utils.read_json(os.path.join(utils._addon_path, widget_file))
     
         if widget_def:
             if not group_id:

@@ -1,4 +1,3 @@
-import xbmc
 import xbmcgui
 
 import re
@@ -85,8 +84,7 @@ def group_menu(group_id):
     group_def = manage.get_group_by_id(group_id)
     if not group_def:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'
-                  .format(group_id),
-                  level=xbmc.LOGERROR)
+                  .format(group_id), 'error')
         return False, 'AutoWidget'
     
     group_name = group_def['label']
@@ -351,8 +349,7 @@ def call_path(path_id):
     if not path_def:
         return
     
-    xbmc.executebuiltin('Dialog.Close(busydialog)')
-    xbmc.sleep(500)
+    utils.call_builtin('Dialog.Close(busydialog)', 500)
     final_path = ''
     
     if path_def['target'] == 'shortcut' and path_def['file']['filetype'] == 'file' \
@@ -377,7 +374,7 @@ def call_path(path_id):
                                                      .replace('plugin://', ''))
         
     if final_path:
-        xbmc.executebuiltin(final_path)
+        utils.call_builtin(final_path)
         
     return False, path_def['label']
 

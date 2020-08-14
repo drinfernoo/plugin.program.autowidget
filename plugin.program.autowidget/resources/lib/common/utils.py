@@ -3,6 +3,7 @@ import xbmcaddon
 import xbmcgui
 
 import codecs
+import contextlib
 import io
 import json
 import os
@@ -13,9 +14,6 @@ import unicodedata
 import six
 from PIL import Image
 
-from xml.dom import minidom
-from xml.etree import ElementTree
-
 try:
     from urllib.parse import unquote
 except ImportError:
@@ -25,6 +23,9 @@ _addon = xbmcaddon.Addon()
 _addon_id = _addon.getAddonInfo('id')
 _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
 _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
+_addon_version = _addon.getAddonInfo('version')
+_addon_data = xbmc.translatePath('special://profile/addon_data/')
+
 _art_path = os.path.join(_addon_root, 'resources', 'media')
 _home = xbmc.translatePath('special://home/')
 
@@ -65,14 +66,23 @@ colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'cri
           'cornsilk', 'blanchedalmond', 'bisque', 'navajowhite', 'wheat', 'burlywood', 'tan', 'rosybrown', 'sandybrown', 'goldenrod', 'peru', 'chocolate', 'saddlebrown', 'sienna', 'brown', 'maroon']  # brown
 
 
-def log(msg, level=xbmc.LOGDEBUG):
+def log(msg, level='debug'):
+    _level = xbmc.LOGDEBUG
     debug = get_setting_bool('logging.debug')
     logpath = os.path.join(_addon_path, 'aw_debug.log')
+    
+    if level == 'debug':
+        _level = xbmc.LOGDEBUG
+    elif level == 'notice':
+        _level = xbmc.LOGNOTICE
+    elif level == 'error':
+        _level = xbmc.LOGERROR
+    
     msg = '{}: {}'.format(_addon_id, msg)
-    xbmc.log(msg, level)
+    xbmc.log(msg, _level)
     if debug:
         debug_size = os.path.getsize(logpath)
-        debug_msg = time.ctime(time.time()) + msg[25:]
+        debug_msg = '{}  {}{}'.format(time.ctime(), level.upper(), msg[25:])
         write_file(logpath, debug_msg + '\n', mode='a' if debug_size < 1048576 else 'w')
 
 
@@ -84,10 +94,11 @@ def ensure_addon_data():
 def wipe(folder=_addon_path):
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno('AutoWidget', get_string(32065))
-    backup_location = xbmc.translatePath(get_setting('backup.location'))
 
     if choice:
         for root, dirs, files in os.walk(folder):
+            backup_location = xbmc.translatePath(
+                                  _addon.getSetting('backup.location'))
             for name in files:
                 file = os.path.join(root, name)
                 if backup_location not in file:
@@ -141,8 +152,8 @@ def set_color(setting=False):
                               preselect=colors.index(color) if color in colors else -1)
         if value > -1:
             value = colors[value]
-            
-    if value:
+
+    if value != -1:
         if value not in colors:
             if len(value) < 6:
                 dialog.notification('AutoWidget', get_string(32138))
@@ -172,7 +183,8 @@ def update_container(reload=False):
     if reload:
         log('Triggering library update to refresh widgets...')
         xbmc.executebuiltin('UpdateLibrary(video, AutoWidget)')
-    xbmc.executebuiltin('Container.Refresh()')
+    if get_active_window() == 'media':
+        xbmc.executebuiltin('Container.Refresh()')
 
 
 def _prettify(elem):
@@ -275,31 +287,6 @@ def write_json(file, content):
                 level=xbmc.LOGERROR)
 
 
-def read_xml(file):
-    xml = None
-    if os.path.exists(file):
-        try:
-            xml = ElementTree.parse(file).getroot()
-        except Exception as e:
-            log('Could not read XML from {}: {}'.format(file, e),
-                level=xbmc.LOGERROR)
-    else:
-        log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
-
-    return xml
-
-
-def write_xml(file, content):
-    _prettify(content)
-    tree = ElementTree.ElementTree(content)
-
-    try:
-        tree.write(file)
-    except Exception as e:
-        log('Could not write to {}: {}'.format(file, e),
-                  level=xbmc.LOGERROR)
-
-
 def set_setting(setting, value):
     return _addon.setSetting(setting, value)
 
@@ -337,6 +324,10 @@ def set_skin_string(string, value):
     xbmc.executebuiltin('Skin.SetString({},{})'.format(string, value))
 
 
+def translate_path(path):
+    return xbmc.translatePath(path)
+
+
 def get_string(_id):
     return six.text_type(_addon.getLocalizedString(_id))
 
@@ -353,6 +344,10 @@ def get_infolabel(label):
     return xbmc.getInfoLabel(label)
 
 
+def get_condition(cond):
+    return xbmc.getCondVisibility(cond)
+
+
 def clean_artwork_url(url):
     url = unquote(url).replace(_home, 'special://home/').replace('image://', '')
     if url.endswith('/'):
@@ -363,7 +358,7 @@ def clean_artwork_url(url):
 def _get_json_version():
     params = {'jsonrpc': '2.0', 'id': 1,
               'method': 'JSONRPC.Version'}
-    result = json.loads(xbmc.executeJSONRPC(json.dumps(params)))['result']['version']
+    result = json.loads(call_jsonrpc(json.dumps(params)))['result']['version']
     return (result['major'], result['minor'], result['patch'])
 
 
@@ -378,7 +373,7 @@ def get_files_list(path, titles=None):
                          'directory': path},
               'id': 1}
     
-    files = json.loads(xbmc.executeJSONRPC(json.dumps(params)))
+    files = json.loads(call_jsonrpc(json.dumps(params)))
     new_files = []
     if 'error' not in files:
         files = files['result']['files']
@@ -391,3 +386,22 @@ def get_files_list(path, titles=None):
             new_files.append(new_file)
                 
         return new_files
+
+
+def call_builtin(action, delay=0):
+    if delay:
+        xbmc.sleep(delay)
+    xbmc.executebuiltin(six.text_type(action))
+
+
+def call_jsonrpc(request):
+    return xbmc.executeJSONRPC(request)
+
+
+@contextlib.contextmanager
+def timing(description):
+    start = time.time()
+    yield
+    elapsed = time.time() - start
+
+    log('{}: {}'.format(description, elapsed))

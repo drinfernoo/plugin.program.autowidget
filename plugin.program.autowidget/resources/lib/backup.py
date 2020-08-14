@@ -1,4 +1,3 @@
-import xbmc
 import xbmcgui
 
 import os
@@ -8,18 +7,16 @@ import six
 
 from resources.lib.common import utils
 
-backup_location = xbmc.translatePath(utils.get_setting('backup.location'))
-
+_backup_location = utils.translate_path(utils.get_setting('backup.location'))
+dialog = xbmcgui.Dialog()
 
 def location():
-    dialog = xbmcgui.Dialog()
     folder = dialog.browse(0, utils.get_string(32091), 'files', defaultt=backup_location)
     if folder:
         utils.set_setting('backup.location', folder)
 
 
 def backup():
-    dialog = xbmcgui.Dialog()
     choice = dialog.yesno('AutoWidget', utils.get_string(32094))
     
     if choice:
@@ -29,11 +26,11 @@ def backup():
             dialog.notification('AutoWidget', utils.get_string(32096))
             return
             
-        if not os.path.exists(backup_location):
+        if not os.path.exists(_backup_location):
             try:
-                os.makedirs(backup_location)
+                os.makedirs(_backup_location)
             except Exception as e:
-                utils.log(str(e), level=xbmc.LOGERROR)
+                utils.log(str(e), 'error')
                 dialog.notification('AutoWidget', utils.get_string(32097))
                 return
                 
@@ -42,7 +39,7 @@ def backup():
             dialog.notification('AutoWidget', utils.get_string(32068))
             return
         
-        path = os.path.join(backup_location, '{}.zip'.format(filename.replace('.zip', '')))
+        path = os.path.join(_backup_location, '{}.zip'.format(filename.replace('.zip', '')))
         content = six.BytesIO()
         with zipfile.ZipFile(content, 'w', zipfile.ZIP_DEFLATED) as z:
             for file in files:
@@ -54,8 +51,7 @@ def backup():
 
 
 def restore():
-    dialog = xbmcgui.Dialog()
-    backup = dialog.browse(1, utils.get_string(32098), 'files', mask='.zip', defaultt=backup_location)
+    backup = dialog.browse(1, utils.get_string(32098), 'files', mask='.zip', defaultt=_backup_location)
     
     if backup.endswith('zip'):
         with zipfile.ZipFile(backup, 'r') as z:
