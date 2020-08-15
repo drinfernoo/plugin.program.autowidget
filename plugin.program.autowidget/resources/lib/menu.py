@@ -357,10 +357,11 @@ def call_path(path_id):
         if path_def['file']['file'] == 'addons://install/':
             final_path = 'InstallFromZip'
         elif not path_def['content']: 
-            final_path = 'RunPlugin({})'.format(path_def['file']['file'])
-        elif path_def['file']['file'].startswith('androidapp://sources/apps/'):
-            final_path = 'StartAndroidActivity({})'.format(path_def['file']['file']
-                                                           .replace('androidapp://sources/apps/', ''))
+            if path_def['file']['file'].startswith('androidapp://sources/apps/'):
+                final_path = 'StartAndroidActivity({})'.format(path_def['file']['file']
+                                                               .replace('androidapp://sources/apps/', ''))
+            else:
+                final_path = 'RunPlugin({})'.format(path_def['file']['file'])
         elif all(i in path_def['file']['file'] for i in ['(', ')']) and '://' not in path_def['file']['file']:
             final_path = path_def['file']['file']
         else:
