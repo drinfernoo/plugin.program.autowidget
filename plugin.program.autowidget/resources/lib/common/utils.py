@@ -70,18 +70,18 @@ def log(msg, level='debug'):
     _level = xbmc.LOGDEBUG
     debug = get_setting_bool('logging.debug')
     logpath = os.path.join(_addon_path, 'aw_debug.log')
-    
+
     if level == 'debug':
         _level = xbmc.LOGDEBUG
     elif level == 'notice':
         _level = xbmc.LOGNOTICE
     elif level == 'error':
         _level = xbmc.LOGERROR
-    
+
     msg = '{}: {}'.format(_addon_id, msg)
     xbmc.log(msg, _level)
     if debug:
-        debug_size = os.path.getsize(logpath)
+        debug_size = os.path.getsize(logpath) if os.path.exists(logpath) else 0
         debug_msg = '{}  {}{}'.format(time.ctime(), level.upper(), msg[25:])
         write_file(logpath, debug_msg + '\n', mode='a' if debug_size < 1048576 else 'w')
 
