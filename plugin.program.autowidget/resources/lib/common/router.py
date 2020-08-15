@@ -21,7 +21,7 @@ def _log_params(_plugin, _handle, _params):
                                     for p in params]))
     else:
         msg = msg.format(' root ')
-    utils.log(msg)
+    utils.log(msg, 'notice')
     
     return params
 
