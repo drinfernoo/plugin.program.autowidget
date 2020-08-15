@@ -20,19 +20,19 @@
         <setting type="bool" id="context.warning" default="false" visible="false" />
     </category>
     
-    <category label="$ADDON[plugin.program.autowidget 32008]">
-        <!-- Management -->
-        <setting label="$ADDON[plugin.program.autowidget 32056]" type="lsep" />
-        <setting label="$ADDON[plugin.program.autowidget 32004]" type="bool" id="context.autowidget" default="true" />
-        <setting label="$ADDON[plugin.program.autowidget 32057]" type="bool" id="context.advanced" default="false" />
-        <setting label="$ADDON[plugin.program.autowidget 32139]" type="bool" id="logging.debug" default="false" />
-    
+    <category label="$ADDON[plugin.program.autowidget 32008]">    
         <!-- Shortcuts -->
         <setting label="$ADDON[plugin.program.autowidget 32002]" type="lsep" />
         <setting label="$ADDON[plugin.program.autowidget 32006]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=force)" option="close" />
         <setting label="$ADDON[plugin.program.autowidget 32129]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clean)" option="close" />
         <setting label="$ADDON[plugin.program.autowidget 32064]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=wipe)" option="close" />
         <setting label="$ADDON[plugin.program.autowidget 32127]" type="action" action="Skin.ToggleDebug" />
+        
+        <!-- Management -->
+        <setting label="$ADDON[plugin.program.autowidget 32056]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 32004]" type="bool" id="context.autowidget" default="true" />
+        <setting label="$ADDON[plugin.program.autowidget 32057]" type="bool" id="context.advanced" default="false" />
+        <setting label="$ADDON[plugin.program.autowidget 32139]" type="bool" id="logging.debug" default="false" />
         
         <!-- Backup/Restore -->
         <setting label="$ADDON[plugin.program.autowidget 32090]" type="lsep" />
