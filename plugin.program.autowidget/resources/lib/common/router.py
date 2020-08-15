@@ -37,6 +37,7 @@ def dispatch(_plugin, _handle, _params):
     mode = params.get('mode', '')
     action = params.get('action', '')
     group = params.get('group', '')
+    subgroup = [i for i in params.get('subgroup', '').split(',') if i]
     path = params.get('path', '')
     path_id = params.get('path_id', '')
     target = params.get('target', '')
@@ -60,8 +61,8 @@ def dispatch(_plugin, _handle, _params):
     elif mode == 'group':
         if not group:
             is_dir, category = menu.my_groups_menu()
-        else:
-            is_dir, category = menu.group_menu(group)
+        elif group:
+            is_dir, category = menu.group_menu(group, subgroup)
     elif mode == 'path':
         if path_id:
             menu.call_path(path_id)

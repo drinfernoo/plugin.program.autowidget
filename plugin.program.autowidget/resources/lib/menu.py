@@ -77,11 +77,11 @@ def my_groups_menu():
     return True, utils.get_string(32007)
     
     
-def group_menu(group_id):
+def group_menu(group_id, sub=[]):
     _window = utils.get_active_window()
     _id = uuid.uuid4()
 
-    group_def = manage.get_group_by_id(group_id)
+    group_def = manage.get_group_by_id(group_id, sub)
     if not group_def:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'
                   .format(group_id), 'error')
@@ -100,14 +100,24 @@ def group_menu(group_id):
                 cm = _create_context_items(group_id, path_def['id'], idx,
                                            len(paths), group_type)
             
-            directory.add_menu_item(title=path_def['label'],
-                                    params={'mode': 'path',
-                                            'group': group_id,
-                                            'path_id': path_def['id']},
-                                    info=path_def['file'],
-                                    art=path_def['file']['art'] or art,
-                                    cm=cm,
-                                    isFolder=False)
+            if 'paths' not in path_def:
+                directory.add_menu_item(title=path_def['label'],
+                                        params={'mode': 'path',
+                                                'group': group_id,
+                                                'path_id': path_def['id']},
+                                        info=path_def['file'],
+                                        art=path_def['file']['art'] or art,
+                                        cm=cm,
+                                        isFolder=False)
+            else:
+                sub.append(path_def['id'])
+                directory.add_menu_item(title=path_def['label'],
+                                        params={'mode': 'group',
+                                                'group': group_id,
+                                                'subgroup': ','.join(sub)},
+                                        art=path_def['art'] or art,
+                                        cm=cm,
+                                        isFolder=True)
 
         if _window != 'home':
             _create_action_items(group_def, _id)

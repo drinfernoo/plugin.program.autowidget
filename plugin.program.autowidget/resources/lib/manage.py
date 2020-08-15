@@ -115,20 +115,24 @@ def save_path_details(params):
     return params
 
 
-def get_group_by_id(group_id):
-    if not group_id:
-        return
-    
-    filename = '{}.group'.format(group_id)
-    path = os.path.join(utils._addon_path, filename)
-    
-    try:
-        group_def = utils.read_json(path)
-    except ValueError:
-        utils.log('Unable to parse: {}'.format(path))
-        return
-    
-    return group_def
+def get_group_by_id(group_id, sub=[]):
+    if group_id:
+        filename = '{}.group'.format(group_id)
+        path = os.path.join(utils._addon_path, filename)
+
+        try:
+            group_def = utils.read_json(path)
+        except ValueError:
+            utils.log('Unable to parse: {}'.format(path))
+            return
+
+        for s in sub:
+            for p in group_def['paths']:
+                if p['id'] == s:
+                    group_def = p
+                    break
+
+        return group_def
 
 
 def get_path_by_id(path_id, group_id=None):
