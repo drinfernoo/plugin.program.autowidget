@@ -80,25 +80,25 @@ def my_groups_menu():
 def group_menu(group_id):
     _window = utils.get_active_window()
     _id = uuid.uuid4()
-    
+
     group_def = manage.get_group_by_id(group_id)
     if not group_def:
         utils.log('\"{}\" is missing, please repoint the widget to fix it.'
                   .format(group_id), 'error')
         return False, 'AutoWidget'
-    
+
     group_name = group_def['label']
     group_type = group_def['type']
-    
-    paths = manage.find_defined_paths(group_id)
+    paths = group_def['paths']
+
     if len(paths) > 0:
         cm = []
         art = folder_shortcut if group_type == 'shortcut' else folder_sync
-        
+
         for idx, path_def in enumerate(paths):
             if _window == 'media':
                 cm = _create_context_items(group_id, path_def['id'], idx,
-                                           len(paths))
+                                           len(paths), group_type)
             
             directory.add_menu_item(title=path_def['label'],
                                     params={'mode': 'path',
@@ -108,50 +108,18 @@ def group_menu(group_id):
                                     art=path_def['file']['art'] or art,
                                     cm=cm,
                                     isFolder=False)
-                                    
-        if group_type == 'widget' and _window != 'home':
-            directory.add_separator(title=32010, char='/', sort='bottom')
 
-            refresh = '$INFO[Window(10000).Property(autowidget-{}-refresh)]'.format(_id)
-
-            directory.add_menu_item(title=utils.get_string(32076)
-                                          .format(group_name),
-                                    params={'mode': 'path',
-                                            'action': 'static',
-                                            'group': group_id,
-                                            'id': six.text_type(_id),
-                                            'refresh': refresh},
-                                    art=utils.get_art('folder'),
-                                    isFolder=True,
-                                    props={'specialsort': 'bottom'})
-            directory.add_menu_item(title=utils.get_string(32028)
-                                          .format(group_name),
-                                    params={'mode': 'path',
-                                            'action': 'cycling',
-                                            'group': group_id,
-                                            'id': six.text_type(_id),
-                                            'refresh': refresh},
-                                    art=utils.get_art('shuffle'),
-                                    isFolder=True,
-                                    props={'specialsort': 'bottom'})
-            directory.add_menu_item(title=utils.get_string(32089)
-                                          .format(group_name),
-                                    params={'mode': 'path',
-                                            'action': 'merged',
-                                            'group': group_id,
-                                            'id': six.text_type(_id)},
-                                    art=utils.get_art('merge'),
-                                    isFolder=True,
-                                    props={'specialsort': 'bottom'})
+        if _window != 'home':
+            _create_action_items(group_def, _id)
     else:
         directory.add_menu_item(title=32032,
                                 art=utils.get_art('alert'),
                                 isFolder=False,
                                 props={'specialsort': 'bottom'})
-    
+
     return True, group_name
-    
-    
+
+
 def active_widgets_menu():
     manage.clean()
     widgets = sorted(manage.find_defined_widgets(),
@@ -479,8 +447,8 @@ def merged_path(group_id, widget_id):
         return True, group_name
 
 
-def _create_context_items(group_id, path_id, idx, length):
-    cm = [(utils.get_string(32048),
+def _create_context_items(group_id, path_id, idx, length, target):
+    cm = [(utils.get_string(32048) if target == 'shortcut' else utils.get_string(32140),
               ('RunPlugin('
                'plugin://plugin.program.autowidget/'
                '?mode=manage'
@@ -505,3 +473,45 @@ def _create_context_items(group_id, path_id, idx, length):
                '&path_id={})').format(group_id, path_id))]
 
     return cm
+
+
+def _create_action_items(group_def, _id):
+    directory.add_separator(title=32010, char='/', sort='bottom')
+    props = {'specialsort': 'bottom'}
+    
+    group_id = group_def['id']
+    group_name = group_def['label']
+    group_type = group_def['type']
+    
+    if group_type == 'widget':
+        refresh = '$INFO[Window(10000).Property(autowidget-{}-refresh)]'.format(_id)
+
+        directory.add_menu_item(title=utils.get_string(32076)
+                                      .format(group_name),
+                                params={'mode': 'path',
+                                        'action': 'static',
+                                        'group': group_id,
+                                        'id': six.text_type(_id),
+                                        'refresh': refresh},
+                                art=utils.get_art('folder'),
+                                isFolder=True,
+                                props=props)
+        directory.add_menu_item(title=utils.get_string(32028)
+                                      .format(group_name),
+                                params={'mode': 'path',
+                                        'action': 'cycling',
+                                        'group': group_id,
+                                        'id': six.text_type(_id),
+                                        'refresh': refresh},
+                                art=utils.get_art('shuffle'),
+                                isFolder=True,
+                                props=props)
+        directory.add_menu_item(title=utils.get_string(32089)
+                                      .format(group_name),
+                                params={'mode': 'path',
+                                        'action': 'merged',
+                                        'group': group_id,
+                                        'id': six.text_type(_id)},
+                                art=utils.get_art('merge'),
+                                isFolder=True,
+                                props=props)

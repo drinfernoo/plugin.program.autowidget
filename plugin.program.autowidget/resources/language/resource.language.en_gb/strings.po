@@ -119,7 +119,7 @@ msgid "Remove this group definition. Cannot be undone."
 msgstr ""
 
 msgctxt "#32025"
-msgid "Remove Path"
+msgid "Remove"
 msgstr ""
 
 msgctxt "#32026"
@@ -211,7 +211,7 @@ msgid "Select InfoLabel"
 msgstr ""
 
 msgctxt "#32048"
-msgid "Edit Path"
+msgid "Edit Shortcut"
 msgstr ""
 
 msgctxt "#32049"
@@ -576,4 +576,8 @@ msgstr ""
 
 msgctxt "#32139"
 msgid "Debug Logging"
+msgstr ""
+
+msgctxt "#32140"
+msgid "Edit Widget"
 msgstr ""
