@@ -232,7 +232,7 @@ def remove_file(file):
             os.remove(file)
         except Exception as e:
             log('Could not remove {}: {}'.format(file, e),
-                level=xbmc.LOGERROR)
+                level='error')
 
 
 def read_file(file):
@@ -243,9 +243,9 @@ def read_file(file):
                 content = f.read()
             except Exception as e:
                 log('Could not read from {}: {}'.format(file, e),
-                    level=xbmc.LOGERROR)
+                    level='error')
     else:
-        log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
+        log('{} does not exist.'.format(file), level='error')
 
     return content
 
@@ -257,7 +257,7 @@ def write_file(file, content, mode='w'):
             return True
         except Exception as e:
             log('Could not write to {}: {}'.format(file, e),
-                level=xbmc.LOGERROR)
+                level='error')
 
     return False
 
@@ -271,9 +271,9 @@ def read_json(file):
                 data = json.loads(content)
             except Exception as e:
                 log('Could not read JSON from {}: {}'.format(file, e),
-                    level=xbmc.LOGERROR)
+                    level='error')
     else:
-        log('{} does not exist.'.format(file), level=xbmc.LOGERROR)
+        log('{} does not exist.'.format(file), level='error')
 
     return convert(data)
 
@@ -284,7 +284,7 @@ def write_json(file, content):
             json.dump(content, f, indent=4)
         except Exception as e:
             log('Could not write to {}: {}'.format(file, e),
-                level=xbmc.LOGERROR)
+                level='error')
 
 
 def set_setting(setting, value):
