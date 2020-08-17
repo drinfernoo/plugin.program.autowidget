@@ -87,8 +87,7 @@ class RefreshService(xbmc.Monitor):
 
 def _update_strings(widget_def):
     refresh = skin_string_pattern.format(widget_def['id'], 'refresh')
-    utils.set_property(refresh, '{}'.format(widget_def.get('updated',
-                                                           time.time())))
+    utils.set_property(refresh, '{}'.format(time.time()))
 
 
 def update_path(widget_id, target, path=None):
