@@ -360,6 +360,8 @@ def call_path(path_id):
             if path_def['file']['file'].startswith('androidapp://sources/apps/'):
                 final_path = 'StartAndroidActivity({})'.format(path_def['file']['file']
                                                                .replace('androidapp://sources/apps/', ''))
+            elif path_def['file']['file'].startswith('pvr://'):
+                final_path = 'PlayMedia({})'.format(path_def['file']['file'])
             else:
                 final_path = 'RunPlugin({})'.format(path_def['file']['file'])
         elif all(i in path_def['file']['file'] for i in ['(', ')']) and '://' not in path_def['file']['file']:
