@@ -92,6 +92,7 @@ def group_menu(group_id):
     paths = group_def['paths']
 
     if len(paths) > 0:
+        utils.log('Showing {} group: {}'.format(group_type, group_name), 'debug')
         cm = []
         art = folder_shortcut if group_type == 'shortcut' else folder_sync
 
@@ -220,12 +221,21 @@ def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, 
     hide_watched = utils.get_setting_bool('widgets.hide_watched')
     show_next = utils.get_setting_int('widgets.show_next')
     paged_widgets = utils.get_setting_bool('widgets.paged')
+    default_color = utils.get_setting('ui.color')
     
     widget_def = manage.get_widget_by_id(widget_id)
     if not widget_def:
         return True, 'AutoWidget'
+        
+    if not titles:
+        titles = []
     
-    default_color = utils.get_setting('ui.color')
+    files = utils.get_files_list(path, titles)
+    if not files:
+        return titles, path_label
+    
+    utils.log('Loading items from {}'.format(path), 'debug')
+    
     if isinstance(widget_def['path'], list):
         color = widget_def['path'][idx].get('color', default_color)
     elif isinstance(widget_def['path'], six.text_type):
@@ -247,13 +257,6 @@ def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, 
                                 props={'specialsort': 'top',
                                        'autoLabel': path_label})
     
-    if not titles:
-        titles = []
-
-    files = utils.get_files_list(path, titles)
-    if not files:
-        return titles, path_label
-        
     for file in files:
         properties = {'autoLabel': path_label}
         if 'customproperties' in file:
@@ -345,6 +348,7 @@ def call_path(path_id):
                                                      .replace('plugin://', ''))
         
     if final_path:
+        utils.log('Calling path from {} using {}'.format(path_id, final_path), 'debug')
         utils.call_builtin(final_path)
         
     return False, path_def['label']
@@ -397,7 +401,7 @@ def path_menu(group_id, action, widget_id):
                 _label = stack[0]['label']
             else:
                 _label = widget_def.get('label', '')
-        
+        utils.log('Showing widget {}'.format(widget_id), 'debug')
         titles, cat = show_path(group_id, _label, widget_id, widget_path)
         return titles, cat
     else:
