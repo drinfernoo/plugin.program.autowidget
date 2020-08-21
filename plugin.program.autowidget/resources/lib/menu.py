@@ -258,7 +258,8 @@ def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, 
                                        'autoLabel': path_label})
     
     for file in files:
-        properties = {'autoLabel': path_label}
+        properties = {'autoLabel': path_label,
+                      'autoID': widget_id}
         if 'customproperties' in file:
             for prop in file['customproperties']:
                 properties[prop] = file['customproperties'][prop]
