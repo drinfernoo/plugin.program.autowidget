@@ -109,7 +109,7 @@ def update_path(widget_id, target, path=None):
         stack.append(widget_def['path'])
         widget_def['stack'] = stack
         widget_def['path'] = path
-    elif target == 'back':
+    elif target == 'back' and widget_def.get('stack'):
         utils.log('Previous Page selected from {}'.format(widget_id), 'debug')
         widget_def['path'] = widget_def['stack'][-1]
         widget_def['stack'] = widget_def['stack'][:-1]
