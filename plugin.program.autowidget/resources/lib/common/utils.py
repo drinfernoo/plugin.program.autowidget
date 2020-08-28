@@ -376,7 +376,11 @@ def get_files_list(path, titles=None):
     files = json.loads(call_jsonrpc(json.dumps(params)))
     new_files = []
     if 'error' not in files:
-        files = files['result']['files']
+        files = files.get('result').get('files')
+        if not files:
+            log('No items found for {}'.format(path))
+            return
+            
         filtered_files = [x for x in files if x['title'] not in titles]
         for file in filtered_files:
             new_file = {k: v for k, v in file.items() if v not in [None, '', -1, [], {}]}
