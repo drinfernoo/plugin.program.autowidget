@@ -26,6 +26,8 @@ _exclude_keys = ['type', 'art', 'mimetype', 'thumbnail', 'file', 'label',
                  'specialsortseason', 'track', 'tvshowid', 'watchedepisodes',
                  'customproperties', 'id']
 
+_exclude_params = ['refresh', 'reload']
+
 
 def add_separator(title='', char='-', sort=''):
     _window = utils.get_active_window()
@@ -60,17 +62,15 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
                   isFolder=False, props=None):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
+    
 
     if params is not None:
-        if 'refresh' in params:
-            encode = {k: params[k] for k, v in params.items() if k != 'refresh'}
-        else:
-            encode = params
-        
+        encode = {k: params[k] for k, v in params.items() if k not in _exclude_params}
+
         _plugin += '?{}'.format(urlencode(encode))
         
-        if 'refresh' in params:
-            _plugin += '&refresh={}'.format(params['refresh'])
+        for param in _exclude_params:
+            _plugin += '&{}={}'.format(param, params.get(param, ''))
     elif path is not None:
         _plugin = path
 

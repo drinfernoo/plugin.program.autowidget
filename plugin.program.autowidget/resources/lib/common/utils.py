@@ -181,7 +181,7 @@ def get_active_window():
 
 def update_container(reload=False):
     if reload:
-        log('Triggering library update to refresh widgets...')
+        log('Triggering library update to reload widgets', 'debug')
         xbmc.executebuiltin('UpdateLibrary(video, AutoWidget)')
     if get_active_window() == 'media':
         xbmc.executebuiltin('Container.Refresh()')
@@ -372,11 +372,15 @@ def get_files_list(path, titles=None):
               'params': {'properties': info_types if not props else props_info,
                          'directory': path},
               'id': 1}
-    
+
     files = json.loads(call_jsonrpc(json.dumps(params)))
     new_files = []
     if 'error' not in files:
-        files = files['result']['files']
+        files = files.get('result').get('files')
+        if not files:
+            log('No items found for {}'.format(path))
+            return
+            
         filtered_files = [x for x in files if x['title'] not in titles]
         for file in filtered_files:
             new_file = {k: v for k, v in file.items() if v not in [None, '', -1, [], {}]}
@@ -384,6 +388,7 @@ def get_files_list(path, titles=None):
                 for art in new_file['art']:
                     new_file['art'][art] = clean_artwork_url(file['art'][art])
             new_files.append(new_file)
+        log(json.dumps(files), 'debug')
                 
         return new_files
 

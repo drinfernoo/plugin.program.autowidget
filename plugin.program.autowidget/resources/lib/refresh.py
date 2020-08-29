@@ -87,8 +87,10 @@ class RefreshService(xbmc.Monitor):
 
 def _update_strings(widget_def):
     refresh = skin_string_pattern.format(widget_def['id'], 'refresh')
-    utils.set_property(refresh, '{}'.format(widget_def.get('updated',
-                                                           time.time())))
+    utils.set_property(refresh, '{}'.format(time.time()))
+    utils.log('Refreshing widget {} to display {}'.format(widget_def['id'],
+                                                       widget_def['path']),
+                                                       'debug')
 
 
 def update_path(widget_id, target, path=None):
@@ -99,6 +101,7 @@ def update_path(widget_id, target, path=None):
     stack = widget_def.get('stack', [])
 
     if target == 'next' and path:
+        utils.log('Next Page selected from {}'.format(widget_id), 'debug')
         path_def = widget_def['path']
         if isinstance(path_def, dict):
             widget_def['label'] = path_def['label']
@@ -106,7 +109,8 @@ def update_path(widget_id, target, path=None):
         stack.append(widget_def['path'])
         widget_def['stack'] = stack
         widget_def['path'] = path
-    elif target == 'back':
+    elif target == 'back' and widget_def.get('stack'):
+        utils.log('Previous Page selected from {}'.format(widget_id), 'debug')
         widget_def['path'] = widget_def['stack'][-1]
         widget_def['stack'] = widget_def['stack'][:-1]
         
