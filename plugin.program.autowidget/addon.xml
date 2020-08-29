@@ -31,6 +31,12 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+2.3.5
+ - Fix various shortcut- and refresh-related bugs
+ - Fix error when path contained no items
+ - Add more debug logging
+ - Add widget ID as ListItem property (autoID)
+ - Reduce library updates (again)
 2.3.4
  - Fix logging error
 2.3.3
