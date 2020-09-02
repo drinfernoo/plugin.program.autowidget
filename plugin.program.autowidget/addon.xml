@@ -31,6 +31,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+2.3.6
+ - Fix separator in shortcut groups
 2.3.5
  - Fix various shortcut- and refresh-related bugs
  - Fix error when path contained no items
