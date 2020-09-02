@@ -483,7 +483,7 @@ def _create_context_items(group_id, path_id, idx, length, target):
 
 
 def _create_action_items(group_def, _id):
-    directory.add_separator(title=32010, char='/', sort='bottom')
+    refresh = '$INFO[Window(10000).Property(autowidget-{}-refresh)]'.format(_id)
     props = {'specialsort': 'bottom'}
     
     group_id = group_def['id']
@@ -491,8 +491,7 @@ def _create_action_items(group_def, _id):
     group_type = group_def['type']
     
     if group_type == 'widget':
-        refresh = '$INFO[Window(10000).Property(autowidget-{}-refresh)]'.format(_id)
-
+        directory.add_separator(title=32010, char='/', sort='bottom')
         directory.add_menu_item(title=utils.get_string(32076)
                                       .format(group_name),
                                 params={'mode': 'path',
