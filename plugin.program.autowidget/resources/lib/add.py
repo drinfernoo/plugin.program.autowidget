@@ -172,7 +172,7 @@ def add_group(target, group_name=''):
     if group_name:
         group_id = utils.get_unique_id(group_name)
         filename = os.path.join(utils._addon_path, '{}.group'.format(group_id))
-        group_def = {'label': six.text_type(group_name),
+        group_def = {'label': group_name,
                      'type': target,
                      'paths': [],
                      'id': group_id,

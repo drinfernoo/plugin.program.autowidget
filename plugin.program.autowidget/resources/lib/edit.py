@@ -288,7 +288,10 @@ def _get_value(edit_def, key):
             if clear:
                 value = ''
         if value is not None:
-            edit_def[key] = utils.clean_artwork_url(value)
+            if key in utils.art_types:
+                edit_def[key] = utils.clean_artwork_url(value)
+            else:
+                edit_def[key] = value
             return value
 
 
