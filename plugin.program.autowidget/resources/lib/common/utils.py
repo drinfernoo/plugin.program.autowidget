@@ -73,8 +73,11 @@ def log(msg, level='debug'):
 
     if level == 'debug':
         _level = xbmc.LOGDEBUG
-    elif level == 'notice':
-        _level = xbmc.LOGNOTICE
+    elif level == 'info':
+        try:
+            _level = xbmc.LOGNOTICE
+        except AttributeError:
+            _level = xbmc.LOGINFO
     elif level == 'error':
         _level = xbmc.LOGERROR
 
