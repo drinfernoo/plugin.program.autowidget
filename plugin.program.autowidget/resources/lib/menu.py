@@ -59,7 +59,7 @@ def my_groups_menu():
                    '&action=edit'
                    '&group={})').format(group_id))]
             
-            directory.add_menu_item(title=group_name,
+            directory.add_menu_item(title=six.text_type(group_name),
                                     params={'mode': 'group',
                                             'group': group_id},
                                     info=group.get('info', {}),
@@ -92,7 +92,8 @@ def group_menu(group_id):
     paths = group_def['paths']
 
     if len(paths) > 0:
-        utils.log('Showing {} group: {}'.format(group_type, group_name), 'debug')
+        utils.log(u'Showing {} group: {}'.format(group_type, six.text_type(group_name)),
+                  'debug')
         cm = []
         art = folder_shortcut if group_type == 'shortcut' else folder_sync
 
@@ -493,7 +494,7 @@ def _create_action_items(group_def, _id):
     if group_type == 'widget':
         directory.add_separator(title=32010, char='/', sort='bottom')
         directory.add_menu_item(title=utils.get_string(32076)
-                                      .format(group_name),
+                                      .format(six.text_type(group_name)),
                                 params={'mode': 'path',
                                         'action': 'static',
                                         'group': group_id,
@@ -503,7 +504,7 @@ def _create_action_items(group_def, _id):
                                 isFolder=True,
                                 props=props)
         directory.add_menu_item(title=utils.get_string(32028)
-                                      .format(group_name),
+                                      .format(six.text_type(group_name)),
                                 params={'mode': 'path',
                                         'action': 'cycling',
                                         'group': group_id,
@@ -513,7 +514,7 @@ def _create_action_items(group_def, _id):
                                 isFolder=True,
                                 props=props)
         directory.add_menu_item(title=utils.get_string(32089)
-                                      .format(group_name),
+                                      .format(six.text_type(group_name)),
                                 params={'mode': 'path',
                                         'action': 'merged',
                                         'group': group_id,

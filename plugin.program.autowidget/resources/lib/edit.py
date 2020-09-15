@@ -56,7 +56,7 @@ def _remove_group(group_id, over=False):
         file = os.path.join(utils._addon_path, '{}.group'.format(group_id))
         utils.remove_file(file)
         dialog.notification('AutoWidget', utils.get_string(32045)
-                                               .format(group_name))
+                                               .format(six.text_type(group_name)))
 
 
 def _remove_path(path_id, group_id, over=False):
@@ -72,7 +72,7 @@ def _remove_path(path_id, group_id, over=False):
                 group_def['paths'].remove(path_def)
                 dialog.notification('AutoWidget',
                                     utils.get_string(32045)
-                                         .format(path_name))
+                                         .format(six.text_type(path_name)))
         manage.write_path(group_def)
 
 

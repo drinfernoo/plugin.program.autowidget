@@ -81,11 +81,11 @@ def log(msg, level='debug'):
     elif level == 'error':
         _level = xbmc.LOGERROR
 
-    msg = '{}: {}'.format(_addon_id, msg)
+    msg = u'{}: {}'.format(_addon_id, six.text_type(msg))
     xbmc.log(msg, _level)
     if debug:
         debug_size = os.path.getsize(logpath) if os.path.exists(logpath) else 0
-        debug_msg = '{}  {}{}'.format(time.ctime(), level.upper(), msg[25:])
+        debug_msg = u'{}  {}{}'.format(time.ctime(), level.upper(), msg[25:])
         write_file(logpath, debug_msg + '\n', mode='a' if debug_size < 1048576 else 'w')
 
 
