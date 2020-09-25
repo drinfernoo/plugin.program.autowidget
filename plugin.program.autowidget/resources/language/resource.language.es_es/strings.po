@@ -541,7 +541,7 @@ msgstr "Limpiar archivos antiguos de widgets"
 
 msgctxt "#32130"
 msgid "Icon Color"
-msgstr "Color de icono"
+msgstr "Color del icono"
 
 msgctxt "#32131"
 msgid "{} paths added to {}"
