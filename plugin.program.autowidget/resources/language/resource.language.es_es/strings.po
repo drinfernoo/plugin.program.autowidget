@@ -119,8 +119,8 @@ msgid "Remove this group definition. Cannot be undone."
 msgstr "Elimina esta definición de grupo. No se puede deshacer."
 
 msgctxt "#32025"
-msgid "Remove Path"
-msgstr "Eliminar ruta"
+msgid "Remove"
+msgstr "Eliminar"
 
 msgctxt "#32026"
 msgid "Shift Path Up"
@@ -211,8 +211,8 @@ msgid "Select InfoLabel"
 msgstr "Seleccionar etiqueta de información"
 
 msgctxt "#32048"
-msgid "Edit Path"
-msgstr "Editar ruta"
+msgid "Edit Shortcut"
+msgstr "Editar acceso directo"
 
 msgctxt "#32049"
 msgid "Select {}"
@@ -497,11 +497,11 @@ msgstr "Editar etiquetas de información"
  
 msgctxt "#32119" 
 msgid "Select Artwork to Add" 
-msgstr "Seleccione ilustraciones para agregar" 
+msgstr "Seleccione ilustraciones a agregar" 
  
 msgctxt "#32120" 
 msgid "Select InfoLabel to Add" 
-msgstr "Seleccione InfoLabel para agregar" 
+msgstr "Seleccione etiqueta de información a agregar" 
  
 msgctxt "#32121" 
 msgid "New Value for {}:" 
@@ -533,8 +533,52 @@ msgstr "Activar modo depuración de skin"
 
 msgctxt "#32128"
 msgid "{} Paths Merged"
-msgstr "{} caminos fusionados"
+msgstr "{} rutas fusionadas"
 
 msgctxt "#32129"
 msgid "Clean Old Widget Files"
-msgstr "Limpiar archivos de widgets antiguos"
+msgstr "Limpiar archivos antiguos de widgets"
+
+msgctxt "#32130"
+msgid "Icon Color"
+msgstr "Color de icono"
+
+msgctxt "#32131"
+msgid "{} paths added to {}"
+msgstr "{} rutas agregadas a {}"
+
+msgctxt "#32132"
+msgid "{} unused widgets removed."
+msgstr "Eliminados {} widgets no utilizados."
+
+msgctxt "#32133"
+msgid "Choose from a predefined color or hexcode input?"
+msgstr "¿Elija entre color predefinido o entrada de código hexadecimal?"
+
+msgctxt "#32134"
+msgid "Hex Input"
+msgstr "Entrada hexadecimal"
+
+msgctxt "#32135"
+msgid "Predefined Color"
+msgstr "Color predefinido"
+
+msgctxt "#32136"
+msgid "Hex codes must be of the format "#RRGGBB"."
+msgstr "Los códigos hexadecimales deben tener el formato "#RRGGBB"."
+
+msgctxt "#32137"
+msgid "Select a Color"
+msgstr "Seleccione un color"
+
+msgctxt "#32138"
+msgid "Invalid color code."
+msgstr "Código de color no válido."
+
+msgctxt "#32139"
+msgid "Debug Logging"
+msgstr "Registro de depuración"
+
+msgctxt "#32140"
+msgid "Edit Widget"
+msgstr "Editar widget"				
