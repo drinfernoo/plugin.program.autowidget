@@ -24,9 +24,9 @@
         <reuselanguageinvoker>true</reuselanguageinvoker>
         <summary lang="en_GB">Automatically changes out widgets</summary>
         <description lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</description>
-		<summary lang="es_ES">Cambia los widgets automáticamente</summary>
-		<description lang="es_ES">Cambia los widgets en la pantalla de inicio automáticamente para una experiencia de navegación más interesante.</description>        
-		<platform>all</platform>
+	    <summary lang="es_ES">Cambia los widgets automáticamente</summary>
+	    <description lang="es_ES">Cambia los widgets en la pantalla de inicio automáticamente para una experiencia de navegación más interesante.</description>
+	    <platform>all</platform>
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
