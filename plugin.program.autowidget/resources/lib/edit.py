@@ -76,7 +76,7 @@ def _remove_path(path_id, group_id, over=False):
         manage.write_path(group_def)
 
 
-def remove_widget(widget_id, over=False):
+def _remove_widget(widget_id, over=False):
     if not over:
         choice = dialog.yesno('AutoWidget', utils.get_string(32039))
 
