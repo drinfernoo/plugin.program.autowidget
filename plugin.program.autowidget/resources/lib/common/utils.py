@@ -387,7 +387,7 @@ def get_files_list(path, titles=None):
             if 'art' in new_file:
                 for art in new_file['art']:
                     new_file['art'][art] = clean_artwork_url(file['art'][art])
-            new_files.append(new_file)
+                new_files.append(new_file)
         log(json.dumps(files), 'debug')
                 
         return new_files
