@@ -10,6 +10,8 @@ import os
 import string
 import time
 import unicodedata
+import hashlib
+import math
 
 import six
 from PIL import Image
@@ -65,6 +67,7 @@ colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'cri
           'gainsboro', 'lightgray', 'silver', 'darkgray', 'gray', 'dimgray', 'lightslategray', 'slategray', 'darkslategray', 'black',  # black
           'cornsilk', 'blanchedalmond', 'bisque', 'navajowhite', 'wheat', 'burlywood', 'tan', 'rosybrown', 'sandybrown', 'goldenrod', 'peru', 'chocolate', 'saddlebrown', 'sienna', 'brown', 'maroon']  # brown
 
+_history_path = os.path.join(_addon_path, 'cache_history.json')
 
 def log(msg, level='debug'):
     _level = xbmc.LOGDEBUG
@@ -373,7 +376,24 @@ def get_files_list(path, titles=None):
                          'directory': path},
               'id': 1}
 
-    files = json.loads(call_jsonrpc(json.dumps(params)))
+    # TODO:
+    # - read current cache time and see if its past
+    #import ptvsd; ptvsd.enable_attach(); ptvsd.wait_for_attach()
+    # import web_pdb; web_pdb.set_trace()
+    hash = hashlib.sha1(path).hexdigest()
+    cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
+    expiry = cache_expiry(hash)
+
+    if expiry > time.time() and os.path.exists(cache_path):
+        files = read_json(cache_path)
+        log("Read cache (exp in {}s): {}".format(expiry-time.time(), hash))
+    else:
+        files_json = call_jsonrpc(json.dumps(params))
+        files = json.loads(files_json)
+        write_json(cache_path, files)
+        expiry = cache_expiry(hash, add=hashlib.sha1(files_json).hexdigest())
+        log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash))
+        
     new_files = []
     if 'error' not in files:
         files = files.get('result').get('files')
@@ -392,6 +412,29 @@ def get_files_list(path, titles=None):
                 
         return new_files
 
+def cache_expiry(hash, add=None, _cache={}):
+    # TODO: clean up no longer used cache files. not read in > 30 days?
+    # TODO: predict based on duration that gets you new content every 3rd attempt.
+    # TODO: correlate updates with watched history to see if thats better predictor
+    # TODO: use next expiry to cause widget refresh
+    if not _cache:
+        _cache = read_json(_history_path)
+    history = _cache.setdefault(hash, [])
+    if add:
+        history.append( (time.time(), add))
+        write_json(_history_path, _cache)
+    # predict next update time 
+    if not history:
+        return time.time() - 20
+    elif len(history) == 1:
+        return history[-1][0] + 60*60
+    else:
+        durations = []
+        last_hash, last_when = None, history[-1][0] - 60*60
+        for when, hash in history:
+            if hash != last_hash:
+                durations.append(when = last_when)
+        return math.sum(durations)/len(durations)/2.0
 
 def call_builtin(action, delay=0):
     if delay:
