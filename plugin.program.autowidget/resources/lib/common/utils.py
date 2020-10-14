@@ -439,8 +439,8 @@ def cache_expiry(hash, add=None):
         last_hash, last_when = None, history[-1][0] - 60*60
         for when, hash in history:
             if hash != last_hash:
-                durations.append(when = last_when)
-        return math.sum(durations)/len(durations)/2.0
+                durations.append(when - last_when)
+        return time.time() + math.fsum(durations)/len(durations)/2.0 # we want every 2nd update to be a change
 
 def call_builtin(action, delay=0):
     if delay:
