@@ -68,6 +68,7 @@ colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'cri
           'cornsilk', 'blanchedalmond', 'bisque', 'navajowhite', 'wheat', 'burlywood', 'tan', 'rosybrown', 'sandybrown', 'goldenrod', 'peru', 'chocolate', 'saddlebrown', 'sienna', 'brown', 'maroon']  # brown
 
 _history_path = os.path.join(_addon_path, 'cache_history.json')
+_history = None
 
 def log(msg, level='debug'):
     _level = xbmc.LOGDEBUG
@@ -386,13 +387,15 @@ def get_files_list(path, titles=None):
 
     if expiry > time.time() and os.path.exists(cache_path):
         files = read_json(cache_path)
-        log("Read cache (exp in {}s): {}".format(expiry-time.time(), hash))
+        log("Read cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
     else:
+        # TODO: maybe need some sort of grace period. startups always return stale content but trigger 
+        # another update soon after?
         files_json = call_jsonrpc(json.dumps(params))
         files = json.loads(files_json)
         write_json(cache_path, files)
         expiry = cache_expiry(hash, add=hashlib.sha1(files_json).hexdigest())
-        log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash))
+        log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
         
     new_files = []
     if 'error' not in files:
@@ -412,17 +415,20 @@ def get_files_list(path, titles=None):
                 
         return new_files
 
-def cache_expiry(hash, add=None, _cache={}):
+def cache_expiry(hash, add=None):
     # TODO: clean up no longer used cache files. not read in > 30 days?
     # TODO: predict based on duration that gets you new content every 3rd attempt.
     # TODO: correlate updates with watched history to see if thats better predictor
     # TODO: use next expiry to cause widget refresh
-    if not _cache:
-        _cache = read_json(_history_path)
-    history = _cache.setdefault(hash, [])
+    global _history
+    if _history is None:
+        _history = read_json(_history_path)
+        if not _history:
+            _history = {}
+    history = _history.setdefault(hash, [])
     if add:
         history.append( (time.time(), add))
-        write_json(_history_path, _cache)
+        write_json(_history_path, _history)
     # predict next update time 
     if not history:
         return time.time() - 20
