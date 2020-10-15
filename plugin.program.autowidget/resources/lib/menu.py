@@ -230,7 +230,7 @@ def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, 
     if not titles:
         titles = []
     
-    files = utils.get_files_list(path, titles)
+    files = utils.get_files_list(path, titles, widget_id)
     if not files:
         return titles, path_label
     

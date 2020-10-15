@@ -339,6 +339,17 @@ def get_string(_id):
 def set_property(property, value, window=10000):
     xbmcgui.Window(window).setProperty(property, value)
 
+def get_property(property, window=10000):
+    return xbmcgui.Window(window).getProperty(property)
+
+def push_queue(property, value):
+    set_property(property, ",".join(get_property(property).split(",") + [value]))
+
+def pop_queue(property):
+    queue = get_property(property).split(',')
+    value = queue.pop()
+    set_property(property, ",".join(queue))
+    return value
 
 def clear_property(property, window=10000):
     xbmcgui.Window(window).clearProperty(property)
@@ -366,16 +377,9 @@ def _get_json_version():
     return (result['major'], result['minor'], result['patch'])
 
 
-def get_files_list(path, titles=None):
+def get_files_list(path, titles=None, widget_id=None):
     if not titles:
         titles = []
-    version = _get_json_version()
-    props = version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12)
-    props_info = info_types + ['customproperties']
-    params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
-              'params': {'properties': info_types if not props else props_info,
-                         'directory': path},
-              'id': 1}
 
     # TODO:
     # - read current cache time and see if its past
@@ -384,18 +388,17 @@ def get_files_list(path, titles=None):
     hash = hashlib.sha1(path).hexdigest()
     cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
     expiry = cache_expiry(hash)
+    files = None
 
-    if expiry > time.time() and os.path.exists(cache_path):
+    if os.path.exists(cache_path):
         files = read_json(cache_path)
         log("Read cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
-    else:
+        if expiry < time.time():
+            push_queue('widgets_to_cache', widget_id)
+    if not files:
         # TODO: maybe need some sort of grace period. startups always return stale content but trigger 
         # another update soon after?
-        files_json = call_jsonrpc(json.dumps(params))
-        files = json.loads(files_json)
-        write_json(cache_path, files)
-        expiry = cache_expiry(hash, add=hashlib.sha1(files_json).hexdigest())
-        log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
+        files = cache_files(path)
         
     new_files = []
     if 'error' not in files:
@@ -415,6 +418,23 @@ def get_files_list(path, titles=None):
                 
         return new_files
 
+def cache_files(path):
+    hash = hashlib.sha1(path).hexdigest()
+    cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
+    version = _get_json_version()
+    props = version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12)
+    props_info = info_types + ['customproperties']
+    params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
+              'params': {'properties': info_types if not props else props_info,
+                         'directory': path},
+              'id': 1}
+    files_json = call_jsonrpc(json.dumps(params))
+    files = json.loads(files_json)
+    write_json(cache_path, files)
+    expiry = cache_expiry(hash, add=hashlib.sha1(files_json).hexdigest())
+    log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
+    return files
+
 def cache_expiry(hash, add=None):
     # TODO: clean up no longer used cache files. not read in > 30 days?
     # TODO: predict based on duration that gets you new content every 3rd attempt.
@@ -430,17 +450,18 @@ def cache_expiry(hash, add=None):
         history.append( (time.time(), add))
         write_json(_history_path, _history)
     # predict next update time 
-    if not history:
-        return time.time() - 20
-    elif len(history) == 1:
-        return history[-1][0] + 60*60
-    else:
-        durations = []
-        last_hash, last_when = None, history[-1][0] - 60*60
-        for when, hash in history:
-            if hash != last_hash:
-                durations.append(when - last_when)
-        return time.time() + math.fsum(durations)/len(durations)/2.0 # we want every 2nd update to be a change
+    return history[-1][0] + 60*5 # just cache until background update is done
+    # if not history:
+    #     return time.time() - 20
+    # elif len(history) == 1:
+    #     return history[-1][0] + 60*60
+    # else:
+    #     durations = []
+    #     last_hash, last_when = None, history[-1][0] - 60*60
+    #     for when, hash in history:
+    #         if hash != last_hash:
+    #             durations.append(when - last_when)
+    #     return time.time() + math.fsum(durations)/len(durations)/2.0 # we want every 2nd update to be a change
 
 def call_builtin(action, delay=0):
     if delay:

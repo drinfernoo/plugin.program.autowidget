@@ -57,7 +57,11 @@ class RefreshService(xbmc.Monitor):
         self._refresh(True)
         
         while not self.abortRequested():
-            if self.waitForAbort(60 * 15):
+            for _ in range(0, 60):
+                if self.waitForAbort(15):
+                    break
+                update_cache()
+            if self.abortRequested():
                 break
 
             if not self._refresh():
@@ -83,6 +87,22 @@ class RefreshService(xbmc.Monitor):
         else:
             utils.log('+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++',
                       'notice')
+
+def update_cache():
+    while True:
+        widget_id = utils.pop_queue('widgets_to_cache')
+        if not widget_id:
+            break
+        #import web_pdb; web_pdb.set_trace()
+        widget_def = manage.get_widget_by_id(widget_id)
+        if not widget_def:
+            continue
+        widget_path = widget_def.get('path', {})  
+        if isinstance(widget_path, dict):
+            _label = widget_path['label']
+            widget_path = widget_path['file']['file']
+        utils.cache_files(widget_path)
+        _update_strings(widget_def)
 
 
 def _update_strings(widget_def):
