@@ -132,7 +132,7 @@ def _show_widget_options(edit_def):
     if idx < 0:
         return
     elif idx == len(options) - 1:
-        _remove_widget(edit_def['id'])
+        remove_widget(edit_def['id'])
         utils.update_container()
         return
     else:
