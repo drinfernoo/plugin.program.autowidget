@@ -11,6 +11,7 @@ except ImportError:
 
 from resources.lib import manage
 from resources.lib.common import utils
+from resources.lib.common import refresh
 
 shortcut_types = [utils.get_string(32051), utils.get_string(32052),
                   utils.get_string(32082), utils.get_string(32083),
@@ -207,7 +208,7 @@ def _copy_path(path_def):
         return
         
     group_def = manage.get_group_by_id(group_id)
-    files = utils.get_files_list(path_def['file']['file'])
+    files = refresh.get_files_list(path_def['file']['file'])
     if not files:
         return
     

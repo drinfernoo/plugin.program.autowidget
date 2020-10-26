@@ -11,7 +11,6 @@ import string
 import time
 import unicodedata
 import hashlib
-import math
 
 import six
 from PIL import Image
@@ -20,6 +19,7 @@ try:
     from urllib.parse import unquote
 except ImportError:
     from urlparse import unquote
+
 
 _addon = xbmcaddon.Addon()
 _addon_id = _addon.getAddonInfo('id')
@@ -68,7 +68,7 @@ colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'cri
           'cornsilk', 'blanchedalmond', 'bisque', 'navajowhite', 'wheat', 'burlywood', 'tan', 'rosybrown', 'sandybrown', 'goldenrod', 'peru', 'chocolate', 'saddlebrown', 'sienna', 'brown', 'maroon']  # brown
 
 _history_path = os.path.join(_addon_path, 'cache_history.json')
-_history = None
+
 
 def log(msg, level='debug'):
     _level = xbmc.LOGDEBUG
@@ -376,48 +376,6 @@ def _get_json_version():
     result = json.loads(call_jsonrpc(json.dumps(params)))['result']['version']
     return (result['major'], result['minor'], result['patch'])
 
-
-def get_files_list(path, titles=None, widget_id=None):
-    if not titles:
-        titles = []
-
-    # TODO:
-    # - read current cache time and see if its past
-    #import ptvsd; ptvsd.enable_attach(); ptvsd.wait_for_attach()
-    # import web_pdb; web_pdb.set_trace()
-    hash = hashlib.sha1(path).hexdigest()
-    cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
-    expiry = cache_expiry(hash)
-    files = None
-
-    if os.path.exists(cache_path):
-        files = read_json(cache_path)
-        log("Read cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
-        if expiry < time.time():
-            push_queue('widgets_to_cache', widget_id)
-    if not files:
-        # TODO: maybe need some sort of grace period. startups always return stale content but trigger 
-        # another update soon after?
-        files = cache_files(path)
-        
-    new_files = []
-    if 'error' not in files:
-        files = files.get('result').get('files')
-        if not files:
-            log('No items found for {}'.format(path))
-            return
-            
-        filtered_files = [x for x in files if x['title'] not in titles]
-        for file in filtered_files:
-            new_file = {k: v for k, v in file.items() if v not in [None, '', -1, [], {}]}
-            if 'art' in new_file:
-                for art in new_file['art']:
-                    new_file['art'][art] = clean_artwork_url(file['art'][art])
-            new_files.append(new_file)
-        log(json.dumps(files), 'debug')
-                
-        return new_files
-
 def cache_files(path):
     hash = hashlib.sha1(path).hexdigest()
     cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
@@ -435,22 +393,27 @@ def cache_files(path):
     log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
     return files
 
+
 def cache_expiry(hash, add=None):
     # TODO: clean up no longer used cache files. not read in > 30 days?
     # TODO: predict based on duration that gets you new content every 3rd attempt.
     # TODO: correlate updates with watched history to see if thats better predictor
+    # or just clear cache when something is watched
     # TODO: use next expiry to cause widget refresh
-    global _history
-    if _history is None:
-        _history = read_json(_history_path)
-        if not _history:
-            _history = {}
+
+    # Read file every time as we might be called from multiple processes
+    _history = read_json(_history_path)
+    if not _history:
+        _history = {}
     history = _history.setdefault(hash, [])
     if add:
         history.append( (time.time(), add))
         write_json(_history_path, _history)
     # predict next update time 
-    return history[-1][0] + 60*5 # just cache until background update is done
+    if not history:
+        return time.time() - 20 # make sure its expired so it updates correctly
+    else:
+        return history[-1][0] + 60*5 # just cache 5m until background update is done
     # if not history:
     #     return time.time() - 20
     # elif len(history) == 1:
@@ -462,6 +425,7 @@ def cache_expiry(hash, add=None):
     #         if hash != last_hash:
     #             durations.append(when - last_when)
     #     return time.time() + math.fsum(durations)/len(durations)/2.0 # we want every 2nd update to be a change
+
 
 def call_builtin(action, delay=0):
     if delay:

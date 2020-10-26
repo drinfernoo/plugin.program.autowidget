@@ -3,12 +3,20 @@ import xbmcgui
 
 import random
 import time
+import hashlib
+import json
+import threading
+import Queue
+import os
+
 
 from resources.lib import manage
 from resources.lib.common import utils
 
 skin_string_pattern = 'autowidget-{}-{}'
 _properties = ['context.autowidget']
+
+_thread = None
 
 
 class RefreshService(xbmc.Monitor):
@@ -60,7 +68,12 @@ class RefreshService(xbmc.Monitor):
             for _ in range(0, 60):
                 if self.waitForAbort(15):
                     break
-                update_cache()
+                # while True:
+                #     widget_id = utils.pop_queue('widgets_to_cache')
+                #     if not widget_id:
+                #         break
+                #     cache_and_update(widget_id)
+
             if self.abortRequested():
                 break
 
@@ -88,30 +101,12 @@ class RefreshService(xbmc.Monitor):
             utils.log('+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++',
                       'notice')
 
-def update_cache():
-    while True:
-        widget_id = utils.pop_queue('widgets_to_cache')
-        if not widget_id:
-            break
-        #import web_pdb; web_pdb.set_trace()
-        widget_def = manage.get_widget_by_id(widget_id)
-        if not widget_def:
-            continue
-        widget_path = widget_def.get('path', {})  
-        if isinstance(widget_path, dict):
-            _label = widget_path['label']
-            widget_path = widget_path['file']['file']
-        utils.cache_files(widget_path)
-        _update_strings(widget_def)
-
-
 def _update_strings(widget_def):
     refresh = skin_string_pattern.format(widget_def['id'], 'refresh')
     utils.set_property(refresh, '{}'.format(time.time()))
     utils.log('Refreshing widget {} to display {}'.format(widget_def['id'],
                                                        widget_def['path']),
                                                        'debug')
-
 
 def update_path(widget_id, target, path=None):
     widget_def = manage.get_widget_by_id(widget_id)
@@ -224,3 +219,81 @@ def refresh_paths(notify=False, force=False):
     utils.update_container(True)
 
     return True, 'AutoWidget'
+
+
+def get_files_list(path, titles=None, widget_id=None):
+    if not titles:
+        titles = []
+
+    hash = hashlib.sha1(path).hexdigest()
+    cache_path = os.path.join(utils._addon_path, '{}.cache'.format(hash))
+    expiry = utils.cache_expiry(hash)
+    files = None
+
+    if os.path.exists(cache_path):
+        files = utils.read_json(cache_path)
+        utils.log("Read cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
+        if expiry < time.time():
+            utils.log("Queue cache update for: {}".format(hash), 'notice')
+            queue_widget_update(widget_id)
+    if not files:
+        # We had no old content so have to block and get it now
+        files = utils.cache_files(path)
+        
+    new_files = []
+    if 'error' not in files:
+        files = files.get('result').get('files')
+        if not files:
+            utils.log('No items found for {}'.format(path))
+            return
+            
+        filtered_files = [x for x in files if x['title'] not in titles]
+        for file in filtered_files:
+            new_file = {k: v for k, v in file.items() if v not in [None, '', -1, [], {}]}
+            if 'art' in new_file:
+                for art in new_file['art']:
+                    new_file['art'][art] = utils.clean_artwork_url(file['art'][art])
+            new_files.append(new_file)
+        utils.log(json.dumps(files), 'debug')
+                
+        return new_files
+
+def queue_widget_update(widget_id):
+    global _thread
+    if _thread is None or not _thread.is_alive():
+        _thread = Worker()
+        _thread.daemon = True
+    _thread.queue.put(widget_id)    
+    _thread.start()
+
+class Worker(threading.Thread):
+    def __init__(self):
+        super(Worker, self).__init__()
+        self.queue = Queue.Queue()
+
+    def run(self):
+        # Just run while we have stuff to process
+        #import web_pdb; web_pdb.set_trace()
+        while True:
+            try:
+                # Don't block
+                widget_id = self.queue.get(block=False)
+                cache_and_update(widget_id)
+                self.queue.task_done()
+            except Queue.Empty:
+                # Allow other stuff to run
+                #time.sleep(0.1)
+                break
+
+def cache_and_update(widget_id):
+    widget_def = manage.get_widget_by_id(widget_id)
+    if not widget_def:
+        return
+    widget_path = widget_def.get('path', {})  
+    if isinstance(widget_path, dict):
+        _label = widget_path['label']
+        widget_path = widget_path['file']['file']
+    utils.cache_files(widget_path)
+    _update_strings(widget_def)
+
+
