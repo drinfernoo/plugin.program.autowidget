@@ -68,11 +68,6 @@ class RefreshService(xbmc.Monitor):
             for _ in range(0, 60):
                 if self.waitForAbort(15):
                     break
-                # while True:
-                #     widget_id = utils.pop_queue('widgets_to_cache')
-                #     if not widget_id:
-                #         break
-                #     cache_and_update(widget_id)
 
             if self.abortRequested():
                 break
@@ -273,7 +268,6 @@ class Worker(threading.Thread):
 
     def run(self):
         # Just run while we have stuff to process
-        #import web_pdb; web_pdb.set_trace()
         while True:
             try:
                 # Don't block
@@ -281,8 +275,6 @@ class Worker(threading.Thread):
                 cache_and_update(widget_id)
                 self.queue.task_done()
             except Queue.Empty:
-                # Allow other stuff to run
-                #time.sleep(0.1)
                 break
 
 def cache_and_update(widget_id):

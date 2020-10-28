@@ -67,8 +67,6 @@ colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'cri
           'gainsboro', 'lightgray', 'silver', 'darkgray', 'gray', 'dimgray', 'lightslategray', 'slategray', 'darkslategray', 'black',  # black
           'cornsilk', 'blanchedalmond', 'bisque', 'navajowhite', 'wheat', 'burlywood', 'tan', 'rosybrown', 'sandybrown', 'goldenrod', 'peru', 'chocolate', 'saddlebrown', 'sienna', 'brown', 'maroon']  # brown
 
-_history_path = os.path.join(_addon_path, 'cache_history.json')
-
 
 def log(msg, level='debug'):
     _level = xbmc.LOGDEBUG
@@ -395,17 +393,18 @@ def cache_files(path):
 
 
 def cache_expiry(hash, add=None):
-    # TODO: clean up no longer used cache files. not read in > 30 days?
-    # TODO: predict based on duration that gets you new content every 3rd attempt.
-    # TODO: correlate updates with watched history to see if thats better predictor
-    # or just clear cache when something is watched
-    # TODO: use next expiry to cause widget refresh
+    # Currently just caches for 5 min so that the background refresh doesn't go in a loop.
+    # In the future it will cache for longer based on the history of how often in changed
+    # and when it changed in relation to events like events events.
+    # It should also manage the cache files to remove any too old.
+    # The cache expiry can also be used later to schedule a future background update.
 
     # Read file every time as we might be called from multiple processes
+    _history_path = os.path.join(_addon_path, '{}.history'.format(hash))
     _history = read_json(_history_path)
     if not _history:
         _history = {}
-    history = _history.setdefault(hash, [])
+    history = _history.setdefault('history', [])
     if add:
         history.append( (time.time(), add))
         write_json(_history_path, _history)
@@ -414,18 +413,7 @@ def cache_expiry(hash, add=None):
         return time.time() - 20 # make sure its expired so it updates correctly
     else:
         return history[-1][0] + 60*5 # just cache 5m until background update is done
-    # if not history:
-    #     return time.time() - 20
-    # elif len(history) == 1:
-    #     return history[-1][0] + 60*60
-    # else:
-    #     durations = []
-    #     last_hash, last_when = None, history[-1][0] - 60*60
-    #     for when, hash in history:
-    #         if hash != last_hash:
-    #             durations.append(when - last_when)
-    #     return time.time() + math.fsum(durations)/len(durations)/2.0 # we want every 2nd update to be a change
-
+        
 
 def call_builtin(action, delay=0):
     if delay:
