@@ -379,6 +379,7 @@ def _get_json_version():
 
 def cache_files(path):
     hash = hashlib.sha1(path).hexdigest()
+    hash = hashlib.sha1(six.text_type(path)).hexdigest()
     cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
     version = _get_json_version()
     props = version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12)
@@ -390,7 +391,7 @@ def cache_files(path):
     files_json = call_jsonrpc(json.dumps(params))
     files = json.loads(files_json)
     write_json(cache_path, files)
-    expiry = cache_expiry(hash, add=hashlib.sha1(files_json).hexdigest())
+    expiry = cache_expiry(hash, add=hashlib.sha1(json.dumps(files_json)).hexdigest())
     log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
     return files
 
