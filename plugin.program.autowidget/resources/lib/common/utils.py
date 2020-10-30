@@ -10,6 +10,7 @@ import os
 import string
 import time
 import unicodedata
+import hashlib
 
 import six
 from PIL import Image
@@ -18,6 +19,7 @@ try:
     from urllib.parse import unquote
 except ImportError:
     from urlparse import unquote
+
 
 _addon = xbmcaddon.Addon()
 _addon_id = _addon.getAddonInfo('id')
@@ -73,7 +75,7 @@ def log(msg, level='debug'):
 
     if level == 'debug':
         _level = xbmc.LOGDEBUG
-    elif level == 'info':
+    elif level in ['notice', 'info']:
         try:
             _level = xbmc.LOGNOTICE
         except AttributeError:
@@ -338,6 +340,17 @@ def get_string(_id):
 def set_property(property, value, window=10000):
     xbmcgui.Window(window).setProperty(property, value)
 
+def get_property(property, window=10000):
+    return xbmcgui.Window(window).getProperty(property)
+
+def push_queue(property, value):
+    set_property(property, ",".join(get_property(property).split(",") + [value]))
+
+def pop_queue(property):
+    queue = get_property(property).split(',')
+    value = queue.pop()
+    set_property(property, ",".join(queue))
+    return value
 
 def clear_property(property, window=10000):
     xbmcgui.Window(window).clearProperty(property)
@@ -364,10 +377,10 @@ def _get_json_version():
     result = json.loads(call_jsonrpc(json.dumps(params)))['result']['version']
     return (result['major'], result['minor'], result['patch'])
 
-
-def get_files_list(path, titles=None):
-    if not titles:
-        titles = []
+def cache_files(path):
+    hash = hashlib.sha1(path).hexdigest()
+    hash = hashlib.sha1(six.text_type(path)).hexdigest()
+    cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
     version = _get_json_version()
     props = version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12)
     props_info = info_types + ['customproperties']
@@ -375,26 +388,36 @@ def get_files_list(path, titles=None):
               'params': {'properties': info_types if not props else props_info,
                          'directory': path},
               'id': 1}
+    files_json = call_jsonrpc(json.dumps(params))
+    files = json.loads(files_json)
+    write_json(cache_path, files)
+    expiry = cache_expiry(hash, add=hashlib.sha1(json.dumps(files_json)).hexdigest())
+    log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
+    return files
 
-    files = json.loads(call_jsonrpc(json.dumps(params)))
-    new_files = []
-    if 'error' not in files:
-        files = files.get('result').get('files')
-        if not files:
-            log('No items found for {}'.format(path))
-            return
-            
-        filtered_files = [x for x in files if x['title'] not in titles]
-        for file in filtered_files:
-            new_file = {k: v for k, v in file.items() if v not in [None, '', -1, [], {}]}
-            if 'art' in new_file:
-                for art in new_file['art']:
-                    new_file['art'][art] = clean_artwork_url(file['art'][art])
-            new_files.append(new_file)
-        log(json.dumps(files), 'debug')
-                
-        return new_files
 
+def cache_expiry(hash, add=None):
+    # Currently just caches for 5 min so that the background refresh doesn't go in a loop.
+    # In the future it will cache for longer based on the history of how often in changed
+    # and when it changed in relation to events like events events.
+    # It should also manage the cache files to remove any too old.
+    # The cache expiry can also be used later to schedule a future background update.
+
+    # Read file every time as we might be called from multiple processes
+    _history_path = os.path.join(_addon_path, '{}.history'.format(hash))
+    _history = read_json(_history_path)
+    if not _history:
+        _history = {}
+    history = _history.setdefault('history', [])
+    if add:
+        history.append( (time.time(), add))
+        write_json(_history_path, _history)
+    # predict next update time 
+    if not history:
+        return time.time() - 20 # make sure its expired so it updates correctly
+    else:
+        return history[-1][0] + 60*5 # just cache 5m until background update is done
+        
 
 def call_builtin(action, delay=0):
     if delay:
