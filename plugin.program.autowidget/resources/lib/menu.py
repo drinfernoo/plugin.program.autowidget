@@ -6,6 +6,7 @@ import uuid
 import six
 
 from resources.lib import manage
+from resources.lib import refresh
 from resources.lib.common import directory
 from resources.lib.common import utils
 
@@ -231,7 +232,7 @@ def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, 
     if not titles:
         titles = []
     
-    files = utils.get_files_list(path, titles)
+    files = refresh.get_files_list(path, titles, widget_id)
     if not files:
         return titles, path_label
     
