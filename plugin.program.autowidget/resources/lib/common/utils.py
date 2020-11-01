@@ -378,7 +378,6 @@ def _get_json_version():
     return (result['major'], result['minor'], result['patch'])
 
 def cache_files(path):
-    hash = hashlib.sha1(path).hexdigest()
     hash = hashlib.sha1(six.text_type(path)).hexdigest()
     cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
     version = _get_json_version()
