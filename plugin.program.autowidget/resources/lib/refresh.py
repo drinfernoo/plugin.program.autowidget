@@ -255,11 +255,14 @@ def get_files_list(path, titles=None, widget_id=None):
 
 def queue_widget_update(widget_id):
     global _thread
+    new_thread = False
     if _thread is None or not _thread.is_alive():
         _thread = Worker()
         _thread.daemon = True
-    _thread.queue.put(widget_id)    
-    _thread.start()
+        new_thread = True
+    _thread.queue.put(widget_id)   
+    if new_thread: 
+        _thread.start()
 
 class Worker(threading.Thread):
     def __init__(self):
