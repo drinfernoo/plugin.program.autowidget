@@ -204,13 +204,7 @@
         </assets>
     </extension>
 </addon>
-d group renaming
-1.1.1
- - Add setting to disable notification
-1.1.0
- - Remove Skin Shortcuts dependency
- - Expand context menu options
- - Add support for skins with "basic" Skin Shortcuts integration
+"basic" Skin Shortcuts integration
  - Add setting to pause AutoWidget's service
 1.0.7
  - Fix context menu option not showing
@@ -236,6 +230,10 @@ d group renaming
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+go>resources/media/clearlogo.png</clearlogo>
         </assets>
     </extension>
 </addon>
