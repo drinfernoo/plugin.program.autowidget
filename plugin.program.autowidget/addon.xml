@@ -4,6 +4,8 @@
         <import addon="script.module.kodi-six" />
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
+        <import addon="script.module.ptvsd" version="5.0.0" />
+        <import addon="script.module.web-pdb" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">

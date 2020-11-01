@@ -9,7 +9,6 @@ import threading
 import Queue
 import os
 
-
 from resources.lib import manage
 from resources.lib.common import utils
 
@@ -25,7 +24,7 @@ class RefreshService(xbmc.Monitor):
         """Starts all of the actions of AutoWidget's service."""
         super(RefreshService, self).__init__()
         utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', 'info')
-        self.player = xbmc.Player()
+        self.player = Player()
         utils.ensure_addon_data()
         self._update_properties()
         self._clean_widgets()
@@ -222,7 +221,7 @@ def get_files_list(path, titles=None, widget_id=None):
 
     hash = hashlib.sha1(path).hexdigest()
     cache_path = os.path.join(utils._addon_path, '{}.cache'.format(hash))
-    expiry = utils.cache_expiry(hash)
+    expiry = utils.cache_expiry(hash, widget_id)
     files = None
 
     if os.path.exists(cache_path):
@@ -233,7 +232,7 @@ def get_files_list(path, titles=None, widget_id=None):
             queue_widget_update(widget_id)
     if not files:
         # We had no old content so have to block and get it now
-        files = utils.cache_files(path)
+        files = utils.cache_files(path, widget_id)
         
     new_files = []
     if 'error' not in files:
@@ -255,11 +254,14 @@ def get_files_list(path, titles=None, widget_id=None):
 
 def queue_widget_update(widget_id):
     global _thread
+    new_thread = False
     if _thread is None or not _thread.is_alive():
         _thread = Worker()
         _thread.daemon = True
-    _thread.queue.put(widget_id)    
-    _thread.start()
+        new_thread = True
+    _thread.queue.put(widget_id)   
+    if new_thread: 
+        _thread.start()
 
 class Worker(threading.Thread):
     def __init__(self):
@@ -268,6 +270,7 @@ class Worker(threading.Thread):
 
     def run(self):
         # Just run while we have stuff to process
+        import web_pdb; web_pdb.set_trace()
         while True:
             try:
                 # Don't block
@@ -285,7 +288,121 @@ def cache_and_update(widget_id):
     if isinstance(widget_path, dict):
         _label = widget_path['label']
         widget_path = widget_path['file']['file']
-    utils.cache_files(widget_path)
+    utils.cache_files(widget_path, widget_id)
     _update_strings(widget_def)
 
 
+
+# As soon as stop playing schedule a widget update on potentially changed widgets
+# Try to guess which widgets should be updated based on which normal change after playback
+# or update everything recently changed
+
+class Player(xbmc.Player):
+    def __init__(self):
+        super(Player, self).__init__()
+        self.publish = None
+        self.totalTime = -1
+        self.playingTime = 0
+        self.info = {}
+
+    def playing_type(self):
+        """
+        @return: [music|movie|episode|stream|liveTV|recordedTV|PVRradio|unknown]
+        """
+        # TODO: taken from callbacks plugin. have as a dependcy instead?
+        substrings = ['-trailer', 'http://']
+        isMovie = False
+        if self.isPlayingAudio():
+            return "music"
+        else:
+            if xbmc.getCondVisibility('VideoPlayer.Content(movies)'):
+                isMovie = True
+        try:
+            filename = self.getPlayingFile()
+        except RuntimeError:
+            filename = ''
+        if filename != '':
+            if filename[0:3] == 'pvr':
+                if xbmc.getCondVisibility('Pvr.IsPlayingTv'):
+                    return 'liveTV'
+                elif xbmc.getCondVisibility('Pvr.IsPlayingRecording'):
+                    return 'recordedTV'
+                elif xbmc.getCondVisibility('Pvr.IsPlayingRadio'):
+                    return 'PVRradio'
+                else:
+                    for string in substrings:
+                        if string in filename:
+                            isMovie = False
+                            break
+        if isMovie:
+            return "movie"
+        elif xbmc.getCondVisibility('VideoPlayer.Content(episodes)'):
+            # Check for tv show title and season to make sure it's really an episode
+            if xbmc.getInfoLabel('VideoPlayer.Season') != "" and xbmc.getInfoLabel('VideoPlayer.TVShowTitle') != "":
+                return "episode"
+        elif xbmc.getCondVisibility('Player.IsInternetStream'):
+            return 'stream'
+        else:
+            return 'unknown'
+
+
+    def onPlayBackStarted(self):
+        # self.getInfo()
+        try:
+            self.totalTime = self.getTotalTime()
+        except RuntimeError:
+            self.totalTime = -1
+        finally:
+            if self.totalTime == 0:
+                self.totalTime = -1
+        # self.recordPlay()
+
+    def onPlayBackEnded(self):
+        #import ptvsd; ptvsd.enable_attach(address=('127.0.0.1', 5678)); ptvsd.wait_for_attach()
+        utils.log("AutoWidget onPlayBackEnded callback", 'notice')
+
+        # Once a playback ends. 
+        # TODO: We don't know it was scrobed so might not result in widget changes? Used watched status instead?
+        # Work out which cached paths are most likely to change based on playback history
+        #  - For now all those that were refreshed on startup
+        for widget_id in utils.widgets_changed_by_watching():
+            # Queue them for refresh
+            queue_widget_update(widget_id)
+
+        # Record playback in a history db so we can potentially use this for future predictions.
+        try:
+            tt = self.totalTime
+            tp = self.playingTime
+            pp = int(100 * tp / tt)
+        except RuntimeError:
+            pp = -1
+        except OverflowError:
+            pp = -1
+        self.totalTime = -1.0
+        self.playingTime = 0.0
+        self.info = {}
+        utils.save_playback_history(self.playing_type, pp)
+
+
+
+    def onPlayBackStopped(self):
+        self.onPlayBackEnded()
+
+    def onPlayBackPaused(self):
+        pass
+
+    def onPlayBackResumed(self):
+        pass
+
+    def onPlayBackSeek(self, time, seekOffset):
+        pass
+
+    def onPlayBackSeekChapter(self, chapter):
+        pass
+
+    def onPlayBackSpeedChanged(self, speed):
+        pass
+
+    def onQueueNextItem(self):
+        topic = Topic('onQueueNextItem')
+        pass

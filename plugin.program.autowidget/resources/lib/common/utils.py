@@ -11,6 +11,7 @@ import string
 import time
 import unicodedata
 import hashlib
+import glob
 
 import six
 from PIL import Image
@@ -66,6 +67,8 @@ colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'cri
           'white', 'snow', 'honeydew', 'mintcream', 'azure', 'aliceblue', 'ghostwhite', 'whitesmoke', 'seashell', 'beige', 'oldlace', 'floralwhite', 'ivory', 'antiquewhite', 'linen', 'lavenderblush', 'mistyrose',  # white
           'gainsboro', 'lightgray', 'silver', 'darkgray', 'gray', 'dimgray', 'lightslategray', 'slategray', 'darkslategray', 'black',  # black
           'cornsilk', 'blanchedalmond', 'bisque', 'navajowhite', 'wheat', 'burlywood', 'tan', 'rosybrown', 'sandybrown', 'goldenrod', 'peru', 'chocolate', 'saddlebrown', 'sienna', 'brown', 'maroon']  # brown
+
+_startup_time = time.time() #TODO: could get reloaded so not accurate?
 
 
 def log(msg, level='debug'):
@@ -377,7 +380,7 @@ def _get_json_version():
     result = json.loads(call_jsonrpc(json.dumps(params)))['result']['version']
     return (result['major'], result['minor'], result['patch'])
 
-def cache_files(path):
+def cache_files(path, widget_id):
     hash = hashlib.sha1(path).hexdigest()
     cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
     version = _get_json_version()
@@ -390,12 +393,12 @@ def cache_files(path):
     files_json = call_jsonrpc(json.dumps(params))
     files = json.loads(files_json)
     write_json(cache_path, files)
-    expiry = cache_expiry(hash, add=hashlib.sha1(files_json).hexdigest())
+    expiry = cache_expiry(hash, widget_id, add=hashlib.sha1(files_json.encode('utf8')).hexdigest())
     log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
     return files
 
 
-def cache_expiry(hash, add=None):
+def cache_expiry(hash, widget_id, add=None):
     # Currently just caches for 5 min so that the background refresh doesn't go in a loop.
     # In the future it will cache for longer based on the history of how often in changed
     # and when it changed in relation to events like events events.
@@ -404,19 +407,44 @@ def cache_expiry(hash, add=None):
 
     # Read file every time as we might be called from multiple processes
     _history_path = os.path.join(_addon_path, '{}.history'.format(hash))
-    _history = read_json(_history_path)
-    if not _history:
+    cache_data = read_json(_history_path)
+    if not cache_data:
         _history = {}
-    history = _history.setdefault('history', [])
+    history = cache_data.setdefault('history', [])
     if add:
         history.append( (time.time(), add))
-        write_json(_history_path, _history)
+        widgets = cache_data.setdefault('widgets', [])
+        if widget_id not in widgets:
+            widgets.append(widget_id)
+        write_json(_history_path, cache_data)
     # predict next update time 
     if not history:
         return time.time() - 20 # make sure its expired so it updates correctly
     else:
         return history[-1][0] + 60*5 # just cache 5m until background update is done
-        
+
+
+def widgets_changed_by_watching():
+    # Predict which widgets the skin might have that could have changed based on recently finish
+    # watching something
+    
+    # Simple version. Anything updated recently (since startup?)
+    all_cache = filter(os.path.isfile, glob.glob(os.path.join(_addon_path, "*.history")))
+    log("recently updated cache {}".format(all_cache), 'notice')
+    for path in sorted(all_cache, key=os.path.getmtime):
+        cache_data = read_json(path)
+        history = cache_data.setdefault('history', [])
+        last_update = history[-1][0]
+        if last_update > _startup_time:
+            for widget_id in cache_data.get('widgets',[]):
+                yield widget_id
+
+
+
+
+def save_playback_history(media_type, playback_percentage):
+    # Record in json when things got played to help predict which widgets will change after playback
+    pass
 
 def call_builtin(action, delay=0):
     if delay:
