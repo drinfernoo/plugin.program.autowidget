@@ -391,7 +391,7 @@ def cache_files(path):
     files_json = call_jsonrpc(json.dumps(params))
     files = json.loads(files_json)
     write_json(cache_path, files)
-    expiry = cache_expiry(hash, add=hashlib.sha1(json.dumps(files_json)).hexdigest())
+    expiry = cache_expiry(hash, add=hashlib.sha1(files_json.encode('utf8')).hexdigest())
     log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
     return files
 
