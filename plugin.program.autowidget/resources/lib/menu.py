@@ -228,7 +228,7 @@ def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, 
     widget_def = manage.get_widget_by_id(widget_id)
     if not widget_def:
         return True, 'AutoWidget'
-        
+    
     if not titles:
         titles = []
     
@@ -303,18 +303,24 @@ def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, 
                                     isFolder=not paged_widgets or merged,
                                     props=properties)
         else:
-            if hide_watched and file.get('playcount', 0) > 0:
+            dupe = False
+            title = (file['label'], file.get('imdbnumber'))
+            for t in titles:
+                if t == title:
+                    dupe = True
+            
+            if (hide_watched and file.get('playcount', 0) > 0) or dupe:
                 continue
-        
-            directory.add_menu_item(title=file['label'],
+
+            directory.add_menu_item(title=title[0],
                                     path=file['file'],
                                     art=file['art'],
                                     info=file,
                                     isFolder=file['filetype'] == 'directory',
                                     props=properties)
             
-            titles.append(file.get('label'))
-         
+            titles.append(title)
+
     return titles, path_label
     
     
@@ -446,7 +452,7 @@ def merged_path(group_id, widget_id):
         for idx, path_def in enumerate(paths):
             titles, cat = show_path(group_id, path_def['label'],
                                     widget_id, path_def['file']['file'], idx=idx,
-                                    num=len(paths), merged=True)
+                                    titles=titles, num=len(paths), merged=True)
 
         return titles, cat
     else:

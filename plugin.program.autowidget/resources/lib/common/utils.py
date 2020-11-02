@@ -78,7 +78,7 @@ def log(msg, level='debug'):
 
     if level == 'debug':
         _level = xbmc.LOGDEBUG
-    elif level == 'info':
+    elif level in ['notice', 'info']:
         try:
             _level = xbmc.LOGNOTICE
         except AttributeError:
@@ -382,6 +382,7 @@ def _get_json_version():
 
 def cache_files(path, widget_id):
     hash = hashlib.sha1(path).hexdigest()
+    hash = hashlib.sha1(six.text_type(path)).hexdigest()
     cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
     version = _get_json_version()
     props = version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12)
