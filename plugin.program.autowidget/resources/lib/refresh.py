@@ -255,7 +255,7 @@ def get_files_list(path, titles=None, widget_id=None):
 def queue_widget_update(widget_id):
     global _thread
     new_thread = False
-    if _thread is None or not _thread.is_alive():
+    if _thread is None or _thread.stopping:
         _thread = Worker()
         _thread.daemon = True
         new_thread = True
@@ -267,18 +267,23 @@ class Worker(threading.Thread):
     def __init__(self):
         super(Worker, self).__init__()
         self.queue = Queue.Queue()
+        self.stopping = False
+
+    def stop(self):
+        self.stopping = True
 
     def run(self):
         # Just run while we have stuff to process
-        import web_pdb; web_pdb.set_trace()
-        while True:
+        #import web_pdb; web_pdb.set_trace()
+        while not self.stopping:
             try:
                 # Don't block
                 widget_id = self.queue.get(block=False)
                 cache_and_update(widget_id)
                 self.queue.task_done()
             except Queue.Empty:
-                break
+                # Allow other stuff to run
+                time.sleep(0.1)
 
 def cache_and_update(widget_id):
     widget_def = manage.get_widget_by_id(widget_id)
