@@ -34,6 +34,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.0.2
+ - Fix bug in background caching
 3.0.1
  - Fix bug when adding paths
 3.0.0
