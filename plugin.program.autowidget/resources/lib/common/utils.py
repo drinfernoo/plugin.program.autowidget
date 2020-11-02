@@ -277,7 +277,7 @@ def read_json(file):
             try:
                 content = six.ensure_text(f.read())
                 data = json.loads(content)
-            except Exception as e:
+            except ValueError as e:
                 log('Could not read JSON from {}: {}'.format(file, e),
                     level='error')
     else:

@@ -29,6 +29,9 @@ class RefreshService(xbmc.Monitor):
         self._update_properties()
         self._clean_widgets()
         self._update_widgets()
+        # Shutting down. Close thread
+        if _thread is not None:
+            _thread.stop()
 
     def onSettingsChanged(self):
         self._update_properties()
@@ -255,9 +258,8 @@ def get_files_list(path, titles=None, widget_id=None):
 def queue_widget_update(widget_id):
     global _thread
     new_thread = False
-    if _thread is None or _thread.stopping:
+    if _thread is None or _thread.stopped():
         _thread = Worker()
-        _thread.daemon = True
         new_thread = True
     _thread.queue.put(widget_id)   
     if new_thread: 
@@ -267,14 +269,16 @@ class Worker(threading.Thread):
     def __init__(self):
         super(Worker, self).__init__()
         self.queue = Queue.Queue()
+        self.daemon = True
         self.stopping = False
 
     def stop(self):
         self.stopping = True
 
+    def stopped(self):
+        return self.stopping
+
     def run(self):
-        # Just run while we have stuff to process
-        #import web_pdb; web_pdb.set_trace()
         while not self.stopping:
             try:
                 # Don't block
@@ -283,7 +287,8 @@ class Worker(threading.Thread):
                 self.queue.task_done()
             except Queue.Empty:
                 # Allow other stuff to run
-                time.sleep(0.1)
+                #time.sleep(0.1)
+                self.stopping = True
 
 def cache_and_update(widget_id):
     widget_def = manage.get_widget_by_id(widget_id)
@@ -300,8 +305,6 @@ def cache_and_update(widget_id):
 
 # As soon as stop playing schedule a widget update on potentially changed widgets
 # Try to guess which widgets should be updated based on which normal change after playback
-# or update everything recently changed
-
 class Player(xbmc.Player):
     def __init__(self):
         super(Player, self).__init__()
@@ -369,7 +372,6 @@ class Player(xbmc.Player):
         # Once a playback ends. 
         # TODO: We don't know it was scrobed so might not result in widget changes? Used watched status instead?
         # Work out which cached paths are most likely to change based on playback history
-        #  - For now all those that were refreshed on startup
         for widget_id in utils.widgets_changed_by_watching():
             # Queue them for refresh
             queue_widget_update(widget_id)
@@ -387,8 +389,6 @@ class Player(xbmc.Player):
         self.playingTime = 0.0
         self.info = {}
         utils.save_playback_history(self.playing_type, pp)
-
-
 
     def onPlayBackStopped(self):
         self.onPlayBackEnded()
