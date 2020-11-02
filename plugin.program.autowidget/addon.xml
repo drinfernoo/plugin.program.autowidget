@@ -34,6 +34,11 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.0.1
+ - Fix bug when adding paths
+3.0.0
+ - Huge speed improvements thanks to @djay's background caching implementation
+ - Fix merged widget duplicate removal
 2.3.7
  - Unicode fixes
  - Fix method calls

@@ -10,8 +10,8 @@ except ImportError:
     from urllib import unquote
 
 from resources.lib import manage
+from resources.lib import refresh
 from resources.lib.common import utils
-from resources.lib.common import refresh
 
 shortcut_types = [utils.get_string(32051), utils.get_string(32052),
                   utils.get_string(32082), utils.get_string(32083),
