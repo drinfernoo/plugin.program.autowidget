@@ -382,9 +382,32 @@ def _get_json_version():
     result = json.loads(call_jsonrpc(json.dumps(params)))['result']['version']
     return (result['major'], result['minor'], result['patch'])
 
+def hash_from_cache_path(path):
+    base=os.path.basename(path)
+    return os.path.splitext(base)[0]
+
+def pop_cache_queue():
+    # Simple queue by creating a .queue file
+    # TODO: use watchdog to use less resources
+    queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_path, "*.queue")))
+    # TODO: sort by path instead so load plugins at the same time
+    for path in sorted(queued, key=os.path.getmtime):
+        os.path.remove(path)
+        hash = hash_from_cache_path(path)
+        path = os.path.join(_addon_path, '{}.history'.format(hash))
+        cache_data = read_json(path)
+        if cache_data:
+            log("Dequeued cache update: {}".format(hash), 'notice')
+            yield hash, cache_data.get('widgets',[])
+            
+
+def push_cache_queue(hash):
+    with open(os.path.join(_addon_path, '{}.cache'.format(hash)), "w") as f:
+        f.write("")
+    log("Queued cache update: {}".format(hash), 'notice')
+
 def cache_files(path, widget_id):
     hash = hashlib.sha1(six.text_type(path)).hexdigest()
-    cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
     version = _get_json_version()
     props = version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12)
     props_info = info_types + ['customproperties']
@@ -394,8 +417,7 @@ def cache_files(path, widget_id):
               'id': 1}
     files_json = call_jsonrpc(json.dumps(params))
     files = json.loads(files_json)
-    write_json(cache_path, files)
-    expiry = cache_expiry(hash, widget_id, add=hashlib.sha1(files_json.encode('utf8')).hexdigest())
+    expiry, _ = cache_expiry(hash, widget_id, add=files)
     log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
     return files
 
@@ -407,23 +429,38 @@ def cache_expiry(hash, widget_id, add=None):
     # It should also manage the cache files to remove any too old.
     # The cache expiry can also be used later to schedule a future background update.
 
+    cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
+
     # Read file every time as we might be called from multiple processes
-    _history_path = os.path.join(_addon_path, '{}.history'.format(hash))
-    cache_data = read_json(_history_path)
-    if not cache_data:
-        _history = {}
+    history_path = os.path.join(_addon_path, '{}.history'.format(hash))
+    cache_data = read_json(history_path)
+    if cache_data is None:
+        cache_data = {}
     history = cache_data.setdefault('history', [])
+
     if add:
-        history.append( (time.time(), add))
+        write_json(cache_path, add)
+        history.append( (time.time(), hashlib.sha1(json.dumps(add).encode('utf8')).hexdigest()))
         widgets = cache_data.setdefault('widgets', [])
         if widget_id not in widgets:
             widgets.append(widget_id)
-        write_json(_history_path, cache_data)
-    # predict next update time 
-    if not history:
-        return time.time() - 20 # make sure its expired so it updates correctly
+        write_json(history_path, cache_data)
+        return history[-1][0] + 60*5, None
     else:
-        return history[-1][0] + 60*5 # just cache 5m until background update is done
+        touch(history_path) # Important because we use modification date to indicate last access time
+
+        if not os.path.exists(cache_path):
+            return time.time() - 20, None # make sure its expired so it updates correctly
+        else:
+            contents = read_json(cache_path, log_file=True)
+            if contents is None:
+                return time.time() - 20, None
+            expiry = history[-1][0] + 60*5
+            log("Read cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
+            if expiry < time.time():
+                log("Queue cache update for: {}".format(hash), 'notice')
+                push_cache_queue(hash)
+            return expiry, contents
 
 
 def widgets_changed_by_watching():
@@ -432,21 +469,25 @@ def widgets_changed_by_watching():
     
     # Simple version. Anything updated recently (since startup?)
     all_cache = filter(os.path.isfile, glob.glob(os.path.join(_addon_path, "*.history")))
-    log("recently updated cache {}".format(all_cache), 'notice')
     for path in sorted(all_cache, key=os.path.getmtime):
-        cache_data = read_json(path)
-        history = cache_data.setdefault('history', [])
-        last_update = history[-1][0]
+        hash = hash_from_cache_path(path)
+        #cache_data = read_json(path)
+        #history = cache_data.setdefault('history', [])
+        last_update = os.path.getmtime(path)
         if last_update > _startup_time:
-            for widget_id in cache_data.get('widgets',[]):
-                yield widget_id
-
-
-
+            log("recently accessed cache {}".format(hash), 'notice')
+            yield hash
 
 def save_playback_history(media_type, playback_percentage):
     # Record in json when things got played to help predict which widgets will change after playback
     pass
+
+def touch(fname, times=None):
+    fhandle = open(fname, 'a')
+    try:
+        os.utime(fname, times)
+    finally:
+        fhandle.close()
 
 def call_builtin(action, delay=0):
     if delay:

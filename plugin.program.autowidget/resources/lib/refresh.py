@@ -5,8 +5,6 @@ import random
 import time
 import hashlib
 import json
-import threading
-import Queue
 import os
 
 from resources.lib import manage
@@ -70,6 +68,9 @@ class RefreshService(xbmc.Monitor):
             for _ in range(0, 60):
                 if self.waitForAbort(15):
                     break
+                # TODO: somehow delay to all other plugins loaded?
+                for hash, widget_ids in utils.pop_cache_queue():
+                    cache_and_update(widget_ids)
 
             if self.abortRequested():
                 break
@@ -223,17 +224,8 @@ def get_files_list(path, titles=None, widget_id=None):
         titles = []
 
     hash = hashlib.sha1(path).hexdigest()
-    cache_path = os.path.join(utils._addon_path, '{}.cache'.format(hash))
-    expiry = utils.cache_expiry(hash, widget_id)
-    files = None
-
-    if os.path.exists(cache_path):
-        files = utils.read_json(cache_path)
-        utils.log("Read cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
-        if expiry < time.time():
-            utils.log("Queue cache update for: {}".format(hash), 'notice')
-            queue_widget_update(widget_id)
-    if not files:
+    expiry, files = utils.cache_expiry(hash, widget_id)
+    if files is None:
         # We had no old content so have to block and get it now
         files = utils.cache_files(path, widget_id)
         
@@ -255,51 +247,20 @@ def get_files_list(path, titles=None, widget_id=None):
                 
         return new_files
 
-def queue_widget_update(widget_id):
-    global _thread
-    new_thread = False
-    if _thread is None or _thread.stopped():
-        _thread = Worker()
-        new_thread = True
-    _thread.queue.put(widget_id)   
-    if new_thread: 
-        _thread.start()
-
-class Worker(threading.Thread):
-    def __init__(self):
-        super(Worker, self).__init__()
-        self.queue = Queue.Queue()
-        self.daemon = True
-        self.stopping = False
-
-    def stop(self):
-        self.stopping = True
-
-    def stopped(self):
-        return self.stopping
-
-    def run(self):
-        while not self.stopping:
-            try:
-                # Don't block
-                widget_id = self.queue.get(block=False)
-                cache_and_update(widget_id)
-                self.queue.task_done()
-            except Queue.Empty:
-                # Allow other stuff to run
-                #time.sleep(0.1)
-                self.stopping = True
-
-def cache_and_update(widget_id):
-    widget_def = manage.get_widget_by_id(widget_id)
-    if not widget_def:
-        return
-    widget_path = widget_def.get('path', {})  
-    if isinstance(widget_path, dict):
-        _label = widget_path['label']
-        widget_path = widget_path['file']['file']
-    utils.cache_files(widget_path, widget_id)
-    _update_strings(widget_def)
+def cache_and_update(widget_ids):
+    seen = set()
+    for widget_id in widget_ids:
+        widget_def = manage.get_widget_by_id(widget_id)
+        if not widget_def:
+            continue
+        widget_path = widget_def.get('path', {})  
+        if isinstance(widget_path, dict):
+            _label = widget_path['label']
+            widget_path = widget_path['file']['file']
+        if widget_path not in seen:
+            utils.cache_files(widget_path, widget_id)
+        seen.add(widget_path)
+        _update_strings(widget_def)
 
 
 
@@ -372,9 +333,9 @@ class Player(xbmc.Player):
         # Once a playback ends. 
         # TODO: We don't know it was scrobed so might not result in widget changes? Used watched status instead?
         # Work out which cached paths are most likely to change based on playback history
-        for widget_id in utils.widgets_changed_by_watching():
+        for hash in utils.widgets_changed_by_watching():
             # Queue them for refresh
-            queue_widget_update(widget_id)
+            utils.push_cache_queue(hash)
 
         # Record playback in a history db so we can potentially use this for future predictions.
         try:
