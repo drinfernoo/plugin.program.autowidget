@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1043" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1003" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.six" />
         <import addon="script.module.pil" />
@@ -31,24 +31,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-2.3.3
- - Fix shortcuts to Android apps
-2.3.2
- - Fix error in debug logging logic
-2.3.1
- - Fix editing and adding new groups
- - Overall cleanup
- - Trim as many library updates as possible
-2.3.0
- - Huge simplification of plugin paths
- - Speed improvements
- - Better detection for "Next Page" items in various add-ons
- - Add dedicated debug log
- - Allow 'path' to be editing for static widgets
-2.2.0
- - Reduce library updates to improve overall speed
- - Sort "Active Widgets" by most recently refreshed
- - Fix any straggling widget errors, I hope :D
 2.1.6
  - Fix "Next Page" error
 2.1.5
@@ -219,6 +201,36 @@
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>resources/media/icon.png</icon>
+            <fanart>resources/media/fanart.png</fanart>
+            <poster>resources/media/poster.png</poster>
+            <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+ng</fanart>
+            <poster>resources/media/poster.png</poster>
+            <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+ces/media/clearlogo.png</clearlogo>
         </assets>
     </extension>
 </addon>
