@@ -27,6 +27,7 @@
         <setting label="$ADDON[plugin.program.autowidget 32129]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clean)" option="close" />
         <setting label="$ADDON[plugin.program.autowidget 32064]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=wipe)" option="close" />
         <setting label="$ADDON[plugin.program.autowidget 32127]" type="action" action="Skin.ToggleDebug" />
+        <setting label="Clear Cache" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clear_cache)" option="close"" />
         
         <!-- Management -->
         <setting label="$ADDON[plugin.program.autowidget 32056]" type="lsep" />
