@@ -76,7 +76,8 @@ def log(msg, level='debug'):
     debug = get_setting_bool('logging.debug')
     logpath = os.path.join(_addon_path, 'aw_debug.log')
 
-    if level == 'debug':
+    if level 
+    'debug':
         _level = xbmc.LOGDEBUG
     elif level in ['notice', 'info']:
         try:
@@ -115,7 +116,13 @@ def wipe(folder=_addon_path):
                 dir = os.path.join(root, name)
                 if backup_location[:-1] not in dir:
                     os.rmdir(dir)
-
+                    
+def clear_cache():
+    dialog = xbmcgui.Dialog()
+    choice = dialog.yesno('AutoWidget', 'Are you sure?')
+    if choice:
+        for file in [i for i in os.listdir(_addon_data) if '.cache' in i]:
+            os.remove(os.path.join(_addon_data, file))
 
 def get_art(filename, color=None):
     art = {}
@@ -517,3 +524,4 @@ def timing(description):
     elapsed = time.time() - start
 
     log('{}: {}'.format(description, elapsed))
+
