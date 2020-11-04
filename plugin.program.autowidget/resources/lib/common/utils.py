@@ -392,17 +392,17 @@ def pop_cache_queue():
     queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_path, "*.queue")))
     # TODO: sort by path instead so load plugins at the same time
     for path in sorted(queued, key=os.path.getmtime):
-        os.path.remove(path)
+        os.remove(path)
         hash = hash_from_cache_path(path)
         path = os.path.join(_addon_path, '{}.history'.format(hash))
         cache_data = read_json(path)
         if cache_data:
-            log("Dequeued cache update: {}".format(hash), 'notice')
+            log("Dequeued cache update: {}".format(hash[:5]), 'notice')
             yield hash, cache_data.get('widgets',[])
             
 
 def push_cache_queue(hash):
-    with open(os.path.join(_addon_path, '{}.cache'.format(hash)), "w") as f:
+    with open(os.path.join(_addon_path, '{}.queue'.format(hash)), "w") as f:
         f.write("")
 
 def cache_files(path, widget_id):
