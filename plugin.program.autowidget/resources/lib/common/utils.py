@@ -238,7 +238,7 @@ def remove_file(file):
     if os.path.exists(file):
         try:
             os.remove(file)
-        except Exception as e:
+        except OSError as e:
             log('Could not remove {}: {}'.format(file, e),
                 level='error')
 
@@ -392,7 +392,7 @@ def pop_cache_queue():
     queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_path, "*.queue")))
     # TODO: sort by path instead so load plugins at the same time
     for path in sorted(queued, key=os.path.getmtime):
-        os.remove(path)
+        remove_file(path)
         hash = hash_from_cache_path(path)
         path = os.path.join(_addon_path, '{}.history'.format(hash))
         cache_data = read_json(path)
@@ -402,8 +402,7 @@ def pop_cache_queue():
             
 
 def push_cache_queue(hash):
-    with open(os.path.join(_addon_path, '{}.queue'.format(hash)), "w") as f:
-        f.write("")
+    touch(os.path.join(_addon_path, '{}.queue'.format(hash)))
 
 def cache_files(path, widget_id):
     hash = hashlib.sha1(six.text_type(path)).hexdigest()
