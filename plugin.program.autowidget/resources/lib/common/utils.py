@@ -404,7 +404,6 @@ def pop_cache_queue():
 def push_cache_queue(hash):
     with open(os.path.join(_addon_path, '{}.cache'.format(hash)), "w") as f:
         f.write("")
-    log("Queued cache update: {}".format(hash), 'notice')
 
 def cache_files(path, widget_id):
     hash = hashlib.sha1(six.text_type(path)).hexdigest()
@@ -418,7 +417,6 @@ def cache_files(path, widget_id):
     files_json = call_jsonrpc(json.dumps(params))
     files = json.loads(files_json)
     expiry, _ = cache_expiry(hash, widget_id, add=files)
-    log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
     return files
 
 
@@ -437,30 +435,43 @@ def cache_expiry(hash, widget_id, add=None):
     if cache_data is None:
         cache_data = {}
     history = cache_data.setdefault('history', [])
+    expiry = time.time() - 20
+    contents = None
+    size = 0 
 
-    if add:
-        write_json(cache_path, add)
-        history.append( (time.time(), hashlib.sha1(json.dumps(add).encode('utf8')).hexdigest()))
-        widgets = cache_data.setdefault('widgets', [])
-        if widget_id not in widgets:
-            widgets.append(widget_id)
-        write_json(history_path, cache_data)
-        return history[-1][0] + 60*5, None
+    if add is not None:
+        cache_json = json.dumps(add)
+        if not add or not cache_json.strip():
+            result = "Invalid Write"
+        else:
+            write_json(cache_path, add)
+            contents = add
+            size = len(cache_json)
+            history.append( (time.time(), hashlib.sha1(cache_json.encode('utf8')).hexdigest()))
+            widgets = cache_data.setdefault('widgets', [])
+            if widget_id not in widgets:
+                widgets.append(widget_id)
+            write_json(history_path, cache_data)
+            expiry = history[-1][0] + 60*5
+            result = "Wrote"
     else:
-        touch(history_path) # Important because we use modification date to indicate last access time
-
         if not os.path.exists(cache_path):
-            return time.time() - 20, None # make sure its expired so it updates correctly
+            result = "Empty"
         else:
             contents = read_json(cache_path, log_file=True)
             if contents is None:
-                return time.time() - 20, None
-            expiry = history[-1][0] + 60*5
-            log("Read cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
-            if expiry < time.time():
-                log("Queue cache update for: {}".format(hash), 'notice')
-                push_cache_queue(hash)
-            return expiry, contents
+                result = "Invalid Read"
+            else:
+                touch(history_path) # Important because we use modification date to indicate last access time
+                size = len(json.dumps(contents))
+                expiry = history[-1][0] + 60*5
+                if expiry < time.time():
+                    push_cache_queue(hash)
+                    result = "Read and queue"
+                else:
+                    result = "Read"
+    log("{} cache {}B (expires {:.0f}s): {}".format(result, size, expiry-time.time(), hash[:5]), 'notice')
+    return expiry, contents
 
 
 def widgets_changed_by_watching():
@@ -475,7 +486,7 @@ def widgets_changed_by_watching():
         #history = cache_data.setdefault('history', [])
         last_update = os.path.getmtime(path)
         if last_update > _startup_time:
-            log("recently accessed cache {}".format(hash), 'notice')
+            log("recently accessed cache {}".format(hash[:5]), 'notice')
             yield hash
 
 def save_playback_history(media_type, playback_percentage):

@@ -227,6 +227,7 @@ def get_files_list(path, titles=None, widget_id=None):
     expiry, files = utils.cache_expiry(hash, widget_id)
     if files is None:
         # We had no old content so have to block and get it now
+        utils.log("Blocking cache path read: {}".format(hash[:5]), "notice")
         files = utils.cache_files(path, widget_id)
         
     new_files = []
@@ -336,6 +337,8 @@ class Player(xbmc.Player):
         for hash in utils.widgets_changed_by_watching():
             # Queue them for refresh
             utils.push_cache_queue(hash)
+            utils.log("Queued cache update: {}".format(hash[:5]), 'notice')
+
 
         # Record playback in a history db so we can potentially use this for future predictions.
         try:
