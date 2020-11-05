@@ -437,6 +437,10 @@ def cache_expiry(hash, widget_id, add=None):
     cache_data = read_json(history_path)
     if cache_data is None:
         cache_data = {}
+        since_read = 0
+    else:
+        since_read = time.time() - os.path.getmtime(history_path) 
+
     history = cache_data.setdefault('history', [])
     expiry = time.time() - 20
     contents = None
@@ -473,7 +477,10 @@ def cache_expiry(hash, widget_id, add=None):
                     result = "Read and queue"
                 else:
                     result = "Read"
-    log("{} cache {}B (expires {:.0f}s): {}".format(result, size, expiry-time.time(), hash[:5]), 'notice')
+    # TODO: some metric that tells us how long to the first and last widgets becomes visible and then get updated
+    # not how to measure the time delay when when the cache is read until it appears on screen?
+    # Is the first cache read always the top visibible widget?
+    log("{} cache {:.1}K (exp:{:.0f}s, last:{:.0f}s): {}".format(result, size/1024.0, expiry-time.time(), since_read, hash[:5]), 'notice')
     return expiry, contents
 
 
