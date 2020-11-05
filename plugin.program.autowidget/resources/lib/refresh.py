@@ -5,10 +5,7 @@ import random
 import time
 import hashlib
 import json
-import threading
-import Queue
 import os
-
 
 from resources.lib import manage
 from resources.lib.common import utils
@@ -25,11 +22,14 @@ class RefreshService(xbmc.Monitor):
         """Starts all of the actions of AutoWidget's service."""
         super(RefreshService, self).__init__()
         utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', 'info')
-        self.player = xbmc.Player()
+        self.player = Player()
         utils.ensure_addon_data()
         self._update_properties()
         self._clean_widgets()
         self._update_widgets()
+        # Shutting down. Close thread
+        if _thread is not None:
+            _thread.stop()
 
     def onSettingsChanged(self):
         self._update_properties()
@@ -68,6 +68,9 @@ class RefreshService(xbmc.Monitor):
             for _ in range(0, 60):
                 if self.waitForAbort(15):
                     break
+                # TODO: somehow delay to all other plugins loaded?
+                for hash, widget_ids in utils.pop_cache_queue():
+                    cache_and_update(widget_ids)
 
             if self.abortRequested():
                 break
@@ -221,19 +224,11 @@ def get_files_list(path, titles=None, widget_id=None):
         titles = []
 
     hash = hashlib.sha1(path).hexdigest()
-    cache_path = os.path.join(utils._addon_path, '{}.cache'.format(hash))
-    expiry = utils.cache_expiry(hash)
-    files = None
-
-    if os.path.exists(cache_path):
-        files = utils.read_json(cache_path)
-        utils.log("Read cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
-        if expiry < time.time():
-            utils.log("Queue cache update for: {}".format(hash), 'notice')
-            queue_widget_update(widget_id)
-    if not files:
+    expiry, files = utils.cache_expiry(hash, widget_id)
+    if files is None:
         # We had no old content so have to block and get it now
-        files = utils.cache_files(path)
+        utils.log("Blocking cache path read: {}".format(hash[:5]), "notice")
+        files = utils.cache_files(path, widget_id)
         
     new_files = []
     if 'error' not in files:
@@ -253,39 +248,130 @@ def get_files_list(path, titles=None, widget_id=None):
                 
         return new_files
 
-def queue_widget_update(widget_id):
-    global _thread
-    if _thread is None or not _thread.is_alive():
-        _thread = Worker()
-        _thread.daemon = True
-    _thread.queue.put(widget_id)    
-    _thread.start()
+def cache_and_update(widget_ids):
+    seen = set()
+    for widget_id in widget_ids:
+        widget_def = manage.get_widget_by_id(widget_id)
+        if not widget_def:
+            continue
+        widget_path = widget_def.get('path', {})  
+        if isinstance(widget_path, dict):
+            _label = widget_path['label']
+            widget_path = widget_path['file']['file']
+        if widget_path not in seen:
+            utils.cache_files(widget_path, widget_id)
+        seen.add(widget_path)
+        _update_strings(widget_def)
 
-class Worker(threading.Thread):
+
+
+# As soon as stop playing schedule a widget update on potentially changed widgets
+# Try to guess which widgets should be updated based on which normal change after playback
+class Player(xbmc.Player):
     def __init__(self):
-        super(Worker, self).__init__()
-        self.queue = Queue.Queue()
+        super(Player, self).__init__()
+        self.publish = None
+        self.totalTime = -1
+        self.playingTime = 0
+        self.info = {}
 
-    def run(self):
-        # Just run while we have stuff to process
-        while True:
-            try:
-                # Don't block
-                widget_id = self.queue.get(block=False)
-                cache_and_update(widget_id)
-                self.queue.task_done()
-            except Queue.Empty:
-                break
+    def playing_type(self):
+        """
+        @return: [music|movie|episode|stream|liveTV|recordedTV|PVRradio|unknown]
+        """
+        # TODO: taken from callbacks plugin. have as a dependcy instead?
+        substrings = ['-trailer', 'http://']
+        isMovie = False
+        if self.isPlayingAudio():
+            return "music"
+        else:
+            if xbmc.getCondVisibility('VideoPlayer.Content(movies)'):
+                isMovie = True
+        try:
+            filename = self.getPlayingFile()
+        except RuntimeError:
+            filename = ''
+        if filename != '':
+            if filename[0:3] == 'pvr':
+                if xbmc.getCondVisibility('Pvr.IsPlayingTv'):
+                    return 'liveTV'
+                elif xbmc.getCondVisibility('Pvr.IsPlayingRecording'):
+                    return 'recordedTV'
+                elif xbmc.getCondVisibility('Pvr.IsPlayingRadio'):
+                    return 'PVRradio'
+                else:
+                    for string in substrings:
+                        if string in filename:
+                            isMovie = False
+                            break
+        if isMovie:
+            return "movie"
+        elif xbmc.getCondVisibility('VideoPlayer.Content(episodes)'):
+            # Check for tv show title and season to make sure it's really an episode
+            if xbmc.getInfoLabel('VideoPlayer.Season') != "" and xbmc.getInfoLabel('VideoPlayer.TVShowTitle') != "":
+                return "episode"
+        elif xbmc.getCondVisibility('Player.IsInternetStream'):
+            return 'stream'
+        else:
+            return 'unknown'
 
-def cache_and_update(widget_id):
-    widget_def = manage.get_widget_by_id(widget_id)
-    if not widget_def:
-        return
-    widget_path = widget_def.get('path', {})  
-    if isinstance(widget_path, dict):
-        _label = widget_path['label']
-        widget_path = widget_path['file']['file']
-    utils.cache_files(widget_path)
-    _update_strings(widget_def)
+
+    def onPlayBackStarted(self):
+        # self.getInfo()
+        try:
+            self.totalTime = self.getTotalTime()
+        except RuntimeError:
+            self.totalTime = -1
+        finally:
+            if self.totalTime == 0:
+                self.totalTime = -1
+        # self.recordPlay()
+
+    def onPlayBackEnded(self):
+        #import ptvsd; ptvsd.enable_attach(address=('127.0.0.1', 5678)); ptvsd.wait_for_attach()
+        utils.log("AutoWidget onPlayBackEnded callback", 'notice')
+
+        # Once a playback ends. 
+        # TODO: We don't know it was scrobed so might not result in widget changes? Used watched status instead?
+        # Work out which cached paths are most likely to change based on playback history
+        for hash in utils.widgets_changed_by_watching():
+            # Queue them for refresh
+            utils.push_cache_queue(hash)
+            utils.log("Queued cache update: {}".format(hash[:5]), 'notice')
 
 
+        # Record playback in a history db so we can potentially use this for future predictions.
+        try:
+            tt = self.totalTime
+            tp = self.playingTime
+            pp = int(100 * tp / tt)
+        except RuntimeError:
+            pp = -1
+        except OverflowError:
+            pp = -1
+        self.totalTime = -1.0
+        self.playingTime = 0.0
+        self.info = {}
+        utils.save_playback_history(self.playing_type, pp)
+
+    def onPlayBackStopped(self):
+        self.onPlayBackEnded()
+
+    def onPlayBackPaused(self):
+        pass
+
+    def onPlayBackResumed(self):
+        pass
+
+    def onPlayBackSeek(self, time, seekOffset):
+        pass
+
+    def onPlayBackSeekChapter(self, chapter):
+        pass
+
+    def onPlayBackSpeedChanged(self, speed):
+        pass
+
+    def onQueueNextItem(self):
+        topic = Topic('onQueueNextItem')
+        pass

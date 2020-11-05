@@ -11,6 +11,7 @@ import string
 import time
 import unicodedata
 import hashlib
+import glob
 
 import six
 from PIL import Image
@@ -67,6 +68,8 @@ colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'cri
           'gainsboro', 'lightgray', 'silver', 'darkgray', 'gray', 'dimgray', 'lightslategray', 'slategray', 'darkslategray', 'black',  # black
           'cornsilk', 'blanchedalmond', 'bisque', 'navajowhite', 'wheat', 'burlywood', 'tan', 'rosybrown', 'sandybrown', 'goldenrod', 'peru', 'chocolate', 'saddlebrown', 'sienna', 'brown', 'maroon']  # brown
 
+_startup_time = time.time() #TODO: could get reloaded so not accurate?
+
 
 def log(msg, level='debug'):
     _level = xbmc.LOGDEBUG
@@ -112,15 +115,6 @@ def wipe(folder=_addon_path):
                 dir = os.path.join(root, name)
                 if backup_location[:-1] not in dir:
                     os.rmdir(dir)
-
-
-def clear_cache():
-    dialog = xbmcgui.Dialog()
-    choice = dialog.yesno('AutoWidget', 'Are you sure?')
-
-    if choice:
-        for file in [i for i in os.listdir(_addon_data) if '.cache' in i]:
-            os.remove(os.path.join(_addon_data, file))
 
 
 def get_art(filename, color=None):
@@ -244,7 +238,7 @@ def remove_file(file):
     if os.path.exists(file):
         try:
             os.remove(file)
-        except Exception as e:
+        except OSError as e:
             log('Could not remove {}: {}'.format(file, e),
                 level='error')
 
@@ -276,16 +270,18 @@ def write_file(file, content, mode='w'):
     return False
 
 
-def read_json(file):
+def read_json(file, log_file=False):
     data = None
     if os.path.exists(file):
         with codecs.open(os.path.join(_addon_path, file), 'r', encoding='utf-8') as f:
+            content = six.ensure_text(f.read())
             try:
-                content = six.ensure_text(f.read())
                 data = json.loads(content)
-            except Exception as e:
+            except ValueError as e:
                 log('Could not read JSON from {}: {}'.format(file, e),
                     level='error')
+                if log_file:
+                    log(content, level='notice')
     else:
         log('{} does not exist.'.format(file), level='error')
 
@@ -386,9 +382,34 @@ def _get_json_version():
     result = json.loads(call_jsonrpc(json.dumps(params)))['result']['version']
     return (result['major'], result['minor'], result['patch'])
 
-def cache_files(path):
+def hash_from_cache_path(path):
+    base=os.path.basename(path)
+    return os.path.splitext(base)[0]
+
+def pop_cache_queue():
+    # Simple queue by creating a .queue file
+    # TODO: use watchdog to use less resources
+    queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_path, "*.queue")))
+    # TODO: sort by path instead so load plugins at the same time
+    for path in sorted(queued, key=os.path.getmtime):
+        remove_file(path)
+        hash = hash_from_cache_path(path)
+        path = os.path.join(_addon_path, '{}.history'.format(hash))
+        cache_data = read_json(path)
+        if cache_data:
+            log("Dequeued cache update: {}".format(hash[:5]), 'notice')
+            yield hash, cache_data.get('widgets',[])
+            
+
+def push_cache_queue(hash):
+    queue_path = os.path.join(_addon_path, '{}.queue'.format(hash))
+    if os.path.exists(queue_path):
+        pass # Leave original modification date so item is higher priority
+    else:
+        touch(queue_path)
+
+def cache_files(path, widget_id):
     hash = hashlib.sha1(six.text_type(path)).hexdigest()
-    cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
     version = _get_json_version()
     props = version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12)
     props_info = info_types + ['customproperties']
@@ -398,34 +419,89 @@ def cache_files(path):
               'id': 1}
     files_json = call_jsonrpc(json.dumps(params))
     files = json.loads(files_json)
-    write_json(cache_path, files)
-    expiry = cache_expiry(hash, add=hashlib.sha1(json.dumps(files_json)).hexdigest())
-    log("Wrote cache (exp in {}s): {}".format(expiry-time.time(), hash), 'notice')
+    expiry, _ = cache_expiry(hash, widget_id, add=files)
     return files
 
 
-def cache_expiry(hash, add=None):
+def cache_expiry(hash, widget_id, add=None):
     # Currently just caches for 5 min so that the background refresh doesn't go in a loop.
     # In the future it will cache for longer based on the history of how often in changed
     # and when it changed in relation to events like events events.
     # It should also manage the cache files to remove any too old.
     # The cache expiry can also be used later to schedule a future background update.
 
+    cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
+
     # Read file every time as we might be called from multiple processes
-    _history_path = os.path.join(_addon_path, '{}.history'.format(hash))
-    _history = read_json(_history_path)
-    if not _history:
-        _history = {}
-    history = _history.setdefault('history', [])
-    if add:
-        history.append( (time.time(), add))
-        write_json(_history_path, _history)
-    # predict next update time 
-    if not history:
-        return time.time() - 20 # make sure its expired so it updates correctly
+    history_path = os.path.join(_addon_path, '{}.history'.format(hash))
+    cache_data = read_json(history_path)
+    if cache_data is None:
+        cache_data = {}
+    history = cache_data.setdefault('history', [])
+    expiry = time.time() - 20
+    contents = None
+    size = 0 
+
+    if add is not None:
+        cache_json = json.dumps(add)
+        if not add or not cache_json.strip():
+            result = "Invalid Write"
+        else:
+            write_json(cache_path, add)
+            contents = add
+            size = len(cache_json)
+            history.append( (time.time(), hashlib.sha1(cache_json.encode('utf8')).hexdigest()))
+            widgets = cache_data.setdefault('widgets', [])
+            if widget_id not in widgets:
+                widgets.append(widget_id)
+            write_json(history_path, cache_data)
+            expiry = history[-1][0] + 60*5
+            result = "Wrote"
     else:
-        return history[-1][0] + 60*5 # just cache 5m until background update is done
-        
+        if not os.path.exists(cache_path):
+            result = "Empty"
+        else:
+            contents = read_json(cache_path, log_file=True)
+            if contents is None:
+                result = "Invalid Read"
+            else:
+                touch(history_path) # Important because we use modification date to indicate last access time
+                size = len(json.dumps(contents))
+                expiry = history[-1][0] + 60*5
+                if expiry < time.time():
+                    push_cache_queue(hash)
+                    result = "Read and queue"
+                else:
+                    result = "Read"
+    log("{} cache {}B (expires {:.0f}s): {}".format(result, size, expiry-time.time(), hash[:5]), 'notice')
+    return expiry, contents
+
+
+def widgets_changed_by_watching():
+    # Predict which widgets the skin might have that could have changed based on recently finish
+    # watching something
+    
+    # Simple version. Anything updated recently (since startup?)
+    all_cache = filter(os.path.isfile, glob.glob(os.path.join(_addon_path, "*.history")))
+    for path in sorted(all_cache, key=os.path.getmtime):
+        hash = hash_from_cache_path(path)
+        #cache_data = read_json(path)
+        #history = cache_data.setdefault('history', [])
+        last_update = os.path.getmtime(path)
+        if last_update > _startup_time:
+            log("recently accessed cache {}".format(hash[:5]), 'notice')
+            yield hash
+
+def save_playback_history(media_type, playback_percentage):
+    # Record in json when things got played to help predict which widgets will change after playback
+    pass
+
+def touch(fname, times=None):
+    fhandle = open(fname, 'a')
+    try:
+        os.utime(fname, times)
+    finally:
+        fhandle.close()
 
 def call_builtin(action, delay=0):
     if delay:
