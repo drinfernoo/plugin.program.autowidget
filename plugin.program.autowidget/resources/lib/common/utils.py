@@ -478,7 +478,9 @@ def cache_expiry(hash, widget_id, add=None):
             else:
                 touch(history_path) # Important because we use modification date to indicate last access time
                 size = len(json.dumps(contents))
-                expiry = history[-1][0] + 60*5
+                if history:
+                    expiry = history[-1][0] + 60*5
+                    
 #                queue_len = len(list(iter_queue()))
                 if expiry > time.time():
                     result = "Read"
