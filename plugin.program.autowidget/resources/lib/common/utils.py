@@ -386,13 +386,20 @@ def hash_from_cache_path(path):
     base=os.path.basename(path)
     return os.path.splitext(base)[0]
 
-def pop_cache_queue():
-    # Simple queue by creating a .queue file
-    # TODO: use watchdog to use less resources
+def iter_queue():
     queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_path, "*.queue")))
     # TODO: sort by path instead so load plugins at the same time
     for path in sorted(queued, key=os.path.getmtime):
+        yield path
+
+def pop_cache_queue():
+    # Simple queue by creating a .queue file
+    # TODO: use watchdog to use less resources
+    for path in iter_queue():
+        # TODO: sort by path instead so load plugins at the same time
         remove_file(path)
+        # TODO: need to workout if a blocking write is happen while it was queued or right now.
+        # probably need a .lock file to ensure foreground calls can get priority.
         hash = hash_from_cache_path(path)
         path = os.path.join(_addon_path, '{}.history'.format(hash))
         cache_data = read_json(path)
@@ -472,17 +479,30 @@ def cache_expiry(hash, widget_id, add=None):
                 touch(history_path) # Important because we use modification date to indicate last access time
                 size = len(json.dumps(contents))
                 expiry = history[-1][0] + 60*5
-                if expiry < time.time():
+#                queue_len = len(list(iter_queue()))
+                if expiry > time.time():
+                    result = "Read"
+                # elif queue_len > 3:
+                #     # Try to give system more breathing space by returning empty cache but ensuring refresh
+                #     # better way is to just do this the first X accessed after startup.
+                #     # or how many accessed in the last 30s?
+                #     push_cache_queue(hash)
+                #     result = "Skip (queue={})".format(queue_len) 
+                #     contents = dict(result=dict(files=[]))  
+                else:                
                     push_cache_queue(hash)
                     result = "Read and queue"
-                else:
-                    result = "Read"
     # TODO: some metric that tells us how long to the first and last widgets becomes visible and then get updated
     # not how to measure the time delay when when the cache is read until it appears on screen?
     # Is the first cache read always the top visibible widget?
-    log("{} cache {:.1}K (exp:{:.0f}s, last:{:.0f}s): {}".format(result, size/1024.0, expiry-time.time(), since_read, hash[:5]), 'notice')
+    log("{} cache {}B (exp:{:.0f}s, last:{:.0f}s): {}".format(result, size, expiry-time.time(), since_read, hash[:5]), 'notice')
     return expiry, contents
 
+def last_read(hash):
+    # Technically this is last read or updated but we can change it to be last read Later
+    # if we create another file
+    path = os.path.join(_addon_path, "{}.history".format(hash))
+    return os.path.getmtime(path)
 
 def widgets_changed_by_watching():
     # Predict which widgets the skin might have that could have changed based on recently finish
