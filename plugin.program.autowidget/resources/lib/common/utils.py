@@ -12,6 +12,7 @@ import time
 import unicodedata
 import hashlib
 import glob
+import math
 
 import six
 from PIL import Image
@@ -21,6 +22,7 @@ try:
 except ImportError:
     from urlparse import unquote
 
+DEFAULT_CACHE_TIME = 60*5
 
 _addon = xbmcaddon.Addon()
 _addon_id = _addon.getAddonInfo('id')
@@ -441,7 +443,7 @@ def cache_expiry(hash, widget_id, add=None):
 
     # Read file every time as we might be called from multiple processes
     history_path = os.path.join(_addon_path, '{}.history'.format(hash))
-    cache_data = read_json(history_path)
+    cache_data = read_json(history_path) if os.path.exists(history_path) else None
     if cache_data is None:
         cache_data = {}
         since_read = 0
@@ -466,7 +468,9 @@ def cache_expiry(hash, widget_id, add=None):
             if widget_id not in widgets:
                 widgets.append(widget_id)
             write_json(history_path, cache_data)
-            expiry = history[-1][0] + 60*5
+            #expiry = history[-1][0] + DEFAULT_CACHE_TIME
+            pred_dur = predict_update_frequency(history)
+            expiry = history[-1][0] + pred_dur/2.0
             result = "Wrote"
     else:
         if not os.path.exists(cache_path):
@@ -479,7 +483,12 @@ def cache_expiry(hash, widget_id, add=None):
                 touch(history_path) # Important because we use modification date to indicate last access time
                 size = len(json.dumps(contents))
                 if history:
-                    expiry = history[-1][0] + 60*5
+                    expiry = history[-1][0] + DEFAULT_CACHE_TIME
+                    pred_dur = predict_update_frequency(history)
+                    pred_expiry = history[-1][0] + pred_dur/2.0
+                    log("pred dur {}s for {}".format(pred_dur, hash[:5]), "notice")
+                    if expiry < pred_expiry:
+                        expiry = pred_expiry
                     
 #                queue_len = len(list(iter_queue()))
                 if expiry > time.time():
@@ -505,6 +514,37 @@ def last_read(hash):
     # if we create another file
     path = os.path.join(_addon_path, "{}.history".format(hash))
     return os.path.getmtime(path)
+
+def predict_update_frequency(history):
+    if not history:
+        return 0
+    update_count = 0
+    duration = 0
+    changes =[]
+    last_when, last = history[0]
+    for when, content in history[1:]:
+        update_count +=1
+        if content == last:
+            duration += when - last_when
+        else:
+            duration =+ (when - last_when)/2 # change could have happened any time inbetween
+            changes.append(dict(duration=duration,update_count=update_count))
+            duration = 0
+            update_count = 0
+        last_when = when
+        last = content
+    if not changes and duration:
+        changes.append(dict(duration=duration,update_count=update_count))
+        
+    # Now we have changes, we can do some trends on them.
+    # Start with average duration
+    # avg_dur = sum([change['duration'] for change in changes]) / len(changes)
+    durations = sorted([change['duration'] for change in changes if change['update_count']>1])
+    log("changes {}".format(durations), "notice")
+    if not durations:
+        return 0
+    med_dur = durations[int(math.floor(len(durations)/2))-1]
+    return med_dur
 
 def widgets_changed_by_watching():
     # Predict which widgets the skin might have that could have changed based on recently finish
