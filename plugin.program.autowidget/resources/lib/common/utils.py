@@ -486,12 +486,7 @@ def cache_expiry(hash, widget_id, add=None):
                 write_json(history_path, cache_data) 
                 size = len(json.dumps(contents))
                 if history:
-                    expiry = history[-1][0] + DEFAULT_CACHE_TIME
-                    pred_dur = predict_update_frequency(history)
-                    pred_expiry = history[-1][0] + pred_dur/2.0
-                    log("pred dur {}s for {}".format(pred_dur, hash[:5]), "notice")
-                    if expiry < pred_expiry:
-                        expiry = pred_expiry
+                    expiry = history[-1][0] + predict_update_frequency(history)
                     
 #                queue_len = len(list(iter_queue()))
                 if expiry > time.time():
@@ -552,8 +547,12 @@ def predict_update_frequency(history):
     # if ones > 0.9:
     #     # too unstable so no point guessing
     #     return DEFAULT_CACHE_TIME
+    # elif DEFAULT_CACHE_TIME > avg_dur/2.0:
+    #     # should not got less than 5min otherwise our updates go in a loop
+    #     return DEFAULT_CACHE_TIME
     # else:
-    #     return avg_dur
+    #     return avg_dur/2.0 # we want to ensure we check more often than the actual predicted expiry 
+
     return DEFAULT_CACHE_TIME
 
 def widgets_changed_by_watching():
