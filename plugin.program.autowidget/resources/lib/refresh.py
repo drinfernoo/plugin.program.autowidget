@@ -264,6 +264,7 @@ def get_files_list(path, titles=None, widget_id=None):
         return new_files
 
 def cache_and_update(widget_ids):
+    assert widget_ids
     seen = set()
     for widget_id in widget_ids:
         widget_def = manage.get_widget_by_id(widget_id)

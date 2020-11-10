@@ -451,6 +451,10 @@ def cache_expiry(hash, widget_id, add=None):
         since_read = time.time() - os.path.getmtime(history_path) 
 
     history = cache_data.setdefault('history', [])
+    widgets = cache_data.setdefault('widgets', [])
+    if widget_id not in widgets:
+        widgets.append(widget_id)
+
     expiry = time.time() - 20
     contents = None
     size = 0 
@@ -464,9 +468,6 @@ def cache_expiry(hash, widget_id, add=None):
             contents = add
             size = len(cache_json)
             history.append( (time.time(), hashlib.sha1(cache_json.encode('utf8')).hexdigest()))
-            widgets = cache_data.setdefault('widgets', [])
-            if widget_id not in widgets:
-                widgets.append(widget_id)
             write_json(history_path, cache_data)
             #expiry = history[-1][0] + DEFAULT_CACHE_TIME
             pred_dur = predict_update_frequency(history)
@@ -480,7 +481,9 @@ def cache_expiry(hash, widget_id, add=None):
             if contents is None:
                 result = "Invalid Read"
             else:
-                touch(history_path) # Important because we use modification date to indicate last access time
+                # write any updated widget_ids so we know what to update when we dequeue
+                # Also important as wwe use last modified of .history as accessed time
+                write_json(history_path, cache_data) 
                 size = len(json.dumps(contents))
                 if history:
                     expiry = history[-1][0] + DEFAULT_CACHE_TIME
@@ -506,7 +509,7 @@ def cache_expiry(hash, widget_id, add=None):
     # TODO: some metric that tells us how long to the first and last widgets becomes visible and then get updated
     # not how to measure the time delay when when the cache is read until it appears on screen?
     # Is the first cache read always the top visibible widget?
-    log("{} cache {}B (exp:{:.0f}s, last:{:.0f}s): {}".format(result, size, expiry-time.time(), since_read, hash[:5]), 'notice')
+    log("{} cache {}B (exp:{:.0f}s, last:{:.0f}s): {} {}".format(result, size, expiry-time.time(), since_read, hash[:5], widgets), 'notice')
     return expiry, contents
 
 def last_read(hash):
@@ -528,23 +531,30 @@ def predict_update_frequency(history):
             duration += when - last_when
         else:
             duration =+ (when - last_when)/2 # change could have happened any time inbetween
-            changes.append(dict(duration=duration,update_count=update_count))
+            changes.append((duration,update_count))
             duration = 0
             update_count = 0
         last_when = when
         last = content
     if not changes and duration:
-        changes.append(dict(duration=duration,update_count=update_count))
+        changes.append((duration,update_count))
         
     # Now we have changes, we can do some trends on them.
-    # Start with average duration
-    # avg_dur = sum([change['duration'] for change in changes]) / len(changes)
-    durations = sorted([change['duration'] for change in changes if change['update_count']>1])
-    log("changes {}".format(durations), "notice")
+    durations = [duration for duration,update_count in changes if update_count > 1]
     if not durations:
         return 0
-    med_dur = durations[int(math.floor(len(durations)/2))-1]
-    return med_dur
+    med_dur = sorted(durations)[int(math.floor(len(durations)/2))-1]
+    avg_dur = sum(durations) / len(durations)
+    weighted = sum([d*c for d,c in changes])/sum([c for _,c in changes])
+    ones = len([c for d,c in changes if c==1])/float(len(changes))
+    # TODO: if many streaks with lots of counts then its stable and can predict
+    log("avg_dur {:0.0f}s, med_dur {:0.0f}s, weighted {:0.0f}s, ones {:0.2f}, all {}".format(avg_dur, med_dur, weighted, ones, changes), "debug")
+    # if ones > 0.9:
+    #     # too unstable so no point guessing
+    #     return DEFAULT_CACHE_TIME
+    # else:
+    #     return avg_dur
+    return DEFAULT_CACHE_TIME
 
 def widgets_changed_by_watching():
     # Predict which widgets the skin might have that could have changed based on recently finish
