@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1022" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1015" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.six" />
         <import addon="script.module.pil" />
@@ -31,10 +31,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-2.3.3
- - Fix shortcuts to Android apps
-2.3.2
- - Fix error in debug logging logic
 2.3.1
  - Fix editing and adding new groups
  - Overall cleanup
@@ -222,7 +218,7 @@
         </assets>
     </extension>
 </addon>
-icon>
+  <icon>resources/media/icon.png</icon>
             <fanart>resources/media/fanart.png</fanart>
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
@@ -230,10 +226,7 @@ icon>
         </assets>
     </extension>
 </addon>
-ts>
-    </extension>
-</addon>
-o>resources/media/clearlogo.png</clearlogo>
+o>
         </assets>
     </extension>
 </addon>
