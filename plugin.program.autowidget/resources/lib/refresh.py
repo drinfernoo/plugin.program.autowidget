@@ -61,16 +61,31 @@ class RefreshService(xbmc.Monitor):
                 utils.log('Resetting {}'.format(widget_def['id']))
                 update_path(widget_def['id'], None, 'reset')
 
+    def tick(self, step, max, abort_check = lambda: False):
+        "yield every Step secords until you get to Max or abort_check returns True"
+        i = 0
+        while i < max and not abort_check():
+            if self.waitForAbort(step):
+                break
+            i += step
+            yield i
+
     def _update_widgets(self):
         self._refresh(True)
         
         while not self.abortRequested():
-            for _ in range(0, 60):
-                if self.waitForAbort(15):
-                    break
+            for _ in self.tick(15, 60*15):
                 # TODO: somehow delay to all other plugins loaded?
                 for hash, widget_ids in utils.pop_cache_queue():
                     cache_and_update(widget_ids)
+                    # # wait 5s or for the skin to reload the widget
+                    # # this should reduce churn at startup where widgets take too long too long show up
+                    # before_update = time.time() # TODO: have .access file so we can put above update
+                    # while _ in self.tick(1, 10, lambda: utils.last_read(hash) > before_update):
+                    #     pass
+                    # utils.log("paused queue until read {:.2} for {}".format(utils.last_read(hash)-before_update, hash[:5]), 'info') 
+                    if self.abortRequested():
+                        break
 
             if self.abortRequested():
                 break
@@ -227,7 +242,7 @@ def get_files_list(path, titles=None, widget_id=None):
     expiry, files = utils.cache_expiry(hash, widget_id)
     if files is None:
         # We had no old content so have to block and get it now
-        utils.log("Blocking cache path read: {}".format(hash[:5]), "notice")
+        utils.log("Blocking cache path read: {}".format(hash[:5]), "info")
         files = utils.cache_files(path, widget_id)
         
     new_files = []
@@ -249,6 +264,7 @@ def get_files_list(path, titles=None, widget_id=None):
         return new_files
 
 def cache_and_update(widget_ids):
+    assert widget_ids
     seen = set()
     for widget_id in widget_ids:
         widget_def = manage.get_widget_by_id(widget_id)
@@ -334,6 +350,9 @@ class Player(xbmc.Player):
         # Once a playback ends. 
         # TODO: We don't know it was scrobed so might not result in widget changes? Used watched status instead?
         # Work out which cached paths are most likely to change based on playback history
+
+        # wait for a bit so scrobing can happen
+        time.sleep(5) 
         for hash in utils.widgets_changed_by_watching():
             # Queue them for refresh
             utils.push_cache_queue(hash)
