@@ -245,7 +245,7 @@ def get_files_list(path, titles=None, widget_id=None):
         titles = []
 
     hash = hashlib.sha1(path).hexdigest()
-    expiry, files = utils.cache_expiry(hash, widget_id)
+    _, files, _ = utils.cache_expiry(hash, widget_id)
     if files is None:
         # We had no old content so have to block and get it now
         utils.log("Blocking cache path read: {}".format(hash[:5]), "info")
@@ -281,6 +281,7 @@ def cache_and_update(widget_ids):
         widget_def = manage.get_widget_by_id(widget_id)
         if not widget_def:
             continue
+        changed = False
         widget_path = widget_def.get('path', {})  
         utils.log("trying to update {} with widget def {}".format(widget_id,widget_def),"inspect")
         if type(widget_path) != list:
@@ -295,16 +296,18 @@ def cache_and_update(widget_ids):
             effected_widgets = effected_widgets.union(utils.widgets_for_path(path))
             if utils.is_cache_queue(hash):
                 # we need to update this path regardless
-                utils.cache_files(path, widget_id)
+                changed = utils.cache_files(path, widget_id) or changed
                 utils.remove_cache_queue(hash)
-            else:
-                # double check this hasn't been updated already when updating another widget
-                expiry, _  = utils.cache_expiry(hash, widget_id, no_queue=True)
-                if expiry <= time.time():
-                    utils.cache_files(path, widget_id)
-                else:
-                    pass # Skipping this path because its already been updated
-        _update_strings(widget_def)
+            # else:
+            #     # double check this hasn't been updated already when updating another widget
+            #     expiry, _  = utils.cache_expiry(hash, widget_id, no_queue=True)
+            #     if expiry <= time.time():
+            #         utils.cache_files(path, widget_id)
+            #     else:
+            #         pass # Skipping this path because its already been updated
+        # TODO: only need to do that if a path has changed which we can tell from the history
+        if changed:
+            _update_strings(widget_def)
     return effected_widgets
 
 

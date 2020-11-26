@@ -450,8 +450,8 @@ def cache_files(path, widget_id):
               'id': 1}
     files_json = call_jsonrpc(json.dumps(params))
     files = json.loads(files_json)
-    expiry, _ = cache_expiry(hash, widget_id, add=files)
-    return files
+    _, _, changed = cache_expiry(hash, widget_id, add=files)
+    return changed
 
 
 def cache_expiry(hash, widget_id, add=None, no_queue=False):
@@ -479,6 +479,7 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
 
     expiry = time.time() - 20
     contents = None
+    changed = False
     size = 0 
 
     if add is not None:
@@ -489,7 +490,9 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
             write_json(cache_path, add)
             contents = add
             size = len(cache_json)
-            history.append( (time.time(), hashlib.sha1(cache_json.encode('utf8')).hexdigest()))
+            content_hash = hashlib.sha1(cache_json.encode('utf8')).hexdigest()
+            changed = history[-1][1] != content_hash if history else True
+            history.append( (time.time(), content_hash) )
             write_json(history_path, cache_data)
             #expiry = history[-1][0] + DEFAULT_CACHE_TIME
             pred_dur = predict_update_frequency(history)
@@ -529,7 +532,7 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
     # not how to measure the time delay when when the cache is read until it appears on screen?
     # Is the first cache read always the top visibible widget?
     log("{} cache {}B (exp:{:.0f}s, last:{:.0f}s): {} {}".format(result, size, expiry-time.time(), since_read, hash[:5], widgets), 'notice')
-    return expiry, contents
+    return expiry, contents, changed
 
 def last_read(hash):
     # Technically this is last read or updated but we can change it to be last read Later
