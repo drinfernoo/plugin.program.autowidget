@@ -249,7 +249,7 @@ def get_files_list(path, titles=None, widget_id=None):
     if files is None:
         # We had no old content so have to block and get it now
         utils.log("Blocking cache path read: {}".format(hash[:5]), "info")
-        files = utils.cache_files(path, widget_id)
+        files, changed = utils.cache_files(path, widget_id)
         
     new_files = []
     if 'error' not in files:
@@ -295,7 +295,8 @@ def cache_and_update(widget_ids):
             effected_widgets = effected_widgets.union(utils.widgets_for_path(path))
             if utils.is_cache_queue(hash):
                 # we need to update this path regardless
-                changed = utils.cache_files(path, widget_id) or changed
+                new_files, files_changed = utils.cache_files(path, widget_id)
+                changed = changed or files_changed
                 utils.remove_cache_queue(hash)
             # else:
             #     # double check this hasn't been updated already when updating another widget

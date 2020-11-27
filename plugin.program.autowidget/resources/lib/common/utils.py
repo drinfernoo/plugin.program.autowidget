@@ -451,7 +451,7 @@ def cache_files(path, widget_id):
     files_json = call_jsonrpc(json.dumps(params))
     files = json.loads(files_json)
     _, _, changed = cache_expiry(hash, widget_id, add=files)
-    return changed
+    return (files,changed)
 
 
 def cache_expiry(hash, widget_id, add=None, no_queue=False):
@@ -479,7 +479,7 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
 
     expiry = time.time() - 20
     contents = None
-    changed = False
+    changed = True
     size = 0 
 
     if add is not None:
