@@ -265,7 +265,6 @@ def get_files_list(path, titles=None, widget_id=None):
                 for art in new_file['art']:
                     new_file['art'][art] = utils.clean_artwork_url(file['art'][art])
             new_files.append(new_file)
-        utils.log(json.dumps(files), 'debug')
                 
         return new_files
 

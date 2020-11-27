@@ -542,7 +542,7 @@ def last_read(hash):
 
 def predict_update_frequency(history):
     if not history:
-        return 0
+        return DEFAULT_CACHE_TIME
     update_count = 0
     duration = 0
     changes =[]
@@ -568,7 +568,7 @@ def predict_update_frequency(history):
     # Now we have changes, we can do some trends on them.
     durations = [duration for duration,update_count in changes if update_count > 1]
     if not durations:
-        return 0
+        return DEFAULT_CACHE_TIME
     med_dur = sorted(durations)[int(math.floor(len(durations)/2))-1]
     avg_dur = sum(durations) / len(durations)
     # weighted by how many snapshots we took inbetween. 
