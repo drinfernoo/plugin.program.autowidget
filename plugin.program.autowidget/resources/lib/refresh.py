@@ -76,8 +76,11 @@ class RefreshService(xbmc.Monitor):
         while not self.abortRequested():
             for _ in self.tick(15, 60*15):
                 # TODO: somehow delay to all other plugins loaded?
-                for hash, widget_ids in utils.pop_cache_queue():
-                    cache_and_update(widget_ids)
+                unrefreshed_widgets = set()
+                for hash, widget_ids in utils.next_cache_queue():
+                    effected_widgets = cache_and_update(widget_ids)
+                    utils.remove_cache_queue(hash) # Just in queued path's widget defintion has changed and it didn't update this path
+                    unrefreshed_widgets = unrefreshed_widgets.union(effected_widgets).difference(set(widget_ids))
                     # # wait 5s or for the skin to reload the widget
                     # # this should reduce churn at startup where widgets take too long too long show up
                     # before_update = time.time() # TODO: have .access file so we can put above update
@@ -86,6 +89,9 @@ class RefreshService(xbmc.Monitor):
                     # utils.log("paused queue until read {:.2} for {}".format(utils.last_read(hash)-before_update, hash[:5]), 'info') 
                     if self.abortRequested():
                         break
+                for widget_id in unrefreshed_widgets:
+                    widget_def = manage.get_widget_by_id(widget_id)
+                    _update_strings(widget_def)
 
             if self.abortRequested():
                 break
@@ -239,11 +245,11 @@ def get_files_list(path, titles=None, widget_id=None):
         titles = []
 
     hash = hashlib.sha1(path).hexdigest()
-    expiry, files = utils.cache_expiry(hash, widget_id)
+    _, files, _ = utils.cache_expiry(hash, widget_id)
     if files is None:
         # We had no old content so have to block and get it now
         utils.log("Blocking cache path read: {}".format(hash[:5]), "info")
-        files = utils.cache_files(path, widget_id)
+        files, changed = utils.cache_files(path, widget_id)
         
     new_files = []
     if 'error' not in files:
@@ -259,25 +265,50 @@ def get_files_list(path, titles=None, widget_id=None):
                 for art in new_file['art']:
                     new_file['art'][art] = utils.clean_artwork_url(file['art'][art])
             new_files.append(new_file)
-        utils.log(json.dumps(files), 'debug')
                 
         return new_files
 
 def cache_and_update(widget_ids):
+    """ a widget might have many paths. Ensure each path is either queued for an update
+    or is expired and if so force it to be refreshed. When going through the queue this 
+    could mean we refresh paths that other widgets also use. These will then be skipped.
+    """
+
     assert widget_ids
-    seen = set()
+    effected_widgets = set()
     for widget_id in widget_ids:
         widget_def = manage.get_widget_by_id(widget_id)
         if not widget_def:
             continue
+        changed = False
         widget_path = widget_def.get('path', {})  
-        if isinstance(widget_path, dict):
-            _label = widget_path['label']
-            widget_path = widget_path['file']['file']
-        if widget_path not in seen:
-            utils.cache_files(widget_path, widget_id)
-        seen.add(widget_path)
-        _update_strings(widget_def)
+        utils.log("trying to update {} with widget def {}".format(widget_id,widget_def),"inspect")
+        if type(widget_path) != list:
+            widget_path = [widget_path]
+        for path in widget_path:
+            if isinstance(path, dict):
+                _label = path['label']
+                path = path['file']['file']
+            hash = hashlib.sha1(path).hexdigest()
+            # TODO: we might be updating paths used by widgets that weren't initiall queued.
+            # We need to return those and ensure they get refreshed also.
+            effected_widgets = effected_widgets.union(utils.widgets_for_path(path))
+            if utils.is_cache_queue(hash):
+                # we need to update this path regardless
+                new_files, files_changed = utils.cache_files(path, widget_id)
+                changed = changed or files_changed
+                utils.remove_cache_queue(hash)
+            # else:
+            #     # double check this hasn't been updated already when updating another widget
+            #     expiry, _  = utils.cache_expiry(hash, widget_id, no_queue=True)
+            #     if expiry <= time.time():
+            #         utils.cache_files(path, widget_id)
+            #     else:
+            #         pass # Skipping this path because its already been updated
+        # TODO: only need to do that if a path has changed which we can tell from the history
+        if changed:
+            _update_strings(widget_def)
+    return effected_widgets
 
 
 

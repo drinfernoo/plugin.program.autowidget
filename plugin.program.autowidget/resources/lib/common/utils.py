@@ -394,12 +394,16 @@ def iter_queue():
     for path in sorted(queued, key=os.path.getmtime):
         yield path
 
-def pop_cache_queue():
+def next_cache_queue():
     # Simple queue by creating a .queue file
     # TODO: use watchdog to use less resources
     for path in iter_queue():
         # TODO: sort by path instead so load plugins at the same time
-        remove_file(path)
+        if not os.path.exists(path):
+            # a widget update has already taken care of updating this path
+            continue
+        # We will let the update operation remove the item from the queue
+
         # TODO: need to workout if a blocking write is happen while it was queued or right now.
         # probably need a .lock file to ensure foreground calls can get priority.
         hash = hash_from_cache_path(path)
@@ -417,6 +421,24 @@ def push_cache_queue(hash):
     else:
         touch(queue_path)
 
+def is_cache_queue(hash):
+    queue_path = os.path.join(_addon_path, '{}.queue'.format(hash))
+    return os.path.exists(queue_path)
+
+def remove_cache_queue(hash):
+    queue_path = os.path.join(_addon_path, '{}.queue'.format(hash))
+    remove_file(queue_path)
+
+def widgets_for_path(path):
+    hash = hashlib.sha1(path).hexdigest()
+    history_path = os.path.join(_addon_path, '{}.history'.format(hash))
+    cache_data = read_json(history_path) if os.path.exists(history_path) else None
+    if cache_data is None:
+        cache_data = {}
+    widgets = cache_data.setdefault('widgets', [])
+    return set(widgets)
+ 
+
 def cache_files(path, widget_id):
     hash = hashlib.sha1(six.text_type(path)).hexdigest()
     version = _get_json_version()
@@ -428,11 +450,11 @@ def cache_files(path, widget_id):
               'id': 1}
     files_json = call_jsonrpc(json.dumps(params))
     files = json.loads(files_json)
-    expiry, _ = cache_expiry(hash, widget_id, add=files)
-    return files
+    _, _, changed = cache_expiry(hash, widget_id, add=files)
+    return (files,changed)
 
 
-def cache_expiry(hash, widget_id, add=None):
+def cache_expiry(hash, widget_id, add=None, no_queue=False):
     # Currently just caches for 5 min so that the background refresh doesn't go in a loop.
     # In the future it will cache for longer based on the history of how often in changed
     # and when it changed in relation to events like events events.
@@ -457,6 +479,7 @@ def cache_expiry(hash, widget_id, add=None):
 
     expiry = time.time() - 20
     contents = None
+    changed = True
     size = 0 
 
     if add is not None:
@@ -467,7 +490,9 @@ def cache_expiry(hash, widget_id, add=None):
             write_json(cache_path, add)
             contents = add
             size = len(cache_json)
-            history.append( (time.time(), hashlib.sha1(cache_json.encode('utf8')).hexdigest()))
+            content_hash = hashlib.sha1(cache_json.encode('utf8')).hexdigest()
+            changed = history[-1][1] != content_hash if history else True
+            history.append( (time.time(), content_hash) )
             write_json(history_path, cache_data)
             #expiry = history[-1][0] + DEFAULT_CACHE_TIME
             pred_dur = predict_update_frequency(history)
@@ -491,6 +516,8 @@ def cache_expiry(hash, widget_id, add=None):
 #                queue_len = len(list(iter_queue()))
                 if expiry > time.time():
                     result = "Read"
+                elif no_queue:
+                    result = "Skip already updated"
                 # elif queue_len > 3:
                 #     # Try to give system more breathing space by returning empty cache but ensuring refresh
                 #     # better way is to just do this the first X accessed after startup.
@@ -505,7 +532,7 @@ def cache_expiry(hash, widget_id, add=None):
     # not how to measure the time delay when when the cache is read until it appears on screen?
     # Is the first cache read always the top visibible widget?
     log("{} cache {}B (exp:{:.0f}s, last:{:.0f}s): {} {}".format(result, size, expiry-time.time(), since_read, hash[:5], widgets), 'notice')
-    return expiry, contents
+    return expiry, contents, changed
 
 def last_read(hash):
     # Technically this is last read or updated but we can change it to be last read Later
@@ -515,7 +542,7 @@ def last_read(hash):
 
 def predict_update_frequency(history):
     if not history:
-        return 0
+        return DEFAULT_CACHE_TIME
     update_count = 0
     duration = 0
     changes =[]
@@ -532,15 +559,24 @@ def predict_update_frequency(history):
         last_when = when
         last = content
     if not changes and duration:
+        # drop the last part of the history that hasn't changed yet unless we have no other history to work with
+        # This is an underestimate as we aren't sure when in the future it will change
         changes.append((duration,update_count))
+    # TODO: the first change is potentially an underestimate too because we don't know how long it was unchanged for
+    # before we started recording.
         
     # Now we have changes, we can do some trends on them.
     durations = [duration for duration,update_count in changes if update_count > 1]
     if not durations:
-        return 0
+        return DEFAULT_CACHE_TIME
     med_dur = sorted(durations)[int(math.floor(len(durations)/2))-1]
     avg_dur = sum(durations) / len(durations)
+    # weighted by how many snapshots we took inbetween. 
+    # TODO: number of snapshots inbetween is really just increasing the confidence on the end time bot the duration as a whole.
+    # so perhaps a better metric is the error margin of the duration? and not weighting by that completely. 
+    # ie durations with wide margin of error should be less important. e.g. times kodi was never turned on for months/weeks.
     weighted = sum([d*c for d,c in changes])/sum([c for _,c in changes])
+    # TODO: also try exponential decay. Older durations are less important than newer ones.
     ones = len([c for d,c in changes if c==1])/float(len(changes))
     # TODO: if many streaks with lots of counts then its stable and can predict
     log("avg_dur {:0.0f}s, med_dur {:0.0f}s, weighted {:0.0f}s, ones {:0.2f}, all {}".format(avg_dur, med_dur, weighted, ones, changes), "debug")
