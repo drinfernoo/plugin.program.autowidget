@@ -20,3 +20,18 @@ and interesting experience to using skin widgets.
 6.  Return to "Add-ons", and choose "Install from repository".
 
 7.  Choose the repository you installed (stable or dev), and install AutoWidget from Program Add-ons.
+
+## Steps to Use
+1. Open any other plugin you wish and browse to a menu item for a list you want
+2. On the context menu select "Add to autowidget group".
+3. Either create a new group or add to an existing group. Groups can have more than one list or "path" inside it
+4. Inside your skin add a new widget
+5. For your widget Select Add ons > Autowidgets > My Groups > {your group name} > {group mode}
+   - Static allows you to pick just one path from with in a group
+   - Cycling will periodically choose either a new random path or rotate to the next path in the group
+      - the time between cycling can be set in the settings
+   - Merged will create one big list from all the paths in the group
+
+### Tips
+- if you have a large group of lists you want added to a AutoWidget group all at once select "Add to Autogroup group" > "Explode menu to Group"
+
