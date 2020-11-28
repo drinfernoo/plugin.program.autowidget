@@ -32,6 +32,8 @@ and interesting experience to using skin widgets.
       - the time between cycling can be set in the settings
    - Merged will create one big list from all the paths in the group
 
+[![Watch the video](https://img.youtube.com/vi/X3HSxTYPrzA/maxresdefault.jpg)](https://youtu.be/X3HSxTYPrzA)
+
 ### Tips
 - if you have a large group of lists you want added to a AutoWidget group all at once select "Add to Autogroup group" > "Explode menu to Group"
 
