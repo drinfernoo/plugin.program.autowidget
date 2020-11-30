@@ -105,7 +105,7 @@ def _show_options(group_def, path_def=None):
     edit_def = path_def if path_def else group_def
     options = _get_options(edit_def)
     remove_label = utils.get_string(32025) if path_def else utils.get_string(32023)
-    options.append('[COLOR firebrick]{}[/COLOR]'.format(remove_label))
+    options.append('[COLOR firebrick]{}[/COLOR]'.format(six.text_type(remove_label)))
 
     idx = dialog.select(utils.get_string(32048), options)
     if idx < 0:
