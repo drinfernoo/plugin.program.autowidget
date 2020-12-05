@@ -93,6 +93,8 @@ def dispatch(_plugin, _handle, _params):
         else:
             edit.remove_widget(widget_id, over=True)
             utils.update_container(True)
+    elif mode == 'clear_cache':
+        utils.clear_cache()
     elif mode == 'set_color':
         utils.set_color(setting=True)
     elif mode == 'backup' and action:
