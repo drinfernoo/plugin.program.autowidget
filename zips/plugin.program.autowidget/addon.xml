@@ -204,8 +204,7 @@
         </assets>
     </extension>
 </addon>
-"basic" Skin Shortcuts integration
- - Add setting to pause AutoWidget's service
+etting to pause AutoWidget's service
 1.0.7
  - Fix context menu option not showing
 1.0.6
@@ -230,10 +229,6 @@
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
-        </assets>
-    </extension>
-</addon>
-go>resources/media/clearlogo.png</clearlogo>
         </assets>
     </extension>
 </addon>
