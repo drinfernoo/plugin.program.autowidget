@@ -381,7 +381,7 @@ class Player(xbmc.Player):
             while self.isPlaying():
                 self.playingTime = self.getTime()
                 time.sleep(1)
-        threading.Thread(target=self.update_playbacktime).start()
+        threading.Thread(target=update_playback_time).start()
 
 
     def onPlayBackEnded(self):
