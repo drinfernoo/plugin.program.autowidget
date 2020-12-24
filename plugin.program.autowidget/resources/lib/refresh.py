@@ -6,6 +6,7 @@ import time
 import hashlib
 import json
 import os
+import threading
 
 from resources.lib import manage
 from resources.lib.common import utils
@@ -312,8 +313,7 @@ def cache_and_update(widget_ids):
 
 
 
-# As soon as stop playing schedule a widget update on potentially changed widgets
-# Try to guess which widgets should be updated based on which normal change after playback
+# Get info on whats playing and use it to update the right widgets when playback stopped
 class Player(xbmc.Player):
     def __init__(self):
         super(Player, self).__init__()
@@ -373,22 +373,21 @@ class Player(xbmc.Player):
             if self.totalTime == 0:
                 self.totalTime = -1
         # self.recordPlay()
+        self.type = self.playing_type()
+
+        def update_playback_time(self=self):
+            while self.isPlaying():
+                self.playingTime = self.getTime()
+                time.sleep(1)
+        threading.Thread(target=self.update_playbacktime).start()
+
 
     def onPlayBackEnded(self):
         #import ptvsd; ptvsd.enable_attach(address=('127.0.0.1', 5678)); ptvsd.wait_for_attach()
         utils.log("AutoWidget onPlayBackEnded callback", 'notice')
 
         # Once a playback ends. 
-        # TODO: We don't know it was scrobed so might not result in widget changes? Used watched status instead?
         # Work out which cached paths are most likely to change based on playback history
-
-        # wait for a bit so scrobing can happen
-        time.sleep(5) 
-        for hash in utils.widgets_changed_by_watching():
-            # Queue them for refresh
-            utils.push_cache_queue(hash)
-            utils.log("Queued cache update: {}".format(hash[:5]), 'notice')
-
 
         # Record playback in a history db so we can potentially use this for future predictions.
         try:
@@ -402,18 +401,26 @@ class Player(xbmc.Player):
         self.totalTime = -1.0
         self.playingTime = 0.0
         self.info = {}
-        utils.save_playback_history(self.playing_type, pp)
+        utils.save_playback_history(self.type, pp)
+        utils.log("recorded playback of {}% {}".format(pp, self.type), 'notice')
+
+        # wait for a bit so scrobing can happen
+        time.sleep(5) 
+        for hash in utils.widgets_changed_by_watching(self.type):
+            # Queue them for refresh
+            utils.push_cache_queue(hash)
+            utils.log("Queued cache update: {}".format(hash[:5]), 'notice')
 
     def onPlayBackStopped(self):
         self.onPlayBackEnded()
+
+    def onPlayBackSeek(self, time, seekOffset):
+        self.playingTime = time
 
     def onPlayBackPaused(self):
         pass
 
     def onPlayBackResumed(self):
-        pass
-
-    def onPlayBackSeek(self, time, seekOffset):
         pass
 
     def onPlayBackSeekChapter(self, chapter):
@@ -423,5 +430,4 @@ class Player(xbmc.Player):
         pass
 
     def onQueueNextItem(self):
-        topic = Topic('onQueueNextItem')
         pass
