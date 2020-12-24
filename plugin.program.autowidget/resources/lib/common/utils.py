@@ -284,7 +284,7 @@ def read_json(file, log_file=False):
                 log('Could not read JSON from {}: {}'.format(file, e),
                     level='error')
                 if log_file:
-                    log(content, level='notice')
+                    log(content, level='debug')
     else:
         log('{} does not exist.'.format(file), level='error')
 
