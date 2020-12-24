@@ -273,20 +273,22 @@ def write_file(file, content, mode='w'):
     return False
 
 
-def read_json(file, log_file=False):
+def read_json(file, log_file=False, default=None):
     data = None
     if os.path.exists(file):
         with codecs.open(os.path.join(_addon_path, file), 'r', encoding='utf-8') as f:
             content = six.ensure_text(f.read())
             try:
                 data = json.loads(content)
-            except ValueError as e:
+            except (ValueError, TypeError) as e:
                 log('Could not read JSON from {}: {}'.format(file, e),
                     level='error')
                 if log_file:
                     log(content, level='debug')
+                return default
     else:
         log('{} does not exist.'.format(file), level='error')
+        return default
 
     return convert(data)
 
