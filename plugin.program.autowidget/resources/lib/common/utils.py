@@ -13,6 +13,7 @@ import unicodedata
 import hashlib
 import glob
 import math
+import datetime
 
 import six
 from PIL import Image
@@ -73,6 +74,8 @@ colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'cri
 
 _startup_time = time.time() #TODO: could get reloaded so not accurate?
 
+def ft(seconds):
+    return str(datetime.timedelta(seconds=int(seconds)))
 
 def log(msg, level='debug'):
     _level = xbmc.LOGDEBUG
@@ -534,7 +537,7 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
     # TODO: some metric that tells us how long to the first and last widgets becomes visible and then get updated
     # not how to measure the time delay when when the cache is read until it appears on screen?
     # Is the first cache read always the top visibible widget?
-    log("{} cache {}B (exp:{:.0f}s, last:{:.0f}s): {} {}".format(result, size, expiry-time.time(), since_read, hash[:5], widgets), 'notice')
+    log("{} cache {}B (exp:{}, last:{}): {} {}".format(result, size, ft(expiry-time.time()), ft(since_read), hash[:5], widgets), 'notice')
     return expiry, contents, changed
 
 def last_read(hash):
@@ -696,4 +699,4 @@ def timing(description):
     yield
     elapsed = time.time() - start
 
-    log('{}: {}'.format(description, elapsed))
+    log('{}: {}'.format(description, ft(elapsed)))
