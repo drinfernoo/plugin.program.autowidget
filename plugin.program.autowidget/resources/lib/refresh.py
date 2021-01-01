@@ -91,6 +91,8 @@ class RefreshService(xbmc.Monitor):
                         break
                 for widget_id in unrefreshed_widgets:
                     widget_def = manage.get_widget_by_id(widget_id)
+                    if not widget_def:
+                        continue
                     _update_strings(widget_def)
 
             if self.abortRequested():
