@@ -122,6 +122,14 @@ def wipe(folder=_addon_path):
                 if backup_location[:-1] not in dir:
                     os.rmdir(dir)
 
+def clear_cache():
+    dialog = xbmcgui.Dialog()
+    choice = dialog.yesno('AutoWidget', 'Are you sure?')
+
+    if choice:
+        for file in [i for i in os.listdir(_addon_data) if '.cache' in i]:
+            os.remove(os.path.join(_addon_data, file))
+
 
 def get_art(filename, color=None):
     art = {}
