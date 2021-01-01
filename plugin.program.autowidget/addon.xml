@@ -36,6 +36,9 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.1.1
+ - Fixes for cache mechanism
+ - Add "Force Refresh Widgets" to context menu for AutoWidget items
 3.1.0
  - Improved background caching for paths that change frequently
  - Fix unneeded refreshes
