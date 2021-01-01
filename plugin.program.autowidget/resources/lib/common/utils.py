@@ -13,6 +13,7 @@ import unicodedata
 import hashlib
 import glob
 import math
+import datetime
 
 import six
 from PIL import Image
@@ -33,6 +34,7 @@ _addon_data = xbmc.translatePath('special://profile/addon_data/')
 
 _art_path = os.path.join(_addon_root, 'resources', 'media')
 _home = xbmc.translatePath('special://home/')
+_playback_history_path = os.path.join(_addon_path, "cache.history")
 
 windows = {'programs': ['program', 'script'],
             'addonbrowser': ['addon', 'addons'],
@@ -72,6 +74,8 @@ colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'cri
 
 _startup_time = time.time() #TODO: could get reloaded so not accurate?
 
+def ft(seconds):
+    return str(datetime.timedelta(seconds=int(seconds)))
 
 def log(msg, level='debug'):
     _level = xbmc.LOGDEBUG
@@ -283,7 +287,7 @@ def read_json(file, log_file=False, default=None):
                 log('Could not read JSON from {}: {}'.format(file, e),
                     level='error')
                 if log_file:
-                    log(content, level='notice')
+                    log(content, level='debug')
                 return default
     else:
         log('{} does not exist.'.format(file), level='error')
@@ -533,7 +537,7 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
     # TODO: some metric that tells us how long to the first and last widgets becomes visible and then get updated
     # not how to measure the time delay when when the cache is read until it appears on screen?
     # Is the first cache read always the top visibible widget?
-    log("{} cache {}B (exp:{:.0f}s, last:{:.0f}s): {} {}".format(result, size, expiry-time.time(), since_read, hash[:5], widgets), 'notice')
+    log("{} cache {}B (exp:{}, last:{}): {} {}".format(result, size, ft(expiry-time.time()), ft(since_read), hash[:5], widgets), 'notice')
     return expiry, contents, changed
 
 def last_read(hash):
@@ -582,35 +586,95 @@ def predict_update_frequency(history):
     ones = len([c for d,c in changes if c==1])/float(len(changes))
     # TODO: if many streaks with lots of counts then its stable and can predict
     log("avg_dur {:0.0f}s, med_dur {:0.0f}s, weighted {:0.0f}s, ones {:0.2f}, all {}".format(avg_dur, med_dur, weighted, ones, changes), "debug")
-    # if ones > 0.9:
-    #     # too unstable so no point guessing
-    #     return DEFAULT_CACHE_TIME
-    # elif DEFAULT_CACHE_TIME > avg_dur/2.0:
-    #     # should not got less than 5min otherwise our updates go in a loop
-    #     return DEFAULT_CACHE_TIME
-    # else:
-    #     return avg_dur/2.0 # we want to ensure we check more often than the actual predicted expiry 
+    if ones > 0.9:
+        # too unstable so no point guessing
+        return DEFAULT_CACHE_TIME
+    elif DEFAULT_CACHE_TIME > avg_dur/2.0:
+        # should not got less than 5min otherwise our updates go in a loop
+        return DEFAULT_CACHE_TIME
+    else:
+        return avg_dur/2.0 # we want to ensure we check more often than the actual predicted expiry 
+#    return DEFAULT_CACHE_TIME
 
-    return DEFAULT_CACHE_TIME
-
-def widgets_changed_by_watching():
+def widgets_changed_by_watching(media_type):
     # Predict which widgets the skin might have that could have changed based on recently finish
     # watching something
     
-    # Simple version. Anything updated recently (since startup?)
     all_cache = filter(os.path.isfile, glob.glob(os.path.join(_addon_path, "*.history")))
-    for path in sorted(all_cache, key=os.path.getmtime):
+
+    # Simple version. Anything updated recently (since startup?)
+    #priority = sorted(all_cache, key=os.path.getmtime)
+    # Sort by chance of it updating
+    plays = read_json(_playback_history_path, default={}).setdefault("plays",[])
+    plays_for_type = [(time,t) for time, t in plays if t == media_type]
+    priority = sorted([(chance_playback_updates_widget(path, plays_for_type), path) for path in all_cache], reverse=True)
+
+    for chance, path in priority:
         hash = hash_from_cache_path(path)
-        #cache_data = read_json(path)
-        #history = cache_data.setdefault('history', [])
-        last_update = os.path.getmtime(path)
-        if last_update > _startup_time:
-            log("recently accessed cache {}".format(hash[:5]), 'notice')
+        last_update = os.path.getmtime(path) - _startup_time
+        if last_update < 0:
+            log("widget not updated since startup {} {}".format(last_update, hash[:5]), 'notice')
+        # elif chance < 0.3:
+        #     log("chance widget changed after play {}% {}".format(chance, hash[:5]), 'notice')
+        else:
+            log("chance widget changed after play {}% {}".format(chance, hash[:5]), 'notice')
             yield hash
+
+
+def chance_playback_updates_widget(history_path, plays, cutoff_time=60*5):
+    cache_data = read_json(history_path)
+    history = cache_data.setdefault('history', [])
+    # Complex version
+    # - for each widget 
+    #    - come up with chance it will update after a playback
+    #    - each pair of updates, is there a playback inbetween and updated with X min after playback
+    #    - num playback with change / num playback with no change
+    changes, non_changes, unrelated_changes = 0, 0, 0
+    update = ''
+    time_since_play = 0
+    for play_time, media_type in plays:
+        while True:
+            last_update = update
+            if not history:
+                break
+            update_time, update = history.pop(0)
+            time_since_play = update_time - play_time
+            #log("{} {} {} {}".format(update[:5],last_update[:5], unrelated_changes, time_since_play), 'notice')
+            if time_since_play > 0:
+                break
+            elif update != last_update:
+                unrelated_changes += 1
+
+        if update == last_update:
+            non_changes += 1
+        elif time_since_play > cutoff_time: # update too long after playback to be releated
+            pass
+        else:
+            changes += 1
+        # TODO: what if the previous update was a long time before playback?
+
+    # There is probably a more statistically correct way of doing this but the idea is that
+    # with few datapoints we should tend towards 0.5 probability but as we get more datapoints
+    # then error goes down and rely on actual changes vs nonchanges 
+    # We will do a simple weighted average with 0.5 to simulate this
+    # TODO: currently random widgets score higher than recently played widgets. need to score them lower
+    # as they are less relevent
+    log("changes={}, non_changes={}, unrelated_changes={}".format(changes, non_changes, unrelated_changes), 'debug')
+    datapoints = float(changes + non_changes)
+    prob = changes/float(changes + non_changes + unrelated_changes)
+    unknown_weight = 4
+    prob = (prob*datapoints + 0.5*unknown_weight)/(datapoints+unknown_weight)    
+    return prob
+
 
 def save_playback_history(media_type, playback_percentage):
     # Record in json when things got played to help predict which widgets will change after playback
-    pass
+    #if playback_percentage < 0.7:
+    #    return
+    history = read_json(_playback_history_path, default={})
+    plays = history.setdefault("plays", [])
+    plays.append((time.time(), media_type))
+    write_json(_playback_history_path, history)
 
 def touch(fname, times=None):
     fhandle = open(fname, 'a')
@@ -635,4 +699,4 @@ def timing(description):
     yield
     elapsed = time.time() - start
 
-    log('{}: {}'.format(description, elapsed))
+    log('{}: {}'.format(description, ft(elapsed)))
