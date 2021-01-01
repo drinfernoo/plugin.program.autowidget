@@ -14,9 +14,13 @@
     
     <extension point="kodi.context.item">
         <menu id="kodi.core.main">
-            <item library="context.py">
+            <item library="context_add.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
                 <visible>String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
+            </item>
+            <item library="context_refresh.py">
+                <label>$ADDON[plugin.program.autowidget 32006]</label>
+                <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
             </item>
         </menu>
     </extension>
