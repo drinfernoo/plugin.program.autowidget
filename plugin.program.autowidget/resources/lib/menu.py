@@ -151,7 +151,7 @@ def active_widgets_menu():
                 except:
                     pass
                 
-                title = '{} - {}'.format(label, group_def['label'])
+                title = '{} - {}'.format(six.ensure_text(label), six.ensure_text(group_def['label']))
             elif group_def:
                 title = group_def.get('label')
 
