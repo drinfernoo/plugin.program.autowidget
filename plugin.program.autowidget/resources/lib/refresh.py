@@ -143,6 +143,7 @@ class RefreshService(xbmc.Monitor):
                     dialog = xbmcgui.Dialog()
                     dialog.notification(u'AutoWidget', u"Finished Updating Widgets", sound=False)
 
+
             if self.abortRequested():
                 break
 
