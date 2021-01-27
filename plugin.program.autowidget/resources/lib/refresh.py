@@ -76,15 +76,14 @@ class RefreshService(xbmc.Monitor):
         while not self.abortRequested():
             for _ in self.tick(15, 60 * 15):
                 # TODO: somehow delay to all other plugins loaded?
+                updated = False
                 unrefreshed_widgets = set()
                 for hash, widget_ids in utils.next_cache_queue():
                     effected_widgets = cache_and_update(widget_ids)
-                    utils.remove_cache_queue(
-                        hash
-                    )  # Just in queued path's widget defintion has changed and it didn't update this path
-                    unrefreshed_widgets = unrefreshed_widgets.union(
-                        effected_widgets
-                    ).difference(set(widget_ids))
+                    if effected_widgets:
+                        updated = True
+                    utils.remove_cache_queue(hash) # Just in queued path's widget defintion has changed and it didn't update this path
+                    unrefreshed_widgets = unrefreshed_widgets.union(effected_widgets).difference(set(widget_ids))
                     # # wait 5s or for the skin to reload the widget
                     # # this should reduce churn at startup where widgets take too long too long show up
                     # before_update = time.time() # TODO: have .access file so we can put above update
@@ -98,8 +97,9 @@ class RefreshService(xbmc.Monitor):
                     if not widget_def:
                         continue
                     _update_strings(widget_def)
-                dialog = xbmcgui.Dialog()
-                dialog.notification(u'AutoWidget', u"Finished Updating Widgets", sound=False)
+                if updated:
+                    dialog = xbmcgui.Dialog()
+                    dialog.notification(u'AutoWidget', u"Finished Updating Widgets", sound=False)
 
 
             if self.abortRequested():
