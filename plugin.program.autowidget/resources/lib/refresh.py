@@ -98,6 +98,9 @@ class RefreshService(xbmc.Monitor):
                     if not widget_def:
                         continue
                     _update_strings(widget_def)
+                dialog = xbmcgui.Dialog()
+                dialog.notification(u'AutoWidget', u"Finished Updating Widgets", sound=False)
+
 
             if self.abortRequested():
                 break
