@@ -106,6 +106,9 @@ class RefreshService(xbmc.Monitor):
                     and utils.get_active_window() == "home"
                 ):
                     utils.update_container(True)
+                dialog = xbmcgui.Dialog()
+                dialog.notification(u'AutoWidget', u"Finished Updating Widgets", sound=False)
+
 
             if self.abortRequested():
                 break
