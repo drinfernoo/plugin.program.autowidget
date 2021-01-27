@@ -72,6 +72,11 @@ colors = ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'indianred', 'cri
           'gainsboro', 'lightgray', 'silver', 'darkgray', 'gray', 'dimgray', 'lightslategray', 'slategray', 'darkslategray', 'black',  # black
           'cornsilk', 'blanchedalmond', 'bisque', 'navajowhite', 'wheat', 'burlywood', 'tan', 'rosybrown', 'sandybrown', 'goldenrod', 'peru', 'chocolate', 'saddlebrown', 'sienna', 'brown', 'maroon']  # brown
 
+
+
+
+
+
 _startup_time = time.time() #TODO: could get reloaded so not accurate?
 
 def ft(seconds):
@@ -459,6 +464,38 @@ def cache_files(path, widget_id):
     _, _, changed = cache_expiry(hash, widget_id, add=files)
     return (files,changed)
 
+ERROR_FILE = {
+    "jsonrpc": "2.0", 
+    "id": 1, 
+    "result": {
+        "files": [
+            {
+                "title": "Error",
+                "label": "Error",
+                "file": "plugin://plugin.program.autowidget/?mode=force&refresh=&reload=",
+                "art": get_art('alert'),
+                "filetype": "file", 
+            }
+        ]
+    }
+}
+
+UPDATING_FILE = {
+    "jsonrpc": "2.0", 
+    "id": 1, 
+    "result": {
+        "files": [
+            {
+                "title": "Updating",
+                "label": "Updating",
+                "file": "plugin://plugin.program.autowidget/?mode=force&refresh=&reload=",
+                "art": get_art('alert'),
+                "filetype": "file", 
+            }
+        ]
+    }
+}
+
 
 def cache_expiry(hash, widget_id, add=None, no_queue=False):
     # Currently just caches for 5 min so that the background refresh doesn't go in a loop.
@@ -507,10 +544,13 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
     else:
         if not os.path.exists(cache_path):
             result = "Empty"
+            contents = UPDATING_FILE
+            push_cache_queue(hash)
         else:
             contents = read_json(cache_path, log_file=True)
             if contents is None:
                 result = "Invalid Read"
+                contents = ERROR_FILE
             else:
                 # write any updated widget_ids so we know what to update when we dequeue
                 # Also important as wwe use last modified of .history as accessed time

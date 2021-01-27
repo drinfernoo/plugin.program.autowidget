@@ -108,7 +108,7 @@ def group_menu(group_id):
                                             'group': group_id,
                                             'path_id': path_def['id']},
                                     info=path_def['file'],
-                                    art=path_def['file']['art'] or art,
+                                    art=path_def['file'].get('art') or art,
                                     cm=cm,
                                     isFolder=False)
 
