@@ -258,6 +258,7 @@ def get_files_list(path, titles=None, widget_id=None):
     _, files, _ = utils.cache_expiry(hash, widget_id)
     if files is None:
         # We had no old content so have to block and get it now
+        # TODO: will no longer happen because we return dummy file instead
         utils.log("Blocking cache path read: {}".format(hash[:5]), "info")
         files, changed = utils.cache_files(path, widget_id)
         

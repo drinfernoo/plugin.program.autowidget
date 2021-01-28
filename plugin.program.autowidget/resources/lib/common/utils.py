@@ -486,8 +486,8 @@ UPDATING_FILE = {
     "result": {
         "files": [
             {
-                "title": "Updating",
-                "label": "Updating",
+                "title": "Loading Content...",
+                "label": "Loading Content...",
                 "file": "plugin://plugin.program.autowidget/?mode=force&refresh=&reload=",
                 "art": get_art('alert'),
                 "filetype": "file", 
@@ -529,6 +529,12 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
         cache_json = json.dumps(add)
         if not add or not cache_json.strip():
             result = "Invalid Write"
+
+        elif 'error' in add or not add.get('result',{}).get('files'):
+            # In this case we don't want to cache a bad result
+            result = "Error"
+            # TODO: do we schedule a new update? or put dummy content up even if we have
+            # good cached content?
         else:
             write_json(cache_path, add)
             contents = add
@@ -539,9 +545,12 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
             write_json(history_path, cache_data)
             #expiry = history[-1][0] + DEFAULT_CACHE_TIME
             pred_dur = predict_update_frequency(history)
-            expiry = history[-1][0] + pred_dur/2.0
+            expiry = history[-1][0] + pred_dur*0.75 # less than prediction to ensure pred keeps up to date
             result = "Wrote"
     else:
+        # write any updated widget_ids so we know what to update when we dequeue
+        # Also important as wwe use last modified of .history as accessed time
+        write_json(history_path, cache_data) 
         if not os.path.exists(cache_path):
             result = "Empty"
             contents = UPDATING_FILE
@@ -551,10 +560,8 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
             if contents is None:
                 result = "Invalid Read"
                 contents = ERROR_FILE
+                push_cache_queue(hash)
             else:
-                # write any updated widget_ids so we know what to update when we dequeue
-                # Also important as wwe use last modified of .history as accessed time
-                write_json(history_path, cache_data) 
                 size = len(json.dumps(contents))
                 if history:
                     expiry = history[-1][0] + predict_update_frequency(history)
