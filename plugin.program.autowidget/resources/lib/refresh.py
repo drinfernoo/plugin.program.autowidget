@@ -411,7 +411,8 @@ def cache_and_update(widget_ids, notify=True):
             effected_widgets = effected_widgets.union(utils.widgets_for_path(path))
             if utils.is_cache_queue(hash):
                 # we need to update this path regardless
-                dialog.notification(u'AutoWidget', u"Updating widget {}".format(_label), sound=False)
+                if notify:
+                    dialog.notification(u'AutoWidget', u"Updating widget {}".format(_label), sound=False)
                 new_files, files_changed = utils.cache_files(path, widget_id)
                 changed = changed or files_changed
                 utils.remove_cache_queue(hash)
