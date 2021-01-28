@@ -82,7 +82,8 @@ class RefreshService(xbmc.Monitor):
                 updated = False
                 unrefreshed_widgets = set()
                 for hash, widget_ids in utils.next_cache_queue():
-                    effected_widgets = cache_and_update(widget_ids)
+                    notify = self.refresh_enabled == 1 and not self.player.isPlayingVideo()
+                    effected_widgets = cache_and_update(widget_ids, notify=notify)
                     if effected_widgets:
                         updated = True
                     utils.remove_cache_queue(hash) # Just in queued path's widget defintion has changed and it didn't update this path
@@ -340,9 +341,9 @@ def is_duplicate(title, titles):
         return False
 
 
-def cache_and_update(widget_ids):
-    """a widget might have many paths. Ensure each path is either queued for an update
-    or is expired and if so force it to be refreshed. When going through the queue this
+def cache_and_update(widget_ids, notify=True):
+    """ a widget might have many paths. Ensure each path is either queued for an update
+    or is expired and if so force it to be refreshed. When going through the queue this 
     could mean we refresh paths that other widgets also use. These will then be skipped.
     """
     dialog = xbmcgui.Dialog()
@@ -371,7 +372,8 @@ def cache_and_update(widget_ids):
             effected_widgets = effected_widgets.union(utils.widgets_for_path(path))
             if utils.is_cache_queue(hash):
                 # we need to update this path regardless
-                dialog.notification(u'AutoWidget', u"Updating widget {}".format(_label), sound=False)
+                if notify:
+                    dialog.notification(u'AutoWidget', u"Updating widget {}".format(_label), sound=False)
                 new_files, files_changed = utils.cache_files(path, widget_id)
                 changed = changed or files_changed
                 utils.remove_cache_queue(hash)
