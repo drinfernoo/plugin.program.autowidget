@@ -106,7 +106,7 @@ class RefreshService(xbmc.Monitor):
                     and utils.get_active_window() == "home"
                 ):
                     utils.update_container(True)
-                if updated:
+                if updated and self.refresh_enabled == 1 and not self.player.isPlayingVideo():
                     dialog = xbmcgui.Dialog()
                     dialog.notification(u'AutoWidget', u"Finished Updating Widgets", sound=False)
 
