@@ -213,7 +213,7 @@ def _copy_path(path_def):
         return
     
     for file in files:
-        if file['type'] in ['movie', 'episode', 'musicvideo', 'song']:
+        if file.get('type') in ['movie', 'episode', 'musicvideo', 'song']:
             continue
             
         labels = build_labels('json', file, path_def['target'])
