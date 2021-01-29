@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1015" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1115" provider-name="drinfernoo">
     <requires>
-        <import addon="script.module.six" />
+        <import addon="script.module.kodi-six" />
         <import addon="script.module.pil" />
+        <import addon="script.module.six" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
@@ -13,9 +14,13 @@
     
     <extension point="kodi.context.item">
         <menu id="kodi.core.main">
-            <item library="context.py">
+            <item library="context_add.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
                 <visible>String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
+            </item>
+            <item library="context_refresh.py">
+                <label>$ADDON[plugin.program.autowidget 32006]</label>
+                <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
             </item>
         </menu>
     </extension>
@@ -24,13 +29,40 @@
         <reuselanguageinvoker>true</reuselanguageinvoker>
         <summary lang="en_GB">Automatically changes out widgets</summary>
         <description lang="en_GB">Automatically changes out widgets on the homescreen for a more interesting browsing experience.</description>
-		<summary lang="es_ES">Cambia los widgets automáticamente</summary>
-		<description lang="es_ES">Cambia los widgets en la pantalla de inicio automáticamente para una experiencia de navegación más interesante.</description>        
-		<platform>all</platform>
+	<summary lang="es_ES">Cambia los widgets automáticamente</summary>
+	<description lang="es_ES">Cambia los widgets en la pantalla de inicio automáticamente para una experiencia de navegación más interesante.</description>
+	<platform>all</platform>
         <license>LGPL-3.0</license>
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.0.2
+ - Fix bug in background caching
+3.0.1
+ - Fix bug when adding paths
+3.0.0
+ - Huge speed improvements thanks to @djay's background caching implementation
+ - Fix merged widget duplicate removal
+2.3.7
+ - Unicode fixes
+ - Fix method calls
+ - Fix separator in menus
+ - Fix logging in Kodi 19
+ - Update Spanish translation
+2.3.6
+ - Fix separator in shortcut groups
+2.3.5
+ - Fix various shortcut- and refresh-related bugs
+ - Fix error when path contained no items
+ - Add more debug logging
+ - Add widget ID as ListItem property (autoID)
+ - Reduce library updates (again)
+2.3.4
+ - Fix logging error
+2.3.3
+ - Fix shortcuts to Android apps
+2.3.2
+ - Fix error in debug logging logic
 2.3.1
  - Fix editing and adding new groups
  - Overall cleanup
@@ -208,28 +240,6 @@
  - Fix crash from non-existent context menu setting
 1.0.0
  - First stable release
-        </news>
-        <assets>
-            <icon>resources/media/icon.png</icon>
-            <fanart>resources/media/fanart.png</fanart>
-            <poster>resources/media/poster.png</poster>
-            <banner>resources/media/banner.png</banner>
-            <clearlogo>resources/media/clearlogo.png</clearlogo>
-        </assets>
-    </extension>
-</addon>
-ease
-        </news>
-        <assets>
-            <icon>resources/media/icon.png</icon>
-            <fanart>resources/media/fanart.png</fanart>
-            <poster>resources/media/poster.png</poster>
-            <banner>resources/media/banner.png</banner>
-            <clearlogo>resources/media/clearlogo.png</clearlogo>
-        </assets>
-    </extension>
-</addon>
-ble release
         </news>
         <assets>
             <icon>resources/media/icon.png</icon>
