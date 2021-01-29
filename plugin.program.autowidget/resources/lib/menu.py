@@ -463,7 +463,12 @@ def merged_path(group_id, widget_id):
 
 
 def _create_context_items(group_id, path_id, idx, length, target):
-    cm = [(utils.get_string(32048) if target == 'shortcut' else utils.get_string(32140),
+    if target not in ['shortcut', 'widget']:
+        main_action = utils.get_string(32140)
+    else:
+        main_action = utils.get_string(32048) if target == 'shortcut' else utils.get_string(32141)
+
+    cm = [(main_action,
               ('RunPlugin('
                'plugin://plugin.program.autowidget/'
                '?mode=manage'
