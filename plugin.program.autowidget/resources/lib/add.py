@@ -208,7 +208,7 @@ def _copy_path(path_def):
         return
         
     group_def = manage.get_group_by_id(group_id)
-    files = refresh.get_files_list(path_def['file']['file'])
+    files = refresh.get_files_list(path_def['file']['file'], background=False)
     if not files:
         return
     

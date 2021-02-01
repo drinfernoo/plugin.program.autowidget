@@ -480,12 +480,11 @@ def cache_files(path, widget_id):
     return (files,changed)
 
 
-def cache_expiry(hash, widget_id, add=None, no_queue=False):
-    # Currently just caches for 5 min so that the background refresh doesn't go in a loop.
-    # In the future it will cache for longer based on the history of how often in changed
-    # and when it changed in relation to events like events events.
-    # It should also manage the cache files to remove any too old.
-    # The cache expiry can also be used later to schedule a future background update.
+def cache_expiry(hash, widget_id, add=None, background=True):
+    # Predict how long to cache for with a min of 5min so updates don't go in a loop
+    # TODO: find better way to prevents loops so that users trying to manually refresh can do so
+    # TODO: manage the cache files to remove any too old or no longer used
+    # TODO: update paths on autowidget refresh based on predicted update frequency
 
     cache_path = os.path.join(_addon_path, '{}.cache'.format(hash))
 
@@ -536,14 +535,16 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
         write_json(history_path, cache_data) 
         if not os.path.exists(cache_path):
             result = "Empty"
-            contents = make_holding_path(u"Loading Content...", "refresh")
-            push_cache_queue(hash)
+            if background:
+                contents = make_holding_path(u"Loading Content...", "refresh")
+                push_cache_queue(hash)
         else:
             contents = read_json(cache_path, log_file=True)
             if contents is None:
                 result = "Invalid Read"
-                contents = make_holding_path("Error", "error")
-                push_cache_queue(hash)
+                if background:
+                    contents = make_holding_path("Error", "error")
+                    push_cache_queue(hash)
             else:
                 size = len(json.dumps(contents))
                 if history:
@@ -552,7 +553,7 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
 #                queue_len = len(list(iter_queue()))
                 if expiry > time.time():
                     result = "Read"
-                elif no_queue:
+                elif not background:
                     result = "Skip already updated"
                 # elif queue_len > 3:
                 #     # Try to give system more breathing space by returning empty cache but ensuring refresh
