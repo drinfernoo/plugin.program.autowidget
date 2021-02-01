@@ -265,12 +265,11 @@ def refresh_paths(notify=False, force=False):
     return True, "AutoWidget"
 
 
-def get_files_list(path, widget_id=None):
+def get_files_list(path, widget_id=None, background=True):
     hash = utils.path2hash(path)
-    _, files, _ = utils.cache_expiry(hash, widget_id)
+    _, files, _ = utils.cache_expiry(hash, widget_id, background=background)
     if files is None:
-        # We had no old content so have to block and get it now
-        # TODO: will no longer happen because we return dummy file instead
+        # Should only happen now when background is False
         utils.log("Blocking cache path read: {}".format(hash[:5]), "info")
         files, changed = utils.cache_files(path, widget_id)
 
