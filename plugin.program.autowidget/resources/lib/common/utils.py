@@ -660,21 +660,6 @@ def cache_files(path, widget_id):
     _, _, changed = cache_expiry(hash, widget_id, add=files)
     return (files, changed)
 
-ERROR_FILE = {
-    "jsonrpc": "2.0", 
-    "id": 1, 
-    "result": {
-        "files": [
-            {
-                "title": "Error",
-                "label": "Error",
-                "file": "plugin://plugin.program.autowidget/?mode=force&refresh=&reload=",
-                "art": get_art('alert'),
-                "filetype": "file", 
-            }
-        ]
-    }
-}
 
 def cache_expiry(hash, widget_id, add=None, background=True):
     # Predict how long to cache for with a min of 5min so updates don't go in a loop
