@@ -204,6 +204,26 @@ colors = [
 
 _startup_time = time.time()  # TODO: could get reloaded so not accurate?
 
+_startup_time = time.time() #TODO: could get reloaded so not accurate?
+
+
+def make_holding_path(label, art):
+    return {
+        "jsonrpc": "2.0", 
+        "id": 1, 
+        "result": {
+            "files": [
+                {
+                    "title": label,
+                    "label": label,
+                    "file": "plugin://plugin.program.autowidget/?mode=force&refresh=&reload=",
+                    "art": get_art(art),
+                    "filetype": "file", 
+                }
+            ]
+        }
+}
+
 
 def ft(seconds):
     return str(datetime.timedelta(seconds=int(seconds)))
@@ -619,38 +639,6 @@ def cache_files(path, widget_id):
     _, _, changed = cache_expiry(hash, widget_id, add=files)
     return (files, changed)
 
-ERROR_FILE = {
-    "jsonrpc": "2.0", 
-    "id": 1, 
-    "result": {
-        "files": [
-            {
-                "title": "Error",
-                "label": "Error",
-                "file": "plugin://plugin.program.autowidget/?mode=force&refresh=&reload=",
-                "art": get_art('alert'),
-                "filetype": "file", 
-            }
-        ]
-    }
-}
-
-UPDATING_FILE = {
-    "jsonrpc": "2.0", 
-    "id": 1, 
-    "result": {
-        "files": [
-            {
-                "title": "Loading Content...",
-                "label": "Loading Content...",
-                "file": "plugin://plugin.program.autowidget/?mode=force&refresh=&reload=",
-                "art": get_art('alert'),
-                "filetype": "file", 
-            }
-        ]
-    }
-}
-
 
 def cache_expiry(hash, widget_id, add=None, no_queue=False):
     # Currently just caches for 5 min so that the background refresh doesn't go in a loop.
@@ -708,13 +696,13 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
         write_json(history_path, cache_data) 
         if not os.path.exists(cache_path):
             result = "Empty"
-            contents = UPDATING_FILE
+            contents = make_holding_path(u"Loading Content...", "refresh")
             push_cache_queue(hash)
         else:
             contents = read_json(cache_path, log_file=True)
             if contents is None:
                 result = "Invalid Read"
-                contents = ERROR_FILE
+                contents = make_holding_path("Error", "error")
                 push_cache_queue(hash)
             else:
                 # write any updated widget_ids so we know what to update when we dequeue
