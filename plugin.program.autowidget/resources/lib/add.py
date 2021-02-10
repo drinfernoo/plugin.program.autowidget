@@ -208,7 +208,8 @@ def _copy_path(path_def):
         return
 
     progress = xbmcgui.DialogProgress()
-    progress.create(u"Exploding")
+    progress.create(u"Copying")
+    progress.update(1, u"Retrieving")
         
     group_def = manage.get_group_by_id(group_id)
     files = refresh.get_files_list(path_def['file']['file'], background=False)
