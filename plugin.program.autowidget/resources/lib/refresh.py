@@ -18,6 +18,7 @@ _properties = ["context.autowidget"]
 _thread = None
 
 
+
 class RefreshService(xbmc.Monitor):
     def __init__(self):
         """Starts all of the actions of AutoWidget's service."""
@@ -73,6 +74,8 @@ class RefreshService(xbmc.Monitor):
                 break
             i += step
             yield i
+
+
 
     def _update_widgets(self):
         self._refresh(True)
@@ -378,8 +381,6 @@ def cache_and_update(widget_ids, notify=True):
     or is expired and if so force it to be refreshed. When going through the queue this
     could mean we refresh paths that other widgets also use. These will then be skipped.
     """
-    dialog = xbmcgui.Dialog()
-
     assert widget_ids
     effected_widgets = set()
     for widget_id in widget_ids:
@@ -411,8 +412,8 @@ def cache_and_update(widget_ids, notify=True):
             effected_widgets = effected_widgets.union(utils.widgets_for_path(path))
             if utils.is_cache_queue(hash):
                 # we need to update this path regardless
-                if notify:
-                    dialog.notification(u'AutoWidget', u"Updating widget {}".format(_label), sound=False)
+                if notify is not None:
+                    notify(_label, path)
                 new_files, files_changed = utils.cache_files(path, widget_id)
                 changed = changed or files_changed
                 utils.remove_cache_queue(hash)
