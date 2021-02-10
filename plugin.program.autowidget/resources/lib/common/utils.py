@@ -644,7 +644,8 @@ def cache_expiry(hash, widget_id, add=None, background=True):
     # Predict how long to cache for with a min of 5min so updates don't go in a loop
     # TODO: find better way to prevents loops so that users trying to manually refresh can do so
     # TODO: manage the cache files to remove any too old or no longer used
-    # TODO: update paths on autowidget refresh based on predicted update frequency
+    # TODO: update paths on autowidget refresh based on predicted update frequency. e.g. plugins with random paths should
+    # update when autowidget updates.
 
     cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
 
