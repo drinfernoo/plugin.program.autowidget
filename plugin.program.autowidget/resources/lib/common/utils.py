@@ -429,8 +429,11 @@ def remove_cache_queue(hash):
     queue_path = os.path.join(_addon_path, '{}.queue'.format(hash))
     remove_file(queue_path)
 
+def path2hash(path):
+    return hashlib.sha1(six.ensure_binary(path, "utf8")).hexdigest()
+
 def widgets_for_path(path):
-    hash = hashlib.sha1(path).hexdigest()
+    hash = path2hash(path)
     history_path = os.path.join(_addon_path, '{}.history'.format(hash))
     cache_data = read_json(history_path) if os.path.exists(history_path) else None
     if cache_data is None:
@@ -440,7 +443,7 @@ def widgets_for_path(path):
  
 
 def cache_files(path, widget_id):
-    hash = hashlib.sha1(six.text_type(path)).hexdigest()
+    hash = path2hash(path)
     version = _get_json_version()
     props = version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12)
     props_info = info_types + ['customproperties']
