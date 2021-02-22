@@ -125,6 +125,7 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
 
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
                                 isFolder=isFolder)
+    return _plugin
 
 
 def finish_directory(handle, category, type):
