@@ -246,6 +246,8 @@ def add_menu_item(
     xbmcplugin.addDirectoryItem(
         handle=_handle, url=_plugin, listitem=item, isFolder=isFolder
     )
+
+    return _plugin
     
     
 def make_library_path(library, type, id):
