@@ -367,6 +367,7 @@ def show_path(
                 "target": "next",
             }
 
+            next_path = file['file'] if not paged_widgets or merged else None
             directory.add_menu_item(
                 title=label,
                 params=update_params if paged_widgets and not merged else None,
@@ -376,6 +377,8 @@ def show_path(
                 isFolder=not paged_widgets or merged,
                 props=properties,
             )
+            # Ensure we precache next page for faster access
+            utils.push_cache_queue(utils.path2hash(next_path))
         else:
             filetype = file.get("type", "")
             title = {
