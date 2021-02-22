@@ -541,6 +541,21 @@ def iter_queue():
     for path in sorted(queued, key=os.path.getmtime):
         yield path
 
+def read_history(hash, create_if_missing=True):
+    history_path = os.path.join(_addon_path, '{}.history'.format(hash))
+    if not os.path.exists(history_path):
+        if create_if_missing:
+            cache_data = {}
+            history = cache_data.setdefault('history', [])
+            widgets = cache_data.setdefault('widgets', [])
+            write_json(history_path, cache_data) 
+        else:
+            cache_data = None
+    else:
+        cache_data = read_json(history_path)
+    return cache_data
+
+
 
 def next_cache_queue():
     # Simple queue by creating a .queue file
@@ -555,15 +570,18 @@ def next_cache_queue():
         # TODO: need to workout if a blocking write is happen while it was queued or right now.
         # probably need a .lock file to ensure foreground calls can get priority.
         hash = hash_from_cache_path(path)
-        path = os.path.join(_addon_data, "{}.history".format(hash))
-        cache_data = read_json(path)
-        if cache_data:
-            log("Dequeued cache update: {}".format(hash[:5]), "notice")
-            yield hash, cache_data.get("widgets", [])
+        cache_data = read_history(hash, create_if_missing=True)
+        yield hash, cache_data.get('widgets',[])
+            
 
+def push_cache_queue(hash, widget_id=None):
+    queue_path = os.path.join(_addon_path, '{}.queue'.format(hash))
+    history = read_history(hash, create_if_missing=True) # Ensure its created
+    if widget_id is not None and widget_id not in history['widgets']:
+        history_path = os.path.join(_addon_path, '{}.history'.format(hash))
+        history['widgets'].append(widget_id)
+        write_json(history_path, history)
 
-def push_cache_queue(hash):
-    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
     if os.path.exists(queue_path):
         pass  # Leave original modification date so item is higher priority
     else:
@@ -581,7 +599,10 @@ def remove_cache_queue(hash):
 
 
 def path2hash(path):
-    return hashlib.sha1(six.ensure_binary(path, "utf8")).hexdigest()
+    if path is not None:
+        return hashlib.sha1(six.ensure_binary(path, "utf8")).hexdigest()
+    else:
+        return None
 
 
 def widgets_for_path(path):
