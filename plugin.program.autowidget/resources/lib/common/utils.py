@@ -551,6 +551,19 @@ def iter_queue():
     for path in sorted(queued, key=os.path.getmtime):
         yield path
 
+def read_history(hash, create_if_missing=True):
+    history_path = os.path.join(_addon_path, '{}.history'.format(hash))
+    if not os.path.exists(history_path):
+        if create_if_missing:
+            cache_data = {}
+            history = cache_data.setdefault('history', [])
+            widgets = cache_data.setdefault('widgets', [])
+            write_json(history_path, cache_data) 
+        else:
+            cache_data = None
+    else:
+        cache_data = read_json(history_path)
+    return cache_data
 
 def read_history(hash, create_if_missing=True):
     history_path = os.path.join(_addon_data, "{}.history".format(hash))
@@ -583,6 +596,13 @@ def next_cache_queue():
         cache_data = read_history(hash, create_if_missing=True)
         yield hash, cache_data.get("widgets", [])
 
+def push_cache_queue(hash, widget_id=None):
+    queue_path = os.path.join(_addon_path, '{}.queue'.format(hash))
+    history = read_history(hash, create_if_missing=True) # Ensure its created
+    if widget_id is not None and widget_id not in history['widgets']:
+        history_path = os.path.join(_addon_path, '{}.history'.format(hash))
+        history['widgets'].append(widget_id)
+        write_json(history_path, history)
 
 def push_cache_queue(hash, widget_id=None):
     queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
