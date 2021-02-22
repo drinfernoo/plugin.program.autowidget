@@ -76,8 +76,8 @@ class RefreshService(xbmc.Monitor):
         self._refresh(True)
         
         while not self.abortRequested():
-            for _ in self.tick(15, 60*15):
-                # TODO: somehow delay to all other plugins loaded?
+            for _ in self.tick(step=1, max=60*15):
+                # TODO: somehow delay till all other plugins loaded?
                 updated = False
                 unrefreshed_widgets = set()
                 queue = list(utils.next_cache_queue())
