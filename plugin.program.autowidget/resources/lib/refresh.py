@@ -3,9 +3,6 @@ import xbmcgui
 
 import random
 import time
-import hashlib
-import json
-import os
 import threading
 
 from resources.lib import manage
@@ -247,7 +244,7 @@ def get_files_list(path, titles=None, widget_id=None):
     if not titles:
         titles = []
 
-    hash = hashlib.sha1(path).hexdigest()
+    hash = utils.path2hash(path)
     _, files, _ = utils.cache_expiry(hash, widget_id)
     if files is None:
         # We had no old content so have to block and get it now
@@ -292,7 +289,7 @@ def cache_and_update(widget_ids):
             if isinstance(path, dict):
                 _label = path['label']
                 path = path['file']['file']
-            hash = hashlib.sha1(path).hexdigest()
+            hash = utils.path2hash(path)
             # TODO: we might be updating paths used by widgets that weren't initiall queued.
             # We need to return those and ensure they get refreshed also.
             effected_widgets = effected_widgets.union(utils.widgets_for_path(path))
