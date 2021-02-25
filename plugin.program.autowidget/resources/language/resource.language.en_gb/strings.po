@@ -131,7 +131,7 @@ msgid "Shift Path Down"
 msgstr ""
 
 msgctxt "#32028"
-msgid "Cycling Path from {}"
+msgid "{} (Cycling)"
 msgstr ""
 
 msgctxt "#32029"
@@ -323,7 +323,7 @@ msgid "This widget is broken, repoint or remove it to stop seeing this."
 msgstr ""
 
 msgctxt "#32076"
-msgid "Static Path from {}"
+msgid "{} (Static)"
 msgstr ""
 
 msgctxt "#32077"
@@ -375,7 +375,7 @@ msgid "Merged Path"
 msgstr ""
 
 msgctxt "#32089"
-msgid "Merged Path from {}"
+msgid "{} (Merged)"
 msgstr ""
 
 msgctxt "#32090"

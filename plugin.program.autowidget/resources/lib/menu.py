@@ -273,7 +273,7 @@ def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, 
                         '(?:page\s*(?:(?:\d+\D*\d?$)|(?:(?:>>)|(?:\.*)$)|(?:\(\d+|.*\)$))?)?$')
         prev_pattern = '^(?:previous(?: page)?)$|^(?:back)$'
         
-        cleaned_title = re.sub(tag_pattern, '', file['label'].lower()).strip()
+        cleaned_title = re.sub(tag_pattern, '', file.get('label','').lower()).strip()
         next_item =  re.search(next_pattern, cleaned_title)
         prev_item = re.search(prev_pattern, cleaned_title)
         

@@ -131,8 +131,8 @@ msgid "Shift Path Down"
 msgstr "Mover abajo"
 
 msgctxt "#32028"
-msgid "Cycling Path from {}"
-msgstr "Ruta ciclica de {}"
+msgid "{} (Cycling)"
+msgstr "{} (Ciclica)"
 
 msgctxt "#32029"
 msgid "Use a random path from the {} group."
@@ -323,8 +323,8 @@ msgid "This widget is broken, repoint or remove it to stop seeing this."
 msgstr "Este widget está roto, vuelva a definirlo o elimínelo para dejar de ver esto."
 
 msgctxt "#32076"
-msgid "Static Path from {}"
-msgstr "Ruta estática desde {}"
+msgid "{} (Static)"
+msgstr "{} (Estática)"
 
 msgctxt "#32077"
 msgid "Add New InfoLabel"
@@ -375,8 +375,8 @@ msgid "Merged Path"
 msgstr "Ruta combinada"
 
 msgctxt "#32089"
-msgid "Merged Path from {}"
-msgstr "Ruta combinada desde {}"
+msgid "{} (Merged)"
+msgstr "{} (Combinada)"
 
 
 msgctxt "#32090"
