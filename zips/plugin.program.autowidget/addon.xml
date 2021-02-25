@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1084" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1099" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.kodi-six" />
         <import addon="script.module.pil" />
@@ -14,9 +14,13 @@
     
     <extension point="kodi.context.item">
         <menu id="kodi.core.main">
-            <item library="context.py">
+            <item library="context_add.py">
                 <label>$ADDON[plugin.program.autowidget 32003]</label>
                 <visible>String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
+            </item>
+            <item library="context_refresh.py">
+                <label>$ADDON[plugin.program.autowidget 32006]</label>
+                <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
             </item>
         </menu>
     </extension>
@@ -246,7 +250,8 @@
         </assets>
     </extension>
 </addon>
-ces/media/fanart.png</fanart>
+g</icon>
+            <fanart>resources/media/fanart.png</fanart>
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
