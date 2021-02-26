@@ -332,7 +332,10 @@ def call_path(path_id):
     utils.call_builtin('Dialog.Close(busydialog)', 500)
     final_path = ''
     
-    if path_def['target'] == 'shortcut' and path_def['file']['filetype'] == 'file' \
+    if path_def['target'] == 'settings':
+        final_path = 'Addon.OpenSettings({})'.format(path_def['file']['file']
+                                                     .replace('plugin://', ''))
+    elif path_def['target'] == 'shortcut' and path_def['file']['filetype'] == 'file' \
                                         and path_def['content'] != 'addons':
         if path_def['file']['file'] == 'addons://install/':
             final_path = 'InstallFromZip'
@@ -352,9 +355,6 @@ def call_path(path_id):
                                         or path_def['content'] == 'addons':
         final_path = 'ActivateWindow({},{},return)'.format(path_def.get('window', 'Videos'),
                                                            path_def['file']['file'])
-    elif path_def['target'] == 'settings':
-        final_path = 'Addon.OpenSettings({})'.format(path_def['file']['file']
-                                                     .replace('plugin://', ''))
         
     if final_path:
         utils.log('Calling path from {} using {}'.format(path_id, final_path), 'debug')

@@ -99,7 +99,7 @@ def _add_as(path_def):
     if path_def['filetype'] == 'directory':
         types = shortcut_types[:4]
     else:
-        if any(i in path for i in ['addons://user', 'plugin://']) and not parse_qsl(path):
+        if (any(i in path for i in ['addons://user', 'plugin://']) and not parse_qsl(path)) or ('widget', 'True') in parse_qsl(path):
             pass
         else:
             types = [shortcut_types[0]]
@@ -116,7 +116,7 @@ def _add_as(path_def):
         return
     
     chosen = types[idx]
-    if chosen in [shortcut_types[0], shortcut_types[4]]:
+    if chosen == shortcut_types[0]:
         return 'shortcut'
     elif chosen == shortcut_types[1]:
         return 'widget'
@@ -124,6 +124,8 @@ def _add_as(path_def):
         return 'clone'
     elif chosen == shortcut_types[3]:
         return 'explode'
+    elif chosen == shortcut_types[4]:
+        return 'settings'
             
             
 def _group_dialog(_type, group_id=None):
@@ -198,6 +200,9 @@ def _add_path(group_def, labels, over=False):
                                                  
     labels['id'] = utils.get_unique_id(labels['label'])
     labels['version'] = utils._addon_version
+    
+    if labels['target'] == 'settings':
+        labels['file']['file'] = labels['file']['file'].split('&')[0]
     
     manage.write_path(group_def, path_def=labels)
     
