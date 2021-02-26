@@ -96,10 +96,10 @@ def _add_as(path_def):
     
     path = path_def['file']
     types = shortcut_types[:]
-    if path_def['filetype'] == 'directory':
+    if path_def['filetype'] == 'directory' and utils.get_active_window() != 'home':
         types = shortcut_types[:4]
     else:
-        if (any(i in path for i in ['addons://user', 'plugin://']) and not parse_qsl(path)) or ('widget', 'True') in parse_qsl(path):
+        if (any(i in path for i in ['addons://user', 'plugin://', 'script://']) and not parse_qsl(path)) or ('widget', 'True') in parse_qsl(path):
             pass
         else:
             types = [shortcut_types[0]]
@@ -202,6 +202,7 @@ def _add_path(group_def, labels, over=False):
     labels['version'] = utils._addon_version
     
     if labels['target'] == 'settings':
+        labels['file']['filetype'] = 'file'
         labels['file']['file'] = labels['file']['file'].split('&')[0]
     
     manage.write_path(group_def, path_def=labels)
