@@ -101,13 +101,20 @@ def _warn():
         warning = True
 
 
-def _show_options(group_def, path_def=None):
+def _show_options(group_def, path_def=None, type=''):
     edit_def = path_def if path_def else group_def
     options = _get_options(edit_def)
     remove_label = utils.get_string(32025) if path_def else utils.get_string(32023)
     options.append(u'[COLOR firebrick]{}[/COLOR]'.format(six.ensure_text(remove_label)))
+    if not type:
+        if target not in ['shortcut', 'widget']:
+            main_action = utils.get_string(32140)
+        else:
+            main_action = utils.get_string(32048) if target == 'shortcut' else utils.get_string(32141)
+    else:
+        main_action = utils.get_string(32061)
 
-    idx = dialog.select(utils.get_string(32048), options)
+    idx = dialog.select(main_action, options)
     if idx < 0:
         return
     elif idx == len(options) - 1:
@@ -128,7 +135,7 @@ def _show_widget_options(edit_def):
     options = _get_widget_options(edit_def)
     options.append('[COLOR firebrick]{}[/COLOR]'.format(utils.get_string(32116)))
 
-    idx = dialog.select(utils.get_string(32048), options)
+    idx = dialog.select(utils.get_string(32070), options)
     if idx < 0:
         return
     elif idx == len(options) - 1:
@@ -367,7 +374,7 @@ def _clean_key(key):
     return key.split(': ')[0]
 
 
-def edit_dialog(group_id, path_id=None, base_key=None):
+def edit_dialog(group_id, path_id=None, base_key=None, type=''):
     updated = False
     if advanced and not warning_shown:
         _warn()
@@ -377,12 +384,12 @@ def edit_dialog(group_id, path_id=None, base_key=None):
     if not group_def or path_id and not path_def:
         return
 
-    updated = _show_options(group_def, path_def)
+    updated = _show_options(group_def, path_def, type)
     if updated:
         manage.write_path(group_def, path_def=path_def, update=path_id)
         utils.update_container(group_def['type'] == 'shortcut')
 
-        edit_dialog(group_id, path_id)
+        edit_dialog(group_id, path_id, type)
 
 
 def edit_widget_dialog(widget_id): 
