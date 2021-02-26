@@ -334,7 +334,9 @@ def call_path(path_id):
     
     if path_def['target'] == 'settings':
         final_path = 'Addon.OpenSettings({})'.format(path_def['file']['file']
-                                                     .replace('plugin://', ''))
+                                                     .replace('plugin://', '')
+                                                     .replace('script://', '')
+                                                     .split('/')[0])
     elif path_def['target'] == 'shortcut' and path_def['file']['filetype'] == 'file' \
                                         and path_def['content'] != 'addons':
         if path_def['file']['file'] == 'addons://install/':
