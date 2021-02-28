@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="3.1.2" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="3.1.4" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.kodi-six" />
         <import addon="script.module.pil" />
@@ -36,6 +36,12 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.1.4
+ - Fix settings shortcuts
+ - Fix some Unicode errors
+ - Fix some dialog labels in editor
+3.1.3
+ - Fix hashing in Matrix
 3.1.2
  - Fix "Clear Cache"
 3.1.1
@@ -258,8 +264,5 @@
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
         </assets>
-    </extension>
-</addon>
-ets>
     </extension>
 </addon>
