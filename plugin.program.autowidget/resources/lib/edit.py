@@ -107,10 +107,11 @@ def _show_options(group_def, path_def=None, type=''):
     remove_label = utils.get_string(32025) if path_def else utils.get_string(32023)
     options.append(u'[COLOR firebrick]{}[/COLOR]'.format(six.ensure_text(remove_label)))
     if not type:
-        if target not in ['shortcut', 'widget']:
+        target = path_def['target'] if path_def else group_def['type']
+        if target not in ['shortcut', 'widget', 'settings']:
             main_action = utils.get_string(32140)
         else:
-            main_action = utils.get_string(32048) if target == 'shortcut' else utils.get_string(32141)
+            main_action = utils.get_string(32048) if target in ['shortcut', 'settings'] else utils.get_string(32141)
     else:
         main_action = utils.get_string(32061)
 
