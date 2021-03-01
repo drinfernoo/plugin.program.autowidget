@@ -6,6 +6,7 @@ import sys
 import six
 
 from resources.lib.common import utils
+from resources.lib import common
 
 try:
     from urllib.parse import urlencode
@@ -60,8 +61,8 @@ def add_sort_methods(handle):
     
 def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
                   isFolder=False, props=None):
-    _plugin = sys.argv[0]
-    _handle = int(sys.argv[1])
+    _plugin = common.dispatched_plugin
+    _handle = common.dispatched_handle
     
 
     if params is not None:

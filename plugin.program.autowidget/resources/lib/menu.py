@@ -1,4 +1,4 @@
-from kodi_six import xbmcgui
+import xbmcgui
 
 import re
 import uuid
