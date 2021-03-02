@@ -11,6 +11,7 @@ import time
 import types
 import runpy
 from urllib.parse import urlparse
+import queue
 
 import polib
 
@@ -34,12 +35,6 @@ import xbmcvfs
 
 PYTHON3 = True if sys.version_info.major == 3 else False
 PYTHON2 = not PYTHON3
-
-if PYTHON2:
-    get_input = raw_input  # noqa
-else:
-    get_input = input
-
 SUPPORTED_LANGUAGES = {
     "en-de": ("en-de", "eng-deu", "English-Central Europe"),
     "en-aus": ("en-aus", "eng-aus", "English-Australia (12h)"),
@@ -50,6 +45,21 @@ SUPPORTED_LANGUAGES = {
 }
 
 PLUGIN_NAME = "plugin.program.autowidget"
+
+def get_input(prompt=""):
+    if MOCK.INPUT_QUEUE:
+        if MOCK.INPUT_QUEUE.unfinished_tasks:
+            MOCK.INPUT_QUEUE.task_done()
+        keys = str(MOCK.INPUT_QUEUE.get(True))
+        #print(f"{prompt}{keys}")
+        return keys
+    else:
+        if PYTHON2:
+            return raw_input(prompt)  # noqa
+        else:
+            return input(prompt)
+
+
 
 def makedirs(name, mode=0o777, exist_ok=False):
     """makedirs(name [, mode=0o777][, exist_ok=False])
@@ -82,8 +92,7 @@ class Directory:
     last_action = ""
     next_action = ""
     current_list_item = None
-    current_container_item = None
-    content = {}
+    content = "movies"
     sort_method = {}
     action_callbacks = {}
     context_callbacks = []
@@ -230,16 +239,21 @@ class Directory:
         self.items = []
         return result
 
-    def getInfoLabel(self, value):
+    def executeInfoLabel(self, value):
         # handle ListItem or Container infolabels
         ListItem = self.current_list_item
-        Container = self.current_container_item
-        value = value.replace(".", ".get")
-        res = eval(value, locals())
-        if callable(res):
-            return res()
+        Container = self
+        #value = value.replace(".", ".get")
+        v2 = re.sub(r"\.([^\d\W]\w*)\(([.\w]*)\)", r".getInfoLabel('\1','\2')", value) # ListItem.Art(banner)
+        if v2 == value: # HACK
+            v2 = re.sub(r"\.([^\d\W]\w*)([^\(]?)", r".getInfoLabel('\1')\2", value) # ListItem.Art
+        return eval(v2, locals())
+
+    def getInfoLabel(self, key):
+        if key == 'Content':
+            return self.content
         else:
-            return res
+            raise Exception(f"Not found {key}")
 
 
     def register_action(self, path, script):
@@ -377,10 +391,10 @@ class SerenStubs:
                 if PYTHON3:
                     return "19"
             elif value.startswith("ListItem.") or value.startswith("Container."):
-                res = MOCK.DIRECTORY.getInfoLabel(value)
+                res = MOCK.DIRECTORY.executeInfoLabel(value)
                 if res is not None:
                     return res
-            print("Couldn't find the infolabel")
+            print(f"Couldn't find the infolabel: {value}")
             return ""
 
         @staticmethod
@@ -448,6 +462,17 @@ class SerenStubs:
         def executebuiltin(function, wait=False):
             """Execute a built in Kodi function"""
             print("EXECUTE BUILTIN: {} wait:{}".format(function, wait))
+
+        @staticmethod
+        def executeJSONRPC(jsonrpccommand):
+            command = json.loads(jsonrpccommand)
+            method = command.get("method")
+            if method == 'JSONRPC.Version':
+                res = dict(result=dict(version=[19,0,0]))
+            else:
+                raise Exception(f"executeJSONRPC not handled for {method}")
+            return json.dumps(res)
+
 
         class PlayList(xbmc.PlayList):
             def __init__(self, playList):
@@ -678,6 +703,7 @@ class SerenStubs:
                 self.cm = []
                 self.vitags = {}
                 self.art = {}
+                self.votes = {}
                 self.info = {}
                 self.info_type = ""
                 self.uniqueIDs = {}
@@ -699,6 +725,21 @@ class SerenStubs:
                 if key in self._props:
                     return self._props[key]
                 return ""
+
+            def getRating(self, key=None): #make key optional for getInfoLabel
+                return self.ratings.get(key, 0.0) if key else 0.0
+
+            def getArt(self, key='thumb'):
+                return self.art.get(key, "")
+
+            def getPath(self):
+                return self._path
+
+            def getVotes(self, key=None):
+                if key is None:
+                    return self.votes.values[0] if self.votes else 0
+                else:
+                    return self.votes.get(key, 0)
 
             def isSelected(self):
                 return self._selected
@@ -749,11 +790,21 @@ class SerenStubs:
             def addStreamInfo(self, cType, dictionary):
                 self.stream_info.update({cType: dictionary})
 
-            def getPath(self):
-                return self._path
-
             def __str__(self):
                 return self._label
+
+            # Additional methods for infolabels
+
+            def getInfoLabel(self, key, *params):
+                # return value or function
+                if key in self.info:
+                    return self.info[key]
+                if hasattr(self, 'get'+key):
+                    return getattr(self, 'get'+key)(*params)
+                
+
+            def getFolderPath(self):
+                return self._path
 
         class Window(xbmcgui.Window):
             def __init__(self, windowId=0):
@@ -1109,6 +1160,7 @@ class MockKodi:
 
         self.DIRECTORY = Directory()
         self.LOG_HISTORY = []
+        self.INPUT_QUEUE = queue.Queue()
         self._monkey_patcher = MonkeyPatchKodiStub()
         # self._monkey_patcher.trace_log()
         self._monkey_patcher.monkey_patch()
