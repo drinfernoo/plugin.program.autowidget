@@ -9,6 +9,8 @@ from mock_kodi import makedirs
 import runpy
 from urllib.parse import urlparse
 import sys
+import doctest
+import time
 
 
 def execute_callback():
@@ -79,7 +81,7 @@ def setup():
 
     def dummy_folder(path):
         for i in range(1,20):
-            p = "plugin://dummy/?item={}".format(i)
+            p = "plugin://dummy/item{}".format(i)
             xbmcplugin.addDirectoryItem(
                 handle=1, 
                 url=p, 
@@ -88,10 +90,62 @@ def setup():
             )
         xbmcplugin.endOfDirectory(handle=1)
     MOCK.DIRECTORY.register_action("plugin://dummy", dummy_folder)
+    #t = threading.Thread(target=start_service).start()
 
+def press(keys):
+    MOCK.INPUT_QUEUE.put(keys)
+    MOCK.INPUT_QUEUE.join()
+
+def test_add_widget_group():
+    """
+    >>> t = threading.Thread(target=MOCK.DIRECTORY.handle_directory, daemon = True)
+    >>> t.start(); time.sleep(1)
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) AutoWidget
+     2) Dummy
+    <BLANKLINE>
+    Enter Action Number
+
+    >>> press("c2")
+     1) Add to AutoWidget Group
+    <BLANKLINE>
+
+    >>> press(1)
+    Add as
+    0) Shortcut
+    1) Widget
+    2) Clone as Shortcut Group
+    3) Explode as Widget Group
+    4) Settings Shortcut
+
+    >>> press(1)
+    Widget
+    Choose a Group
+    0) Create New Widget Group
+
+    >>> press(0)
+    Create New Widget Group
+    Name for Group
+
+    >>> press("Widget1")
+    Choose a Group
+    0) Create New Widget Group
+    1) Widget1
+
+    >>> press(1)
+    Widget1
+    Widget Label
+
+    >>> press("My Label")
+
+    """
 
 if __name__ == '__main__':
     os.environ['SEREN_INTERACTIVE_MODE'] = 'True'
-    #t = threading.Thread(target=start_service).start()
     setup()
-    MOCK.DIRECTORY.handle_directory()
+    doctest.testmod()
+    #threading.Thread(target=MOCK.DIRECTORY.handle_directory).start()
+    #MOCK.INPUT_QUEUE=[2,"c1",1,1,0,"Widget1",1,"Widget1",0,1,1]
