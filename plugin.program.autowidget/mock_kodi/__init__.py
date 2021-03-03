@@ -12,6 +12,7 @@ import types
 import runpy
 from urllib.parse import urlparse
 import queue
+import doctest
 
 import polib
 
@@ -81,6 +82,32 @@ def makedirs(name, mode=0o777, exist_ok=False):
         if not exist_ok:
             raise
 
+def pick_item(selected, items, start=0):
+    """
+    >>> abc = ["A","B","C"]
+    >>> pick_item("1", abc)
+    0
+    >>> pick_item("B", abc)
+    1
+    >>> pick_item("blah", abc) is None
+    True
+    >>> pick_item("5", abc) is None
+    True
+    >>> pick_item("0", abc, -1)
+    -1
+    """
+
+    try:
+        action = int(selected) - 1
+    except:
+        action = next((i for i,item in enumerate(items, start) if str(item)==selected), None)
+        if action is None:
+            return None
+    if not(start <= action < len(items)-start):
+        return None
+    return action
+
+
 class Directory:
     """Directory class to keep track of items added to the virtual directory of the mock"""
 
@@ -127,7 +154,7 @@ class Directory:
                 for idx, item in enumerate(self.items):
                     print(" {}) {}".format(idx + 1, item[1]))
 
-                print("")
+                print("-------------------------------")
                 print("Enter Action Number")
                 action = get_input()
                 if self._try_handle_menu_action(action):
@@ -139,10 +166,9 @@ class Directory:
                 else:
                     print("Please enter a valid entry")
 
-    def _try_handle_menu_action(self, action):
-        try:
-            action = int(action) - 1
-        except:
+    def _try_handle_menu_action(self, selected):
+        action = pick_item(selected, ["Back", "Home"]+[str(i[1]) for i in self.items], -2)
+        if action is None:
             return False
         if action == -2:
             if self.history:
@@ -150,16 +176,14 @@ class Directory:
                 self.last_action = ""
             self.current_list_item = None
             return True
-        if action == -1:
+        elif action == -1:
             self.next_action = ""
             self.current_list_item = None
             return True
-        elif -1 < action < len(self.items):
+        else:
             self.next_action = self.items[action][0]
             self.current_list_item = self.items[action][1]
             return True
-        else:
-            return False
 
     def _try_handle_context_menu_action(self, action):
         get_context_check = re.findall(r"^c(\d*)", action)
@@ -181,16 +205,12 @@ class Directory:
                 for idx, item in enumerate(items):
                     print(" {}) {}".format(idx + 1, item[1]))
 
-                print("")
                 action = get_input("Enter Context Menu: ")
-                try:
-                    action = int(action) - 1
-                except:
-                    return False                    
-                if -1 < action < len(items):
-                    self.next_action = items[action][0]
-                    return True
-                return False
+                action = pick_item(action, ["Back", "Cancel"]+[str(i[1]) for i in items], -2)
+                if action is None:
+                    return False            
+                self.next_action = items[action][0]
+                return True
                     
             return True
         return False
@@ -594,6 +614,15 @@ class SerenStubs:
                         "settings.xml",
                     )
                 )
+                addon_dir = os.path.join(
+                    os.path.join(
+                        MOCK.PROFILE_ROOT,
+                        "userdata",
+                        "addon_data",
+                        PLUGIN_NAME,
+                    )
+                )
+                makedirs(addon_dir, exist_ok=True)
                 current_settings_file = os.path.join(
                     os.path.join(
                         MOCK.PROFILE_ROOT,
@@ -872,14 +901,9 @@ class SerenStubs:
                 action = None
                 for idx, i in enumerate(list):
                     print("{}) {}".format(idx, i))
-                while True:
-                    try:
-                        action = int(get_input())
-                    except:
-                        break
-                    if 0 <= action < len(list):
-                        break
-                if action is None:
+                while action is None:
+                    action = pick_item(get_input(), ["Back", "Cancel"] + list, -2)
+                if action < 0:
                     return -1
                 print(list[action])
                 return action
@@ -1248,3 +1272,6 @@ class MockKodiUILanguage(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         MOCK.KODI_UI_LANGUAGE = self.original_language
+
+if __name__ == '__main__':
+    doctest.testmod()

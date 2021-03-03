@@ -28,19 +28,8 @@ def teardown():
 def setup():
     import tempfile
     MOCK.PROFILE_ROOT = tempfile.mkdtemp()
-#    makedirs(os.environ['KODI_PROFILE_ROOT'], exist_ok=True)
 
     _addon = xbmcaddon.Addon()
-    # create dirs
-    _addon_id = _addon.getAddonInfo('id')
-    _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
-    #_addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
-    makedirs(_addon_path, exist_ok=True)
-            
-
-
-    # load the context menus
-    #_addon._config 
 
             # <item library="context_add.py">
             #     <label>$ADDON[plugin.program.autowidget 32003]</label>
@@ -116,26 +105,25 @@ def test_add_widget_group():
     -------------------------------
      1) AutoWidget
      2) Dummy
-    <BLANKLINE>
+    -------------------------------
     Enter Action Number
 
     >>> press("c2")
      1) Add to AutoWidget Group
-    <BLANKLINE>
 
-    >>> press(1)
+    >>> press("Add to AutoWidget Group")
     Add as
     0) Shortcut
     1) Widget
     2) Clone as Shortcut Group
     3) Explode as Widget Group
 
-    >>> press(1)
+    >>> press("Widget")
     Widget
     Choose a Group
     0) Create New Widget Group
 
-    >>> press(0)
+    >>> press("Create New Widget Group")
     Create New Widget Group
     Name for Group
 
@@ -144,7 +132,7 @@ def test_add_widget_group():
     0) Create New Widget Group
     1) Widget1
 
-    >>> press(1)
+    >>> press("Widget1")
     Widget1
     Widget Label
 
@@ -155,12 +143,20 @@ def test_add_widget_group():
     -------------------------------
      1) AutoWidget
      2) Dummy
-    <BLANKLINE>
+    -------------------------------
     Enter Action Number
 
     Ensure the Widget is there
-    >>> press(1)
-
+    >>> press("AutoWidget")
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) My Groups
+     2) Active Widgets
+     3) Tools
+    -------------------------------
+    >>> press("My Groups")
 
     """
 
