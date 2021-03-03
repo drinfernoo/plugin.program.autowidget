@@ -243,15 +243,25 @@ class Directory:
         # handle ListItem or Container infolabels
         ListItem = self.current_list_item
         Container = self
+        class Window:
+            @staticmethod
+            def getInfoLabel(key, *params):
+                if key == 'IsMedia':
+                    return False
         #value = value.replace(".", ".get")
-        v2 = re.sub(r"\.([^\d\W]\w*)\(([.\w]*)\)", r".getInfoLabel('\1','\2')", value) # ListItem.Art(banner)
-        if v2 == value: # HACK
-            v2 = re.sub(r"\.([^\d\W]\w*)([^\(]?)", r".getInfoLabel('\1')\2", value) # ListItem.Art
+        v1 = re.sub(r"\.([^\d\W]\w*)\(([.\w]*)\)", r".getInfoLabel('\1','\2')", value) # ListItem.Art(banner)
+        v2 = re.sub(r"\.(?!getInfoLabel)([^\d\W]\w*)(?!\()", r".getInfoLabel('\1')", v1) # ListItem.Art
         return eval(v2, locals())
+    
+    @property
+    def ListItem(self):
+        return self.current_list_item
 
     def getInfoLabel(self, key):
         if key == 'Content':
             return self.content
+        elif key == 'ListItem':
+            return self.current_list_item
         else:
             raise Exception(f"Not found {key}")
 
@@ -398,6 +408,17 @@ class SerenStubs:
             return ""
 
         @staticmethod
+        def getCondVisibility(value):
+            if value == "Window.IsMedia":
+                return 0
+            res = MOCK.DIRECTORY.executeInfoLabel(value)
+            if res is not None:
+                return res
+            print(f"Couldn't find condition: {value}")
+
+
+
+        @staticmethod
         def getSupportedMedia(media):
             """Returns the supported file types for the specific media as a string"""
             if media == "video":
@@ -443,11 +464,6 @@ class SerenStubs:
             value = "{} - {}".format(levels[level], msg)
             print(value)
             MOCK.LOG_HISTORY.append(value)
-
-        @staticmethod
-        def getCondVisibility(value):
-            if value == "Window.IsMedia":
-                return 0
 
         @staticmethod
         def getLanguage(format=xbmc.ENGLISH_NAME, region=False):
@@ -659,6 +675,7 @@ class SerenStubs:
     class xbmcplugin:
         @staticmethod
         def addDirectoryItem(handle, url, listitem, isFolder=False, totalItems=0):
+            listitem.is_folder = isFolder
             MOCK.DIRECTORY.items.append((url, listitem, isFolder))
 
         @staticmethod
@@ -710,6 +727,7 @@ class SerenStubs:
                 self.ratings = {}
                 self.contentLookup = True
                 self.stream_info = {}
+                self.is_folder = False
 
             def addContextMenuItems(self, items, replaceItems=False):
                 [self.cm.append(i) for i in items]
@@ -797,14 +815,18 @@ class SerenStubs:
 
             def getInfoLabel(self, key, *params):
                 # return value or function
-                if key in self.info:
-                    return self.info[key]
                 if hasattr(self, 'get'+key):
                     return getattr(self, 'get'+key)(*params)
-                
+                if key in self.info:
+                    return self.info[key]
+                else:
+                    return "" # HACK     
 
             def getFolderPath(self):
                 return self._path
+
+            def getIsFolder(self):
+                return self.is_folder
 
         class Window(xbmcgui.Window):
             def __init__(self, windowId=0):

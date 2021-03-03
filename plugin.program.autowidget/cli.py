@@ -119,7 +119,6 @@ def test_add_widget_group():
     1) Widget
     2) Clone as Shortcut Group
     3) Explode as Widget Group
-    4) Settings Shortcut
 
     >>> press(1)
     Widget
@@ -140,6 +139,18 @@ def test_add_widget_group():
     Widget Label
 
     >>> press("My Label")
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) AutoWidget
+     2) Dummy
+    <BLANKLINE>
+    Enter Action Number
+
+    Ensure the Widget is there
+    >>> press(1)
+
 
     """
 
@@ -147,5 +158,3 @@ if __name__ == '__main__':
     os.environ['SEREN_INTERACTIVE_MODE'] = 'True'
     setup()
     doctest.testmod()
-    #threading.Thread(target=MOCK.DIRECTORY.handle_directory).start()
-    #MOCK.INPUT_QUEUE=[2,"c1",1,1,0,"Widget1",1,"Widget1",0,1,1]
