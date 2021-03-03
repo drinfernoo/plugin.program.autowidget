@@ -139,14 +139,6 @@ class Directory:
                 else:
                     print("Please enter a valid entry")
 
-            # old_items = self.items
-            # self.items = []
-            # self._execute_action()
-            # if not self.items:
-            #     self.items = old_items
-            #     self._try_handle_menu_action(-1)
-            # TODO: action that doesn't make a menu
-
     def _try_handle_menu_action(self, action):
         try:
             action = int(action) - 1
@@ -597,7 +589,7 @@ class SerenStubs:
             def _init_user_settings(self):
                 settings_def_file = os.path.join(
                     os.path.join(
-                        MOCK.PROFILE_ROOT,
+                        MOCK.SEREN_ROOT,
                         "resources",
                         "settings.xml",
                     )
@@ -1164,9 +1156,12 @@ class MockKodi:
     """KODIStub mock helper"""
 
     def __init__(self):
-        self.XBMC_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+        here = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+        self.XBMC_ROOT = here
+        #self.XBMC_ROOT = os.environ.get("KODI_ROOT", self.XBMC_ROOT)
         self.PROFILE_ROOT = os.path.abspath(os.path.join(self.XBMC_ROOT, "../"))
-        self.SEREN_ROOT = self.PROFILE_ROOT
+        self.PROFILE_ROOT = os.environ.get("KODI_PROFILE_ROOT", self.PROFILE_ROOT)
+        self.SEREN_ROOT = os.path.abspath(os.path.join(here, "../"))
         self.KODI_UI_LANGUAGE = os.environ.get("KODI_UI_LANGUAGE", "en-gb")
         self.INTERACTIVE_MODE = (
                 os.environ.get("SEREN_INTERACTIVE_MODE", False) == "True"

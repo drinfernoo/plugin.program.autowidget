@@ -21,16 +21,20 @@ def start_service():
     _monitor = refresh.RefreshService()
     _monitor.waitForAbort()
 
+def teardown():
+    import shutil
+    shutil.rmtree(MOCK.PROFILE_ROOT)
+
 def setup():
-    #item.setInfo('video', def_info)
-    #item.setMimeType(def_info.get('mimetype', ''))
-    #item.setArt(def_art)
-    #item.addContextMenuItems(def_cm)
+    import tempfile
+    MOCK.PROFILE_ROOT = tempfile.mkdtemp()
+#    makedirs(os.environ['KODI_PROFILE_ROOT'], exist_ok=True)
+
     _addon = xbmcaddon.Addon()
     # create dirs
     _addon_id = _addon.getAddonInfo('id')
     _addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
-    _addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
+    #_addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
     makedirs(_addon_path, exist_ok=True)
             
 
@@ -164,3 +168,4 @@ if __name__ == '__main__':
     os.environ['SEREN_INTERACTIVE_MODE'] = 'True'
     setup()
     doctest.testmod()
+    teardown()
