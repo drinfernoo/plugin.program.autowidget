@@ -106,10 +106,13 @@ class Directory:
             return
 
         while True:
+            old_items = self.items
             self.items = []
             self._execute_action()
-            self.current_container_item = self.current_list_item
-            self.current_list_item = None
+            if not self.items: # plugin didn't open a menu, keep on teh same one
+                self.items = old_items
+            else:
+                self.current_list_item = None
 
             while True:
 
@@ -135,7 +138,6 @@ class Directory:
                     break
                 else:
                     print("Please enter a valid entry")
-                    time.sleep(1)
 
             # old_items = self.items
             # self.items = []

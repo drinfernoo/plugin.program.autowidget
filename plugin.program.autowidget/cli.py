@@ -90,16 +90,22 @@ def setup():
             )
         xbmcplugin.endOfDirectory(handle=1)
     MOCK.DIRECTORY.register_action("plugin://dummy", dummy_folder)
-    #t = threading.Thread(target=start_service).start()
 
 def press(keys):
     MOCK.INPUT_QUEUE.put(keys)
-    MOCK.INPUT_QUEUE.join()
+    MOCK.INPUT_QUEUE.join() # wait until the action got processed (ie until we wait for more input)
+
+def start_kodi(service=True):
+    threading.Thread(target=MOCK.DIRECTORY.handle_directory, daemon = True).start()
+    time.sleep(0.1) # give the home menu enough time to output
+    if service:
+        service = threading.Thread(target=start_service, daemon = True).start()
+        time.sleep(1) # give the home menu enough time to output
+
 
 def test_add_widget_group():
     """
-    >>> t = threading.Thread(target=MOCK.DIRECTORY.handle_directory, daemon = True)
-    >>> t.start(); time.sleep(1)
+    >>> start_kodi(service=False)
     -------------------------------
     -1) Back
      0) Home
