@@ -146,7 +146,6 @@ def test_add_widget_group():
     -------------------------------
     Enter Action Number
 
-    Ensure the Widget is there
     >>> press("AutoWidget")
     -------------------------------
     -1) Back
@@ -156,8 +155,34 @@ def test_add_widget_group():
      2) Active Widgets
      3) Tools
     -------------------------------
-    >>> press("My Groups")
 
+    >>> press("My Groups")
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) Widget1
+    -------------------------------
+    Enter Action Number
+
+    >>> press("Widget1")
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) My Label
+     2) Widget1 (Static)
+     3) Widget1 (Cycling)
+     4) Widget1 (Merged)
+    -------------------------------
+    Enter Action Number
+
+    >>> press("Widget1 (Cycling)")
+    Choose an Action
+    0) Random Path
+    1) Next Path   
+
+    >>> press("Next Path") 
     """
 
 if __name__ == '__main__':

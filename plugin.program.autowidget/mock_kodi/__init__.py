@@ -224,33 +224,36 @@ class Directory:
                 print("Failed to parse action {}".format(action))
         return False
 
-    def _execute_action(self):
+    def _execute_action(self, next_path=None):
+        if next_path is None:
+            next_path = self.next_action
         #from resources.lib.modules.globals import g
 
         #g.init_globals(["", 0, self.next_action])
         for path,script in sorted(self.action_callbacks.items(), reverse=True):
-            if not self.next_action.startswith(path):
+            if not next_path.startswith(path):
                 continue
             if type(script) == type(""):
-                p = urlparse(self.next_action)
+                p = urlparse(next_path)
                 sys.argv = ["{}://{}".format(p.scheme, p.hostname), 1, "?"+p.query]
                 runpy.run_module(script, run_name='__main__',)
             else:
-                script(self.next_action)
+                script(next_path)
             break
 
-        # for plugin,label,script in self.context_callbacks:
-        #     if not self.next_action.startswith('context://{}/{}'.format(plugin,label)):
-        #         continue
-        #     callback(self.next_action)
-
-    def get_items_dictionary(self):
+    def get_items_dictionary(self, path=None):
         """
         :return:
         :rtype:
         """
-        result = json.loads(json.dumps(self.items, cls=JsonEncoder))
-        self.items = []
+        if path is not None:
+            old_items = self.items
+            self._execute_action(path)
+        result = json.loads(json.dumps([i for _,i,_ in self.items], cls=JsonEncoder))
+        if path is not None:
+            self.items = old_items
+        else:
+            self.items = []
         return result
 
     def executeInfoLabel(self, value):
@@ -307,6 +310,7 @@ class SerenStubs:
                 "getLanguage": SerenStubs.xbmc.getLanguage,
                 "getCondVisibility": SerenStubs.xbmc.getCondVisibility,
                 "executebuiltin": SerenStubs.xbmc.executebuiltin,
+                "executeJSONRPC": SerenStubs.xbmc.executeJSONRPC,
                 "PlayList": SerenStubs.xbmc.PlayList,
                 "Monitor": SerenStubs.xbmc.Monitor,
                 "validatePath": lambda t: t,
@@ -498,7 +502,11 @@ class SerenStubs:
             command = json.loads(jsonrpccommand)
             method = command.get("method")
             if method == 'JSONRPC.Version':
-                res = dict(result=dict(version=[19,0,0]))
+                res = dict(result=dict(version=dict(major=19,minor=0,patch=0)))
+            elif method == "Files.GetDirectory":
+                path = command['params']['directory']
+                files = MOCK.DIRECTORY.get_items_dictionary(path)
+                res = dict(result=dict(files=files))
             else:
                 raise Exception(f"executeJSONRPC not handled for {method}")
             return json.dumps(res)
@@ -811,6 +819,10 @@ class SerenStubs:
             def setProperty(self, key, value):
                 key = key.lower()
                 self._props[key] = value
+
+            def setProperties(self, properties):
+                for key, value in properties.items():
+                    self.setProperty(key, value)
 
             def setThumbnailImage(self, value):
                 self._thumb = value
