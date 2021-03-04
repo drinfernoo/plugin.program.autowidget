@@ -56,17 +56,19 @@ def setup():
     MOCK.DIRECTORY.register_action("plugin://plugin.program.autowidget", "main")
 
     def home(path):
+        url="plugin://plugin.program.autowidget/"
         xbmcplugin.addDirectoryItem(
             handle=1, 
-            url="plugin://plugin.program.autowidget/", 
+            url=url,
             listitem=xbmcgui.ListItem("AutoWidget"),  
             isFolder=True
         )
-        # add our fake plugin    
+        # add our fake plugin  
+        url="plugin://dummy/"  
         xbmcplugin.addDirectoryItem(
             handle=1, 
-            url="plugin://dummy/", 
-            listitem=xbmcgui.ListItem("Dummy"),
+            url=url,
+            listitem=xbmcgui.ListItem("Dummy",path=url),
             isFolder=True
         )
         xbmcplugin.endOfDirectory(handle=1)
@@ -119,12 +121,10 @@ def test_add_widget_group():
     3) Explode as Widget Group
 
     >>> press("Widget")
-    Widget
     Choose a Group
     0) Create New Widget Group
 
     >>> press("Create New Widget Group")
-    Create New Widget Group
     Name for Group
 
     >>> press("Widget1")
@@ -133,7 +133,6 @@ def test_add_widget_group():
     1) Widget1
 
     >>> press("Widget1")
-    Widget1
     Widget Label
 
     >>> press("My Label")
@@ -147,6 +146,7 @@ def test_add_widget_group():
     Enter Action Number
 
     >>> press("AutoWidget")
+    LOGINFO - plugin.program.autowidget: [ root ]
     -------------------------------
     -1) Back
      0) Home
@@ -155,8 +155,10 @@ def test_add_widget_group():
      2) Active Widgets
      3) Tools
     -------------------------------
-
+    Enter Action Number
+    
     >>> press("My Groups")
+    LOGINFO - plugin.program.autowidget: [ mode: group ]
     -------------------------------
     -1) Back
      0) Home
@@ -166,6 +168,7 @@ def test_add_widget_group():
     Enter Action Number
 
     >>> press("Widget1")
+    LOGINFO - plugin.program.autowidget: [ mode: group ][ group: widget1-... ]
     -------------------------------
     -1) Back
      0) Home
@@ -178,11 +181,28 @@ def test_add_widget_group():
     Enter Action Number
 
     >>> press("Widget1 (Cycling)")
+    LOGINFO - plugin.program.autowidget: [ mode: path ][ action: cycling ][ group: widget1-...
     Choose an Action
     0) Random Path
     1) Next Path   
 
-    >>> press("Next Path") 
+    >>> press("Next Path")
+    LOGINFO - plugin.program.autowidget: Empty cache 0B (exp:-1 day, 23:..., last:0:00:00): ... ['...']
+    LOGINFO - plugin.program.autowidget: Blocking cache path read: ...
+    LOGINFO - plugin.program.autowidget: Wrote cache ... (exp:0:02:.., last:0:00:00): ... ['...']    
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) Dummy Item 1
+     2) Dummy Item 2
+     3) Dummy Item 3
+     4) Dummy Item 4
+     ...
+     20) Dummy Item 20
+    -------------------------------
+    Enter Action Number
+
     """
 
 if __name__ == '__main__':

@@ -47,6 +47,8 @@ SUPPORTED_LANGUAGES = {
 
 PLUGIN_NAME = "plugin.program.autowidget"
 
+LOG_LEVEL = "LOGINFO"
+
 def get_input(prompt=""):
     if MOCK.INPUT_QUEUE:
         if MOCK.INPUT_QUEUE.unfinished_tasks:
@@ -241,7 +243,7 @@ class Directory:
                 script(next_path)
             break
 
-    def get_items_dictionary(self, path=None):
+    def get_items_dictionary(self, path=None, properties=[]):
         """
         :return:
         :rtype:
@@ -249,7 +251,7 @@ class Directory:
         if path is not None:
             old_items = self.items
             self._execute_action(path)
-        result = json.loads(json.dumps([i for _,i,_ in self.items], cls=JsonEncoder))
+        result = json.loads(json.dumps([i.toJSONRPC(properties) for _,i,_ in self.items], cls=JsonEncoder))
         if path is not None:
             self.items = old_items
         else:
@@ -263,8 +265,25 @@ class Directory:
         class Window:
             @staticmethod
             def getInfoLabel(key, *params):
-                if key == 'IsMedia':
-                    return False
+                params = [p for p in params if p]
+                a = getattr(Window, key)
+                if a:
+                    return a(*params)
+
+            @staticmethod
+            def IsActive(window):
+                if window=='home':
+                    return self.next_action == ""
+                raise Exception(f"Not handled Window.IsActive({window})")
+
+            @staticmethod
+            def Property(prop):
+                if prop == 'xmlfile':
+                    return '<?xml version="1.0" encoding="UTF-8"?><window></window>'
+
+            @staticmethod
+            def IsMedia():
+                return False
         #value = value.replace(".", ".get")
         v1 = re.sub(r"\.([^\d\W]\w*)\(([.\w]*)\)", r".getInfoLabel('\1','\2')", value) # ListItem.Art(banner)
         v2 = re.sub(r"\.(?!getInfoLabel)([^\d\W]\w*)(?!\()", r".getInfoLabel('\1')", v1) # ListItem.Art
@@ -331,6 +350,7 @@ class SerenStubs:
                 "endOfDirectory": SerenStubs.xbmcplugin.endOfDirectory,
                 "addSortMethod": SerenStubs.xbmcplugin.addSortMethod,
                 "setContent": SerenStubs.xbmcplugin.setContent,
+                "setPluginCategory": SerenStubs.xbmcplugin.setPluginCategory,
             },
             "xbmcvfs": {
                 "File": SerenStubs.xbmcvfs.open,
@@ -418,7 +438,7 @@ class SerenStubs:
                     return "18"
                 if PYTHON3:
                     return "19"
-            elif value.startswith("ListItem.") or value.startswith("Container."):
+            elif any(value.startswith(i) for i in ["ListItem.", "Container.", "Window."]):
                 res = MOCK.DIRECTORY.executeInfoLabel(value)
                 if res is not None:
                     return res
@@ -480,8 +500,9 @@ class SerenStubs:
                     "LOGNONE",
                 ]
             value = "{} - {}".format(levels[level], msg)
-            print(value)
-            MOCK.LOG_HISTORY.append(value)
+            if levels.index(LOG_LEVEL) <= level:
+                print(value)
+                MOCK.LOG_HISTORY.append(value)
 
         @staticmethod
         def getLanguage(format=xbmc.ENGLISH_NAME, region=False):
@@ -505,7 +526,8 @@ class SerenStubs:
                 res = dict(result=dict(version=dict(major=19,minor=0,patch=0)))
             elif method == "Files.GetDirectory":
                 path = command['params']['directory']
-                files = MOCK.DIRECTORY.get_items_dictionary(path)
+                props = command['params'].get('properties',[])
+                files = MOCK.DIRECTORY.get_items_dictionary(path, properties=props)
                 res = dict(result=dict(files=files))
             else:
                 raise Exception(f"executeJSONRPC not handled for {method}")
@@ -725,6 +747,11 @@ class SerenStubs:
             MOCK.DIRECTORY.content = content
 
         @staticmethod
+        def setPluginCategory(handle, category):
+            MOCK.DIRECTORY.content = category
+
+
+        @staticmethod
         def addSortMethod(handle, sortMethod, label2Mask=""):
             MOCK.DIRECTORY.sort_method = sortMethod
 
@@ -759,6 +786,7 @@ class SerenStubs:
                 self.contentLookup = True
                 self.stream_info = {}
                 self.is_folder = False
+                self.mimeType = ''
 
             def addContextMenuItems(self, items, replaceItems=False):
                 [self.cm.append(i) for i in items]
@@ -843,6 +871,9 @@ class SerenStubs:
             def addStreamInfo(self, cType, dictionary):
                 self.stream_info.update({cType: dictionary})
 
+            def setMimeType(self, mimetype):
+                self._props['MimeType'] = mimetype
+
             def __str__(self):
                 return self._label
 
@@ -862,6 +893,19 @@ class SerenStubs:
 
             def getIsFolder(self):
                 return self.is_folder
+
+            def toJSONRPC(self, properties=[]):
+                item = dict(
+                    filetype='direcotry' if self.is_folder else 'file',
+                    title=self._label,
+                    type="unknown",
+                    file=self._path,
+                    label=self._label,
+                    art=self.art,
+                    mimetype=self._props.get('MimeType','')
+                )
+                item.update({k:v for k,v in self.info.items() if k in properties})
+                return item
 
         class Window(xbmcgui.Window):
             def __init__(self, windowId=0):
@@ -917,7 +961,6 @@ class SerenStubs:
                     action = pick_item(get_input(), ["Back", "Cancel"] + list, -2)
                 if action < 0:
                     return -1
-                print(list[action])
                 return action
 
             def textviewer(self, heading, text, usemono=False):
