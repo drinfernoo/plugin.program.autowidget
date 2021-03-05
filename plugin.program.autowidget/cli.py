@@ -170,7 +170,6 @@ def test_add_widget_group():
     Enter Action Number
 
     >>> press("Widget1")
-    LOGINFO - plugin.program.autowidget: [ mode: group ][ group: widget1-... ]
     -------------------------------
     -1) Back
      0) Home

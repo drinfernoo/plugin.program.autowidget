@@ -131,7 +131,6 @@ class Directory:
         :return:
         :rtype:
         """
-        import pdb; pdb.set_trace()
         if not MOCK.INTERACTIVE_MODE:
             return
 
