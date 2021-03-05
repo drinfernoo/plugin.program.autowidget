@@ -189,7 +189,13 @@ def set_color(setting=False):
 
 
 def get_active_window():
-    xml_file = get_infolabel('Window.Property(xmlfile)').lower()
+    # 'home'
+    # 'dialogXXX'
+    # etc...
+    #
+    # 'Window.Property(xmlfile)' gives full path to current window XML, this gives
+    # JUST the title of the file, with no extension
+    xml_file = os.path.basename(get_infolabel('Window.Property(xmlfile)').lower())[:-4]
 
     if xbmc.getCondVisibility('Window.IsMedia()'):
         return 'media'
