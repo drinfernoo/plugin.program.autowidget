@@ -9,5 +9,8 @@
 Thumbs.db
 *~
 .cache
-.vscode/
+lib
+bin
+.venv
+.vscode
 venv/
