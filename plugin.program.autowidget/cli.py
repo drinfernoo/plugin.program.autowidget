@@ -28,6 +28,8 @@ def teardown():
 def setup():
     import tempfile
     MOCK.PROFILE_ROOT = tempfile.mkdtemp()
+    os.environ['SEREN_INTERACTIVE_MODE'] = 'True'
+    MOCK.INTERACTIVE_MODE = True
 
     _addon = xbmcaddon.Addon()
 
@@ -92,7 +94,7 @@ def press(keys):
 
 def start_kodi(service=True):
     threading.Thread(target=MOCK.DIRECTORY.handle_directory, daemon = True).start()
-    time.sleep(0.1) # give the home menu enough time to output
+    time.sleep(1) # give the home menu enough time to output
     if service:
         service = threading.Thread(target=start_service, daemon = True).start()
         time.sleep(1) # give the home menu enough time to output
@@ -206,7 +208,6 @@ def test_add_widget_group():
     """
 
 if __name__ == '__main__':
-    os.environ['SEREN_INTERACTIVE_MODE'] = 'True'
     setup()
     doctest.testmod()
     teardown()
