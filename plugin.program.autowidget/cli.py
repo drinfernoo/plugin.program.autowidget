@@ -170,6 +170,7 @@ def test_add_widget_group():
     Enter Action Number
 
     >>> press("Widget1")
+    LOGINFO - plugin.program.autowidget: [ mode: group ][ group: widget1-... ]
     -------------------------------
     -1) Back
      0) Home
@@ -182,10 +183,10 @@ def test_add_widget_group():
     Enter Action Number
 
     >>> press("Widget1 (Cycling)")
-    LOGINFO - plugin.program.autowidget: [ mode: path ][ action: cycling ][ group: widget1-...
+    LOGINFO - plugin.program.autowidget: [ mode: path ][ action: cycling ][ group: widget1-... ]
     Choose an Action
     0) Random Path
-    1) Next Path   
+    1) Next Path
 
     >>> press("Next Path")
     LOGINFO - plugin.program.autowidget: Empty cache 0B (exp:-1 day, 23:..., last:0:00:00): ... ['...']
@@ -208,5 +209,5 @@ def test_add_widget_group():
 
 if __name__ == '__main__':
     setup()
-    doctest.testmod()
+    doctest.testmod(optionflags=doctest.ELLIPSIS|doctest.REPORT_NDIFF|doctest.REPORT_ONLY_FIRST_FAILURE)
     teardown()
