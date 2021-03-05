@@ -77,7 +77,7 @@ def setup():
     MOCK.DIRECTORY.register_action("", home)
 
     def dummy_folder(path):
-        for i in range(1,20):
+        for i in range(1,21):
             p = "plugin://dummy/item{}".format(i)
             xbmcplugin.addDirectoryItem(
                 handle=1, 
@@ -189,9 +189,9 @@ def test_add_widget_group():
     1) Next Path
 
     >>> press("Next Path")
-    LOGINFO - plugin.program.autowidget: Empty cache 0B (exp:-1 day, 23:..., last:0:00:00): ... ['...']
+    LOGINFO - plugin.program.autowidget: Empty cache 0B (exp:-1 day, ...
     LOGINFO - plugin.program.autowidget: Blocking cache path read: ...
-    LOGINFO - plugin.program.autowidget: Wrote cache ... (exp:0:02:.., last:0:00:00): ... ['...']    
+    LOGINFO - plugin.program.autowidget: Wrote cache ...
     -------------------------------
     -1) Back
      0) Home
@@ -200,7 +200,7 @@ def test_add_widget_group():
      2) Dummy Item 2
      3) Dummy Item 3
      4) Dummy Item 4
-     ...
+    ...
      20) Dummy Item 20
     -------------------------------
     Enter Action Number

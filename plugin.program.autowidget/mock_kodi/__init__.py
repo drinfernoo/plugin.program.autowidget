@@ -250,6 +250,7 @@ class Directory:
         """
         if path is not None:
             old_items = self.items
+            self.items = []
             self._execute_action(path)
         result = json.loads(json.dumps([i.toJSONRPC(properties) for _,i,_ in self.items], cls=JsonEncoder))
         if path is not None:

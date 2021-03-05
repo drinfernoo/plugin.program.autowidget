@@ -13,3 +13,4 @@ lib
 bin
 .venv
 .vscode
+/venv
