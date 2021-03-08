@@ -1,4 +1,4 @@
-from mock_kodi import MOCK
+import mock_kodi
 import os
 import threading
 import xbmcgui
@@ -11,33 +11,31 @@ from urllib.parse import urlparse
 import sys
 import doctest
 import time
+import pytest
+import tempfile
+import shutil
 
 
-def execute_callback():
-    runpy.run_module('foobar', run_name='__main__')
-
-def start_service():
-    from resources.lib import refresh
+@pytest.fixture
+def service():
+    from ..plugin.program.autowidget.resources.lib import refresh # need to ensure loaded late due to caching addon path
     _monitor = refresh.RefreshService()
     _monitor.waitForAbort()
 
-def teardown():
-    import shutil
-    shutil.rmtree(MOCK.PROFILE_ROOT)
-
-def setup():
-    import tempfile
-    MOCK.PROFILE_ROOT = tempfile.mkdtemp()
-    os.environ['SEREN_INTERACTIVE_MODE'] = 'True'
-    MOCK.INTERACTIVE_MODE = True
-
+@pytest.fixture
+def autowidget():
+    mock_kodi.MOCK = mock_kodi.MockKodi()
+    mock_kodi.MOCK.SEREN_ROOT =  os.path.abspath(os.path.join(os.path.dirname(__file__),"../plugin.program.autowidget")) 
+    mock_kodi.MOCK.PROFILE_ROOT = tempfile.mkdtemp()
+    #os.environ['SEREN_INTERACTIVE_MODE'] = 'True'
+    mock_kodi.MOCK.INTERACTIVE_MODE = True
     _addon = xbmcaddon.Addon()
 
             # <item library="context_add.py">
             #     <label>$ADDON[plugin.program.autowidget 32003]</label>
             #     <visible>String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
             # </item>
-    MOCK.DIRECTORY.register_contextmenu(
+    mock_kodi.MOCK.DIRECTORY.register_contextmenu(
         _addon.getLocalizedString(32003),
         "plugin.program.autowidget",
         "context_add", 
@@ -48,34 +46,20 @@ def setup():
             #     <label>$ADDON[plugin.program.autowidget 32006]</label>
             #     <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
             # </item>
-    MOCK.DIRECTORY.register_contextmenu(
+    mock_kodi.MOCK.DIRECTORY.register_contextmenu(
         _addon.getLocalizedString(32006),
         "plugin.program.autowidget",
         "context_refresh", 
         lambda : True
     )
+    path = "plugin://plugin.program.autowidget"
+    mock_kodi.MOCK.DIRECTORY.register_action(path, "main")
+    yield path
+    # teardown after test
+    shutil.rmtree(mock_kodi.MOCK.PROFILE_ROOT)
 
-    MOCK.DIRECTORY.register_action("plugin://plugin.program.autowidget", "main")
-
-    def home(path):
-        url="plugin://plugin.program.autowidget/"
-        xbmcplugin.addDirectoryItem(
-            handle=1, 
-            url=url,
-            listitem=xbmcgui.ListItem("AutoWidget"),  
-            isFolder=True
-        )
-        # add our fake plugin  
-        url="plugin://dummy/"  
-        xbmcplugin.addDirectoryItem(
-            handle=1, 
-            url=url,
-            listitem=xbmcgui.ListItem("Dummy",path=url),
-            isFolder=True
-        )
-        xbmcplugin.endOfDirectory(handle=1)
-    MOCK.DIRECTORY.register_action("", home)
-
+@pytest.fixture
+def dummy():
     def dummy_folder(path):
         for i in range(1,21):
             p = "plugin://dummy/item{}".format(i)
@@ -86,23 +70,46 @@ def setup():
                 isFolder=False
             )
         xbmcplugin.endOfDirectory(handle=1)
-    MOCK.DIRECTORY.register_action("plugin://dummy", dummy_folder)
+    path = "plugin://dummy"
+    mock_kodi.MOCK.DIRECTORY.register_action(path, dummy_folder)
+    return path
+
+@pytest.fixture
+def home_with_dummy(autowidget, dummy):
+    def home(path):
+        url="plugin://plugin.program.autowidget/"
+        xbmcplugin.addDirectoryItem(
+            handle=1, 
+            url=autowidget,
+            listitem=xbmcgui.ListItem("AutoWidget", path=autowidget),  
+            isFolder=True
+        )
+        # add our fake plugin 
+        xbmcplugin.addDirectoryItem(
+            handle=1, 
+            url=dummy,
+            listitem=xbmcgui.ListItem("Dummy",path=dummy),
+            isFolder=True
+        )
+        xbmcplugin.endOfDirectory(handle=1)
+    mock_kodi.MOCK.DIRECTORY.register_action("", home)
 
 def press(keys):
-    MOCK.INPUT_QUEUE.put(keys)
-    MOCK.INPUT_QUEUE.join() # wait until the action got processed (ie until we wait for more input)
+    mock_kodi.MOCK.INPUT_QUEUE.put(keys)
+    mock_kodi.MOCK.INPUT_QUEUE.join() # wait until the action got processed (ie until we wait for more input)
 
-def start_kodi(service=True):
-    threading.Thread(target=MOCK.DIRECTORY.handle_directory, daemon = True).start()
+def start_kodi(use_service=True):
+    threading.Thread(target=mock_kodi.MOCK.DIRECTORY.handle_directory, daemon = True).start()
     time.sleep(1) # give the home menu enough time to output
-    if service:
-        service = threading.Thread(target=start_service, daemon = True).start()
+    if use_service:
+        t = threading.Thread(target=service, daemon = True).start()
         time.sleep(1) # give the home menu enough time to output
 
 
-def test_add_widget_group():
+def test_add_widget_cycling():
     """
-    >>> start_kodi(service=False)
+    >>> getfixture("home_with_dummy") # TODO:
+    >>> start_kodi(False)
     -------------------------------
     -1) Back
      0) Home
@@ -207,7 +214,23 @@ def test_add_widget_group():
 
     """
 
-if __name__ == '__main__':
-    setup()
-    doctest.testmod(optionflags=doctest.ELLIPSIS|doctest.REPORT_NDIFF|doctest.REPORT_ONLY_FIRST_FAILURE)
-    teardown()
+def test_add_widget_merged():
+    """
+    >>> getfixture("home_with_dummy") # TODO:
+    >>> start_kodi(False)
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) AutoWidget
+     2) Dummy
+    -------------------------------
+    Enter Action Number
+    """
+
+# if __name__ == '__main__':
+#     autowidget()
+#     dummy()
+#     home_with_dummy()
+#     doctest.testmod(optionflags=doctest.ELLIPSIS|doctest.REPORT_NDIFF|doctest.REPORT_ONLY_FIRST_FAILURE)
+#     #teardown()

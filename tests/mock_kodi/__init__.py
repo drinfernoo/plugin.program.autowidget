@@ -236,12 +236,24 @@ class Directory:
             if not next_path.startswith(path):
                 continue
             if type(script) == type(""):
-                p = urlparse(next_path)
-                sys.argv = ["{}://{}".format(p.scheme, p.hostname), 1, "?"+p.query]
-                runpy.run_module(script, run_name='__main__',)
+                self._run_addon_script(script, next_path)
             else:
                 script(next_path)
             break
+
+    def _run_addon_script(self, script, path):
+        argv = sys.argv
+        p = urlparse(path)
+        sys.argv = ["{}://{}".format(p.scheme, p.hostname), 1, "?"+p.query]
+
+        sys.path.insert(0, MOCK.SEREN_ROOT) # This allows relative imports to work. There might be a better solution
+        #script = os.path.join(MOCK.SEREN_ROOT, script)
+        # TODO: should really use run_path and include full path seems to get different behaviour for some reason
+        # Context menus worked but main plugin didn't display the menu for some reason
+        runpy.run_module(script, run_name='__main__',)
+        sys.path.pop(0)
+        sys.argv = argv
+
 
     def get_items_dictionary(self, path=None, properties=[]):
         """
@@ -307,11 +319,11 @@ class Directory:
         # TODO: read config from the addon.xml for actions and context menu
         self.action_callbacks[path] = script
 
-    def register_contextmenu(self, label, plugin, module, visible=None):
+    def register_contextmenu(self, label, plugin, script, visible=None):
         # TODO: read config from the addon.xml for actions and context menu
-        path = "plugin://{}/{}".format(plugin, module) # HACK: there is probably an offical way to encode
+        path = "plugin://{}/{}".format(plugin, label.replace(" ", "_")) # HACK: there is probably an offical way to encode
         self.context_callbacks.append((label, path, visible))
-        self.action_callbacks[path] = module
+        self.action_callbacks[path] = script
 
 
 class SerenStubs:

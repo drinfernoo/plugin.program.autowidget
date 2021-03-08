@@ -22,3 +22,4 @@ requests-mock
 Mock
 tzlocal
 Pillow
+pytest
