@@ -976,6 +976,21 @@ class SerenStubs:
                     return -1
                 return action
 
+            def multiselect(
+                    self, heading, list, autoclose=False, preselect=None, useDetails=False
+            ):
+                print(heading)
+                action = None
+                for idx, i in enumerate(list):
+                    print("{}) {}".format(idx, i))
+                while action is None:
+                    selections = get_input().split(',')
+                    for input in selections:
+                        action = pick_item(input, ["Back", "Cancel"] + list, -2)
+                if action < 0:
+                    return -1
+                return action
+
             def textviewer(self, heading, text, usemono=False):
                 print(heading)
                 print(text)

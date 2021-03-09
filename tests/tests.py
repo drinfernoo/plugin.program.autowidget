@@ -94,6 +94,32 @@ def home_with_dummy(autowidget, dummy):
         xbmcplugin.endOfDirectory(handle=1)
     mock_kodi.MOCK.DIRECTORY.register_action("", home)
 
+@pytest.fixture
+def home_with_dummies(autowidget, dummy):
+    def home(path):
+        url="plugin://plugin.program.autowidget/"
+        xbmcplugin.addDirectoryItem(
+            handle=1, 
+            url=autowidget,
+            listitem=xbmcgui.ListItem("AutoWidget", path=autowidget),  
+            isFolder=True
+        )
+        # add our fake plugin 
+        xbmcplugin.addDirectoryItem(
+            handle=1, 
+            url=dummy,
+            listitem=xbmcgui.ListItem("Dummy 1",path=dummy),
+            isFolder=True
+        )
+        xbmcplugin.addDirectoryItem(
+            handle=1, 
+            url=dummy,
+            listitem=xbmcgui.ListItem("Dummy 2",path=dummy),
+            isFolder=True
+        )
+        xbmcplugin.endOfDirectory(handle=1)
+    mock_kodi.MOCK.DIRECTORY.register_action("", home)
+
 def press(keys):
     mock_kodi.MOCK.INPUT_QUEUE.put(keys)
     mock_kodi.MOCK.INPUT_QUEUE.join() # wait until the action got processed (ie until we wait for more input)
@@ -216,16 +242,148 @@ def test_add_widget_cycling():
 
 def test_add_widget_merged():
     """
-    >>> getfixture("home_with_dummy") # TODO:
+    >>> getfixture("home_with_dummies") # TODO:
     >>> start_kodi(False)
     -------------------------------
     -1) Back
      0) Home
     -------------------------------
      1) AutoWidget
-     2) Dummy
+     2) Dummy 1
+     3) Dummy 2
     -------------------------------
     Enter Action Number
+
+    >>> press("c2")
+     1) Add to AutoWidget Group
+
+    >>> press("Add to AutoWidget Group")
+    Add as
+    0) Shortcut
+    1) Widget
+    2) Clone as Shortcut Group
+    3) Explode as Widget Group
+
+    >>> press("Widget")
+    Choose a Group
+    0) Create New Widget Group
+
+    >>> press("Create New Widget Group")
+    Name for Group
+
+    >>> press("Widget1")
+    Choose a Group
+    0) Create New Widget Group
+    1) Widget1
+
+    >>> press("Widget1")
+    Widget Label
+
+    >>> press("Path 1")
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) AutoWidget
+     2) Dummy 1
+     3) Dummy 2
+    -------------------------------
+    Enter Action Number
+
+    >>> press("c3")
+     1) Add to AutoWidget Group
+
+    >>> press("Add to AutoWidget Group")
+    Add as
+    0) Shortcut
+    1) Widget
+    2) Clone as Shortcut Group
+    3) Explode as Widget Group
+
+    >>> press("Widget")
+    Choose a Group
+    0) Create New Widget Group
+    1) Widget1
+
+    >>> press("Widget1")
+    Widget Label
+
+    >>> press("Path 2")
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) AutoWidget
+     2) Dummy 1
+     3) Dummy 2
+    -------------------------------
+    Enter Action Number
+
+    >>> press("AutoWidget")
+    LOGINFO - plugin.program.autowidget: [ root ]
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) My Groups
+     2) Active Widgets
+     3) Tools
+    -------------------------------
+    Enter Action Number
+    
+    >>> press("My Groups")
+    LOGINFO - plugin.program.autowidget: [ mode: group ]
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) Widget1
+    -------------------------------
+    Enter Action Number
+
+    >>> press("Widget1")
+    LOGINFO - plugin.program.autowidget: [ mode: group ][ group: widget1-... ]
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) Path 1
+     2) Path 2
+     3) Widget1 (Static)
+     4) Widget1 (Cycling)
+     5) Widget1 (Merged)
+    -------------------------------
+    Enter Action Number
+
+    >>> press("Widget1 (Merged)")
+    LOGINFO - plugin.program.autowidget: [ mode: path ][ action: merged ][ group: widget1-... ]
+    Choose Paths to Merge
+    0) Path 1
+    1) Path 2
+
+    >>> press("Path 1,Path2")
+    LOGINFO - plugin.program.autowidget: Empty cache 0B (exp:-1 day, ...
+    LOGINFO - plugin.program.autowidget: Blocking cache path read: ...
+    LOGINFO - plugin.program.autowidget: Wrote cache ...
+    -------------------------------
+    -1) Back
+     0) Home
+    -------------------------------
+     1) Dummy Item 1
+     2) Dummy Item 2
+     3) Dummy Item 3
+     4) Dummy Item 4
+    ...
+     20) Dummy Item 20
+     21) Dummy Item 1
+     22) Dummy Item 2
+     23) Dummy Item 3
+     24) Dummy Item 4
+     ...
+     40) Dummy Item 20
+    -------------------------------
+    Enter Action Number
+
     """
 
 # if __name__ == '__main__':
