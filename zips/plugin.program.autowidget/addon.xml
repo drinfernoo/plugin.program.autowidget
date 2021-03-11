@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="3.1.4" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="3.1.7" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.kodi-six" />
         <import addon="script.module.pil" />
@@ -36,6 +36,13 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.1.7
+ - Fix widget cleaning
+ - Fix Active Widgets menu
+3.1.6
+ - Fix detection of JSON-RPC version
+3.1.5
+ - Fix editor dialog
 3.1.4
  - Fix settings shortcuts
  - Fix some Unicode errors
@@ -119,8 +126,6 @@
  - Make artwork for groups and paths more consistent
 2.0.1
  - Add "Toggle Skin Debugging" shortcut
-2.0.0
- - Rewrite most ofut
 2.0.0
  - Rewrite most of add-on functions
  - Add "Static Path" option
