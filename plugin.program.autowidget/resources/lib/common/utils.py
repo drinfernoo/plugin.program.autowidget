@@ -465,7 +465,7 @@ def widgets_for_path(path):
 def cache_files(path, widget_id):
     hash = path2hash(path)
     version = _get_json_version()
-    props = version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12)
+    props = version == (10, 3, 1) or (version[0] >= 11 and version[1] >= 12) or version[0] >= 12
     props_info = info_types + ['customproperties']
     params = {'jsonrpc': '2.0', 'method': 'Files.GetDirectory',
               'params': {'properties': info_types if not props else props_info,
