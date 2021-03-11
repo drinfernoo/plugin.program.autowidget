@@ -124,9 +124,8 @@ def group_menu(group_id):
 
 
 def active_widgets_menu():
-    manage.clean()
-    widgets = sorted(manage.find_defined_widgets(),
-                     key=lambda x: x.get('updated'), reverse=True)
+    widgets = sorted(manage.clean(all=True),
+                     key=lambda x: x.get('updated', 0), reverse=True)
     
     if len(widgets) > 0:
         for widget_def in widgets:
