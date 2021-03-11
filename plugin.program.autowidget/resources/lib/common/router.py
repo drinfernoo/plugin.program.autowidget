@@ -89,7 +89,7 @@ def dispatch(_plugin, _handle, _params):
         utils.wipe()
     elif mode == 'clean':
         if not widget_id:
-            manage.clean(notify=True)
+            manage.clean(notify=True, all=True)
         else:
             edit.remove_widget(widget_id, over=True)
             utils.update_container(True)
