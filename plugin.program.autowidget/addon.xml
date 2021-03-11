@@ -36,6 +36,9 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.1.7
+ - Fix widget cleaning
+ - Fix Active Widgets menu
 3.1.6
  - Fix detection of JSON-RPC version
 3.1.5
