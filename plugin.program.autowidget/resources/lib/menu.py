@@ -124,9 +124,8 @@ def group_menu(group_id):
 
 
 def active_widgets_menu():
-    manage.clean()
-    widgets = sorted(manage.find_defined_widgets(),
-                     key=lambda x: x.get('updated'), reverse=True)
+    widgets = sorted(manage.clean(all=True),
+                     key=lambda x: x.get('updated', 0), reverse=True)
     
     if len(widgets) > 0:
         for widget_def in widgets:
@@ -151,7 +150,7 @@ def active_widgets_menu():
                 except:
                     pass
                 
-                title = '{} - {}'.format(label, group_def['label'])
+                title = '{} - {}'.format(six.ensure_text(label), six.ensure_text(group_def['label']))
             elif group_def:
                 title = group_def.get('label')
 
@@ -332,7 +331,12 @@ def call_path(path_id):
     utils.call_builtin('Dialog.Close(busydialog)', 500)
     final_path = ''
     
-    if path_def['target'] == 'shortcut' and path_def['file']['filetype'] == 'file' \
+    if path_def['target'] == 'settings':
+        final_path = 'Addon.OpenSettings({})'.format(path_def['file']['file']
+                                                     .replace('plugin://', '')
+                                                     .replace('script://', '')
+                                                     .split('/')[0])
+    elif path_def['target'] == 'shortcut' and path_def['file']['filetype'] == 'file' \
                                         and path_def['content'] != 'addons':
         if path_def['file']['file'] == 'addons://install/':
             final_path = 'InstallFromZip'
@@ -352,9 +356,6 @@ def call_path(path_id):
                                         or path_def['content'] == 'addons':
         final_path = 'ActivateWindow({},{},return)'.format(path_def.get('window', 'Videos'),
                                                            path_def['file']['file'])
-    elif path_def['target'] == 'settings':
-        final_path = 'Addon.OpenSettings({})'.format(path_def['file']['file']
-                                                     .replace('plugin://', ''))
         
     if final_path:
         utils.log('Calling path from {} using {}'.format(path_id, final_path), 'debug')
@@ -463,7 +464,12 @@ def merged_path(group_id, widget_id):
 
 
 def _create_context_items(group_id, path_id, idx, length, target):
-    cm = [(utils.get_string(32048) if target == 'shortcut' else utils.get_string(32140),
+    if target not in ['shortcut', 'widget']:
+        main_action = utils.get_string(32140)
+    else:
+        main_action = utils.get_string(32048) if target == 'shortcut' else utils.get_string(32141)
+
+    cm = [(main_action,
               ('RunPlugin('
                'plugin://plugin.program.autowidget/'
                '?mode=manage'

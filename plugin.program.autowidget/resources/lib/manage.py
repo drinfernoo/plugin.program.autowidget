@@ -8,7 +8,12 @@ import random
 from resources.lib.common import utils
 
 
-def clean(widget_id=None, notify=False):
+def clean(widget_id=None, notify=False, all=False):
+    if all:
+        for widget in find_defined_widgets():
+            clean(widget_id=widget['id'])
+        return find_defined_widgets()
+    
     files = []
     dialog = xbmcgui.Dialog()
     skin_shortcuts = os.path.join(utils._addon_data, 'script.skinshortcuts')

@@ -56,7 +56,7 @@ def dispatch(_plugin, _handle, _params):
         elif action == 'shift_path' and group and path_id and target:
             edit.shift_path(group, path_id, target)
         elif action == 'edit':
-            edit.edit_dialog(group)
+            edit.edit_dialog(group, type='group')
         elif action == 'edit_path':
             edit.edit_dialog(group, path_id)
         elif action == 'edit_widget':
@@ -93,7 +93,7 @@ def dispatch(_plugin, _handle, _params):
         utils.wipe()
     elif mode == 'clean':
         if not widget_id:
-            manage.clean(notify=True)
+            manage.clean(notify=True, all=True)
         else:
             edit.remove_widget(widget_id, over=True)
             utils.update_container(True)
