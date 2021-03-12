@@ -581,4 +581,8 @@ msgstr "Registro de depuración"
 
 msgctxt "#32140"
 msgid "Edit Widget"
-msgstr "Editar widget"				
+msgstr "Editar widget"
+
+msgctxt "#32141"
+msgid "Edit Path"
+msgstr "Editar ruta"
