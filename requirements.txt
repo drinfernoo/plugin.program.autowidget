@@ -23,3 +23,5 @@ Mock
 tzlocal
 Pillow
 pytest
+pytest-cov
+coveralls

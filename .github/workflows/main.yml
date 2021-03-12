@@ -27,7 +27,7 @@ jobs:
             pytest
       - name: createcoverage
         run: |
-            pytest --cov=resources/lib
+            pytest --cov=plugin.program.autowidget
             coveralls
       - name: make package
         run: |
