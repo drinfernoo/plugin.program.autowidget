@@ -16,8 +16,6 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#This is a comment
-
 msgctxt "#32000"
 msgid "General"
 msgstr ""
@@ -95,7 +93,7 @@ msgid "Create a new group of shortcuts."
 msgstr ""
 
 msgctxt "#32019"
-msgid "View the "{}" group."
+msgid "View the \"{}\" group."
 msgstr ""
 
 msgctxt "#32020"
@@ -563,7 +561,7 @@ msgid "Predefined Color"
 msgstr ""
 
 msgctxt "#32136"
-msgid "Hex codes must be of the format "#RRGGBB"."
+msgid "Hex codes must be of the format \"#RRGGBB\"."
 msgstr ""
 
 msgctxt "#32137"

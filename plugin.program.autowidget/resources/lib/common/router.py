@@ -10,6 +10,7 @@ from resources.lib import manage
 from resources.lib import refresh
 from resources.lib.common import directory
 from resources.lib.common import utils
+from resources.lib import common
 
 
 def _log_params(_plugin, _handle, _params):
@@ -27,6 +28,9 @@ def _log_params(_plugin, _handle, _params):
 
 
 def dispatch(_plugin, _handle, _params):
+    common.dispatched_plugin = _plugin
+    common.dispatched_handle = _handle
+    
     params = _log_params(_plugin, int(_handle), _params)
     category = 'AutoWidget'
     is_dir = False

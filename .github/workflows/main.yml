@@ -1,0 +1,113 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      - "master"
+      - "releases/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: install
+        run: |
+            pip install -r requirements.txt
+
+      - name: test
+        run: |
+            pytest
+      - name: createcoverage
+        run: |
+            pytest --cov=plugin.program.autowidget
+      # - name: Coveralls
+      #   uses: coverallsapp/github-action@master
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}            
+      - name: make package
+        run: |
+          sed -i "s/name=\"AutoWidget\" version=\"CURRENT_VERSION\"/name=\"AutoWidget\" version=\"${CIRCLE_TAG-0.0.$CIRCLE_BUILD_NUM}\"/" ./plugin.program.autowidget/addon.xml
+          zip -Xr /tmp/plugin.program.autowidget.zip plugin.program.autowidget
+      # - store_artifacts:
+      #     path: /tmp/plugin.program.autowidget.zip
+      # - persist_to_workspace:
+      #     root: /tmp
+      #     paths:
+      #       - plugin.program.autowidget.zip
+
+
+# circle ci config
+
+# jobs:
+#   build:
+#     docker:
+#       - image: circleci/python:2
+#     steps:
+#       - checkout
+#   release:
+#     parameters:
+#       commit_branch:
+#         type: string
+#         default: repo
+#       overwrite:
+#         type: boolean
+#         default: false
+#     docker:
+#       - image: circleci/python:2
+#     steps:
+#       - attach_workspace:
+#           at: /tmp
+#       - checkout
+#       - run: |
+#           git checkout << parameters.commit_branch >>
+#           python create_repository.py -d ./zips /tmp/plugin.program.autowidget.zip
+#           find ./zips -name "*.zip" | xargs python create_repository.py -d ./zips
+#       - unless:
+#           condition: << parameters.overwrite >>
+#           steps:
+#             run: git ls-files -m ./zips/|grep -v ".zip"
+#       - run: |
+#           git add ./zips
+#           git commit -m "Release version ${CIRCLE_TAG-0.0.$CIRCLE_BUILD_NUM}"
+#           git push
+# workflows:
+#   version: 2
+#   build_and_release:
+#     jobs:
+#       - build:
+#           filters:
+#             tags:
+#               only: /.*/
+#             branches:
+#               ignore:
+#                 - repo
+#                 - devrepo
+#       - release:
+#           context: publish
+#           requires:
+#             - build
+#           filters:
+#             branches:
+#               ignore: /.*/
+#             tags:
+#               only: /.*/
+#       - release:
+#           commit_branch: devrepo
+#           overwrite: true
+#           context: publish
+#           requires:
+#             - build
+#           filters:
+#             branches:
+#               ignore:
+#                 - devrepo
+#                 - master
+#                 - repo

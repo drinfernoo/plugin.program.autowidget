@@ -1,4 +1,4 @@
-from kodi_six import xbmcgui
+import xbmcgui
 
 import re
 import uuid
@@ -313,7 +313,7 @@ def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, 
 
             directory.add_menu_item(title=title[0],
                                     path=file['file'],
-                                    art=file['art'],
+                                    art=file.get('art',{}),
                                     info=file,
                                     isFolder=file['filetype'] == 'directory',
                                     props=properties)
