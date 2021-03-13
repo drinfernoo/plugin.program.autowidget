@@ -106,6 +106,8 @@ def add_menu_item(title, params=None, path=None, info={}, cm=None, art=None,
             def_info['duration'] = runtime
             
         resume = info.get('resume', {})
+        if 'resume' in def_info:
+            def_info.pop('resume')
         if resume.get('position', 0) > 0:
             props['ResumeTime'] = six.text_type(resume['position'])
             props['TotalTime'] = six.text_type(resume['total'])
