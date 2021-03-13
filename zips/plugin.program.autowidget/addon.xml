@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1113" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1160" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.kodi-six" />
         <import addon="script.module.pil" />
@@ -36,6 +36,18 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.1.3
+ - Fix hashing in Matrix
+3.1.2
+ - Fix "Clear Cache"
+3.1.1
+ - Fixes for cache mechanism
+ - Add "Force Refresh Widgets" to context menu for AutoWidget items
+3.1.0
+ - Improved background caching for paths that change frequently
+ - Fix unneeded refreshes
+ - Fix caching on merged widgets
+ - Fix more Unicode errors
 3.0.2
  - Fix bug in background caching
 3.0.1
@@ -108,19 +120,6 @@
  - Add "Static Path" option
  - Add "Merged Path" option
  - Add "Paged Widgets"
- - Revamp editor dialog
- - More complete skin compatibility
- - More miscellaneous fixes
-1.6.8
- - Add setting for notification sound
-1.6.7
- - Fix crash when window cannot be detected. Notably fixes Disney+ support.
-1.6.6
- - Fix extract location
-1.6.5
- - Add backup/restore features
-1.6.4
- - Fix more rogue refreshets"
  - Revamp editor dialog
  - More complete skin compatibility
  - More miscellaneous fixes
