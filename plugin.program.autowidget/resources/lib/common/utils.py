@@ -54,7 +54,7 @@ info_types = ['artist', 'albumartist', 'genre', 'year', 'rating',
               'firstaired', 'episode', 'showtitle', 'artistid', 'albumid',
               'tvshowid', 'setid', 'watchedepisodes', 'displayartist', 'mimetype',
               'albumartistid', 'description', 'albumlabel', 'sorttitle', 'episodeguide',
-              'dateadded', 'lastmodified', 'specialsortseason', 'specialsortepisode']
+              'dateadded', 'lastmodified', 'specialsortseason', 'specialsortepisode', 'resume']
 
 art_types = ['banner', 'clearart', 'clearlogo', 'fanart', 'icon', 'landscape',
              'poster', 'thumb']

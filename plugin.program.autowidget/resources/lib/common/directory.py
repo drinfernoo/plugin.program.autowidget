@@ -58,12 +58,11 @@ def add_sort_methods(handle):
         xbmcplugin.addSortMethod(handle, method)
         
     
-def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
-                  isFolder=False, props=None):
+def add_menu_item(title, params=None, path=None, info={}, cm=None, art=None,
+                  isFolder=False, props={}):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
     
-
     if params is not None:
         encode = {k: params[k] for k, v in params.items() if k not in _exclude_params}
 
@@ -77,7 +76,8 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
     if isinstance(title, int):
         title = utils.get_string(title)
     
-    def_info = {}
+    item = xbmcgui.ListItem(title)
+    
     if info:
         def_info = {x: info[x] for x in info if x not in _exclude_keys}
         mediatype = info.get('type', 'video')
@@ -100,21 +100,18 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
                 def_info[key] = ' / '.join(i)
             else:
                 def_info[key] = six.text_type(i)
-    
-    def_art = {}
-    if art:
-        def_art.update(art)
-    
-    def_cm = []
-    if cm:
-        def_cm.extend(cm)
-    
-    # build list item
-    item = xbmcgui.ListItem(title)
-    item.setInfo('video', def_info)
-    item.setMimeType(def_info.get('mimetype', ''))
-    item.setArt(def_art)
-    item.addContextMenuItems(def_cm)
+        
+        runtime = info.get('runtime', 0)
+        if runtime > 0:
+            def_info['duration'] = runtime
+            
+        resume = info.get('resume', {})
+        if resume.get('position', 0) > 0:
+            props['ResumeTime'] = six.text_type(resume['position'])
+            props['TotalTime'] = six.text_type(resume['total'])
+        
+        item.setInfo('video', def_info)
+        item.setMimeType(def_info.get('mimetype', ''))
     
     if props:
         try:
@@ -122,6 +119,12 @@ def add_menu_item(title, params=None, path=None, info=None, cm=None, art=None,
         except AttributeError:
             for prop in props:
                 item.setProperty(prop, props[prop])
+    
+    if art:
+        item.setArt(art)
+    
+    if cm:
+        item.addContextMenuItems(cm)
 
     xbmcplugin.addDirectoryItem(handle=_handle, url=_plugin, listitem=item,
                                 isFolder=isFolder)
