@@ -1,6 +1,7 @@
 from kodi_six import xbmc
 from kodi_six import xbmcaddon
 from kodi_six import xbmcgui
+from kodi_six import xbmcvfs
 
 import codecs
 import contextlib
@@ -23,17 +24,22 @@ try:
 except ImportError:
     from urlparse import unquote
 
+try:
+    translate_path = xbmcvfs.translatePath
+except AttributeError:
+    translate_path = xbmc.translatePath
+
 DEFAULT_CACHE_TIME = 60*5
 
 _addon = xbmcaddon.Addon()
 _addon_id = _addon.getAddonInfo('id')
-_addon_path = xbmc.translatePath(_addon.getAddonInfo('profile'))
-_addon_root = xbmc.translatePath(_addon.getAddonInfo('path'))
+_addon_path = translate_path(_addon.getAddonInfo('profile'))
+_addon_root = translate_path(_addon.getAddonInfo('path'))
 _addon_version = _addon.getAddonInfo('version')
-_addon_data = xbmc.translatePath('special://profile/addon_data/')
+_addon_data = translate_path('special://profile/addon_data/')
 
 _art_path = os.path.join(_addon_root, 'resources', 'media')
-_home = xbmc.translatePath('special://home/')
+_home = translate_path('special://home/')
 _playback_history_path = os.path.join(_addon_path, "cache.history")
 
 windows = {'programs': ['program', 'script'],
@@ -111,7 +117,7 @@ def wipe(folder=_addon_path):
 
     if choice:
         for root, dirs, files in os.walk(folder):
-            backup_location = xbmc.translatePath(
+            backup_location = translate_path(
                                   _addon.getSetting('backup.location'))
             for name in files:
                 file = os.path.join(root, name)
@@ -354,10 +360,6 @@ def get_skin_string(string):
 
 def set_skin_string(string, value):
     xbmc.executebuiltin('Skin.SetString({},{})'.format(string, value))
-
-
-def translate_path(path):
-    return xbmc.translatePath(path)
 
 
 def get_string(_id):
