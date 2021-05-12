@@ -310,6 +310,9 @@ def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, 
             
             if (hide_watched and file.get('playcount', 0) > 0) or dupe:
                 continue
+            
+            if not file['art'].get('landscape') and file['art'].get('thumb'):
+                file['art']['landscape'] = file['art']['thumb']
 
             directory.add_menu_item(title=title[0],
                                     path=file['file'],
