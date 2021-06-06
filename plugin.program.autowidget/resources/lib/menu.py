@@ -231,7 +231,7 @@ def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, 
     if not titles:
         titles = []
     
-    files = refresh.get_files_list(path, titles, widget_id)
+    files = refresh.get_files_list(path, widget_id)
     if not files:
         return titles, path_label
     
@@ -302,19 +302,19 @@ def show_path(group_id, path_label, widget_id, path, idx=0, titles=None, num=1, 
                                     isFolder=not paged_widgets or merged,
                                     props=properties)
         else:
-            dupe = False
-            title = (file['label'], file.get('imdbnumber'))
-            for t in titles:
-                if t == title:
-                    dupe = True
-            
+            title = {'type': file.get('type'),
+                     'label': file.get('label'),
+                     'imdbnumber': file.get('imdbnumber'),
+                     'showtitle': file.get('showtitle')}
+            dupe = refresh.is_duplicate(title, titles)
+
             if (hide_watched and file.get('playcount', 0) > 0) or dupe:
                 continue
             
             if not file['art'].get('landscape') and file['art'].get('thumb'):
                 file['art']['landscape'] = file['art']['thumb']
 
-            directory.add_menu_item(title=title[0],
+            directory.add_menu_item(title=file['label'],
                                     path=file['file'],
                                     art=file['art'],
                                     info=file,
