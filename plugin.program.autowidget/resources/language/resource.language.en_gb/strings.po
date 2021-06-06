@@ -471,7 +471,7 @@ msgid "Shift Path to Top"
 msgstr ""
 
 msgctxt "#32113"
-msgid "Shift Page to Bottom"
+msgid "Shift Path to Bottom"
 msgstr ""
 
 msgctxt "#32114"

@@ -472,7 +472,7 @@ msgid "Shift Path to Top"
 msgstr "Mover al inicio"
 
 msgctxt "#32113"
-msgid "Shift Page to Bottom"
+msgid "Shift Path to Bottom"
 msgstr "Mover al fondo"
 
 msgctxt "#32114"
