@@ -207,6 +207,8 @@ def _get_widget_options(edit_def):
                 elif label in ['merged', 'static']: 
                     continue
             elif key == 'refresh':
+                if edit_def['action'] in ['static', 'merged']:
+                    continue
                 hh = int(_def) 
                 mm = int((_def * 60)  % 60) 
                 if hh and mm: 
@@ -225,10 +227,10 @@ def _get_widget_options(edit_def):
                         paths.append(i['label'])
                     label = ', '.join(paths)
                 else:
-                    label = _def['label']
+                    label = _def
                     
                 try:
-                    label = label.encode('utf-8')
+                    label = six.ensure_text(label)
                 except:
                     pass
             
