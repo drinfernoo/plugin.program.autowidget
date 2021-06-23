@@ -586,3 +586,11 @@ msgstr "Editar widget"
 msgctxt "#32141"
 msgid "Edit Path"
 msgstr "Editar ruta"
+
+msgctxt "#32142"
+msgid "Hide Duplicates"
+msgstr "Ocultar duplicados"
+
+msgctxt "#32143"
+msgid "Preferir episodio si el programa está disponible"
+msgstr ""

@@ -8,8 +8,8 @@
         <setting label="$ADDON[plugin.program.autowidget 32106]" type="bool" id="widgets.hide_watched" default="false" />
         <setting label="$ADDON[plugin.program.autowidget 32104]" type="enum" id="widgets.show_next" lvalues="32087|32109|32085" default="1" />
         <setting label="$ADDON[plugin.program.autowidget 32107]" type="bool" id="widgets.paged" default="true" />
-		<setting label="Hide Duplicates" type="bool" id="widgets.hide_duplicates" default="true" />
-		<setting label="Prefer Episode if Show Available" subsetting="true" type="bool" id="widgets.prefer_episodes" default="true" enable="eq(-1,true)" />
+		<setting label="$ADDON[plugin.program.autowidget 32142]" type="bool" id="widgets.hide_duplicates" default="true" />
+		<setting label="$ADDON[plugin.program.autowidget 32143]" subsetting="true" type="bool" id="widgets.prefer_episodes" default="true" enable="eq(-1,true)" />
         
         <!-- Path Service -->
         <setting label="$ADDON[plugin.program.autowidget 32001]" type="lsep" />
