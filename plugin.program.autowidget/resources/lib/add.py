@@ -13,93 +13,108 @@ from resources.lib import manage
 from resources.lib import refresh
 from resources.lib.common import utils
 
-shortcut_types = [utils.get_string(32051), utils.get_string(32052),
-                  utils.get_string(32082), utils.get_string(32083),
-                  utils.get_string(32053)]
+shortcut_types = [
+    utils.get_string(32051),
+    utils.get_string(32052),
+    utils.get_string(32082),
+    utils.get_string(32083),
+    utils.get_string(32053),
+]
 
-folder_shortcut = utils.get_art('folder-shortcut')
-folder_sync = utils.get_art('folder-sync')
-folder_settings = utils.get_art('folder-settings')
-folder_clone = utils.get_art('folder-clone')
-folder_explode = utils.get_art('folder-explode')
+folder_shortcut = utils.get_art("folder-shortcut")
+folder_sync = utils.get_art("folder-sync")
+folder_settings = utils.get_art("folder-settings")
+folder_clone = utils.get_art("folder-clone")
+folder_explode = utils.get_art("folder-explode")
 
 dialog = xbmcgui.Dialog()
 
 
 def add(labels):
-    _type = _add_as(labels['file'])
+    _type = _add_as(labels["file"])
     if not _type:
         return
-    
-    if _type not in ['clone', 'explode']:
-        labels['target'] = _type
+
+    if _type not in ["clone", "explode"]:
+        labels["target"] = _type
         group_def = _group_dialog(_type)
         if group_def:
             _add_path(group_def, labels)
-    elif _type == 'clone':
-        labels['target'] = 'shortcut'
+    elif _type == "clone":
+        labels["target"] = "shortcut"
         _copy_path(labels)
-    elif _type == 'explode':
-        labels['target'] = 'widget'
+    elif _type == "explode":
+        labels["target"] = "widget"
         _copy_path(labels)
-        
-    utils.update_container(_type == 'shortcut')
-            
-            
-def build_labels(source, path_def=None, target=''):
-    if source == 'context' and not path_def and not target:
-        labels = {'label': utils.get_infolabel('ListItem.Label'),
-                  'content': utils.get_infolabel('Container.Content')}
-        
-        path_def = {'file': utils.get_infolabel('ListItem.FolderPath'),
-                    'filetype': 'directory' if utils.get_condition('Container.ListItem.IsFolder') else 'file',
-                    'art': {}}  # would be fun to set some "placeholder" art here
+
+    utils.update_container(_type == "shortcut")
+
+
+def build_labels(source, path_def=None, target=""):
+    if source == "context" and not path_def and not target:
+        labels = {
+            "label": utils.get_infolabel("ListItem.Label"),
+            "content": utils.get_infolabel("Container.Content"),
+        }
+
+        path_def = {
+            "file": utils.get_infolabel("ListItem.FolderPath"),
+            "filetype": "directory"
+            if utils.get_condition("Container.ListItem.IsFolder")
+            else "file",
+            "art": {},
+        }  # would be fun to set some "placeholder" art here
 
         for i in utils.info_types:
-            info = utils.get_infolabel('ListItem.{}'.format(i.capitalize()))
-            if info and not info.startswith('ListItem'):
+            info = utils.get_infolabel("ListItem.{}".format(i.capitalize()))
+            if info and not info.startswith("ListItem"):
                 path_def[i] = info
 
         for i in utils.art_types:
-            art = utils.get_infolabel('ListItem.Art({})'.format(i))
+            art = utils.get_infolabel("ListItem.Art({})".format(i))
             if art:
-                path_def['art'][i] = utils.clean_artwork_url(art)
-        for i in ['icon', 'thumb']:
-            art = utils.clean_artwork_url(utils.get_infolabel('ListItem.{}'.format(i)))
+                path_def["art"][i] = utils.clean_artwork_url(art)
+        for i in ["icon", "thumb"]:
+            art = utils.clean_artwork_url(utils.get_infolabel("ListItem.{}".format(i)))
             if art:
-                path_def['art'][i] = art
-    elif source == 'json' and path_def and target:
-        labels = {'label': path_def['label'],
-                  'content': '',
-                  'target': target}
+                path_def["art"][i] = art
+    elif source == "json" and path_def and target:
+        labels = {"label": path_def["label"], "content": "", "target": target}
 
-    labels['file'] = path_def if path_def else {key: path_def[key] for key in path_def if path_def[key]}
-    path = labels['file']['file']
+    labels["file"] = (
+        path_def
+        if path_def
+        else {key: path_def[key] for key in path_def if path_def[key]}
+    )
+    path = labels["file"]["file"]
 
-    if path != 'addons://user/':
-        path = path.replace('addons://user/', 'plugin://')
-    if 'plugin://plugin.video.themoviedb.helper' in path and not '&widget=True' in path:
-        path += '&widget=True'            
-    labels['file']['file'] = path
+    if path != "addons://user/":
+        path = path.replace("addons://user/", "plugin://")
+    if "plugin://plugin.video.themoviedb.helper" in path and not "&widget=True" in path:
+        path += "&widget=True"
+    labels["file"]["file"] = path
 
-    labels['color'] = utils.get_setting('ui.color')
+    labels["color"] = utils.get_setting("ui.color")
 
     for _key in utils.windows:
         if any(i in path for i in utils.windows[_key]):
-            labels['window'] = _key
+            labels["window"] = _key
 
     return labels
 
 
 def _add_as(path_def):
     art = [folder_shortcut, folder_sync, folder_clone, folder_explode, folder_settings]
-    
-    path = path_def['file']
+
+    path = path_def["file"]
     types = shortcut_types[:]
-    if path_def['filetype'] == 'directory' and utils.get_active_window() != 'home':
+    if path_def["filetype"] == "directory" and utils.get_active_window() != "home":
         types = shortcut_types[:4]
     else:
-        if (any(i in path for i in ['addons://user', 'plugin://', 'script://']) and not parse_qsl(path)) or ('widget', 'True') in parse_qsl(path):
+        if (
+            any(i in path for i in ["addons://user", "plugin://", "script://"])
+            and not parse_qsl(path)
+        ) or ("widget", "True") in parse_qsl(path):
             pass
         else:
             types = [shortcut_types[0]]
@@ -107,37 +122,37 @@ def _add_as(path_def):
     options = []
     for idx, type in enumerate(types):
         li = xbmcgui.ListItem(type)
-        
+
         li.setArt(art[idx])
         options.append(li)
-    
+
     idx = dialog.select(utils.get_string(32084), options, useDetails=True)
     if idx < 0:
         return
-    
+
     chosen = types[idx]
     if chosen == shortcut_types[0]:
-        return 'shortcut'
+        return "shortcut"
     elif chosen == shortcut_types[1]:
-        return 'widget'
+        return "widget"
     elif chosen == shortcut_types[2]:
-        return 'clone'
+        return "clone"
     elif chosen == shortcut_types[3]:
-        return 'explode'
+        return "explode"
     elif chosen == shortcut_types[4]:
-        return 'settings'
-            
-            
+        return "settings"
+
+
 def _group_dialog(_type, group_id=None):
-    _type = 'shortcut' if _type == 'settings' else _type
+    _type = "shortcut" if _type == "settings" else _type
     groups = manage.find_defined_groups(_type)
-    ids = [group['id'] for group in groups]
-    
+    ids = [group["id"] for group in groups]
+
     index = -1
     options = []
     offset = 1
-    
-    if _type == 'widget':
+
+    if _type == "widget":
         new_widget = xbmcgui.ListItem(utils.get_string(32015))
         new_widget.setArt(folder_sync)
         options.append(new_widget)
@@ -145,84 +160,87 @@ def _group_dialog(_type, group_id=None):
         new_shortcut = xbmcgui.ListItem(utils.get_string(32017))
         new_shortcut.setArt(folder_shortcut)
         options.append(new_shortcut)
-        
+
     if group_id:
         index = ids.index(group_id) + 1
-    
+
     for group in groups:
-        item = xbmcgui.ListItem(group['label'])
-        item.setArt(folder_sync if group['type'] == 'widget' else folder_shortcut)
+        item = xbmcgui.ListItem(group["label"])
+        item.setArt(folder_sync if group["type"] == "widget" else folder_shortcut)
         options.append(item)
-    
-    choice = dialog.select(utils.get_string(32054), options, preselect=index,
-                           useDetails=True)
-    
+
+    choice = dialog.select(
+        utils.get_string(32054), options, preselect=index, useDetails=True
+    )
+
     if choice < 0:
-        dialog.notification('AutoWidget', utils.get_string(32034))
-    elif (choice, _type) == (0, 'widget'):
-        return _group_dialog(_type, add_group('widget'))
+        dialog.notification("AutoWidget", utils.get_string(32034))
+    elif (choice, _type) == (0, "widget"):
+        return _group_dialog(_type, add_group("widget"))
     elif choice == 0:
-        return _group_dialog(_type, add_group('shortcut'))
+        return _group_dialog(_type, add_group("shortcut"))
     else:
         return groups[choice - offset]
 
 
-def add_group(target, group_name=''):
-    group_name = dialog.input(heading=utils.get_string(32037),
-                              defaultt=group_name)
-    group_id = ''
-    
+def add_group(target, group_name=""):
+    group_name = dialog.input(heading=utils.get_string(32037), defaultt=group_name)
+    group_id = ""
+
     if group_name:
         group_id = utils.get_unique_id(group_name)
-        filename = os.path.join(utils._addon_path, '{}.group'.format(group_id))
-        group_def = {'label': group_name,
-                     'type': target,
-                     'paths': [],
-                     'id': group_id,
-                     'art': folder_sync if target == 'widget' else folder_shortcut,
-                     'version': utils._addon_version}
-    
+        filename = os.path.join(utils._addon_path, "{}.group".format(group_id))
+        group_def = {
+            "label": group_name,
+            "type": target,
+            "paths": [],
+            "id": group_id,
+            "art": folder_sync if target == "widget" else folder_shortcut,
+            "version": utils._addon_version,
+        }
+
         utils.write_json(filename, group_def)
     else:
-        dialog.notification('AutoWidget', utils.get_string(32038))
-    
+        dialog.notification("AutoWidget", utils.get_string(32038))
+
     return group_id
-    
-    
+
+
 def _add_path(group_def, labels, over=False):
     if not over:
-        if group_def['type'] == 'shortcut':
+        if group_def["type"] == "shortcut":
             heading = utils.get_string(32043)
-        elif group_def['type'] == 'widget':
+        elif group_def["type"] == "widget":
             heading = utils.get_string(32044)
-        
-        labels['label'] = dialog.input(heading=heading, defaultt=labels['label'])
-                                                 
-    labels['id'] = utils.get_unique_id(labels['label'])
-    labels['version'] = utils._addon_version
-    
-    if labels['target'] == 'settings':
-        labels['file']['filetype'] = 'file'
-        labels['file']['file'] = labels['file']['file'].split('&')[0]
-    
+
+        labels["label"] = dialog.input(heading=heading, defaultt=labels["label"])
+
+    labels["id"] = utils.get_unique_id(labels["label"])
+    labels["version"] = utils._addon_version
+
+    if labels["target"] == "settings":
+        labels["file"]["filetype"] = "file"
+        labels["file"]["file"] = labels["file"]["file"].split("&")[0]
+
     manage.write_path(group_def, path_def=labels)
-    
-    
+
+
 def _copy_path(path_def):
-    group_id = add_group(path_def['target'], path_def['label'])
+    group_id = add_group(path_def["target"], path_def["label"])
     if not group_id:
         return
-        
+
     group_def = manage.get_group_by_id(group_id)
-    files = refresh.get_files_list(path_def['file']['file'])
+    files = refresh.get_files_list(path_def["file"]["file"])
     if not files:
         return
-    
+
     for file in files:
-        if file.get('type') in ['movie', 'episode', 'musicvideo', 'song']:
+        if file.get("type") in ["movie", "episode", "musicvideo", "song"]:
             continue
-            
-        labels = build_labels('json', file, path_def['target'])
+
+        labels = build_labels("json", file, path_def["target"])
         _add_path(group_def, labels, over=True)
-    dialog.notification('AutoWidget', utils.get_string(32131)
-                                      .format(len(files), group_def['label']))
+    dialog.notification(
+        "AutoWidget", utils.get_string(32131).format(len(files), group_def["label"])
+    )
