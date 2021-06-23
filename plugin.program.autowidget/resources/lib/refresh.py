@@ -256,10 +256,7 @@ def refresh_paths(notify=False, force=False):
     return True, "AutoWidget"
 
 
-def get_files_list(path, titles=None, widget_id=None):
-    if not titles:
-        titles = []
-
+def get_files_list(path, widget_id=None):
     hash = utils.path2hash(path)
     _, files, _ = utils.cache_expiry(hash, widget_id)
     if files is None:
@@ -274,8 +271,7 @@ def get_files_list(path, titles=None, widget_id=None):
             utils.log("No items found for {}".format(path))
             return
 
-        filtered_files = [x for x in files if x["title"] not in titles]
-        for file in filtered_files:
+        for file in files:
             new_file = {
                 k: v for k, v in file.items() if v not in [None, "", -1, [], {}]
             }
@@ -285,6 +281,23 @@ def get_files_list(path, titles=None, widget_id=None):
             new_files.append(new_file)
 
         return new_files
+
+
+def is_duplicate(title, titles):
+    if not utils.get_setting_bool("widgets.hide_duplicates"):
+        return False
+
+    prefer_eps = utils.get_setting_bool("widgets.prefer_episodes")
+    if title["type"] == "movie":
+        return (title["label"], title["imdbnumber"]) in [
+            (t["label"], t["imdbnumber"]) for t in titles
+        ]
+    elif (title["type"] == "tvshow" and prefer_eps) or (
+        title["type"] == "episode" and not prefer_eps
+    ):
+        return title["showtitle"] in [t["showtitle"] for t in titles]
+    else:
+        return False
 
 
 def cache_and_update(widget_ids):
