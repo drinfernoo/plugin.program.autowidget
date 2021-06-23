@@ -57,7 +57,7 @@ class RefreshService(xbmc.Monitor):
         for widget_def in manage.find_defined_widgets():
             if not manage.clean(widget_def['id']):
                 utils.log('Resetting {}'.format(widget_def['id']))
-                update_path(widget_def['id'], None, 'reset')
+                update_path(widget_def['id'], 'reset')
 
     def tick(self, step, max, abort_check = lambda: False):
         "yield every Step secords until you get to Max or abort_check returns True"
@@ -151,10 +151,10 @@ def update_path(widget_id, target, path=None):
         if len(widget_def['stack']) == 0:
             widget_def['label'] = ''
     elif target == 'reset':
-            if len(stack) > 0:
-                widget_def['path'] = widget_def['stack'][0]
-                widget_def['stack'] = []
-                widget_def['label'] = ''
+        if len(stack) > 0:
+            widget_def['path'] = widget_def['stack'][0]
+            widget_def['stack'] = []
+            widget_def['label'] = ''
     
     action = widget_def['path'] if widget_def['action'] != 'merged' else 'merged'
     if isinstance(widget_def['path'], dict):
