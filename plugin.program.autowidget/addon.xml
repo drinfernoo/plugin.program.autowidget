@@ -36,8 +36,10 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.2.1
+ - Fix for items with no artwork
 3.2.0
- = Add setting to prefer episodes/shows when removing duplicates
+ - Add setting to prefer episodes/shows when removing duplicates
  - Rework duplicate removal
  - Fix bug in Active Widgets editor dialog
  - Fix landscape art for some items
