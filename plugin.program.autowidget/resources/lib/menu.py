@@ -127,7 +127,7 @@ def group_menu(group_id):
                 title=path_def["label"],
                 params={"mode": "path", "group": group_id, "path_id": path_def["id"]},
                 info=path_def["file"],
-                art=path_def["file"]["art"] or art,
+                art=path_def["file"].get("art", art),
                 cm=cm,
                 isFolder=False,
             )
@@ -284,7 +284,7 @@ def show_path(
 
     if not titles:
         titles = []
-    
+
     files = refresh.get_files_list(path, widget_id)
     if not files:
         return titles, path_label
@@ -364,25 +364,30 @@ def show_path(
                 props=properties,
             )
         else:
-            title = {'type': file.get('type'),
-                     'label': file.get('label'),
-                     'imdbnumber': file.get('imdbnumber'),
-                     'showtitle': file.get('showtitle')}
+            title = {
+                "type": file.get("type"),
+                "label": file.get("label"),
+                "imdbnumber": file.get("imdbnumber"),
+                "showtitle": file.get("showtitle"),
+            }
             dupe = refresh.is_duplicate(title, titles)
 
-            if (hide_watched and file.get('playcount', 0) > 0) or dupe:
+            if (hide_watched and file.get("playcount", 0) > 0) or dupe:
                 continue
 
-            if not file["art"].get("landscape") and file["art"].get("thumb"):
-                file["art"]["landscape"] = file["art"]["thumb"]
+            art = file.get("art", {})
+            if not art.get("landscape") and art.get("thumb"):
+                art["landscape"] = art["thumb"]
 
-            directory.add_menu_item(title=file['label'],
-                                    path=file['file'],
-                                    art=file['art'],
-                                    info=file,
-                                    isFolder=file['filetype'] == 'directory',
-                                    props=properties)
-            
+            directory.add_menu_item(
+                title=file["label"],
+                path=file["file"],
+                art=art,
+                info=file,
+                isFolder=file["filetype"] == "directory",
+                props=properties,
+            )
+
             titles.append(title)
 
     return titles, path_label
