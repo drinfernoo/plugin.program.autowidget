@@ -329,8 +329,8 @@ def clear_cache():
     choice = dialog.yesno("AutoWidget", "Are you sure?")
 
     if choice:
-        for file in [i for i in os.listdir(_addon_data) if ".cache" in i]:
-            os.remove(os.path.join(_addon_data, file))
+        for file in [i for i in os.listdir(_addon_path) if i.endswith(".cache")]:
+            os.remove(os.path.join(_addon_path, file))
 
 
 def get_art(filename, color=None):
