@@ -1,0 +1,663 @@
+# Kodi Media Center language file
+# Addon Name: AutoWidget
+# Addon id: plugin.program.autowidget
+# Addon Provider: drinfernoo
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-addons/language/en/)\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: /resources/settings.xml:2
+msgctxt "#30000"
+msgid "General"
+msgstr "Allgemein"
+
+#: /resources/settings.xml:14
+msgctxt "#30001"
+msgid "Path Service"
+msgstr "Pfaddienst"
+
+#: /resources/settings.xml:26
+msgctxt "#30002"
+msgid "Shortcuts"
+msgstr "Schnellzugriff"
+
+#: addon.xml:17
+msgctxt "#30003"
+msgid "Add to AutoWidget Group"
+msgstr "Zur AutoWidget-Gruppe hinzufügen"
+
+#: /resources/settings.xml:35
+msgctxt "#30004"
+msgid "Show 'Add to AutoWidget Group' on Context Menu"
+msgstr "'Zur AutoWidget-Gruppe hinzufügen' im Kontextmenü anzeigen"
+
+#: /resources/settings.xml:16
+msgctxt "#30005"
+msgid "Default time between widget refreshes (in hours)"
+msgstr "Standardzeit zwischen Widget-Aktualisierungen (in Stunden)"
+
+#: addon.xml:21 /resources/settings.xml:27 /resources/lib/menu.py:248
+msgctxt "#30006"
+msgid "Force Refresh Widgets"
+msgstr "Erzwingen von Aktualisierungs-Widgets"
+
+#: /resources/lib/menu.py:36 /resources/lib/menu.py:96
+msgctxt "#30007"
+msgid "My Groups"
+msgstr "Meine Gruppen"
+
+#: /resources/settings.xml:24 /resources/lib/menu.py:48
+#: /resources/lib/menu.py:273
+msgctxt "#30008"
+msgid "Tools"
+msgstr "Werkzeuge"
+
+#: /resources/lib/menu.py:616
+msgctxt "#30009"
+msgid "Actions"
+msgstr "Aktionen"
+
+#: /resources/lib/add.py:155
+msgctxt "#30010"
+msgid "Create New Widget Group"
+msgstr "Neue Widget-Gruppe erstellen"
+
+#: /resources/lib/add.py:159
+msgctxt "#30011"
+msgid "Create New Shortcut Group"
+msgstr "Neue Shortcut-Gruppe erstellen"
+
+#: /resources/lib/menu.py:251
+msgctxt "#30012"
+msgid "Force all defined widgets to refresh."
+msgstr "Erzwingen Sie, dass alle definierten Widgets aktualisiert werden."
+
+#: /resources/lib/edit.py:113
+msgctxt "#30013"
+msgid "Remove Group"
+msgstr "Gruppe entfernen"
+
+#: /resources/lib/edit.py:113
+msgctxt "#30014"
+msgid "Remove"
+msgstr "Entfernen"
+
+#: /resources/lib/menu.py:579
+msgctxt "#30015"
+msgid "Shift Path Up"
+msgstr "Shift Path Nach oben"
+
+#: /resources/lib/menu.py:591
+msgctxt "#30016"
+msgid "Shift Path Down"
+msgstr "Shift Path Down"
+
+#: /resources/lib/menu.py:631
+msgctxt "#30017"
+msgid "{} (Cycling)"
+msgstr "{} (Agro-Tourismus, Freizeit Häuser)"
+
+#: /resources/lib/menu.py:190
+msgctxt "#30018"
+msgid "Shortcuts from {}"
+msgstr "Verknüpfungen von ."
+
+#: /resources/lib/menu.py:142 /resources/lib/menu.py:463
+#: /resources/lib/menu.py:515
+msgctxt "#30019"
+msgid "No paths have been defined for this group."
+msgstr "Für diese Gruppe wurden keine Pfade definiert."
+
+#: /resources/lib/refresh.py:240
+msgctxt "#30020"
+msgid "Refreshing widgets..."
+msgstr "Widgets werden aktualisiert..."
+
+#: /resources/lib/add.py:176
+msgctxt "#30021"
+msgid "Addition cancelled."
+msgstr "Addition abgebrochen."
+
+#: /resources/lib/edit.py:67
+msgctxt "#30022"
+msgid ""
+"Are you sure you want to remove this path? This action [COLOR "
+"firebrick][B]cannot[/B][/COLOR] be undone."
+msgstr ""
+"Möchten Sie diesen Pfad wirklich entfernen? Diese Aktion [COLOR "
+"firebrick][B]cannot[/B][/COLOR] kann rückgängig gemacht werden."
+
+#: /resources/lib/add.py:186
+msgctxt "#30023"
+msgid "Name for Group"
+msgstr "Name für Gruppe"
+
+#: /resources/lib/add.py:203
+msgctxt "#30024"
+msgid "Cannot create a group with no name."
+msgstr "Eine Gruppe ohne Namen kann nicht erstellt werden."
+
+#: /resources/lib/edit.py:55 /resources/lib/edit.py:85
+msgctxt "#30025"
+msgid ""
+"Are you sure you want to remove this group? This action [COLOR "
+"firebrick][B]cannot[/B][/COLOR] be undone."
+msgstr ""
+"Möchten Sie diese Gruppe wirklich entfernen? Diese Aktion [COLOR "
+"firebrick][B]cannot[/B][/COLOR] kann rückgängig gemacht werden."
+
+#: /resources/settings.xml:15
+msgctxt "#30026"
+msgid "Enable Path Refreshing Service"
+msgstr "Aktivieren des Pfadaktualisierungsdienstes"
+
+#: /resources/settings.xml:17
+msgctxt "#30027"
+msgid "Show 'Refreshing Paths' Notification"
+msgstr "Benachrichtigung \"Aktualisierungspfade\" anzeigen"
+
+#: /resources/lib/add.py:211
+msgctxt "#30028"
+msgid "Shortcut Label"
+msgstr "Shortcut-Label"
+
+#: /resources/lib/add.py:213
+msgctxt "#30029"
+msgid "Widget Label"
+msgstr "Widget Beschriftung"
+
+#: /resources/lib/edit.py:61 /resources/lib/edit.py:78
+#: /resources/lib/edit.py:90
+msgctxt "#30030"
+msgid "{} removed."
+msgstr "{} entfernt."
+
+#: /resources/lib/edit.py:121 /resources/lib/menu.py:563
+msgctxt "#30031"
+msgid "Edit Shortcut"
+msgstr "Tastenkürzel bearbeiten"
+
+#: /resources/lib/edit.py:300 /resources/lib/edit.py:319
+msgctxt "#30032"
+msgid "Select {}"
+msgstr "Wählen {}"
+
+#: /resources/lib/add.py:16
+msgctxt "#30033"
+msgid "Shortcut"
+msgstr "Abkürzung"
+
+#: /resources/lib/add.py:17
+msgctxt "#30034"
+msgid "Widget"
+msgstr "Widget"
+
+#: /resources/lib/add.py:20
+msgctxt "#30035"
+msgid "Settings Shortcut"
+msgstr "Einstellungsverknüpfung"
+
+#: /resources/lib/add.py:172
+msgctxt "#30036"
+msgid "Choose a Group"
+msgstr "Gruppe wählen"
+
+#: /resources/settings.xml:34
+msgctxt "#30037"
+msgid "Management"
+msgstr "Management"
+
+#: /resources/settings.xml:36
+msgctxt "#30038"
+msgid "Show Advanced Editing Options"
+msgstr "Erweiterte Bearbeitungsoptionen anzeigen"
+
+#: /resources/lib/edit.py:96
+msgctxt "#30039"
+msgid ""
+"Changing of any of the advanced options may cause paths to [COLOR "
+"firebrick]no longer[/COLOR] function correctly. This message will only be "
+"shown once."
+msgstr ""
+"Das Ändern einer der erweiterten Optionen kann dazu führen, dass Pfade zu "
+"[COLOR firebrick] nicht mehr ordnungsgemäß funktionieren[/COLOR]. Diese "
+"Meldung wird nur einmal angezeigt."
+
+#: /resources/lib/edit.py:97
+msgctxt "#30040"
+msgid "[COLOR firebrick][B]Continue[/B][/COLOR]"
+msgstr "[COLOR Firebrick] [B] Weiter[/B][/COLOR]"
+
+#: /resources/lib/edit.py:98
+msgctxt "#30041"
+msgid "[COLOR lawngreen][B]Disable[/B][/COLOR]"
+msgstr "[COLOR Rasengrün] [B] Deaktivieren[/B][/COLOR]"
+
+#: /resources/lib/edit.py:126 /resources/lib/menu.py:64
+msgctxt "#30042"
+msgid "Edit Group"
+msgstr "Gruppe bearbeiten"
+
+#: /resources/settings.xml:29 /resources/lib/menu.py:261
+msgctxt "#30043"
+msgid "Wipe Add-on Data"
+msgstr "Löschen von Add-On-Daten"
+
+#: /resources/lib/common/utils.py:311
+msgctxt "#30044"
+msgid ""
+"This will remove [B]all[/B] data for AutoWidget, excluding backups. Any "
+"current AutoWidgets will no longer refresh and may not work reliably. It is "
+"recommended that this only be done if you intend on repointing all of those "
+"widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
+msgstr ""
+"Dadurch werden [B]all[/B]-Daten für AutoWidget entfernt, mit Ausnahme von "
+"Sicherungen. Alle aktuellen AutoWidgets werden nicht mehr aktualisiert und "
+"funktionieren möglicherweise nicht zuverlässig. Es wird empfohlen, dies nur "
+"zu tun, wenn Sie beabsichtigen, alle diese Widgets neu zu verweisen. Dieser "
+"[COLOR firebrick]kann nicht[/COLOR] rückgängig gemacht werden."
+
+#: /resources/lib/menu.py:503 /resources/lib/menu.py:553
+msgctxt "#30045"
+msgid "Point a widget here to show items."
+msgstr "Zeigen Sie hier ein Widget, um Elemente anzuzeigen."
+
+#: /resources/lib/backup.py:41 /resources/lib/menu.py:90
+msgctxt "#30046"
+msgid "No groups have been defined."
+msgstr "Es wurden keine Gruppen definiert."
+
+#: /resources/lib/menu.py:196
+msgctxt "#30047"
+msgid "Refresh Widget"
+msgstr "Widget aktualisieren"
+
+#: /resources/lib/edit.py:118 /resources/lib/edit.py:149
+#: /resources/lib/menu.py:212 /resources/lib/menu.py:560
+msgctxt "#30048"
+msgid "Edit Widget"
+msgstr "Widget bearbeiten"
+
+#: /resources/lib/menu.py:225
+msgctxt "#30049"
+msgid "Orphaned"
+msgstr "Waisen"
+
+#: /resources/lib/menu.py:237
+msgctxt "#30050"
+msgid "No widgets have been initialized."
+msgstr "Es wurden keine Widgets initialisiert."
+
+#: /resources/lib/menu.py:453
+msgctxt "#30051"
+msgid "Broken Widget"
+msgstr "Gebrochenes Widget"
+
+#: /resources/lib/menu.py:42 /resources/lib/menu.py:243
+msgctxt "#30052"
+msgid "Active Widgets"
+msgstr "Aktive Widgets"
+
+#: /resources/lib/menu.py:454
+msgctxt "#30053"
+msgid "This widget is broken, repoint or remove it to stop seeing this."
+msgstr ""
+"Dieses Widget ist defekt, repoint oder entfernen Sie es, um dies nicht mehr "
+"zu sehen."
+
+#: /resources/lib/menu.py:618
+msgctxt "#30054"
+msgid "{} (Static)"
+msgstr "{} (Static)"
+
+#: /resources/lib/edit.py:200
+msgctxt "#30055"
+msgid "Add New InfoLabel"
+msgstr "Neues InfoLabel hinzufügen"
+
+#: /resources/lib/edit.py:200
+msgctxt "#30056"
+msgid "Add New Artwork"
+msgstr "Neues Kunstwerk hinzufügen"
+
+#: /resources/lib/edit.py:230 /resources/lib/edit.py:357
+#: /resources/lib/menu.py:478
+msgctxt "#30057"
+msgid "Random Path"
+msgstr "Zufälliger Pfad"
+
+#: /resources/lib/edit.py:232 /resources/lib/edit.py:357
+#: /resources/lib/menu.py:478
+msgctxt "#30058"
+msgid "Next Path"
+msgstr "Nächster Pfad"
+
+#: /resources/lib/edit.py:358 /resources/lib/menu.py:477
+msgctxt "#30059"
+msgid "Choose an Action"
+msgstr "Option auswählen"
+
+#: /resources/lib/add.py:18
+msgctxt "#30060"
+msgid "Clone as Shortcut Group"
+msgstr "Klonen als Shortcut-Gruppe"
+
+#: /resources/lib/add.py:19
+msgctxt "#30061"
+msgid "Explode as Widget Group"
+msgstr "Explodieren als Widget-Gruppe"
+
+#: /resources/lib/add.py:128
+msgctxt "#30062"
+msgid "Add as"
+msgstr "Fügen Sie als"
+
+#: /resources/settings.xml:8 /resources/settings.xml:15
+#: /resources/settings.xml:17
+msgctxt "#30063"
+msgid "Always"
+msgstr "Immer"
+
+#: /resources/settings.xml:15 /resources/settings.xml:17
+msgctxt "#30064"
+msgid "While Nothing Playing"
+msgstr "While Nothing Playing"
+
+#: /resources/settings.xml:8 /resources/settings.xml:15
+#: /resources/settings.xml:17
+msgctxt "#30065"
+msgid "Never"
+msgstr "Nie"
+
+#: /resources/lib/menu.py:644
+msgctxt "#30066"
+msgid "{} (Merged)"
+msgstr "{} (Zusammengeführt)"
+
+#: /resources/settings.xml:40
+msgctxt "#30067"
+msgid "Backup / Restore"
+msgstr "Sichern / Wiederherstellen"
+
+#: /resources/settings.xml:41 /resources/lib/backup.py:15
+msgctxt "#30068"
+msgid "Choose Backup Location"
+msgstr "Wählen Sie Backup-Speicherort"
+
+#: /resources/settings.xml:42
+msgctxt "#30069"
+msgid "Backup My Groups"
+msgstr "Sichern Meiner Gruppen"
+
+#: /resources/settings.xml:43
+msgctxt "#30070"
+msgid "Restore from Backup"
+msgstr "Restore from Backup"
+
+#: /resources/lib/backup.py:22
+msgctxt "#30071"
+msgid ""
+"Do you want to backup your groups? This will not backup any widgets defined "
+"in the skin."
+msgstr ""
+"Möchten Sie Ihre Gruppen sichern? Dadurch werden keine Widgets gesichert, "
+"die in der Skin definiert sind."
+
+#: /resources/lib/backup.py:25
+msgctxt "#30072"
+msgid "Backup Name"
+msgstr "Sicherungsname"
+
+#: /resources/lib/backup.py:28
+msgctxt "#30073"
+msgid "Backup Cancelled."
+msgstr "Backup abgebrochen."
+
+#: /resources/lib/backup.py:36
+msgctxt "#30074"
+msgid "Could not create backup location."
+msgstr "Der Sicherungsspeicherort konnte nicht erstellt werden."
+
+#: /resources/lib/backup.py:59
+msgctxt "#30075"
+msgid "Choose Backup to Restore"
+msgstr "Wählen Sie Backup to Restore"
+
+#: /resources/lib/backup.py:67
+msgctxt "#30076"
+msgid "Would you like to restore {} group {} from this backup?"
+msgstr "Möchten Sie die Gruppe \" aus dieser Sicherung wiederherstellen?"
+
+#: /resources/lib/backup.py:71
+msgctxt "#30077"
+msgid "Would you like to erase your current groups before restoring?"
+msgstr ""
+"Möchten Sie Ihre aktuellen Gruppen löschen, bevor Sie sie wiederherstellen?"
+
+#: /resources/lib/backup.py:81 /resources/lib/backup.py:83
+msgctxt "#30078"
+msgid "Restore Cancelled."
+msgstr "Wiederherstellen abgebrochen."
+
+#: /resources/settings.xml:8
+msgctxt "#30079"
+msgid "Show 'Next Page' Items"
+msgstr "'Nächste Seite' Elemente anzeigen"
+
+#: /resources/settings.xml:6
+msgctxt "#30080"
+msgid "Widget Settings"
+msgstr "Widget Einstellungen"
+
+#: /resources/settings.xml:7
+msgctxt "#30081"
+msgid "Hide Watched Items"
+msgstr "Beobachtete Elemente ausblenden"
+
+#: /resources/settings.xml:9
+msgctxt "#30082"
+msgid "Use Paged Widgets (Doesn't Affect Merged Widgets)"
+msgstr ""
+"Verwenden von ausgelagerten Widgets (beeinflusst keine zusammengeführten "
+"Widgets)"
+
+#: /resources/settings.xml:18
+msgctxt "#30083"
+msgid "Notification Sound"
+msgstr "Benachrichtigung Ton"
+
+#: /resources/settings.xml:8
+msgctxt "#30084"
+msgid "Not on Merged Widgets"
+msgstr "Nicht auf zusammengeführten Widgets"
+
+#: /resources/lib/menu.py:307
+msgctxt "#30085"
+msgid "Back to Page {}"
+msgstr "Back to Page {}"
+
+#: /resources/lib/menu.py:591
+msgctxt "#30086"
+msgid "Shift Path to Top"
+msgstr "Shift-Pfad nach oben"
+
+#: /resources/lib/menu.py:579
+msgctxt "#30087"
+msgid "Shift Path to Bottom"
+msgstr "Shift-Pfad nach unten"
+
+#: /resources/lib/edit.py:403 /resources/lib/menu.py:470
+msgctxt "#30088"
+msgid "Choose a Path"
+msgstr "Wählen Sie einen Pfad"
+
+#: /resources/lib/edit.py:397 /resources/lib/menu.py:524
+msgctxt "#30089"
+msgid "Choose Paths to Merge"
+msgstr "Wählen Sie Pfade zum Zusammenführen"
+
+#: /resources/lib/edit.py:147
+msgctxt "#30090"
+msgid "Remove Widget"
+msgstr "Entfernen Widget"
+
+#: /resources/lib/edit.py:271
+msgctxt "#30091"
+msgid "Edit Artwork"
+msgstr "Kunstwerk bearbeiten"
+
+#: /resources/lib/edit.py:271
+msgctxt "#30092"
+msgid "Edit InfoLabels"
+msgstr "Bearbeiten von InfoLabels"
+
+#: /resources/lib/edit.py:285
+msgctxt "#30093"
+msgid "Select Artwork to Add"
+msgstr "Bildmaterial auswählen, das hinzugefügt werden soll"
+
+#: /resources/lib/edit.py:285
+msgctxt "#30094"
+msgid "Select InfoLabel to Add"
+msgstr "Wählen Sie InfoLabel zum Hinzufügen"
+
+#: /resources/lib/edit.py:292 /resources/lib/edit.py:334
+#: /resources/lib/edit.py:410
+msgctxt "#30095"
+msgid "New Value for {}:"
+msgstr "Neuer Wert für ."
+
+#: /resources/lib/edit.py:328
+msgctxt "#30096"
+msgid "Select Filetype"
+msgstr "Dateityp auswählen"
+
+#: /resources/lib/edit.py:339
+msgctxt "#30097"
+msgid ""
+"Do you want to clear or keep the current {}?\n"
+"\n"
+"[B]{}[/B]: {}"
+msgstr ""
+"Möchten Sie den aktuellen Wert löschen oder beibehalten?\n"
+"\n"
+"[B] [/B]:"
+
+#: /resources/lib/edit.py:342
+msgctxt "#30098"
+msgid "Clear"
+msgstr "Bereinigen"
+
+#: /resources/lib/edit.py:343
+msgctxt "#30099"
+msgid "Keep"
+msgstr "Unverändert belassen"
+
+#: /resources/lib/edit.py:379
+msgctxt "#30100"
+msgid "Refresh Duration"
+msgstr "Aktualisierungsdauer"
+
+#: /resources/settings.xml:30 /resources/lib/menu.py:267
+msgctxt "#30101"
+msgid "Toggle Skin Debugging"
+msgstr "Umschalten des Skin-Debuggings"
+
+#: /resources/lib/menu.py:175
+msgctxt "#30102"
+msgid "{} Paths Merged"
+msgstr "• Zusammengeführte Pfade"
+
+#: /resources/settings.xml:28 /resources/lib/menu.py:255
+msgctxt "#30103"
+msgid "Clean Old Widget Files"
+msgstr "Saubere alte Widget-Dateien"
+
+#: /resources/settings.xml:3
+msgctxt "#30104"
+msgid "Icon Color"
+msgstr "Icon"
+
+#: /resources/lib/add.py:244
+msgctxt "#30105"
+msgid "{} paths added to {}"
+msgstr "Pfade, die zu ."
+
+#: /resources/lib/manage.py:76
+msgctxt "#30106"
+msgid "{} unused widgets removed."
+msgstr "Nicht verwendete Widgets entfernt."
+
+#: /resources/lib/common/utils.py:369
+msgctxt "#30107"
+msgid "Choose from a predefined color or hexcode input?"
+msgstr "Wählen Sie aus einer vordefinierten Farb- oder Hexcode-Eingabe?"
+
+#: /resources/lib/common/utils.py:370
+msgctxt "#30108"
+msgid "Hex Input"
+msgstr "Hex-Eingang"
+
+#: /resources/lib/common/utils.py:371
+msgctxt "#30109"
+msgid "Predefined Color"
+msgstr "Vordefinierte Farbe"
+
+#: /resources/lib/common/utils.py:375
+msgctxt "#30110"
+msgid "Hex codes must be of the format '#RRGGBB'."
+msgstr "Hexcodes müssen das Format \"#RRGGBB\" haben."
+
+#: /resources/lib/common/utils.py:378
+msgctxt "#30111"
+msgid "Select a Color"
+msgstr "Wähle Sie eine Farbe"
+
+#: /resources/lib/common/utils.py:388
+msgctxt "#30112"
+msgid "Invalid color code."
+msgstr "Ungültiger Farbcode."
+
+#: /resources/settings.xml:37
+msgctxt "#30113"
+msgid "Debug Logging"
+msgstr "Debug Logging"
+
+#: /resources/lib/edit.py:123 /resources/lib/menu.py:563
+msgctxt "#30114"
+msgid "Edit Path"
+msgstr "Strecke bearbeiten"
+
+#: /resources/settings.xml:10
+msgctxt "#30115"
+msgid "Hide Duplicates"
+msgstr "Duplikate ausblenden"
+
+#: /resources/settings.xml:11
+msgctxt "#30116"
+msgid "Prefer Episode if Show Available"
+msgstr "Bevorzugen Sie Episode, wenn Show verfügbar"
+
+#: /resources/settings.xml:31
+msgctxt "#30117"
+msgid "Clear Cache"
+msgstr "Cache leeren"
+
+#: /resources/lib/common/utils.py:328
+msgctxt "#30118"
+msgid ""
+"Are you sure you want to clear the cache? This action may make widgets load "
+"slower for some time."
+msgstr ""
+"Möchten Sie den Cache wirklich löschen? Diese Aktion kann dazu sorgen, dass "
+"Widgets für einige Zeit langsamer geladen werden."

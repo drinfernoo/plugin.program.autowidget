@@ -74,7 +74,7 @@ def clean(widget_id=None, notify=False, all=False):
     if notify:
         dialog.notification(
             "AutoWidget",
-            utils.get_string(32132).format("No" if removed == 0 else removed),
+            utils.get_string(30106).format("No" if removed == 0 else removed),
         )
 
 

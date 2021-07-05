@@ -309,7 +309,7 @@ def ensure_addon_data():
 
 def wipe(folder=_addon_path):
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno("AutoWidget", get_string(32065))
+    choice = dialog.yesno("AutoWidget", get_string(30044))
 
     if choice:
         for root, dirs, files in os.walk(folder):
@@ -326,11 +326,11 @@ def wipe(folder=_addon_path):
 
 def clear_cache():
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno("AutoWidget", "Are you sure?")
+    choice = dialog.yesno("AutoWidget", get_string(30118))
 
     if choice:
-        for file in [i for i in os.listdir(_addon_data) if ".cache" in i]:
-            os.remove(os.path.join(_addon_data, file))
+        for file in [i for i in os.listdir(_addon_path) if i.endswith(".cache")]:
+            os.remove(os.path.join(_addon_path, file))
 
 
 def get_art(filename, color=None):
@@ -367,16 +367,16 @@ def set_color(setting=False):
 
     choice = dialog.yesno(
         "AutoWidget",
-        get_string(32133),
-        yeslabel=get_string(32134),
-        nolabel=get_string(32135),
+        get_string(30107),
+        yeslabel=get_string(30108),
+        nolabel=get_string(30109),
     )
 
     if choice:
-        value = dialog.input(get_string(32136)).lower()
+        value = dialog.input(get_string(30110)).lower()
     else:
         value = dialog.select(
-            get_string(32137),
+            get_string(30111),
             ["[COLOR {0}]{0}[/COLOR]".format(i) for i in colors],
             preselect=colors.index(color) if color in colors else -1,
         )
@@ -386,7 +386,7 @@ def set_color(setting=False):
     if value != -1:
         if value not in colors:
             if len(value) < 6:
-                dialog.notification("AutoWidget", get_string(32138))
+                dialog.notification("AutoWidget", get_string(30112))
                 return
             elif len(value) == 6 and not value.startswith("#"):
                 value = "#{}".format(value)
@@ -560,7 +560,9 @@ def set_skin_string(string, value):
     xbmc.executebuiltin("Skin.SetString({},{})".format(string, value))
 
 
-def get_string(_id):
+def get_string(_id, kodi=False):
+    if kodi:
+        return six.text_type(xbmc.getLocalizedString(_id))
     return six.text_type(_addon.getLocalizedString(_id))
 
 
