@@ -564,8 +564,8 @@ msgid "Predefined Color"
 msgstr "Color predefinido"
 
 msgctxt "#32136"
-msgid "Hex codes must be of the format "#RRGGBB"."
-msgstr "Los códigos hexadecimales deben tener el formato "#RRGGBB"."
+msgid "Hex codes must be of the format '#RRGGBB'."
+msgstr "Los códigos hexadecimales deben tener el formato '#RRGGBB'."
 
 msgctxt "#32137"
 msgid "Select a Color"
@@ -592,5 +592,13 @@ msgid "Hide Duplicates"
 msgstr "Ocultar duplicados"
 
 msgctxt "#32143"
-msgid "Preferir episodio si el programa está disponible"
-msgstr ""
+msgid "Prefer Episode if Show Available"
+msgstr "Preferir episodio si el programa está disponible"
+
+msgctxt "#32144"
+msgid "Clear Cache"
+msgstr "Limpiar cache"
+
+msgctxt "#32145"
+msgid "Are you sure you want to clear the cache? This action may make widgets load slower for some time."
+msgstr "¿Estás seguro de que deseas borrar la caché? Esta acción puede hacer que los widgets se carguen más lentamente durante algún tiempo."

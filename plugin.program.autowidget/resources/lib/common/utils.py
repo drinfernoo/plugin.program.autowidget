@@ -326,7 +326,7 @@ def wipe(folder=_addon_path):
 
 def clear_cache():
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno("AutoWidget", "Are you sure?")
+    choice = dialog.yesno("AutoWidget", get_string(32145))
 
     if choice:
         for file in [i for i in os.listdir(_addon_path) if i.endswith(".cache")]:

@@ -563,7 +563,7 @@ msgid "Predefined Color"
 msgstr ""
 
 msgctxt "#32136"
-msgid "Hex codes must be of the format "#RRGGBB"."
+msgid "Hex codes must be of the format '#RRGGBB'."
 msgstr ""
 
 msgctxt "#32137"
@@ -592,4 +592,12 @@ msgstr ""
 
 msgctxt "#32143"
 msgid "Prefer Episode if Show Available"
+msgstr ""
+
+msgctxt "#32144"
+msgid "Clear Cache"
+msgstr ""
+
+msgctxt "#32145"
+msgid "Are you sure you want to clear the cache? This action may make widgets load slower for some time."
 msgstr ""
