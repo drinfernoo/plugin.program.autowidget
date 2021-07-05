@@ -1,0 +1,665 @@
+# Kodi Media Center language file
+# Addon Name: AutoWidget
+# Addon id: plugin.program.autowidget
+# Addon Provider: drinfernoo
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-addons/language/en/)\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: /resources/settings.xml:2
+msgctxt "#30000"
+msgid "General"
+msgstr "Γενικά"
+
+#: /resources/settings.xml:14
+msgctxt "#30001"
+msgid "Path Service"
+msgstr "Υπηρεσία διαδρομής"
+
+#: /resources/settings.xml:26
+msgctxt "#30002"
+msgid "Shortcuts"
+msgstr "Συντομεύσεις"
+
+#: addon.xml:17
+msgctxt "#30003"
+msgid "Add to AutoWidget Group"
+msgstr "Προσθήκη στην ομάδα Αυτόματης Σύμπνοιας"
+
+#: /resources/settings.xml:35
+msgctxt "#30004"
+msgid "Show 'Add to AutoWidget Group' on Context Menu"
+msgstr ""
+"Εμφάνιση της επιλογής \"Προσθήκη στην ομάδα Αυτόματης Σύσπασης\" στο μενού "
+"περιβάλλοντος"
+
+#: /resources/settings.xml:16
+msgctxt "#30005"
+msgid "Default time between widget refreshes (in hours)"
+msgstr "Προεπιλεγμένος χρόνος μεταξύ ανανεώσεων widget (σε ώρες)"
+
+#: addon.xml:21 /resources/settings.xml:27 /resources/lib/menu.py:248
+msgctxt "#30006"
+msgid "Force Refresh Widgets"
+msgstr "Επιβολή γραφικών στοιχείων ανανέωσης"
+
+#: /resources/lib/menu.py:36 /resources/lib/menu.py:96
+msgctxt "#30007"
+msgid "My Groups"
+msgstr "Οι ομάδες μου"
+
+#: /resources/settings.xml:24 /resources/lib/menu.py:48
+#: /resources/lib/menu.py:273
+msgctxt "#30008"
+msgid "Tools"
+msgstr "Εργαλεία"
+
+#: /resources/lib/menu.py:616
+msgctxt "#30009"
+msgid "Actions"
+msgstr "Ενέργειες"
+
+#: /resources/lib/add.py:155
+msgctxt "#30010"
+msgid "Create New Widget Group"
+msgstr "Δημιουργία νέας ομάδας widget"
+
+#: /resources/lib/add.py:159
+msgctxt "#30011"
+msgid "Create New Shortcut Group"
+msgstr "Δημιουργία νέας ομάδας συντομεύσεων"
+
+#: /resources/lib/menu.py:251
+msgctxt "#30012"
+msgid "Force all defined widgets to refresh."
+msgstr "Εξαναγκάσετε όλα τα καθορισμένα widgets να ανανεωθούν."
+
+#: /resources/lib/edit.py:113
+msgctxt "#30013"
+msgid "Remove Group"
+msgstr "Κατάργηση Oμάδας"
+
+#: /resources/lib/edit.py:113
+msgctxt "#30014"
+msgid "Remove"
+msgstr "Κατάργηση"
+
+#: /resources/lib/menu.py:579
+msgctxt "#30015"
+msgid "Shift Path Up"
+msgstr "Μετατόπιση διαδρομής προς τα επάνω"
+
+#: /resources/lib/menu.py:591
+msgctxt "#30016"
+msgid "Shift Path Down"
+msgstr "Μετατόπιση διαδρομής προς τα κάτω"
+
+#: /resources/lib/menu.py:631
+msgctxt "#30017"
+msgid "{} (Cycling)"
+msgstr "{} (Ποδηλασία)"
+
+#: /resources/lib/menu.py:190
+msgctxt "#30018"
+msgid "Shortcuts from {}"
+msgstr "Συντομεύσεις από {}"
+
+#: /resources/lib/menu.py:142 /resources/lib/menu.py:463
+#: /resources/lib/menu.py:515
+msgctxt "#30019"
+msgid "No paths have been defined for this group."
+msgstr "Δεν έχουν καθοριστεί διαδρομές για αυτήν την ομάδα."
+
+#: /resources/lib/refresh.py:240
+msgctxt "#30020"
+msgid "Refreshing widgets..."
+msgstr "Ανανέωση γραφικών στοιχείων..."
+
+#: /resources/lib/add.py:176
+msgctxt "#30021"
+msgid "Addition cancelled."
+msgstr "Η προσθήκη ακυρώθηκε."
+
+#: /resources/lib/edit.py:67
+msgctxt "#30022"
+msgid ""
+"Are you sure you want to remove this path? This action [COLOR "
+"firebrick][B]cannot[/B][/COLOR] be undone."
+msgstr ""
+"Είστε βέβαιοι ότι θέλετε να καταργήσετε αυτό το μονοπάτι; Αυτή η ενέργεια "
+"[COLOR firebrick][B][/B][/COLOR] δεν μπορεί να αναιρεθεί."
+
+#: /resources/lib/add.py:186
+msgctxt "#30023"
+msgid "Name for Group"
+msgstr "Όνομα για ομάδα"
+
+#: /resources/lib/add.py:203
+msgctxt "#30024"
+msgid "Cannot create a group with no name."
+msgstr "Δεν είναι δυνατή η δημιουργία ομάδας χωρίς όνομα."
+
+#: /resources/lib/edit.py:55 /resources/lib/edit.py:85
+msgctxt "#30025"
+msgid ""
+"Are you sure you want to remove this group? This action [COLOR "
+"firebrick][B]cannot[/B][/COLOR] be undone."
+msgstr ""
+"Είστε βέβαιοι ότι θέλετε να καταργήσετε αυτήν την ομάδα; Αυτή η ενέργεια "
+"[COLOR firebrick][B][/B][/COLOR] δεν μπορεί να αναιρεθεί."
+
+#: /resources/settings.xml:15
+msgctxt "#30026"
+msgid "Enable Path Refreshing Service"
+msgstr "Ενεργοποίηση υπηρεσίας ανανέωσης διαδρομής"
+
+#: /resources/settings.xml:17
+msgctxt "#30027"
+msgid "Show 'Refreshing Paths' Notification"
+msgstr "Εμφάνιση ειδοποίησης \"Ανανέωση διαδρομών\""
+
+#: /resources/lib/add.py:211
+msgctxt "#30028"
+msgid "Shortcut Label"
+msgstr "Ετικέτα συντόμευσης"
+
+#: /resources/lib/add.py:213
+msgctxt "#30029"
+msgid "Widget Label"
+msgstr "Ετικέτα widget"
+
+#: /resources/lib/edit.py:61 /resources/lib/edit.py:78
+#: /resources/lib/edit.py:90
+msgctxt "#30030"
+msgid "{} removed."
+msgstr "{} διαγράφτηκε."
+
+#: /resources/lib/edit.py:121 /resources/lib/menu.py:563
+msgctxt "#30031"
+msgid "Edit Shortcut"
+msgstr "Επεξεργασία συντόμευσης"
+
+#: /resources/lib/edit.py:300 /resources/lib/edit.py:319
+msgctxt "#30032"
+msgid "Select {}"
+msgstr "Επιλογή {}"
+
+#: /resources/lib/add.py:16
+msgctxt "#30033"
+msgid "Shortcut"
+msgstr "Συντόμευση"
+
+#: /resources/lib/add.py:17
+msgctxt "#30034"
+msgid "Widget"
+msgstr "Μικροεφαρμογή"
+
+#: /resources/lib/add.py:20
+msgctxt "#30035"
+msgid "Settings Shortcut"
+msgstr "Συντόμευση ρυθμίσεων"
+
+#: /resources/lib/add.py:172
+msgctxt "#30036"
+msgid "Choose a Group"
+msgstr "Επιλογή ομάδας"
+
+#: /resources/settings.xml:34
+msgctxt "#30037"
+msgid "Management"
+msgstr "Διοίκηση"
+
+#: /resources/settings.xml:36
+msgctxt "#30038"
+msgid "Show Advanced Editing Options"
+msgstr "Εμφάνιση επιλογών επεξεργασίας για προχωρημένους"
+
+#: /resources/lib/edit.py:96
+msgctxt "#30039"
+msgid ""
+"Changing of any of the advanced options may cause paths to [COLOR "
+"firebrick]no longer[/COLOR] function correctly. This message will only be "
+"shown once."
+msgstr ""
+"Η αλλαγή οποιασδήποτε από τις προηγμένες επιλογές μπορεί να προκαλέσει "
+"διαδρομές προς τη λειτουργία [COLOR firebrick]πλέον[/COLOR] σωστά. Αυτό το "
+"μήνυμα θα εμφανιστεί μόνο μία φορά."
+
+#: /resources/lib/edit.py:97
+msgctxt "#30040"
+msgid "[COLOR firebrick][B]Continue[/B][/COLOR]"
+msgstr "[ΧΡΩΜΑΤΟ πυροσβέστες] [Β] Συνέχεια[/B][/ΈΓΧΡΩΜΟ]"
+
+#: /resources/lib/edit.py:98
+msgctxt "#30041"
+msgid "[COLOR lawngreen][B]Disable[/B][/COLOR]"
+msgstr "[ΧΡΩΜΑΤΙΚΟ γκαζόν] [Β] Απενεργοποίηση[/B][/COLOR]"
+
+#: /resources/lib/edit.py:126 /resources/lib/menu.py:64
+msgctxt "#30042"
+msgid "Edit Group"
+msgstr "Επεξεργασία ομάδας"
+
+#: /resources/settings.xml:29 /resources/lib/menu.py:261
+msgctxt "#30043"
+msgid "Wipe Add-on Data"
+msgstr "Διαγραφή πρόσθετων δεδομένων"
+
+#: /resources/lib/common/utils.py:311
+msgctxt "#30044"
+msgid ""
+"This will remove [B]all[/B] data for AutoWidget, excluding backups. Any "
+"current AutoWidgets will no longer refresh and may not work reliably. It is "
+"recommended that this only be done if you intend on repointing all of those "
+"widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
+msgstr ""
+"Αυτό θα καταργήσει [B]όλα τα [/B] δεδομένα για το AutoWidget, εξαιρουμένων "
+"των αντιγράφων ασφαλείας. Οποιαδήποτε τρέχοντα AutoWidgets δεν θα "
+"ανανεώνονται πλέον και ενδέχεται να μην λειτουργούν αξιόπιστα. Συνιστάται "
+"αυτό να γίνει μόνο εάν σκοπεύετε να επαναδιορίσετε όλα αυτά τα widgets. Αυτό"
+" το [COLOR firebrick] δεν μπορεί[/COLOR] να αναιρεθεί."
+
+#: /resources/lib/menu.py:503 /resources/lib/menu.py:553
+msgctxt "#30045"
+msgid "Point a widget here to show items."
+msgstr "Τοποθετήστε ένα widget εδώ για να εμφανίσετε στοιχεία."
+
+#: /resources/lib/backup.py:41 /resources/lib/menu.py:90
+msgctxt "#30046"
+msgid "No groups have been defined."
+msgstr "Δεν έχουν καθοριστεί ομάδες."
+
+#: /resources/lib/menu.py:196
+msgctxt "#30047"
+msgid "Refresh Widget"
+msgstr "Ανανέωση widget"
+
+#: /resources/lib/edit.py:118 /resources/lib/edit.py:149
+#: /resources/lib/menu.py:212 /resources/lib/menu.py:560
+msgctxt "#30048"
+msgid "Edit Widget"
+msgstr "Επεξεργασία Widget"
+
+#: /resources/lib/menu.py:225
+msgctxt "#30049"
+msgid "Orphaned"
+msgstr "ορφανεμένος"
+
+#: /resources/lib/menu.py:237
+msgctxt "#30050"
+msgid "No widgets have been initialized."
+msgstr "Δεν έχουν αρχικοποιηθεί γραφικά στοιχεία."
+
+#: /resources/lib/menu.py:453
+msgctxt "#30051"
+msgid "Broken Widget"
+msgstr "Σπασμένο γραφικό στοιχείο"
+
+#: /resources/lib/menu.py:42 /resources/lib/menu.py:243
+msgctxt "#30052"
+msgid "Active Widgets"
+msgstr "Ενεργά γραφικά στοιχεία"
+
+#: /resources/lib/menu.py:454
+msgctxt "#30053"
+msgid "This widget is broken, repoint or remove it to stop seeing this."
+msgstr ""
+"Αυτό το widget είναι σπασμένο, επαναδιορίστε ή αφαιρέστε το για να "
+"σταματήσετε να το βλέπετε αυτό."
+
+#: /resources/lib/menu.py:618
+msgctxt "#30054"
+msgid "{} (Static)"
+msgstr "{} (Στατικό)"
+
+#: /resources/lib/edit.py:200
+msgctxt "#30055"
+msgid "Add New InfoLabel"
+msgstr "Προσθήκη νέας ενημερωτικής κάρτας"
+
+#: /resources/lib/edit.py:200
+msgctxt "#30056"
+msgid "Add New Artwork"
+msgstr "Προσθήκη Νέου Έργου"
+
+#: /resources/lib/edit.py:230 /resources/lib/edit.py:357
+#: /resources/lib/menu.py:478
+msgctxt "#30057"
+msgid "Random Path"
+msgstr "Τυχαία διαδρομή"
+
+#: /resources/lib/edit.py:232 /resources/lib/edit.py:357
+#: /resources/lib/menu.py:478
+msgctxt "#30058"
+msgid "Next Path"
+msgstr "Επόμενο μονοπάτι"
+
+#: /resources/lib/edit.py:358 /resources/lib/menu.py:477
+msgctxt "#30059"
+msgid "Choose an Action"
+msgstr "Επιλογή ενέργειας"
+
+#: /resources/lib/add.py:18
+msgctxt "#30060"
+msgid "Clone as Shortcut Group"
+msgstr "Κλώνος ως ομάδα συντομεύσεων"
+
+#: /resources/lib/add.py:19
+msgctxt "#30061"
+msgid "Explode as Widget Group"
+msgstr "Έκρηξη ως ομάδα widget"
+
+#: /resources/lib/add.py:128
+msgctxt "#30062"
+msgid "Add as"
+msgstr "Προσθήκη ως"
+
+#: /resources/settings.xml:8 /resources/settings.xml:15
+#: /resources/settings.xml:17
+msgctxt "#30063"
+msgid "Always"
+msgstr "Πάντα"
+
+#: /resources/settings.xml:15 /resources/settings.xml:17
+msgctxt "#30064"
+msgid "While Nothing Playing"
+msgstr "Ενώ τίποτα δεν παίζει"
+
+#: /resources/settings.xml:8 /resources/settings.xml:15
+#: /resources/settings.xml:17
+msgctxt "#30065"
+msgid "Never"
+msgstr "Ποτέ"
+
+#: /resources/lib/menu.py:644
+msgctxt "#30066"
+msgid "{} (Merged)"
+msgstr "{} (Συγχωνευμένο)"
+
+#: /resources/settings.xml:40
+msgctxt "#30067"
+msgid "Backup / Restore"
+msgstr "Backup / Restore"
+
+#: /resources/settings.xml:41 /resources/lib/backup.py:15
+msgctxt "#30068"
+msgid "Choose Backup Location"
+msgstr "Επιλογή θέσης δημιουργίας αντιγράφων ασφαλείας"
+
+#: /resources/settings.xml:42
+msgctxt "#30069"
+msgid "Backup My Groups"
+msgstr "Δημιουργία αντιγράφων ασφαλείας των ομάδων μου"
+
+#: /resources/settings.xml:43
+msgctxt "#30070"
+msgid "Restore from Backup"
+msgstr "Επαναφορά από εφεδρεία"
+
+#: /resources/lib/backup.py:22
+msgctxt "#30071"
+msgid ""
+"Do you want to backup your groups? This will not backup any widgets defined "
+"in the skin."
+msgstr ""
+"Θέλετε να δημιουργήσετε αντίγραφα ασφαλείας των ομάδων σας; Αυτό δεν θα "
+"δημιουργήσει αντίγραφα ασφαλείας οποιωνδήποτε widgets που ορίζονται στο "
+"δέρμα."
+
+#: /resources/lib/backup.py:25
+msgctxt "#30072"
+msgid "Backup Name"
+msgstr "Όνομα αντιγράφου ασφαλείας"
+
+#: /resources/lib/backup.py:28
+msgctxt "#30073"
+msgid "Backup Cancelled."
+msgstr "Το αντίγραφο ασφαλείας ακυρώθηκε."
+
+#: /resources/lib/backup.py:36
+msgctxt "#30074"
+msgid "Could not create backup location."
+msgstr "Αδύνατη η δημιουργία αντιγράφου ασφαλείας location."
+
+#: /resources/lib/backup.py:59
+msgctxt "#30075"
+msgid "Choose Backup to Restore"
+msgstr "Επιλογή δημιουργίας αντιγράφων ασφαλείας για επαναφορά"
+
+#: /resources/lib/backup.py:67
+msgctxt "#30076"
+msgid "Would you like to restore {} group {} from this backup?"
+msgstr ""
+"Θέλετε να επαναφέρετε την ομάδα {} {} από αυτό το αντίγραφο ασφαλείας;"
+
+#: /resources/lib/backup.py:71
+msgctxt "#30077"
+msgid "Would you like to erase your current groups before restoring?"
+msgstr "Θέλετε να διαγράψετε τις τρέχουσες ομάδες σας πριν από την επαναφορά;"
+
+#: /resources/lib/backup.py:81 /resources/lib/backup.py:83
+msgctxt "#30078"
+msgid "Restore Cancelled."
+msgstr "Η επαναφορά ακυρώθηκε."
+
+#: /resources/settings.xml:8
+msgctxt "#30079"
+msgid "Show 'Next Page' Items"
+msgstr "Εμφάνιση στοιχείων \"επόμενης σελίδας\""
+
+#: /resources/settings.xml:6
+msgctxt "#30080"
+msgid "Widget Settings"
+msgstr "Ρυθμίσεις μικροεφαρμογής"
+
+#: /resources/settings.xml:7
+msgctxt "#30081"
+msgid "Hide Watched Items"
+msgstr "Απόκρυψη στοιχείων που παρακολουθούνται"
+
+#: /resources/settings.xml:9
+msgctxt "#30082"
+msgid "Use Paged Widgets (Doesn't Affect Merged Widgets)"
+msgstr "Χρήση σελιδών widgets (δεν επηρεάζει τα συγχωνευμένα widgets)"
+
+#: /resources/settings.xml:18
+msgctxt "#30083"
+msgid "Notification Sound"
+msgstr "Ήχος ειδοποίησης"
+
+#: /resources/settings.xml:8
+msgctxt "#30084"
+msgid "Not on Merged Widgets"
+msgstr "Όχι σε συγχωνευμένα widgets"
+
+#: /resources/lib/menu.py:307
+msgctxt "#30085"
+msgid "Back to Page {}"
+msgstr "Επιστροφή στη Σελίδα {}"
+
+#: /resources/lib/menu.py:591
+msgctxt "#30086"
+msgid "Shift Path to Top"
+msgstr "Μετατόπιση διαδρομής στην κορυφή"
+
+#: /resources/lib/menu.py:579
+msgctxt "#30087"
+msgid "Shift Path to Bottom"
+msgstr "Μετατόπιση διαδρομής προς τα κάτω"
+
+#: /resources/lib/edit.py:403 /resources/lib/menu.py:470
+msgctxt "#30088"
+msgid "Choose a Path"
+msgstr "Επιλογή διαδρομής"
+
+#: /resources/lib/edit.py:397 /resources/lib/menu.py:524
+msgctxt "#30089"
+msgid "Choose Paths to Merge"
+msgstr "Επιλογή διαδρομών για συγχώνευση"
+
+#: /resources/lib/edit.py:147
+msgctxt "#30090"
+msgid "Remove Widget"
+msgstr "Κατάργηση widget"
+
+#: /resources/lib/edit.py:271
+msgctxt "#30091"
+msgid "Edit Artwork"
+msgstr "Τροποποίηση Έργου Τέχνης"
+
+#: /resources/lib/edit.py:271
+msgctxt "#30092"
+msgid "Edit InfoLabels"
+msgstr "Επεξεργασία ενημερωτικών σημάτων"
+
+#: /resources/lib/edit.py:285
+msgctxt "#30093"
+msgid "Select Artwork to Add"
+msgstr "Επιλογή γραφικού για προσθήκη"
+
+#: /resources/lib/edit.py:285
+msgctxt "#30094"
+msgid "Select InfoLabel to Add"
+msgstr "Επιλέξτε InfoLabel για προσθήκη"
+
+#: /resources/lib/edit.py:292 /resources/lib/edit.py:334
+#: /resources/lib/edit.py:410
+msgctxt "#30095"
+msgid "New Value for {}:"
+msgstr "Νέα τιμή για {}:"
+
+#: /resources/lib/edit.py:328
+msgctxt "#30096"
+msgid "Select Filetype"
+msgstr "Επιλογή τύπου αρχείου"
+
+#: /resources/lib/edit.py:339
+msgctxt "#30097"
+msgid ""
+"Do you want to clear or keep the current {}?\n"
+"\n"
+"[B]{}[/B]: {}"
+msgstr ""
+"Θέλετε να καταργήσετε ή να διατηρήσετε το τρέχον {};\n"
+"\n"
+"[Β] {}[/B]: {}"
+
+#: /resources/lib/edit.py:342
+msgctxt "#30098"
+msgid "Clear"
+msgstr "Εκκαθάριση"
+
+#: /resources/lib/edit.py:343
+msgctxt "#30099"
+msgid "Keep"
+msgstr "Keep"
+
+#: /resources/lib/edit.py:379
+msgctxt "#30100"
+msgid "Refresh Duration"
+msgstr "Διάρκεια ανανέωσης"
+
+#: /resources/settings.xml:30 /resources/lib/menu.py:267
+msgctxt "#30101"
+msgid "Toggle Skin Debugging"
+msgstr "Εναλλαγή εντοπισμού σφαλμάτων δέρματος"
+
+#: /resources/lib/menu.py:175
+msgctxt "#30102"
+msgid "{} Paths Merged"
+msgstr "{} Συγχωνευμένες διαδρομές"
+
+#: /resources/settings.xml:28 /resources/lib/menu.py:255
+msgctxt "#30103"
+msgid "Clean Old Widget Files"
+msgstr "Καθαρισμός παλαιών αρχείων widget"
+
+#: /resources/settings.xml:3
+msgctxt "#30104"
+msgid "Icon Color"
+msgstr "Χρώμα Εικονιδίου"
+
+#: /resources/lib/add.py:244
+msgctxt "#30105"
+msgid "{} paths added to {}"
+msgstr "{} διαδρομές που προστέθηκαν στο {}"
+
+#: /resources/lib/manage.py:76
+msgctxt "#30106"
+msgid "{} unused widgets removed."
+msgstr "{} αφαιρέθηκαν τα αχρησιμοποίητα widgets."
+
+#: /resources/lib/common/utils.py:369
+msgctxt "#30107"
+msgid "Choose from a predefined color or hexcode input?"
+msgstr "Επιλέξτε από μια προκαθορισμένη είσοδο χρώματος ή εξαγωνού;"
+
+#: /resources/lib/common/utils.py:370
+msgctxt "#30108"
+msgid "Hex Input"
+msgstr "Εισροές εξάγωνων"
+
+#: /resources/lib/common/utils.py:371
+msgctxt "#30109"
+msgid "Predefined Color"
+msgstr "Προκαθορισμένο χρώμα"
+
+#: /resources/lib/common/utils.py:375
+msgctxt "#30110"
+msgid "Hex codes must be of the format '#RRGGBB'."
+msgstr "Οι εξαγωνιανοί κωδικοί πρέπει να έχουν τη μορφή «#RRGGBB»."
+
+#: /resources/lib/common/utils.py:378
+msgctxt "#30111"
+msgid "Select a Color"
+msgstr "Επιλογή χρώματος"
+
+#: /resources/lib/common/utils.py:388
+msgctxt "#30112"
+msgid "Invalid color code."
+msgstr "Δεν είναι έγκυρος χρωματικός κώδικας."
+
+#: /resources/settings.xml:37
+msgctxt "#30113"
+msgid "Debug Logging"
+msgstr "Καταγραφή εντοπισμού σφαλμάτων"
+
+#: /resources/lib/edit.py:123 /resources/lib/menu.py:563
+msgctxt "#30114"
+msgid "Edit Path"
+msgstr "Επεξεργασία διαδρομής"
+
+#: /resources/settings.xml:10
+msgctxt "#30115"
+msgid "Hide Duplicates"
+msgstr "Απόκρυψη διπλοτύπων"
+
+#: /resources/settings.xml:11
+msgctxt "#30116"
+msgid "Prefer Episode if Show Available"
+msgstr "Προτιμήστε το επεισόδιο εάν η εκπομπή είναι διαθέσιμη"
+
+#: /resources/settings.xml:31
+msgctxt "#30117"
+msgid "Clear Cache"
+msgstr "Απαλοιφή Προσωρινής Μνήμης"
+
+#: /resources/lib/common/utils.py:328
+msgctxt "#30118"
+msgid ""
+"Are you sure you want to clear the cache? This action may make widgets load "
+"slower for some time."
+msgstr ""
+"Είστε βέβαιοι ότι θέλετε να καταργήσετε την προσωρινή μνήμη; Αυτή η ενέργεια"
+" μπορεί να κάνει τα widgets να φορτώνονται πιο αργά για κάποιο χρονικό "
+"διάστημα."

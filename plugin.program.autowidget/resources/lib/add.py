@@ -14,11 +14,11 @@ from resources.lib import refresh
 from resources.lib.common import utils
 
 shortcut_types = [
-    utils.get_string(32051),
-    utils.get_string(32052),
-    utils.get_string(32082),
-    utils.get_string(32083),
-    utils.get_string(32053),
+    utils.get_string(30033),
+    utils.get_string(30034),
+    utils.get_string(30060),
+    utils.get_string(30061),
+    utils.get_string(30035),
 ]
 
 folder_shortcut = utils.get_art("folder-shortcut")
@@ -126,7 +126,7 @@ def _add_as(path_def):
         li.setArt(art[idx])
         options.append(li)
 
-    idx = dialog.select(utils.get_string(32084), options, useDetails=True)
+    idx = dialog.select(utils.get_string(30062), options, useDetails=True)
     if idx < 0:
         return
 
@@ -153,11 +153,11 @@ def _group_dialog(_type, group_id=None):
     offset = 1
 
     if _type == "widget":
-        new_widget = xbmcgui.ListItem(utils.get_string(32015))
+        new_widget = xbmcgui.ListItem(utils.get_string(30010))
         new_widget.setArt(folder_sync)
         options.append(new_widget)
     else:
-        new_shortcut = xbmcgui.ListItem(utils.get_string(32017))
+        new_shortcut = xbmcgui.ListItem(utils.get_string(30011))
         new_shortcut.setArt(folder_shortcut)
         options.append(new_shortcut)
 
@@ -170,11 +170,11 @@ def _group_dialog(_type, group_id=None):
         options.append(item)
 
     choice = dialog.select(
-        utils.get_string(32054), options, preselect=index, useDetails=True
+        utils.get_string(30036), options, preselect=index, useDetails=True
     )
 
     if choice < 0:
-        dialog.notification("AutoWidget", utils.get_string(32034))
+        dialog.notification("AutoWidget", utils.get_string(30021))
     elif (choice, _type) == (0, "widget"):
         return _group_dialog(_type, add_group("widget"))
     elif choice == 0:
@@ -184,7 +184,7 @@ def _group_dialog(_type, group_id=None):
 
 
 def add_group(target, group_name=""):
-    group_name = dialog.input(heading=utils.get_string(32037), defaultt=group_name)
+    group_name = dialog.input(heading=utils.get_string(30023), defaultt=group_name)
     group_id = ""
 
     if group_name:
@@ -201,7 +201,7 @@ def add_group(target, group_name=""):
 
         utils.write_json(filename, group_def)
     else:
-        dialog.notification("AutoWidget", utils.get_string(32038))
+        dialog.notification("AutoWidget", utils.get_string(30024))
 
     return group_id
 
@@ -209,9 +209,9 @@ def add_group(target, group_name=""):
 def _add_path(group_def, labels, over=False):
     if not over:
         if group_def["type"] == "shortcut":
-            heading = utils.get_string(32043)
+            heading = utils.get_string(30028)
         elif group_def["type"] == "widget":
-            heading = utils.get_string(32044)
+            heading = utils.get_string(30029)
 
         labels["label"] = dialog.input(heading=heading, defaultt=labels["label"])
 
@@ -242,5 +242,5 @@ def _copy_path(path_def):
         labels = build_labels("json", file, path_def["target"])
         _add_path(group_def, labels, over=True)
     dialog.notification(
-        "AutoWidget", utils.get_string(32131).format(len(files), group_def["label"])
+        "AutoWidget", utils.get_string(30105).format(len(files), group_def["label"])
     )

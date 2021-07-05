@@ -238,7 +238,7 @@ def refresh_paths(notify=False, force=False):
         dialog = xbmcgui.Dialog()
         dialog.notification(
             "AutoWidget",
-            utils.get_string(32033),
+            utils.get_string(30020),
             sound=utils.get_setting_bool("service.refresh_sound"),
         )
 

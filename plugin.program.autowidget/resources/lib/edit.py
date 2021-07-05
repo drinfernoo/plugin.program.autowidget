@@ -53,19 +53,19 @@ def _remove_group(group_id, over=False):
     group_def = manage.get_group_by_id(group_id)
     group_name = group_def["label"]
     if not over:
-        choice = dialog.yesno("AutoWidget", utils.get_string(32039))
+        choice = dialog.yesno("AutoWidget", utils.get_string(30025))
 
     if over or choice:
         file = os.path.join(utils._addon_path, "{}.group".format(group_id))
         utils.remove_file(file)
         dialog.notification(
-            "AutoWidget", utils.get_string(32045).format(six.text_type(group_name))
+            "AutoWidget", utils.get_string(30030).format(six.text_type(group_name))
         )
 
 
 def _remove_path(path_id, group_id, over=False):
     if not over:
-        choice = dialog.yesno("AutoWidget", utils.get_string(32035))
+        choice = dialog.yesno("AutoWidget", utils.get_string(30022))
 
     if over or choice:
         group_def = manage.get_group_by_id(group_id)
@@ -76,27 +76,27 @@ def _remove_path(path_id, group_id, over=False):
                 group_def["paths"].remove(path_def)
                 dialog.notification(
                     "AutoWidget",
-                    utils.get_string(32045).format(six.text_type(path_name)),
+                    utils.get_string(30030).format(six.text_type(path_name)),
                 )
         manage.write_path(group_def)
 
 
 def remove_widget(widget_id, over=False):
     if not over:
-        choice = dialog.yesno("AutoWidget", utils.get_string(32039))
+        choice = dialog.yesno("AutoWidget", utils.get_string(30025))
 
     if over or choice:
         file = os.path.join(utils._addon_path, "{}.widget".format(widget_id))
         utils.remove_file(file)
-        dialog.notification("AutoWidget", utils.get_string(32045).format(widget_id))
+        dialog.notification("AutoWidget", utils.get_string(30030).format(widget_id))
 
 
 def _warn():
     choice = dialog.yesno(
         "AutoWidget",
-        utils.get_string(32058),
-        yeslabel=utils.get_string(32059),
-        nolabel=utils.get_string(32060),
+        utils.get_string(30039),
+        yeslabel=utils.get_string(30040),
+        nolabel=utils.get_string(30041),
     )
     if choice < 1:
         utils.set_setting("context.advanced", "false")
@@ -111,20 +111,20 @@ def _warn():
 def _show_options(group_def, path_def=None, type=""):
     edit_def = path_def if path_def else group_def
     options = _get_options(edit_def)
-    remove_label = utils.get_string(32025) if path_def else utils.get_string(32023)
+    remove_label = utils.get_string(30014) if path_def else utils.get_string(30013)
     options.append(u"[COLOR firebrick]{}[/COLOR]".format(six.ensure_text(remove_label)))
     if not type:
         target = path_def["target"] if path_def else group_def["type"]
         if target not in ["shortcut", "widget", "settings"]:
-            main_action = utils.get_string(32140)
+            main_action = utils.get_string(30048)
         else:
             main_action = (
-                utils.get_string(32048)
+                utils.get_string(30031)
                 if target in ["shortcut", "settings"]
-                else utils.get_string(32141)
+                else utils.get_string(30114)
             )
     else:
-        main_action = utils.get_string(32061)
+        main_action = utils.get_string(30042)
 
     idx = dialog.select(main_action, options)
     if idx < 0:
@@ -145,9 +145,9 @@ def _show_options(group_def, path_def=None, type=""):
 
 def _show_widget_options(edit_def):
     options = _get_widget_options(edit_def)
-    options.append("[COLOR firebrick]{}[/COLOR]".format(utils.get_string(32116)))
+    options.append("[COLOR firebrick]{}[/COLOR]".format(utils.get_string(30090)))
 
-    idx = dialog.select(utils.get_string(32070), options)
+    idx = dialog.select(utils.get_string(30048), options)
     if idx < 0:
         return
     elif idx == len(options) - 1:
@@ -198,7 +198,7 @@ def _get_options(edit_def, useThumbs=None):
 
     if useThumbs is not None:
         new_item = xbmcgui.ListItem(
-            utils.get_string(32077) if not useThumbs else utils.get_string(32078)
+            utils.get_string(30055) if not useThumbs else utils.get_string(30056)
         )
         new_item.setArt(plus)
         options.append(new_item)
@@ -228,9 +228,9 @@ def _get_widget_options(edit_def):
 
             if key == "action":
                 if label == "random":
-                    label = utils.get_string(32079)
+                    label = utils.get_string(30057)
                 elif label == "next":
-                    label = utils.get_string(32080)
+                    label = utils.get_string(30058)
                 elif label in ["merged", "static"]:
                     continue
             elif key == "refresh":
@@ -269,7 +269,7 @@ def _get_widget_options(edit_def):
 def _get_value(edit_def, key):
     if isinstance(edit_def[_clean_key(key)], dict):
         is_art = key == "art"
-        label = utils.get_string(32117) if is_art else utils.get_string(32118)
+        label = utils.get_string(30091) if is_art else utils.get_string(30092)
         options = _get_options(edit_def[key], useThumbs=is_art)
         idx = dialog.select(label, options, useDetails=is_art)
 
@@ -283,14 +283,14 @@ def _get_value(edit_def, key):
                 if (i not in edit_def[key] or edit_def[key][i] in [None, "", -1])
             ]
             add_idx = dialog.select(
-                utils.get_string(32120) if key == "file" else utils.get_string(32119),
+                utils.get_string(30094) if key == "file" else utils.get_string(30093),
                 add_options,
             )
             if add_idx < 0:
                 return
             if key == "file":
                 value = dialog.input(
-                    utils.get_string(32121).format(add_options[add_idx])
+                    utils.get_string(30095).format(add_options[add_idx])
                 )
                 if value is not None:
                     edit_def[key][add_options[add_idx]] = value
@@ -298,7 +298,7 @@ def _get_value(edit_def, key):
             elif key == "art":
                 value = dialog.browse(
                     2,
-                    utils.get_string(32049).format(add_options[add_idx].capitalize()),
+                    utils.get_string(30032).format(add_options[add_idx].capitalize()),
                     shares="files",
                     mask=".jpg|.png",
                     useThumbs=True,
@@ -317,7 +317,7 @@ def _get_value(edit_def, key):
         if key in utils.art_types:
             value = dialog.browse(
                 2,
-                utils.get_string(32049).format(key.capitalize()),
+                utils.get_string(30032).format(key.capitalize()),
                 shares="files",
                 mask=".jpg|.png",
                 useThumbs=True,
@@ -326,22 +326,22 @@ def _get_value(edit_def, key):
         elif key == "filetype":
             options = ["file", "directory"]
             type = dialog.select(
-                utils.get_string(32122), options, preselect=options.index(default)
+                utils.get_string(30096), options, preselect=options.index(default)
             )
             value = options[type]
         elif key == "color":
             value = utils.set_color()
         else:
-            value = dialog.input(utils.get_string(32121).format(key), defaultt=default)
+            value = dialog.input(utils.get_string(30095).format(key), defaultt=default)
 
         if value == default:
             clear = dialog.yesno(
                 "AutoWidget",
-                utils.get_string(32123).format(
+                utils.get_string(30097).format(
                     "art" if key in utils.art_types else "value", key, default
                 ),
-                yeslabel=utils.get_string(32124),
-                nolabel=utils.get_string(32125),
+                yeslabel=utils.get_string(30098),
+                nolabel=utils.get_string(30099),
             )
             if clear:
                 value = ""
@@ -355,8 +355,8 @@ def _get_value(edit_def, key):
 
 def _get_widget_value(edit_def, key):
     if key == "action":
-        actions = [utils.get_string(32079), utils.get_string(32080)]
-        choice = dialog.select(utils.get_string(32081), actions)
+        actions = [utils.get_string(30057), utils.get_string(30058)]
+        choice = dialog.select(utils.get_string(30059), actions)
         if choice < 0:
             return
 
@@ -377,7 +377,7 @@ def _get_widget_value(edit_def, key):
             durations.append(label)
             d = d + 0.25
 
-        choice = dialog.select(utils.get_string(32126), durations)
+        choice = dialog.select(utils.get_string(30100), durations)
 
         if choice < 0:
             return
@@ -395,20 +395,20 @@ def _get_widget_value(edit_def, key):
         labels = [i["label"] for i in groups]
         if isinstance(edit_def[key], list):
             paths = []
-            choice = dialog.multiselect(utils.get_string(32115), labels)
+            choice = dialog.multiselect(utils.get_string(30089), labels)
             if choice:
                 for i in choice:
                     paths.append(groups[i])
                 value = paths
         else:
-            choice = dialog.select(utils.get_string(32114), labels)
+            choice = dialog.select(utils.get_string(30088), labels)
             if choice < 0:
                 return
             value = groups[choice]
     else:
         default = edit_def.get(key)
         value = dialog.input(
-            utils.get_string(32121).format(key), defaultt=six.text_type(default)
+            utils.get_string(30095).format(key), defaultt=six.text_type(default)
         )
 
     if value:
