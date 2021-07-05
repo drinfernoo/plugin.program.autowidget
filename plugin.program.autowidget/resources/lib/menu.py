@@ -27,6 +27,10 @@ sync = utils.get_art("sync")
 tools = utils.get_art("tools")
 unpack = utils.get_art("unpack")
 
+_next = utils.get_string(209, kodi=True)
+_previous = utils.get_string(210, kodi=True)
+_next_page = utils.get_string(33078, kodi=True)
+
 
 def root_menu():
     directory.add_menu_item(
@@ -300,7 +304,8 @@ def show_path(
 
     stack = widget_def.get("stack", [])
     if stack:
-        title = utils.get_string(32110).format(len(stack))
+        title = _previous
+        # title = utils.get_string(32110).format(len(stack))
         directory.add_menu_item(
             title=title,
             params={
@@ -315,29 +320,24 @@ def show_path(
             props={"specialsort": "top", "autoLabel": path_label},
         )
 
-    for file in files:
+    for pos, file in enumerate(files):
         properties = {"autoLabel": path_label, "autoID": widget_id}
+        next_item = False
+        prev_item = False
+
         if "customproperties" in file:
             for prop in file["customproperties"]:
                 properties[prop] = file["customproperties"][prop]
 
-        clean_pattern = "[^\w \xC0-\xFF]"
-        tag_pattern = "(\[[^\]]*\])"
-
-        next_pattern = (
-            "(?:^(?:next)?\s*(?:(?:>>)|(?:\.*)$)?)\s*"
-            "(?:page\s*(?:(?:\d+\D*\d?$)|(?:(?:>>)|(?:\.*)$)|(?:\(\d+|.*\)$))?)?$"
-        )
-        prev_pattern = "^(?:previous(?: page)?)$|^(?:back)$"
-
-        cleaned_title = re.sub(tag_pattern, "", file.get("label", "").lower()).strip()
-        next_item = re.search(next_pattern, cleaned_title)
-        prev_item = re.search(prev_pattern, cleaned_title)
+        if pos == len(files) - 1:
+            next_item = _is_page_item(file.get("label", ""))
+        elif pos == 0:
+            prev_item = _is_page_item(file.get("label", ""), next=False)
 
         if (prev_item and stack) or (next_item and show_next == 0):
             continue
         elif next_item and show_next > 0:
-            label = utils.get_string(32111)
+            label = _next_page
             properties["specialsort"] = "bottom"
 
             if num > 1:
@@ -653,3 +653,30 @@ def _create_action_items(group_def, _id):
             isFolder=True,
             props=props,
         )
+
+
+def _is_page_item(label, next=True):
+    tag_pattern = "(\[[^\]]*\])"
+    page_count_pattern = "(?:\W*(?:(?:\d+\D*\d*))\W*)?"
+    base_pattern = "^(?:(?:\W*)?\s*(?:{})+\s*{})?$"
+    next_pattern = base_pattern.format(_next.lower(), page_count_pattern)
+    next_page_pattern = base_pattern.format(_next_page.lower(), page_count_pattern)
+    prev_pattern = "^(?:(?:(?:{})\s*(?:page)?)|(?:back)?)\s*{}$".format(_previous, page_count_pattern)
+
+    cleaned_title = re.sub(tag_pattern, "", label.lower()).strip()
+    next_page_words = _next_page.split("\s*")
+
+    if next:
+        contains_next = re.search(next_pattern, cleaned_title) is not None
+        contains_next_page = re.search(next_page_pattern, cleaned_title) is not None
+        word_matches = [
+            re.search(base_pattern.format(i, page_count_pattern), cleaned_title)
+            for i in next_page_words
+        ]
+        return (
+            contains_next
+            or contains_next_page
+            or any(i is not None for i in word_matches)
+        )
+    else:
+        return re.search(prev_pattern, cleaned_title)

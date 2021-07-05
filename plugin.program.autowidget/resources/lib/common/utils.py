@@ -560,7 +560,9 @@ def set_skin_string(string, value):
     xbmc.executebuiltin("Skin.SetString({},{})".format(string, value))
 
 
-def get_string(_id):
+def get_string(_id, kodi=False):
+    if kodi:
+        return six.text_type(xbmc.getLocalizedString(_id))
     return six.text_type(_addon.getLocalizedString(_id))
 
 
