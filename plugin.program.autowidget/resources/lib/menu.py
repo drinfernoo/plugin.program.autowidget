@@ -656,12 +656,14 @@ def _create_action_items(group_def, _id):
 
 
 def _is_page_item(label, next=True):
-    tag_pattern = "(\[[^\]]*\])"
-    page_count_pattern = "(?:\W*(?:(?:\d+\D*\d*))\W*)?"
-    base_pattern = "^(?:(?:\W*)?\s*(?:{})+\s*{})?$"
+    tag_pattern = r"(\[[^\]]*\])"
+    page_count_pattern = r"(?:\W*(?:(?:\d+\D*\d*))\W*)?"
+    base_pattern = r"^(?:(?:\W*)?\s*(?:{})+\s*{})?$"
     next_pattern = base_pattern.format(_next.lower(), page_count_pattern)
     next_page_pattern = base_pattern.format(_next_page.lower(), page_count_pattern)
-    prev_pattern = "^(?:(?:(?:{})\s*(?:page)?)|(?:back)?)\s*{}$".format(_previous, page_count_pattern)
+    prev_pattern = r"^(?:(?:(?:{})\s*(?:page)?)|(?:back)?)\s*{}$".format(
+        _previous, page_count_pattern
+    )
 
     cleaned_title = re.sub(tag_pattern, "", label.lower()).strip()
     next_page_words = _next_page.split("\s*")
