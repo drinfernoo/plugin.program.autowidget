@@ -27,9 +27,9 @@ sync = utils.get_art("sync")
 tools = utils.get_art("tools")
 unpack = utils.get_art("unpack")
 
-_next = utils.get_string(209, kodi=True)
-_previous = utils.get_string(210, kodi=True)
-_next_page = utils.get_string(33078, kodi=True)
+_next = utils.get_string(209, kodi=True)  # no-translate
+_previous = utils.get_string(210, kodi=True)  # no-translate
+_next_page = utils.get_string(33078, kodi=True)  # no-translate
 
 
 def root_menu():
