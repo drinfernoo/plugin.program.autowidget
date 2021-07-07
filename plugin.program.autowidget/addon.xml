@@ -36,6 +36,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.2.3
+ - Add English (US) and Portugese localizations
 3.2.2
  - Add more localizations
  - Better "Next Page" detection
