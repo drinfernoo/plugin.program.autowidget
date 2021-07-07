@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="3.2.2" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="3.2.1" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.kodi-six" />
         <import addon="script.module.pil" />
@@ -15,11 +15,11 @@
     <extension point="kodi.context.item">
         <menu id="kodi.core.main">
             <item library="context_add.py">
-                <label>$ADDON[plugin.program.autowidget 30003]</label>
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
                 <visible>String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
             </item>
             <item library="context_refresh.py">
-                <label>$ADDON[plugin.program.autowidget 30006]</label>
+                <label>$ADDON[plugin.program.autowidget 32006]</label>
                 <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
             </item>
         </menu>
@@ -36,10 +36,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-3.2.2
- - Add more localizations
- - Better "Next Page" detection
- - Support for "Next Page" items in other languages
 3.2.1
  - Fix for items with no artwork
 3.2.0
@@ -287,6 +283,15 @@
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+anner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+learlogo>
         </assets>
     </extension>
 </addon>
