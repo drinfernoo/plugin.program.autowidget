@@ -27,9 +27,9 @@ sync = utils.get_art("sync")
 tools = utils.get_art("tools")
 unpack = utils.get_art("unpack")
 
-_next = utils.get_string(209, kodi=True)
-_previous = utils.get_string(210, kodi=True)
-_next_page = utils.get_string(33078, kodi=True)
+_next = utils.get_string(209, kodi=True)  # no-translate
+_previous = utils.get_string(210, kodi=True)  # no-translate
+_next_page = utils.get_string(33078, kodi=True)  # no-translate
 
 
 def root_menu():
@@ -656,12 +656,14 @@ def _create_action_items(group_def, _id):
 
 
 def _is_page_item(label, next=True):
-    tag_pattern = "(\[[^\]]*\])"
-    page_count_pattern = "(?:\W*(?:(?:\d+\D*\d*))\W*)?"
-    base_pattern = "^(?:(?:\W*)?\s*(?:{})+\s*{})?$"
+    tag_pattern = r"(\[[^\]]*\])"
+    page_count_pattern = r"(?:\W*(?:(?:\d+\D*\d*))\W*)?"
+    base_pattern = r"^(?:(?:\W*)?\s*(?:{})+\s*{})?$"
     next_pattern = base_pattern.format(_next.lower(), page_count_pattern)
     next_page_pattern = base_pattern.format(_next_page.lower(), page_count_pattern)
-    prev_pattern = "^(?:(?:(?:{})\s*(?:page)?)|(?:back)?)\s*{}$".format(_previous, page_count_pattern)
+    prev_pattern = r"^(?:(?:(?:{})\s*(?:page)?)|(?:back)?)\s*{}$".format(
+        _previous, page_count_pattern
+    )
 
     cleaned_title = re.sub(tag_pattern, "", label.lower()).strip()
     next_page_words = _next_page.split("\s*")
