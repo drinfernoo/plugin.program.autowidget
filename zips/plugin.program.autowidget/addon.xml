@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1144" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1217" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.kodi-six" />
         <import addon="script.module.pil" />
@@ -15,11 +15,11 @@
     <extension point="kodi.context.item">
         <menu id="kodi.core.main">
             <item library="context_add.py">
-                <label>$ADDON[plugin.program.autowidget 32003]</label>
+                <label>$ADDON[plugin.program.autowidget 30003]</label>
                 <visible>String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
             </item>
             <item library="context_refresh.py">
-                <label>$ADDON[plugin.program.autowidget 32006]</label>
+                <label>$ADDON[plugin.program.autowidget 30006]</label>
                 <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
             </item>
         </menu>
@@ -36,6 +36,32 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.2.1
+ - Fix for items with no artwork
+3.2.0
+ - Add setting to prefer episodes/shows when removing duplicates
+ - Rework duplicate removal
+ - Fix bug in Active Widgets editor dialog
+ - Fix landscape art for some items
+ - Fix paged widgets not resetting on boot
+ - Format with black
+3.1.9
+ - Fix error with translatePath
+3.1.8
+ - Fix resume progress on items
+3.1.7
+ - Fix widget cleaning
+ - Fix Active Widgets menu
+3.1.6
+ - Fix detection of JSON-RPC version
+3.1.5
+ - Fix editor dialog
+3.1.4
+ - Fix settings shortcuts
+ - Fix some Unicode errors
+ - Fix some dialog labels in editor
+3.1.3
+ - Fix hashing in Matrix
 3.1.2
  - Fix "Clear Cache"
 3.1.1
@@ -241,28 +267,6 @@
  - Raise required Skin Shortcuts version to  1.0.19
 1.0.4
  - Allow custom labels
- - Add removal notifications    
-1.0.3
- - Fix shortcuts and widgets added from context menu
-1.0.2
- - Fix crash from non-XML files
-1.0.1
- - Fix crash from non-existent context menu setting
-1.0.0
- - First stable release
-        </news>
-        <assets>
-            <icon>resources/media/icon.png</icon>
-            <fanart>resources/media/fanart.png</fanart>
-            <poster>resources/media/poster.png</poster>
-            <banner>resources/media/banner.png</banner>
-            <clearlogo>resources/media/clearlogo.png</clearlogo>
-        </assets>
-    </extension>
-</addon>
-ets>
-    </extension>
-</addon>
  - Add removal notifications    
 1.0.3
  - Fix shortcuts and widgets added from context menu
