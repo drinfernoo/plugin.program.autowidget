@@ -46,6 +46,13 @@ _exclude_keys = [
 
 _exclude_params = ["refresh", "reload"]
 
+_info_types = {
+    **dict.fromkeys(
+        ["video", "movie", "set", "tvshow", "season", "episode", "musicvideo"], "video"
+    ),
+    **dict.fromkeys(["music", "song", "album", "artist"], "music"),
+}
+
 
 def add_separator(title="", char="-", sort=""):
     _window = utils.get_active_window()
@@ -75,13 +82,13 @@ def add_sort_methods(handle):
 
 
 def add_menu_item(
-    title, params=None, path=None, info={}, cm=None, art=None, isFolder=False, props={}
+    title, params=None, path=None, info={}, cm=None, art={}, isFolder=False, props={}
 ):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
 
     if params is not None:
-        encode = {k: params[k] for k, v in params.items() if k not in _exclude_params}
+        encode = {k: v for k, v in params.items() if k not in _exclude_params}
 
         _plugin += "?{}".format(urlencode(encode))
 
@@ -96,51 +103,46 @@ def add_menu_item(
     item = xbmcgui.ListItem(title)
 
     if info:
-        def_info = {x: info[x] for x in info if x not in _exclude_keys}
-        mediatype = info.get("type", "video")
-        if mediatype != "unknown":
-            def_info["mediatype"] = mediatype
+        def_info = {"mediatype": info.get("type", "")}
 
-        for key in def_info:
-            i = def_info.get(key)
-            if any(key == x for x in ["artist", "cast"]):
-                if not i:
-                    def_info[key] = []
-                elif not isinstance(i, list):
-                    def_info[key] = [i]
-                elif isinstance(i, list) and key == "cast":
-                    cast = []
-                    for actor in i:
-                        cast.append((actor["name"], actor["role"]))
-                    def_info[key] = cast
-            elif isinstance(i, list):
-                def_info[key] = " / ".join(i)
+        for key in {k: v for k, v in info.items() if k not in _exclude_keys}:
+            if isinstance(info[key], list):
+                value = info.get(key, [])
+                if key == "cast":
+                    item.setCast(value)
+                else:
+                    def_info[key] = " / ".join(value)
+            elif isinstance(info[key], dict):
+                value = info.get(key, {})
+                if key == "resume":
+                    pos = value.get("position", 0)
+                    total = value.get("total", 0)
+                    if pos > 0 and pos < total:
+                        props["ResumeTime"] = six.text_type(pos)
+                        props["TotalTime"] = six.text_type(total)
+                else:
+                    utils.log("Unknown dict-typed info key encountered: {}".format(key))
             else:
-                def_info[key] = six.text_type(i)
+                value = info.get(key)
+                if value is not None:
+                    if key == "runtime":
+                        def_info["duration"] = value
+                    else:
+                        def_info[key] = (
+                            value
+                            if isinstance(value, int) or isinstance(value, float)
+                            else six.text_type(value)
+                        )
 
-        runtime = info.get("runtime", 0)
-        if runtime > 0:
-            def_info["duration"] = runtime
-
-        resume = info.get("resume", {})
-        if "resume" in def_info:
-            def_info.pop("resume")
-        if resume.get("position", 0) > 0:
-            props["ResumeTime"] = six.text_type(resume["position"])
-            props["TotalTime"] = six.text_type(resume["total"])
-
-        item.setInfo("video", def_info)
+        info_type = _info_types.get(def_info.get("mediatype"))
+        if info_type:
+            item.setInfo(info_type, def_info)
         item.setMimeType(def_info.get("mimetype", ""))
 
-    if props:
-        try:
-            item.setProperties(props)
-        except AttributeError:
-            for prop in props:
-                item.setProperty(prop, props[prop])
+    for prop in props:
+        item.setProperty(prop, props[prop])
 
-    if art:
-        item.setArt(art)
+    item.setArt(art)
 
     if cm:
         item.addContextMenuItems(cm)
