@@ -355,12 +355,6 @@ def update_container(reload=False):
         xbmc.executebuiltin("Container.Refresh()")
 
 
-def _prettify(elem):
-    rough_string = ElementTree.tostring(elem, "utf-8")
-    reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="\t")
-
-
 def get_valid_filename(filename):
     whitelist = "-_.() {}{}".format(string.ascii_letters, string.digits)
     char_limit = 255
@@ -530,7 +524,12 @@ def get_condition(cond):
 
 
 def clean_artwork_url(url):
-    url = unquote(url).replace(_home, "special://home/").replace("image://", "").rstrip("/")
+    url = (
+        unquote(url)
+        .replace(_home, "special://home/")
+        .replace("image://", "")
+        .rstrip("/")
+    )
     return url
 
 
