@@ -598,9 +598,7 @@ def get_condition(cond):
 
 
 def clean_artwork_url(url):
-    url = unquote(url).replace(_home, "special://home/").replace("image://", "")
-    if url.endswith("/"):
-        url = url[:-1]
+    url = unquote(url).replace(_home, "special://home/").replace("image://", "").rstrip("/")
     return url
 
 
