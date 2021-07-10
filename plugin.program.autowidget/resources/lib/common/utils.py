@@ -50,74 +50,6 @@ windows = {
     "videos": ["video", "videos"],
 }
 
-info_types = [
-    "artist",
-    "albumartist",
-    "genre",
-    "year",
-    "rating",
-    "album",
-    "track",
-    "duration",
-    "comment",
-    "lyrics",
-    "musicbrainztrackid",
-    "plot",
-    "art",
-    "mpaa",
-    "cast",
-    "musicbrainzartistid",
-    "set",
-    "showlink",
-    "top250",
-    "votes",
-    "musicbrainzalbumid",
-    "disc",
-    "tag",
-    "genreid",
-    "season",
-    "musicbrainzalbumartistid",
-    "size",
-    "theme",
-    "mood",
-    "style",
-    "playcount",
-    "director",
-    "trailer",
-    "tagline",
-    "title",
-    "plotoutline",
-    "originaltitle",
-    "lastplayed",
-    "writer",
-    "studio",
-    "country",
-    "imdbnumber",
-    "premiered",
-    "productioncode",
-    "runtime",
-    "firstaired",
-    "episode",
-    "showtitle",
-    "artistid",
-    "albumid",
-    "tvshowid",
-    "setid",
-    "watchedepisodes",
-    "displayartist",
-    "mimetype",
-    "albumartistid",
-    "description",
-    "albumlabel",
-    "sorttitle",
-    "episodeguide",
-    "dateadded",
-    "lastmodified",
-    "specialsortseason",
-    "specialsortepisode",
-    "resume",
-]
-
 art_types = [
     "banner",
     "clearart",
@@ -672,20 +604,35 @@ def widgets_for_path(path):
     return set(widgets)
 
 
+def _get_info_keys():
+    params = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "JSONRPC.Introspect",
+        "params": {
+            "getmetadata": True,
+            "filter": {
+                "getreferences": True,
+                "id": "List.Fields.Files",
+                "type": "type",
+            },
+        },
+    }
+    info_keys_json = call_jsonrpc(json.dumps(params))
+    info_keys = json.loads(info_keys_json)
+    return info_keys["result"]["types"]["List.Fields.Files"]["items"]["enums"]
+
+
 def cache_files(path, widget_id):
     hash = path2hash(path)
     version = _get_json_version()
-    props = (
-        version == (10, 3, 1)
-        or (version[0] >= 11 and version[1] >= 12)
-        or version[0] >= 12
-    )
-    props_info = info_types + ["customproperties"]
+    
+    info_keys = _get_info_keys()
     params = {
         "jsonrpc": "2.0",
         "method": "Files.GetDirectory",
         "params": {
-            "properties": info_types if not props else props_info,
+            "properties": info_keys,
             "directory": path,
         },
         "id": 1,
