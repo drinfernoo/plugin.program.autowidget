@@ -325,10 +325,6 @@ def show_path(
         next_item = False
         prev_item = False
 
-        if "customproperties" in file:
-            for prop in file["customproperties"]:
-                properties[prop] = file["customproperties"][prop]
-
         if pos == len(files) - 1:
             next_item = _is_page_item(file.get("label", ""))
         elif pos == 0:
@@ -375,14 +371,9 @@ def show_path(
             if (hide_watched and file.get("playcount", 0) > 0) or dupe:
                 continue
 
-            art = file.get("art", {})
-            if not art.get("landscape") and art.get("thumb"):
-                art["landscape"] = art["thumb"]
-
             directory.add_menu_item(
                 title=file["label"],
                 path=file["file"],
-                art=art,
                 info=file,
                 isFolder=file["filetype"] == "directory",
                 props=properties,
@@ -483,6 +474,7 @@ def path_menu(group_id, action, widget_id):
 
             _action = "random" if idx == 0 else "next"
             widget_def = manage.initialize(group_def, _action, widget_id)
+        del dialog
 
     if widget_def:
         widget_path = widget_def.get("path", {})

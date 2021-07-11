@@ -23,27 +23,33 @@ _sort_methods = [
 ]
 
 _exclude_keys = [
-    "type",
-    "art",
-    "mimetype",
-    "thumbnail",
     "file",
+    "thumbnail",
     "label",
-    "filetype",
     "lastmodified",
     "productioncode",
     "firstaired",
-    "runtime",
-    "showtitle",
-    "specialsortepisode",
-    "specialsortseason",
-    "track",
-    "tvshowid",
     "watchedepisodes",
-    "customproperties",
     "id",
 ]
 
+_default_info_keys = {"type": "mediatype"}
+
+_video_keys = {
+    "specialsortepisode": "sortepisode",
+    "specialsortseason": "sortseason",
+    "track": "tracknumber",
+    "showtitle": "tvshowtitle",
+    "runtime": "duration",
+    "file": "path",
+}
+
+_music_keys = {
+    "disc": "discnumber",
+    "track": "tracknumber",
+}
+
+_translations = {"video": _video_keys, "music": _music_keys}
 _exclude_params = ["refresh", "reload"]
 
 _info_types = {
@@ -82,7 +88,7 @@ def add_sort_methods(handle):
 
 
 def add_menu_item(
-    title, params=None, path=None, info={}, cm=None, art={}, isFolder=False, props={}
+    title="", params=None, path=None, info={}, cm=None, art={}, isFolder=False, props={}
 ):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
@@ -103,38 +109,49 @@ def add_menu_item(
     item = xbmcgui.ListItem(title)
 
     if info:
-        def_info = {"mediatype": info.get("type", "")}
+        def_info = {v: info.get(k, "") for k, v in _default_info_keys.items()}
+        mediatype = def_info.get("mediatype", "")
 
         for key in {k: v for k, v in info.items() if k not in _exclude_keys}:
-            if isinstance(info[key], list):
-                value = info.get(key, [])
+            value = info.get(key)
+            new_value = None
+            if isinstance(value, list):
                 if key == "cast":
                     item.setCast(value)
                 else:
-                    def_info[key] = " / ".join(value)
-            elif isinstance(info[key], dict):
-                value = info.get(key, {})
+                    new_value = value
+                    # new_value = " / ".join(value)
+            elif isinstance(value, dict):
                 if key == "resume":
                     pos = value.get("position", 0)
                     total = value.get("total", 0)
                     if pos > 0 and pos < total:
                         props["ResumeTime"] = six.text_type(pos)
                         props["TotalTime"] = six.text_type(total)
+                elif key == "art":
+                    art = value
+                elif key == "customproperties":
+                    for prop in value:
+                        props[prop] = value[prop]
+                elif key == "uniqueid":
+                    item.setUniqueIDs(value)
+                # elif key == "streamdetails":
+                #     for d in value:
+                #         item.addStreamInfo(d, value[d])
                 else:
                     utils.log("Unknown dict-typed info key encountered: {}".format(key))
             else:
-                value = info.get(key)
-                if value is not None:
-                    if key == "runtime":
-                        def_info["duration"] = value
-                    else:
-                        def_info[key] = (
-                            value
-                            if isinstance(value, int) or isinstance(value, float)
-                            else six.text_type(value)
-                        )
+                new_value = (
+                    value
+                    if isinstance(value, int) or isinstance(value, float)
+                    else six.text_type(value)
+                )
+            if new_value is not None:
+                valid_keys = _translations.get(mediatype, {})
+                new_key = valid_keys.get(key, key)
+                def_info[new_key] = new_value
 
-        info_type = _info_types.get(def_info.get("mediatype"))
+        info_type = _info_types.get(mediatype)
         if info_type:
             item.setInfo(info_type, def_info)
         item.setMimeType(def_info.get("mimetype", ""))
@@ -142,13 +159,16 @@ def add_menu_item(
     for prop in props:
         item.setProperty(prop, props[prop])
 
+    if not art.get("landscape") and art.get("thumb"):
+        art["landscape"] = art["thumb"]
     item.setArt(art)
 
     if cm:
         item.addContextMenuItems(cm)
 
+    is_folder = def_info.get("filetype") == "directory"
     xbmcplugin.addDirectoryItem(
-        handle=_handle, url=_plugin, listitem=item, isFolder=isFolder
+        handle=_handle, url=_plugin, listitem=item, isFolder=is_folder
     )
 
 
