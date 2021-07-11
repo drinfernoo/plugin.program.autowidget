@@ -137,9 +137,10 @@ def add_menu_item(
                         props[prop] = value[prop]
                 elif key == "uniqueid":
                     item.setUniqueIDs(value)
-                # elif key == "streamdetails":
-                #     for d in value:
-                #         item.addStreamInfo(d, value[d])
+                elif key == "streamdetails":
+                    for d in value:
+                        if len(value[d]) > 0:
+                            item.addStreamInfo(d, value[d][0])
                 else:
                     utils.log("Unknown dict-typed info key encountered: {}".format(key))
             else:
