@@ -8,18 +8,21 @@ import six
 from resources.lib.common import utils
 
 _backup_location = utils.translate_path(utils.get_setting("backup.location"))
-dialog = xbmcgui.Dialog()
 
 
 def location():
+    dialog = xbmcgui.Dialog()
     folder = dialog.browse(
         0, utils.get_string(30068), "files", defaultt=backup_location
     )
+    del dialog
+
     if folder:
         utils.set_setting("backup.location", folder)
 
 
 def backup():
+    dialog = xbmcgui.Dialog()
     choice = dialog.yesno("AutoWidget", utils.get_string(30071))
 
     if choice:
@@ -27,6 +30,7 @@ def backup():
 
         if not filename:
             dialog.notification("AutoWidget", utils.get_string(30073))
+            del dialog
             return
 
         if not os.path.exists(_backup_location):
@@ -35,11 +39,13 @@ def backup():
             except Exception as e:
                 utils.log(str(e), "error")
                 dialog.notification("AutoWidget", utils.get_string(30074))
+                del dialog
                 return
 
         files = [x for x in os.listdir(utils._addon_path) if x.endswith(".group")]
         if len(files) == 0:
             dialog.notification("AutoWidget", utils.get_string(30046))
+            del dialog
             return
 
         path = os.path.join(
@@ -53,9 +59,11 @@ def backup():
 
         with open(path, "wb") as f:
             f.write(content.getvalue())
+    del dialog
 
 
 def restore():
+    dialog = xbmcgui.Dialog()
     backup = dialog.browse(
         1, utils.get_string(30075), "files", mask=".zip", defaultt=_backup_location
     )
@@ -80,6 +88,8 @@ def restore():
                 z.extractall(utils._addon_path)
             else:
                 dialog.notification("AutoWidget", utils.get_string(30078))
+        del dialog
     else:
         dialog.notification("AutoWidget", utils.get_string(30078))
+        del dialog
         return

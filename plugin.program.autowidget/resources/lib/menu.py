@@ -461,6 +461,7 @@ def path_menu(group_id, action, widget_id):
         if action == "static":
             idx = dialog.select(utils.get_string(30088), [i["label"] for i in paths])
             if idx == -1:
+                del dialog
                 return True, "AutoWidget"
 
             widget_def = manage.initialize(group_def, action, widget_id, keep=idx)
@@ -470,6 +471,7 @@ def path_menu(group_id, action, widget_id):
                 [utils.get_string(30057), utils.get_string(30058)],
             )
             if idx == -1:
+                del dialog
                 return True, "AutoWidget"
 
             _action = "random" if idx == 0 else "next"
@@ -518,6 +520,7 @@ def merged_path(group_id, widget_id):
             [i["label"] for i in paths],
             preselect=list(range(len(paths))) if len(paths) <= 5 else [],
         )
+        del dialog
 
         if idxs is not None:
             if len(idxs) > 0:

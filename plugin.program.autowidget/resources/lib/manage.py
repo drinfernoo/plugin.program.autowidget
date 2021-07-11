@@ -52,7 +52,9 @@ def clean(widget_id=None, notify=False, all=False):
             utils.remove_file(
                 os.path.join(utils._addon_path, "{}.widget".format(widget_id))
             )
+            del dialog
             return True
+        del dialog
         return False
 
     for widget in find_defined_widgets():
@@ -76,6 +78,8 @@ def clean(widget_id=None, notify=False, all=False):
             "AutoWidget",
             utils.get_string(30106).format("No" if removed == 0 else removed),
         )
+        del dialog
+    del dialog
 
 
 def initialize(group_def, action, widget_id, save=True, keep=None):

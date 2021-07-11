@@ -21,7 +21,6 @@ widget_filter = {
 }
 color_tag = "\[\w+(?: \w+)*\](?:\[\w+(?: \w+)*\])?(\w+)(?:\[\/\w+\])?\[\/\w+\]"
 plus = utils.get_art("plus")
-dialog = xbmcgui.Dialog()
 
 
 def shift_path(group_id, path_id, target):
@@ -50,6 +49,7 @@ def shift_path(group_id, path_id, target):
 
 
 def _remove_group(group_id, over=False):
+    dialog = xbmcgui.Dialog()
     group_def = manage.get_group_by_id(group_id)
     group_name = group_def["label"]
     if not over:
@@ -61,9 +61,11 @@ def _remove_group(group_id, over=False):
         dialog.notification(
             "AutoWidget", utils.get_string(30030).format(six.text_type(group_name))
         )
+    del dialog
 
 
 def _remove_path(path_id, group_id, over=False):
+    dialog = xbmcgui.Dialog()
     if not over:
         choice = dialog.yesno("AutoWidget", utils.get_string(30022))
 
@@ -79,9 +81,11 @@ def _remove_path(path_id, group_id, over=False):
                     utils.get_string(30030).format(six.text_type(path_name)),
                 )
         manage.write_path(group_def)
+    del dialog
 
 
 def remove_widget(widget_id, over=False):
+    dialog = xbmcgui.Dialog()
     if not over:
         choice = dialog.yesno("AutoWidget", utils.get_string(30025))
 
@@ -89,23 +93,23 @@ def remove_widget(widget_id, over=False):
         file = os.path.join(utils._addon_path, "{}.widget".format(widget_id))
         utils.remove_file(file)
         dialog.notification("AutoWidget", utils.get_string(30030).format(widget_id))
+    del dialog
 
 
 def _warn():
+    dialog = xbmcgui.Dialog()
     choice = dialog.yesno(
         "AutoWidget",
         utils.get_string(30039),
         yeslabel=utils.get_string(30040),
         nolabel=utils.get_string(30041),
     )
+    del dialog
     if choice < 1:
         utils.set_setting("context.advanced", "false")
         utils.set_setting("context.warning", "true")
-        advanced = False
-        warning = True
     else:
         utils.set_setting("context.warning", "true")
-        warning = True
 
 
 def _show_options(group_def, path_def=None, type=""):
@@ -126,7 +130,10 @@ def _show_options(group_def, path_def=None, type=""):
     else:
         main_action = utils.get_string(30042)
 
+    dialog = xbmcgui.Dialog()
     idx = dialog.select(main_action, options)
+    del dialog
+
     if idx < 0:
         return
     elif idx == len(options) - 1:
@@ -147,7 +154,10 @@ def _show_widget_options(edit_def):
     options = _get_widget_options(edit_def)
     options.append("[COLOR firebrick]{}[/COLOR]".format(utils.get_string(30090)))
 
+    dialog = xbmcgui.Dialog()
     idx = dialog.select(utils.get_string(30048), options)
+    del dialog
+
     if idx < 0:
         return
     elif idx == len(options) - 1:
@@ -267,13 +277,16 @@ def _get_widget_options(edit_def):
 
 
 def _get_value(edit_def, key):
+    dialog = xbmcgui.Dialog()
     if isinstance(edit_def[_clean_key(key)], dict):
         is_art = key == "art"
         label = utils.get_string(30091) if is_art else utils.get_string(30092)
         options = _get_options(edit_def[key], useThumbs=is_art)
+
         idx = dialog.select(label, options, useDetails=is_art)
 
         if idx < 0:
+            del dialog
             return
         elif idx == len(options) - 1:
             keys = utils.info_types if key == "file" else utils.art_types
@@ -287,6 +300,7 @@ def _get_value(edit_def, key):
                 add_options,
             )
             if add_idx < 0:
+                del dialog
                 return
             if key == "file":
                 value = dialog.input(
@@ -294,6 +308,7 @@ def _get_value(edit_def, key):
                 )
                 if value is not None:
                     edit_def[key][add_options[add_idx]] = value
+                    del dialog
                     return edit_def[key][add_options[add_idx]]
             elif key == "art":
                 value = dialog.browse(
@@ -305,12 +320,14 @@ def _get_value(edit_def, key):
                 )
                 if value is not None:
                     edit_def[key][add_options[add_idx]] = utils.clean_artwork_url(value)
+                    del dialog
                     return edit_def[key]
         else:
             subkey = _clean_key(options[idx])
             value = _get_value(edit_def[key], _clean_key(options[idx]))
             if value is not None:
                 edit_def[key][subkey] = value
+                del dialog
                 return edit_def[key]
     else:
         default = edit_def[key]
@@ -345,6 +362,7 @@ def _get_value(edit_def, key):
             )
             if clear:
                 value = ""
+        del dialog
         if value is not None:
             if key in utils.art_types:
                 edit_def[key] = utils.clean_artwork_url(value)
@@ -354,10 +372,12 @@ def _get_value(edit_def, key):
 
 
 def _get_widget_value(edit_def, key):
+    dialog = xbmcgui.Dialog()
     if key == "action":
         actions = [utils.get_string(30057), utils.get_string(30058)]
         choice = dialog.select(utils.get_string(30059), actions)
         if choice < 0:
+            del dialog
             return
 
         value = actions[choice].split(" ")[0].lower()
@@ -380,6 +400,7 @@ def _get_widget_value(edit_def, key):
         choice = dialog.select(utils.get_string(30100), durations)
 
         if choice < 0:
+            del dialog
             return
 
         duration = durations[choice].split(" ")
@@ -400,9 +421,11 @@ def _get_widget_value(edit_def, key):
                 for i in choice:
                     paths.append(groups[i])
                 value = paths
+            del dialog
         else:
             choice = dialog.select(utils.get_string(30088), labels)
             if choice < 0:
+                del dialog
                 return
             value = groups[choice]
     else:
@@ -411,6 +434,7 @@ def _get_widget_value(edit_def, key):
             utils.get_string(30095).format(key), defaultt=six.text_type(default)
         )
 
+    del dialog
     if value:
         edit_def[key] = value
         return value

@@ -242,6 +242,7 @@ def ensure_addon_data():
 def wipe(folder=_addon_path):
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno("AutoWidget", get_string(30044))
+    del dialog
 
     if choice:
         for root, dirs, files in os.walk(folder):
@@ -259,6 +260,7 @@ def wipe(folder=_addon_path):
 def clear_cache():
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno("AutoWidget", get_string(30118))
+    del dialog
 
     if choice:
         for file in [i for i in os.listdir(_addon_path) if i.endswith(".cache")]:
@@ -319,12 +321,14 @@ def set_color(setting=False):
         if value not in colors:
             if len(value) < 6:
                 dialog.notification("AutoWidget", get_string(30112))
+                del dialog
                 return
             elif len(value) == 6 and not value.startswith("#"):
                 value = "#{}".format(value)
         if setting:
             set_setting("ui.color", value)
 
+    del dialog
     return value
 
 

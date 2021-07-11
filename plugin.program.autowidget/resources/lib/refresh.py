@@ -241,6 +241,7 @@ def refresh_paths(notify=False, force=False):
             utils.get_string(30020),
             sound=utils.get_setting_bool("service.refresh_sound"),
         )
+        del dialog
 
     for group_def in manage.find_defined_groups():
         paths = []

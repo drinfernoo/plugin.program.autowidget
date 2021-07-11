@@ -27,8 +27,6 @@ folder_settings = utils.get_art("folder-settings")
 folder_clone = utils.get_art("folder-clone")
 folder_explode = utils.get_art("folder-explode")
 
-dialog = xbmcgui.Dialog()
-
 
 def add(labels):
     _type = _add_as(labels["file"])
@@ -126,7 +124,10 @@ def _add_as(path_def):
         li.setArt(art[idx])
         options.append(li)
 
+    dialog = xbmcgui.Dialog()
     idx = dialog.select(utils.get_string(30062), options, useDetails=True)
+    del dialog
+
     if idx < 0:
         return
 
@@ -169,12 +170,16 @@ def _group_dialog(_type, group_id=None):
         item.setArt(folder_sync if group["type"] == "widget" else folder_shortcut)
         options.append(item)
 
+    dialog = xbmcgui.Dialog()
     choice = dialog.select(
         utils.get_string(30036), options, preselect=index, useDetails=True
     )
+    del dialog
 
     if choice < 0:
+        dialog = xbmcgui.Dialog()
         dialog.notification("AutoWidget", utils.get_string(30021))
+        del dialog
     elif (choice, _type) == (0, "widget"):
         return _group_dialog(_type, add_group("widget"))
     elif choice == 0:
@@ -184,6 +189,7 @@ def _group_dialog(_type, group_id=None):
 
 
 def add_group(target, group_name=""):
+    dialog = xbmcgui.Dialog()
     group_name = dialog.input(heading=utils.get_string(30023), defaultt=group_name)
     group_id = ""
 
@@ -203,6 +209,7 @@ def add_group(target, group_name=""):
     else:
         dialog.notification("AutoWidget", utils.get_string(30024))
 
+    del dialog
     return group_id
 
 
@@ -213,7 +220,9 @@ def _add_path(group_def, labels, over=False):
         elif group_def["type"] == "widget":
             heading = utils.get_string(30029)
 
+        dialog = xbmcgui.Dialog()
         labels["label"] = dialog.input(heading=heading, defaultt=labels["label"])
+        del dialog
 
     labels["id"] = utils.get_unique_id(labels["label"])
     labels["version"] = utils._addon_version
@@ -241,6 +250,8 @@ def _copy_path(path_def):
 
         labels = build_labels("json", file, path_def["target"])
         _add_path(group_def, labels, over=True)
+    dialog = xbmcgui.Dialog()
     dialog.notification(
         "AutoWidget", utils.get_string(30105).format(len(files), group_def["label"])
     )
+    del dialog
