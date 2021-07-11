@@ -89,7 +89,7 @@ def add_sort_methods(handle):
 
 
 def add_menu_item(
-    title="", params=None, path=None, info={}, cm=None, art={}, isFolder=False, props={}
+    title="", params=None, path=None, info={}, cm=[], art={}, isFolder=False, props={}
 ):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
@@ -133,6 +133,12 @@ def add_menu_item(
                 elif key == "art":
                     art = value
                 elif key == "customproperties":
+                    labels = {k: v for k, v in value.items() if "contextmenulabel" in k}
+                    actions = {k: v for k, v in value.items() if "contextmenuaction" in k}
+                    if len(labels) == len(actions):
+                        items = [(labels["contextmenulabel({})".format(i)], actions["contextmenuaction({})".format(i)]) for i in range(0, len(labels))]
+                        cm.extend(items)
+                    
                     for prop in value:
                         props[prop] = value[prop]
                 elif key == "uniqueid":
