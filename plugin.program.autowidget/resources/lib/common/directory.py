@@ -100,7 +100,7 @@ def add_menu_item(
 ):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
-    
+
     if params is not None and isinstance(params, dict):
         encode = {k: v for k, v in params.items() if k not in _exclude_params}
 
@@ -155,7 +155,7 @@ def add_menu_item(
                     if cm is None:
                         cm = []
                     cm.extend(items)
-                    
+
                     if props is None:
                         props = {}
                     props.update(value)
@@ -188,7 +188,9 @@ def add_menu_item(
             item.setProperty(prop, props[prop])
 
     if art is not None and isinstance(art, dict):
-        if not art.get("landscape") and art.get("thumb"):
+        if not any([art.get(i) for i in ["landscape", "poster"]]) and all(
+            [art.get(i) for i in ["thumb", "fanart"]]
+        ):
             art["landscape"] = art["thumb"]
         item.setArt(art)
 
