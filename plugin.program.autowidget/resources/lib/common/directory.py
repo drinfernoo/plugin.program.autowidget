@@ -89,19 +89,26 @@ def add_sort_methods(handle):
 
 
 def add_menu_item(
-    title="", params=None, path=None, info={}, cm=[], art={}, isFolder=False, props={}
+    title="",
+    params=None,
+    path=None,
+    info=None,
+    cm=None,
+    art=None,
+    isFolder=False,
+    props=None,
 ):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
-
-    if params is not None:
+    
+    if params is not None and isinstance(params, dict):
         encode = {k: v for k, v in params.items() if k not in _exclude_params}
 
         _plugin += "?{}".format(urlencode(encode))
 
         for param in _exclude_params:
             _plugin += "&{}={}".format(param, params.get(param, ""))
-    elif path is not None:
+    elif path is not None and isinstance(path, six.text_type):
         _plugin = path
 
     if isinstance(title, int):
@@ -109,10 +116,9 @@ def add_menu_item(
 
     item = xbmcgui.ListItem(title)
 
-    if info:
+    if info is not None and isinstance(info, dict):
         def_info = {v: info.get(k, "") for k, v in _default_info_keys.items()}
         mediatype = def_info.get("mediatype", "")
-        isFolder = def_info.get("filetype") == "directory"
 
         for key in {k: v for k, v in info.items() if k not in _exclude_keys}:
             value = info.get(key)
@@ -128,19 +134,25 @@ def add_menu_item(
                     pos = value.get("position", 0)
                     total = value.get("total", 0)
                     if pos > 0 and pos < total:
+                        if props is None:
+                            props = {}
                         props["ResumeTime"] = six.text_type(pos)
                         props["TotalTime"] = six.text_type(total)
                 elif key == "art":
-                    art = value
+                    if art is None:
+                        art = value
                 elif key == "customproperties":
                     labels = {k: v for k, v in value.items() if "contextmenulabel" in k}
                     actions = {k: v for k, v in value.items() if "contextmenuaction" in k}
                     if len(labels) == len(actions):
                         items = [(labels["contextmenulabel({})".format(i)], actions["contextmenuaction({})".format(i)]) for i in range(0, len(labels))]
+                    if cm is None:
+                        cm = []
                         cm.extend(items)
                     
-                    for prop in value:
-                        props[prop] = value[prop]
+                    if props is None:
+                        props = {}
+                    props.update(value)
                 elif key == "uniqueid":
                     item.setUniqueIDs(value)
                 elif key == "streamdetails":
@@ -165,14 +177,16 @@ def add_menu_item(
             item.setInfo(info_type, def_info)
         item.setMimeType(def_info.get("mimetype", ""))
 
-    for prop in props:
-        item.setProperty(prop, props[prop])
+    if props is not None and isinstance(props, dict):
+        for prop in props:
+            item.setProperty(prop, props[prop])
 
-    if not art.get("landscape") and art.get("thumb"):
-        art["landscape"] = art["thumb"]
-    item.setArt(art)
+    if art is not None and isinstance(art, dict):
+        if not art.get("landscape") and art.get("thumb"):
+            art["landscape"] = art["thumb"]
+        item.setArt(art)
 
-    if cm:
+    if cm is not None and isinstance(cm, list):
         item.addContextMenuItems(cm)
 
     xbmcplugin.addDirectoryItem(
