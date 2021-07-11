@@ -14,7 +14,7 @@ _backup_location = utils.translate_path(settings.get_setting_string("backup.loca
 def location():
     dialog = xbmcgui.Dialog()
     folder = dialog.browse(
-        0, utils.get_string(30068), "files", defaultt=backup_location
+        0, utils.get_string(30068), "files", defaultt=_backup_location
     )
     del dialog
 
