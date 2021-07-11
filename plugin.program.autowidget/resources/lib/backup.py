@@ -8,6 +8,7 @@ import six
 from resources.lib.common import settings
 from resources.lib.common import utils
 
+_addon_data = utils.translate_path(settings.get_addon_info("profile"))
 _backup_location = utils.translate_path(settings.get_setting_string("backup.location"))
 
 
@@ -43,7 +44,7 @@ def backup():
                 del dialog
                 return
 
-        files = [x for x in os.listdir(utils._addon_path) if x.endswith(".group")]
+        files = [x for x in os.listdir(_addon_data) if x.endswith(".group")]
         if len(files) == 0:
             dialog.notification("AutoWidget", utils.get_string(30046))
             del dialog
@@ -55,7 +56,7 @@ def backup():
         content = six.BytesIO()
         with zipfile.ZipFile(content, "w", zipfile.ZIP_DEFLATED) as z:
             for file in files:
-                with open(os.path.join(utils._addon_path, file), "r") as f:
+                with open(os.path.join(_addon_data, file), "r") as f:
                     z.writestr(file, six.ensure_text(f.read()))
 
         with open(path, "wb") as f:
@@ -82,11 +83,11 @@ def restore():
 
                 if overwrite:
                     files = [
-                        x for x in os.listdir(utils._addon_path) if x.endswith(".group")
+                        x for x in os.listdir(_addon_data) if x.endswith(".group")
                     ]
                     for file in files:
                         utils.remove_file(file)
-                z.extractall(utils._addon_path)
+                z.extractall(_addon_data)
             else:
                 dialog.notification("AutoWidget", utils.get_string(30078))
         del dialog

@@ -14,6 +14,8 @@ from resources.lib import refresh
 from resources.lib.common import settings
 from resources.lib.common import utils
 
+_addon_data = utils.translate_path(settings.get_addon_info("profile"))
+
 shortcut_types = [
     utils.get_string(30033),
     utils.get_string(30034),
@@ -196,7 +198,7 @@ def add_group(target, group_name=""):
 
     if group_name:
         group_id = utils.get_unique_id(group_name)
-        filename = os.path.join(utils._addon_path, "{}.group".format(group_id))
+        filename = os.path.join(_addon_data, "{}.group".format(group_id))
         group_def = {
             "label": group_name,
             "type": target,

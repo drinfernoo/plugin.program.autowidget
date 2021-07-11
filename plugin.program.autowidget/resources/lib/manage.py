@@ -6,6 +6,8 @@ import random
 from resources.lib.common import settings
 from resources.lib.common import utils
 
+_addon_data = utils.translate_path(settings.get_addon_info("profile"))
+
 
 def clean(widget_id=None, notify=False, all=False):
     if all:
@@ -15,7 +17,7 @@ def clean(widget_id=None, notify=False, all=False):
 
     files = []
     dialog = xbmcgui.Dialog()
-    skin_shortcuts = os.path.join(utils._addon_data, "script.skinshortcuts")
+    skin_shortcuts = os.path.join(_addon_data, "script.skinshortcuts")
 
     params = {
         "jsonrpc": "2.0",
@@ -26,7 +28,7 @@ def clean(widget_id=None, notify=False, all=False):
     addons = utils.call_jsonrpc(params)
     if "error" not in addons:
         for addon in addons["result"]["addons"]:
-            path = os.path.join(utils._addon_data, addon["addonid"], "settings.xml")
+            path = os.path.join(_addon_data, addon["addonid"], "settings.xml")
             if os.path.exists(path):
                 files.append(path)
     if os.path.exists(skin_shortcuts):
@@ -48,9 +50,7 @@ def clean(widget_id=None, notify=False, all=False):
                 break
         if not found:
             utils.log("{} not found; cleaning".format(widget_id))
-            utils.remove_file(
-                os.path.join(utils._addon_path, "{}.widget".format(widget_id))
-            )
+            utils.remove_file(os.path.join(_addon_data, "{}.widget".format(widget_id)))
             del dialog
             return True
         del dialog
@@ -69,7 +69,7 @@ def clean(widget_id=None, notify=False, all=False):
         if not found:
             utils.log("{} not found; cleaning".format(widget["id"]))
             utils.remove_file(
-                os.path.join(utils._addon_path, "{}.widget".format(widget["id"]))
+                os.path.join(_addon_data, "{}.widget".format(widget["id"]))
             )
             removed += 1
     if notify:
@@ -111,7 +111,7 @@ def initialize(group_def, action, widget_id, save=True, keep=None):
 
 
 def write_path(group_def, path_def=None, update=""):
-    filename = os.path.join(utils._addon_path, "{}.group".format(group_def["id"]))
+    filename = os.path.join(_addon_data, "{}.group".format(group_def["id"]))
 
     if path_def:
         if update:
@@ -125,7 +125,7 @@ def write_path(group_def, path_def=None, update=""):
 
 
 def save_path_details(params):
-    path_to_saved = os.path.join(utils._addon_path, "{}.widget".format(params["id"]))
+    path_to_saved = os.path.join(_addon_data, "{}.widget".format(params["id"]))
     utils.write_json(path_to_saved, params)
 
     return params
@@ -136,7 +136,7 @@ def get_group_by_id(group_id):
         return
 
     filename = "{}.group".format(group_id)
-    path = os.path.join(utils._addon_path, filename)
+    path = os.path.join(_addon_data, filename)
 
     try:
         group_def = utils.read_json(path)
@@ -168,8 +168,8 @@ def get_widget_by_id(widget_id, group_id=None):
 def find_defined_groups(_type=""):
     groups = []
 
-    for filename in [x for x in os.listdir(utils._addon_path) if x.endswith(".group")]:
-        path = os.path.join(utils._addon_path, filename)
+    for filename in [x for x in os.listdir(_addon_data) if x.endswith(".group")]:
+        path = os.path.join(_addon_data, filename)
 
         group_def = utils.read_json(path)
         if group_def:
@@ -185,7 +185,7 @@ def find_defined_groups(_type=""):
 def find_defined_paths(group_id=None):
     if group_id:
         filename = "{}.group".format(group_id)
-        path = os.path.join(utils._addon_path, filename)
+        path = os.path.join(_addon_data, filename)
 
         group_def = utils.read_json(path)
         if group_def:
@@ -200,12 +200,12 @@ def find_defined_paths(group_id=None):
 
 
 def find_defined_widgets(group_id=None):
-    addon_files = os.listdir(utils._addon_path)
+    addon_files = os.listdir(_addon_data)
     widgets = []
 
     widget_files = [x for x in addon_files if x.endswith(".widget")]
     for widget_file in widget_files:
-        widget_def = utils.read_json(os.path.join(utils._addon_path, widget_file))
+        widget_def = utils.read_json(os.path.join(_addon_data, widget_file))
 
         if widget_def:
             if not group_id:

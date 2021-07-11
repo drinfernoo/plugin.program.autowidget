@@ -33,12 +33,12 @@ except AttributeError:
 DEFAULT_CACHE_TIME = 60 * 5
 
 _addon_id = settings.get_addon_info("id")
-_addon_path = translate_path(settings.get_addon_info("profile"))
+_addon_data = translate_path(settings.get_addon_info("profile"))
 _addon_root = translate_path(settings.get_addon_info("path"))
 
 _art_path = os.path.join(_addon_root, "resources", "media")
 _home = translate_path("special://home/")
-_playback_history_path = os.path.join(_addon_path, "cache.history")
+_playback_history_path = os.path.join(_addon_data, "cache.history")
 
 windows = {
     "programs": ["program", "script"],
@@ -212,7 +212,7 @@ def ft(seconds):
 def log(msg, level="debug"):
     _level = xbmc.LOGDEBUG
     debug = settings.get_setting_bool("logging.debug")
-    logpath = os.path.join(_addon_path, "aw_debug.log")
+    logpath = os.path.join(_addon_data, "aw_debug.log")
 
     if level == "debug":
         _level = xbmc.LOGDEBUG
@@ -233,11 +233,11 @@ def log(msg, level="debug"):
 
 
 def ensure_addon_data():
-    if not os.path.exists(_addon_path):
-        os.makedirs(_addon_path)
+    if not os.path.exists(_addon_data):
+        os.makedirs(_addon_data)
 
 
-def wipe(folder=_addon_path):
+def wipe(folder=_addon_data):
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno("AutoWidget", get_string(30044))
     del dialog
@@ -263,8 +263,8 @@ def clear_cache():
     del dialog
 
     if choice:
-        for file in [i for i in os.listdir(_addon_path) if i.endswith(".cache")]:
-            os.remove(os.path.join(_addon_path, file))
+        for file in [i for i in os.listdir(_addon_data) if i.endswith(".cache")]:
+            os.remove(os.path.join(_addon_data, file))
 
 
 def get_art(filename, color=None):
@@ -272,7 +272,7 @@ def get_art(filename, color=None):
     if not color:
         color = settings.get_setting_string("ui.color")
 
-    themed_path = os.path.join(_addon_path, color)
+    themed_path = os.path.join(_addon_data, color)
     if not os.path.exists(themed_path):
         os.makedirs(themed_path)
 
@@ -404,7 +404,7 @@ def remove_file(file):
 def read_file(file):
     content = None
     if os.path.exists(file):
-        with io.open(os.path.join(_addon_path, file), "r", encoding="utf-8") as f:
+        with io.open(os.path.join(_addon_data, file), "r", encoding="utf-8") as f:
             try:
                 content = f.read()
             except Exception as e:
@@ -429,7 +429,7 @@ def write_file(file, content, mode="w"):
 def read_json(file, log_file=False, default=None):
     data = None
     if os.path.exists(file):
-        with codecs.open(os.path.join(_addon_path, file), "r", encoding="utf-8") as f:
+        with codecs.open(os.path.join(_addon_data, file), "r", encoding="utf-8") as f:
             content = six.ensure_text(f.read())
             try:
                 data = json.loads(content)
@@ -506,7 +506,7 @@ def hash_from_cache_path(path):
 
 
 def iter_queue():
-    queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_path, "*.queue")))
+    queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_data, "*.queue")))
     # TODO: sort by path instead so load plugins at the same time
     for path in sorted(queued, key=os.path.getmtime):
         yield path
@@ -525,7 +525,7 @@ def next_cache_queue():
         # TODO: need to workout if a blocking write is happen while it was queued or right now.
         # probably need a .lock file to ensure foreground calls can get priority.
         hash = hash_from_cache_path(path)
-        path = os.path.join(_addon_path, "{}.history".format(hash))
+        path = os.path.join(_addon_data, "{}.history".format(hash))
         cache_data = read_json(path)
         if cache_data:
             log("Dequeued cache update: {}".format(hash[:5]), "notice")
@@ -533,7 +533,7 @@ def next_cache_queue():
 
 
 def push_cache_queue(hash):
-    queue_path = os.path.join(_addon_path, "{}.queue".format(hash))
+    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
     if os.path.exists(queue_path):
         pass  # Leave original modification date so item is higher priority
     else:
@@ -541,12 +541,12 @@ def push_cache_queue(hash):
 
 
 def is_cache_queue(hash):
-    queue_path = os.path.join(_addon_path, "{}.queue".format(hash))
+    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
     return os.path.exists(queue_path)
 
 
 def remove_cache_queue(hash):
-    queue_path = os.path.join(_addon_path, "{}.queue".format(hash))
+    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
     remove_file(queue_path)
 
 
@@ -556,7 +556,7 @@ def path2hash(path):
 
 def widgets_for_path(path):
     hash = path2hash(path)
-    history_path = os.path.join(_addon_path, "{}.history".format(hash))
+    history_path = os.path.join(_addon_data, "{}.history".format(hash))
     cache_data = read_json(history_path) if os.path.exists(history_path) else None
     if cache_data is None:
         cache_data = {}
@@ -607,10 +607,10 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
     # It should also manage the cache files to remove any too old.
     # The cache expiry can also be used later to schedule a future background update.
 
-    cache_path = os.path.join(_addon_path, "{}.cache".format(hash))
+    cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
 
     # Read file every time as we might be called from multiple processes
-    history_path = os.path.join(_addon_path, "{}.history".format(hash))
+    history_path = os.path.join(_addon_data, "{}.history".format(hash))
     cache_data = read_json(history_path) if os.path.exists(history_path) else None
     if cache_data is None:
         cache_data = {}
@@ -689,7 +689,7 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
 def last_read(hash):
     # Technically this is last read or updated but we can change it to be last read Later
     # if we create another file
-    path = os.path.join(_addon_path, "{}.history".format(hash))
+    path = os.path.join(_addon_data, "{}.history".format(hash))
     return os.path.getmtime(path)
 
 
@@ -760,7 +760,7 @@ def widgets_changed_by_watching(media_type):
     # watching something
 
     all_cache = filter(
-        os.path.isfile, glob.glob(os.path.join(_addon_path, "*.history"))
+        os.path.isfile, glob.glob(os.path.join(_addon_data, "*.history"))
     )
 
     # Simple version. Anything updated recently (since startup?)

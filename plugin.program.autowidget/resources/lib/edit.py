@@ -9,6 +9,8 @@ from resources.lib import manage
 from resources.lib.common import settings
 from resources.lib.common import utils
 
+_addon_data = utils.translate_path(settings.get_addon_info("profile"))
+
 advanced = settings.get_setting_bool("context.advanced")
 warning_shown = settings.get_setting_bool("context.warning")
 
@@ -57,7 +59,7 @@ def _remove_group(group_id, over=False):
         choice = dialog.yesno("AutoWidget", utils.get_string(30025))
 
     if over or choice:
-        file = os.path.join(utils._addon_path, "{}.group".format(group_id))
+        file = os.path.join(_addon_data, "{}.group".format(group_id))
         utils.remove_file(file)
         dialog.notification(
             "AutoWidget", utils.get_string(30030).format(six.text_type(group_name))
@@ -91,7 +93,7 @@ def remove_widget(widget_id, over=False):
         choice = dialog.yesno("AutoWidget", utils.get_string(30025))
 
     if over or choice:
-        file = os.path.join(utils._addon_path, "{}.widget".format(widget_id))
+        file = os.path.join(_addon_data, "{}.widget".format(widget_id))
         utils.remove_file(file)
         dialog.notification("AutoWidget", utils.get_string(30030).format(widget_id))
     del dialog
