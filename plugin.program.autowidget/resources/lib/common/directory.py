@@ -142,13 +142,19 @@ def add_menu_item(
                     if art is None:
                         art = value
                 elif key == "customproperties":
-                    labels = {k: v for k, v in value.items() if "contextmenulabel" in k}
-                    actions = {k: v for k, v in value.items() if "contextmenuaction" in k}
-                    if len(labels) == len(actions):
-                        items = [(labels["contextmenulabel({})".format(i)], actions["contextmenuaction({})".format(i)]) for i in range(0, len(labels))]
+                    context_items = {
+                        k: v for k, v in value.items() if "contextmenu" in k
+                    }
+                    items = [
+                        (
+                            context_items.get("contextmenulabel({})".format(i)),
+                            context_items.get("contextmenuaction({})".format(i)),
+                        )
+                        for i in range(0, len(context_items) // 2)
+                    ]
                     if cm is None:
                         cm = []
-                        cm.extend(items)
+                    cm.extend(items)
                     
                     if props is None:
                         props = {}
