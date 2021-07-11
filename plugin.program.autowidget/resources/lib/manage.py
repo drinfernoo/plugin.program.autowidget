@@ -7,6 +7,7 @@ from resources.lib.common import settings
 from resources.lib.common import utils
 
 _addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_skin_shortcuts = utils.translate_path(settings.get_addon_info("profile", addon="script.skinshortcuts"))
 
 
 def clean(widget_id=None, notify=False, all=False):
@@ -17,7 +18,6 @@ def clean(widget_id=None, notify=False, all=False):
 
     files = []
     dialog = xbmcgui.Dialog()
-    skin_shortcuts = os.path.join(_addon_data, "script.skinshortcuts")
 
     params = {
         "jsonrpc": "2.0",
@@ -31,11 +31,11 @@ def clean(widget_id=None, notify=False, all=False):
             path = os.path.join(_addon_data, addon["addonid"], "settings.xml")
             if os.path.exists(path):
                 files.append(path)
-    if os.path.exists(skin_shortcuts):
-        for xml in os.listdir(skin_shortcuts):
+    if os.path.exists(_skin_shortcuts):
+        for xml in os.listdir(_skin_shortcuts):
             ext = xml.split(".")
             if ext[-1] in ["xml", "properties"]:
-                path = os.path.join(skin_shortcuts, xml)
+                path = os.path.join(_skin_shortcuts, xml)
                 files.append(path)
 
     remove = []
