@@ -72,7 +72,7 @@ def dispatch(_plugin, _handle, _params):
             refresh.update_path(widget_id, target, path)
         is_type = "videos"
     elif mode == "widget":
-        is_dir, is_category = menu.active_widgets_menu()
+        is_dir, category = menu.active_widgets_menu()
     elif mode == "refresh":
         if not widget_id:
             refresh.refresh_paths()
