@@ -52,12 +52,13 @@ _music_keys = {
 _translations = {"video": _video_keys, "music": _music_keys}
 _exclude_params = ["refresh", "reload"]
 
-_info_types = {
-    **dict.fromkeys(
+_info_types = {}
+_info_types.update(
+    dict.fromkeys(
         ["video", "movie", "set", "tvshow", "season", "episode", "musicvideo"], "video"
-    ),
-    **dict.fromkeys(["music", "song", "album", "artist"], "music"),
-}
+    )
+)
+_info_types.update(dict.fromkeys(["music", "song", "album", "artist"], "music"))
 
 
 def add_separator(title="", char="-", sort=""):
