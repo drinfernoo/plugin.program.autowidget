@@ -283,7 +283,9 @@ def get_files_list(path, widget_id=None):
                     new_file["art"][art] = utils.clean_artwork_url(file["art"][art])
             if "cast" in new_file:
                 for idx, cast in enumerate(new_file["cast"]):
-                    new_file["cast"][idx]["thumbnail"] = utils.clean_artwork_url(cast.get("thumbnail", ""))
+                    new_file["cast"][idx]["thumbnail"] = utils.clean_artwork_url(
+                        cast.get("thumbnail", "")
+                    )
             new_files.append(new_file)
 
         return new_files
