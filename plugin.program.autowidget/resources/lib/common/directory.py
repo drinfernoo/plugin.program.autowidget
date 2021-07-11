@@ -112,6 +112,7 @@ def add_menu_item(
     if info:
         def_info = {v: info.get(k, "") for k, v in _default_info_keys.items()}
         mediatype = def_info.get("mediatype", "")
+        isFolder = def_info.get("filetype") == "directory"
 
         for key in {k: v for k, v in info.items() if k not in _exclude_keys}:
             value = info.get(key)
@@ -167,9 +168,8 @@ def add_menu_item(
     if cm:
         item.addContextMenuItems(cm)
 
-    is_folder = def_info.get("filetype") == "directory"
     xbmcplugin.addDirectoryItem(
-        handle=_handle, url=_plugin, listitem=item, isFolder=is_folder
+        handle=_handle, url=_plugin, listitem=item, isFolder=isFolder
     )
 
 
