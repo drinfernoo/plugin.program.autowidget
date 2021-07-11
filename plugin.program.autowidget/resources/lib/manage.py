@@ -1,7 +1,6 @@
 import xbmcaddon
 import xbmcgui
 
-import json
 import os
 import random
 
@@ -25,7 +24,7 @@ def clean(widget_id=None, notify=False, all=False):
         "method": "Addons.GetAddons",
         "params": {"type": "xbmc.gui.skin"},
     }
-    addons = json.loads(utils.call_jsonrpc(json.dumps(params)))
+    addons = utils.call_jsonrpc(params)
     if "error" not in addons:
         for addon in addons["result"]["addons"]:
             path = os.path.join(utils._addon_data, addon["addonid"], "settings.xml")

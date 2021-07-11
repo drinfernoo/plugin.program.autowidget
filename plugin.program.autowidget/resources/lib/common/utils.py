@@ -501,12 +501,6 @@ def clean_artwork_url(url):
     return url
 
 
-def _get_json_version():
-    params = {"jsonrpc": "2.0", "id": 1, "method": "JSONRPC.Version"}
-    result = json.loads(call_jsonrpc(json.dumps(params)))["result"]["version"]
-    return (result["major"], result["minor"], result["patch"])
-
-
 def hash_from_cache_path(path):
     base = os.path.basename(path)
     return os.path.splitext(base)[0]
@@ -585,15 +579,13 @@ def get_info_keys():
             },
         },
     }
-    info_keys_json = call_jsonrpc(json.dumps(params))
-    info_keys = json.loads(info_keys_json)
+    info_keys = call_jsonrpc(params)
     return info_keys["result"]["types"]["List.Fields.Files"]["items"]["enums"]
 
 
 def cache_files(path, widget_id):
     hash = path2hash(path)
-    version = _get_json_version()
-    
+
     info_keys = get_info_keys()
     params = {
         "jsonrpc": "2.0",
@@ -604,8 +596,7 @@ def cache_files(path, widget_id):
         },
         "id": 1,
     }
-    files_json = call_jsonrpc(json.dumps(params))
-    files = json.loads(files_json)
+    files = call_jsonrpc(params)
     _, _, changed = cache_expiry(hash, widget_id, add=files)
     return (files, changed)
 
@@ -882,7 +873,9 @@ def call_builtin(action, delay=0):
 
 
 def call_jsonrpc(request):
-    return xbmc.executeJSONRPC(request)
+    call = json.dumps(request)
+    response = xbmc.executeJSONRPC(call)
+    return json.loads(response)
 
 
 @contextlib.contextmanager
