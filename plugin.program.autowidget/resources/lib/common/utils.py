@@ -603,7 +603,7 @@ def widgets_for_path(path):
     return set(widgets)
 
 
-def _get_info_keys():
+def get_info_keys():
     params = {
         "jsonrpc": "2.0",
         "id": 1,
@@ -626,7 +626,7 @@ def cache_files(path, widget_id):
     hash = path2hash(path)
     version = _get_json_version()
     
-    info_keys = _get_info_keys()
+    info_keys = get_info_keys()
     params = {
         "jsonrpc": "2.0",
         "method": "Files.GetDirectory",

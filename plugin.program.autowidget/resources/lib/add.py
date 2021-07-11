@@ -65,7 +65,7 @@ def build_labels(source, path_def=None, target=""):
             "art": {},
         }  # would be fun to set some "placeholder" art here
 
-        for i in utils.info_types:
+        for i in utils.get_info_keys():
             info = utils.get_infolabel("ListItem.{}".format(i.capitalize()))
             if info and not info.startswith("ListItem"):
                 path_def[i] = info
