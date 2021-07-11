@@ -1,7 +1,6 @@
-from kodi_six import xbmc
-from kodi_six import xbmcaddon
-from kodi_six import xbmcgui
-from kodi_six import xbmcvfs
+import xbmc
+import xbmcgui
+import xbmcvfs
 
 import codecs
 import contextlib

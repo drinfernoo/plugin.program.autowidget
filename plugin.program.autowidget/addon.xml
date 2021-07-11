@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.program.autowidget" name="AutoWidget" version="CURRENT_VERSION" provider-name="drinfernoo">
     <requires>
-        <import addon="script.module.kodi-six" />
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
     </requires>
