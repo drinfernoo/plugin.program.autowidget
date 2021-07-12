@@ -203,11 +203,11 @@ def _get_options(edit_def, useThumbs=None):
                 else:
                     v = edit_def[key]
                     try:
-                        v = edit_def[key].encode("utf-8")
-                    except:
-                        pass
-
-                    options.append("[B]{}[/B]: {}".format(formatted_key, v))
+                        options.append("[B]{}[/B]: {}".format(formatted_key, v))
+                    except UnicodeEncodeError:
+                        options.append(
+                            "[B]{}[/B]: {}".format(formatted_key, v.encode("utf-8"))
+                        )
 
     if useThumbs is not None:
         new_item = xbmcgui.ListItem(
@@ -269,12 +269,10 @@ def _get_widget_options(edit_def):
                 else:
                     label = _def
 
-                try:
-                    label = six.ensure_text(label)
-                except:
-                    pass
-
-        options.append("[B]{}[/B]: {}".format(formatted_key, label))
+        try:
+            options.append("[B]{}[/B]: {}".format(formatted_key, label))
+        except UnicodeEncodeError:
+            options.append("[B]{}[/B]: {}".format(formatted_key, label.encode("utf-8")))
 
     return options
 

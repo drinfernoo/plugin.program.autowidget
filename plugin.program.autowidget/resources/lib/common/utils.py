@@ -225,7 +225,10 @@ def log(msg, level="debug"):
         _level = xbmc.LOGERROR
 
     msg = u"{}: {}".format(_addon_id, six.text_type(msg))
-    xbmc.log(msg, _level)
+    try:
+        xbmc.log(msg, _level)
+    except UnicodeEncodeError:
+        xbmc.log(msg.encode("utf-8"), _level)
     if debug:
         debug_size = os.path.getsize(logpath) if os.path.exists(logpath) else 0
         debug_msg = u"{}  {}{}".format(time.ctime(), level.upper(), msg[25:])
