@@ -44,7 +44,14 @@ def backup():
                 del dialog
                 return
 
-        files = [x for x in os.listdir(_addon_data) if x.endswith(".group")]
+        files = [
+            x
+            for x in os.listdir(_addon_data)
+            if any(
+                x.endswith(i)
+                for i in [".group", ".widget", ".history", ".cache", ".log"]
+            )
+        ]
         if len(files) == 0:
             dialog.notification("AutoWidget", utils.get_string(30046))
             del dialog
@@ -82,9 +89,7 @@ def restore():
                 overwrite = dialog.yesno("AutoWidget", utils.get_string(30077))
 
                 if overwrite:
-                    files = [
-                        x for x in os.listdir(_addon_data) if x.endswith(".group")
-                    ]
+                    files = [x for x in os.listdir(_addon_data) if x.endswith(".group")]
                     for file in files:
                         utils.remove_file(file)
                 z.extractall(_addon_data)
