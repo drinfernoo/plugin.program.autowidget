@@ -5,6 +5,7 @@ import json
 import os
 import random
 
+from resources.lib.common import settings
 from resources.lib.common import utils
 
 
@@ -83,7 +84,7 @@ def clean(widget_id=None, notify=False, all=False):
 
 
 def initialize(group_def, action, widget_id, save=True, keep=None):
-    duration = utils.get_setting_float("service.refresh_duration")
+    duration = settings.get_setting_float("service.refresh_duration")
     paths = group_def.get("paths", [])
     path_def = []
 
@@ -103,7 +104,7 @@ def initialize(group_def, action, widget_id, save=True, keep=None):
         "group": group_def["id"],
         "refresh": duration,
         "path": path_def,
-        "version": utils._addon_version,
+        "version": settings.get_addon_info("version"),
     }
     if save:
         save_path_details(params)

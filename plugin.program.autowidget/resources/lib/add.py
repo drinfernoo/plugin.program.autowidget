@@ -11,6 +11,7 @@ except ImportError:
 
 from resources.lib import manage
 from resources.lib import refresh
+from resources.lib.common import settings
 from resources.lib.common import utils
 
 shortcut_types = [
@@ -92,7 +93,7 @@ def build_labels(source, path_def=None, target=""):
         path += "&widget=True"
     labels["file"]["file"] = path
 
-    labels["color"] = utils.get_setting("ui.color")
+    labels["color"] = settings.get_setting_string("ui.color")
 
     for _key in utils.windows:
         if any(i in path for i in utils.windows[_key]):
@@ -202,7 +203,7 @@ def add_group(target, group_name=""):
             "paths": [],
             "id": group_id,
             "art": folder_sync if target == "widget" else folder_shortcut,
-            "version": utils._addon_version,
+            "version": settings.get_addon_info("version"),
         }
 
         utils.write_json(filename, group_def)
@@ -225,7 +226,7 @@ def _add_path(group_def, labels, over=False):
         del dialog
 
     labels["id"] = utils.get_unique_id(labels["label"])
-    labels["version"] = utils._addon_version
+    labels["version"] = settings.get_addon_info("version")
 
     if labels["target"] == "settings":
         labels["file"]["filetype"] = "file"

@@ -6,10 +6,11 @@ import re
 import six
 
 from resources.lib import manage
+from resources.lib.common import settings
 from resources.lib.common import utils
 
-advanced = utils.get_setting_bool("context.advanced")
-warning_shown = utils.get_setting_bool("context.warning")
+advanced = settings.get_setting_bool("context.advanced")
+warning_shown = settings.get_setting_bool("context.warning")
 
 filter = {
     "include": ["label", "file", "art", "color"] + utils.art_types,
@@ -106,10 +107,10 @@ def _warn():
     )
     del dialog
     if choice < 1:
-        utils.set_setting("context.advanced", "false")
-        utils.set_setting("context.warning", "true")
+        settings.set_setting_bool("context.advanced", False)
+        settings.set_setting_bool("context.warning", True)
     else:
-        utils.set_setting("context.warning", "true")
+        settings.set_setting_bool("context.warning", True)
 
 
 def _show_options(group_def, path_def=None, type=""):

@@ -19,6 +19,8 @@ import datetime
 import six
 from PIL import Image
 
+from resources.lib.common import settings
+
 try:
     from urllib.parse import unquote
 except ImportError:
@@ -31,12 +33,9 @@ except AttributeError:
 
 DEFAULT_CACHE_TIME = 60 * 5
 
-_addon = xbmcaddon.Addon()
-_addon_id = _addon.getAddonInfo("id")
-_addon_path = translate_path(_addon.getAddonInfo("profile"))
-_addon_root = translate_path(_addon.getAddonInfo("path"))
-_addon_version = _addon.getAddonInfo("version")
-_addon_data = translate_path("special://profile/addon_data/")
+_addon_id = settings.get_addon_info("id")
+_addon_path = translate_path(settings.get_addon_info("profile"))
+_addon_root = translate_path(settings.get_addon_info("path"))
 
 _art_path = os.path.join(_addon_root, "resources", "media")
 _home = translate_path("special://home/")
@@ -213,7 +212,7 @@ def ft(seconds):
 
 def log(msg, level="debug"):
     _level = xbmc.LOGDEBUG
-    debug = get_setting_bool("logging.debug")
+    debug = settings.get_setting_bool("logging.debug")
     logpath = os.path.join(_addon_path, "aw_debug.log")
 
     if level == "debug":
@@ -246,7 +245,9 @@ def wipe(folder=_addon_path):
 
     if choice:
         for root, dirs, files in os.walk(folder):
-            backup_location = translate_path(_addon.getSetting("backup.location"))
+            backup_location = translate_path(
+                settings.get_setting_string("backup.location")
+            )
             for name in files:
                 file = os.path.join(root, name)
                 if backup_location not in file:
@@ -270,7 +271,7 @@ def clear_cache():
 def get_art(filename, color=None):
     art = {}
     if not color:
-        color = get_setting("ui.color")
+        color = settings.get_setting_string("ui.color")
 
     themed_path = os.path.join(_addon_path, color)
     if not os.path.exists(themed_path):
@@ -297,7 +298,7 @@ def get_art(filename, color=None):
 
 def set_color(setting=False):
     dialog = xbmcgui.Dialog()
-    color = get_setting("ui.color")
+    color = settings.get_setting_string("ui.color")
 
     choice = dialog.yesno(
         "AutoWidget",
@@ -326,7 +327,7 @@ def set_color(setting=False):
             elif len(value) == 6 and not value.startswith("#"):
                 value = "#{}".format(value)
         if setting:
-            set_setting("ui.color", value)
+            settings.set_setting_string("ui.color", value)
 
     del dialog
     return value
@@ -453,47 +454,10 @@ def write_json(file, content):
             log("Could not write to {}: {}".format(file, e), level="error")
 
 
-def set_setting(setting, value):
-    return _addon.setSetting(setting, value)
-
-
-def get_setting(setting):
-    return _addon.getSetting(setting)
-
-
-def get_setting_bool(setting):
-    try:
-        return _addon.getSettingBool(setting)
-    except AttributeError:
-        return bool(_addon.getSetting(setting))
-
-
-def get_setting_int(setting):
-    try:
-        return _addon.getSettingInt(setting)
-    except AttributeError:
-        return int(_addon.getSetting(setting))
-
-
-def get_setting_float(setting):
-    try:
-        return _addon.getSettingNumber(setting)
-    except AttributeError:
-        return float(_addon.getSetting(setting))
-
-
-def get_skin_string(string):
-    return get_infolabel("Skin.String({})".format(string))
-
-
-def set_skin_string(string, value):
-    xbmc.executebuiltin("Skin.SetString({},{})".format(string, value))
-
-
 def get_string(_id, kodi=False):
     if kodi:
         return six.text_type(xbmc.getLocalizedString(_id))
-    return six.text_type(_addon.getLocalizedString(_id))
+    return settings.get_localized_string(_id)
 
 
 def set_property(property, value, window=10000):

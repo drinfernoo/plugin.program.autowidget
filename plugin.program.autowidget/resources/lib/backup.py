@@ -5,9 +5,10 @@ import zipfile
 
 import six
 
+from resources.lib.common import settings
 from resources.lib.common import utils
 
-_backup_location = utils.translate_path(utils.get_setting("backup.location"))
+_backup_location = utils.translate_path(settings.get_setting_string("backup.location"))
 
 
 def location():
@@ -18,7 +19,7 @@ def location():
     del dialog
 
     if folder:
-        utils.set_setting("backup.location", folder)
+        settings.set_setting_string("backup.location", folder)
 
 
 def backup():

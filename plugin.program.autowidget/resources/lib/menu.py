@@ -8,6 +8,7 @@ import six
 from resources.lib import manage
 from resources.lib import refresh
 from resources.lib.common import directory
+from resources.lib.common import settings
 from resources.lib.common import utils
 
 folder_shortcut = utils.get_art("folder-shortcut")
@@ -277,10 +278,10 @@ def tools_menu():
 def show_path(
     group_id, path_label, widget_id, path, idx=0, titles=None, num=1, merged=False
 ):
-    hide_watched = utils.get_setting_bool("widgets.hide_watched")
-    show_next = utils.get_setting_int("widgets.show_next")
-    paged_widgets = utils.get_setting_bool("widgets.paged")
-    default_color = utils.get_setting("ui.color")
+    hide_watched = settings.get_setting_bool("widgets.hide_watched")
+    show_next = settings.get_setting_int("widgets.show_next")
+    paged_widgets = settings.get_setting_bool("widgets.paged")
+    default_color = settings.get_setting_string("ui.color")
 
     widget_def = manage.get_widget_by_id(widget_id)
     if not widget_def:
