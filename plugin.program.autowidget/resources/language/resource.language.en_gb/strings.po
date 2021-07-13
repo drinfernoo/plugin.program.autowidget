@@ -655,3 +655,8 @@ msgid ""
 msgstr ""
 "Are you sure you want to clear the cache? This action may make widgets load "
 "slower for some time."
+
+#: /resources/lib/common/utils.py:261
+msgctxt "#30119"
+msgid "Select Content Type"
+msgstr "Select Content Type"

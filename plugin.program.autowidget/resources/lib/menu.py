@@ -50,7 +50,7 @@ def root_menu():
         title=30008, params={"mode": "tools"}, art=utils.get_art("tools"), isFolder=True
     )
 
-    return True, "AutoWidget"
+    return True, "AutoWidget", "files"
 
 
 def my_groups_menu():
@@ -95,7 +95,7 @@ def my_groups_menu():
             props={"specialsort": "bottom"},
         )
 
-    return True, utils.get_string(30007)
+    return True, utils.get_string(30007), "files"
 
 
 def group_menu(group_id):
@@ -108,11 +108,12 @@ def group_menu(group_id):
             '"{}" is missing, please repoint the widget to fix it.'.format(group_id),
             "error",
         )
-        return False, "AutoWidget"
+        return False, "AutoWidget", "files"
 
     group_name = group_def["label"]
     group_type = group_def["type"]
     paths = group_def["paths"]
+    content = group_def.get("content", "files")
 
     if len(paths) > 0:
         utils.log(
@@ -147,7 +148,7 @@ def group_menu(group_id):
             props={"specialsort": "bottom"},
         )
 
-    return True, group_name
+    return True, group_name, content
 
 
 def active_widgets_menu():
@@ -242,7 +243,7 @@ def active_widgets_menu():
             props={"specialsort": "bottom"},
         )
 
-    return True, utils.get_string(30052)
+    return True, utils.get_string(30052), "files"
 
 
 def tools_menu():
@@ -272,7 +273,7 @@ def tools_menu():
         isFolder=False,
     )
 
-    return True, utils.get_string(30008)
+    return True, utils.get_string(30008), "files"
 
 
 def show_path(
@@ -285,14 +286,15 @@ def show_path(
 
     widget_def = manage.get_widget_by_id(widget_id)
     if not widget_def:
-        return True, "AutoWidget"
+        return True, "AutoWidget", "videos"
 
+    content = widget_def.get("content", "videos")
     if not titles:
         titles = []
 
     files = refresh.get_files_list(path, widget_id)
     if not files:
-        return titles, path_label
+        return titles, path_label, content
 
     utils.log("Loading items from {}".format(path), "debug")
 
@@ -382,7 +384,7 @@ def show_path(
 
             titles.append(title)
 
-    return titles, path_label
+    return titles, path_label, content
 
 
 def call_path(path_id):
@@ -436,8 +438,6 @@ def call_path(path_id):
         utils.log("Calling path from {} using {}".format(path_id, final_path), "debug")
         utils.call_builtin(final_path)
 
-    return False, path_def["label"]
-
 
 def path_menu(group_id, action, widget_id):
     group_def = manage.get_group_by_id(group_id)
@@ -448,13 +448,13 @@ def path_menu(group_id, action, widget_id):
             art=utils.get_art("alert"),
             isFolder=True,
         )
-        return True, "AutoWidget"
+        return True, "AutoWidget", "files"
 
     group_name = group_def.get("label", "")
     paths = group_def.get("paths", [])
     if len(paths) == 0:
         directory.add_menu_item(title=30019, art=utils.get_art("alert"), isFolder=True)
-        return True, group_name
+        return True, group_name, "files"
 
     widget_def = manage.get_widget_by_id(widget_id, group_id)
     if not widget_def:
@@ -463,7 +463,7 @@ def path_menu(group_id, action, widget_id):
             idx = dialog.select(utils.get_string(30088), [i["label"] for i in paths])
             if idx == -1:
                 del dialog
-                return True, "AutoWidget"
+                return True, "AutoWidget", "videos"
 
             widget_def = manage.initialize(group_def, action, widget_id, keep=idx)
         elif action == "cycling":
@@ -473,7 +473,7 @@ def path_menu(group_id, action, widget_id):
             )
             if idx == -1:
                 del dialog
-                return True, "AutoWidget"
+                return True, "AutoWidget", "videos"
 
             _action = "random" if idx == 0 else "next"
             widget_def = manage.initialize(group_def, _action, widget_id)
@@ -492,13 +492,13 @@ def path_menu(group_id, action, widget_id):
             else:
                 _label = widget_def.get("label", "")
         utils.log("Showing widget {}".format(widget_id), "debug")
-        titles, cat = show_path(group_id, _label, widget_id, widget_path)
-        return titles, cat
+        titles, cat, type = show_path(group_id, _label, widget_id, widget_path)
+        return titles, cat, type
     else:
         directory.add_menu_item(
             title=30045, art=utils.get_art("information_outline"), isFolder=True
         )
-        return True, group_name
+        return True, group_name, "files"
 
 
 def merged_path(group_id, widget_id):
@@ -509,7 +509,7 @@ def merged_path(group_id, widget_id):
     paths = group_def.get("paths", [])
     if len(paths) == 0:
         directory.add_menu_item(title=30019, art=utils.get_art("alert"), isFolder=False)
-        return True, group_name
+        return True, group_name, "files"
 
     widget_def = manage.get_widget_by_id(widget_id, group_id)
     if widget_def and _window != "dialog":
@@ -533,7 +533,7 @@ def merged_path(group_id, widget_id):
     if widget_def:
         titles = []
         for idx, path_def in enumerate(paths):
-            titles, cat = show_path(
+            titles, cat, type = show_path(
                 group_id,
                 path_def["label"],
                 widget_id,
@@ -544,12 +544,12 @@ def merged_path(group_id, widget_id):
                 merged=True,
             )
 
-        return titles, cat
+        return titles, cat, type
     else:
         directory.add_menu_item(
             title=30045, art=utils.get_art("information_outline"), isFolder=True
         )
-        return True, group_name
+        return True, group_name, "files"
 
 
 def _create_context_items(group_id, path_id, idx, length, target):

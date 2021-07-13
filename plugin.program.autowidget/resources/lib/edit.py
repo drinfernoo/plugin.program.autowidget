@@ -182,7 +182,7 @@ def _get_options(edit_def, useThumbs=None):
         i for i in (all_keys if advanced else base_keys) if i not in filter["exclude"]
     ]
     for key in option_keys:
-        if key in edit_def and (edit_def[key] not in [None, "", -1]):
+        if edit_def.get(key) is not None:
             if key in utils.art_types:
                 li = xbmcgui.ListItem("[B]{}[/B]: {}".format(key, edit_def[key]))
                 li.setArt({"icon": edit_def[key]})
@@ -349,6 +349,24 @@ def _get_value(edit_def, key):
             value = options[type]
         elif key == "color":
             value = utils.set_color()
+        elif key == "content":
+            options = [
+                "files",
+                "movies",
+                "tvshows",
+                "episodes",
+                "videos",
+                "artists",
+                "albums",
+                "songs",
+                "musicvideos",
+                "images",
+                "games",
+            ]
+            type = dialog.select(
+                utils.get_string(30119), options, preselect=options.index(default)
+            )
+            value = options[type]
         else:
             value = dialog.input(utils.get_string(30095).format(key), defaultt=default)
 

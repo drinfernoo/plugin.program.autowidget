@@ -53,9 +53,10 @@ def add(labels):
 
 def build_labels(source, path_def=None, target=""):
     if source == "context" and not path_def and not target:
+        content = utils.get_infolabel("Container.Content")
         labels = {
             "label": utils.get_infolabel("ListItem.Label"),
-            "content": utils.get_infolabel("Container.Content"),
+            "content": content if content else "videos",
         }
 
         path_def = {
@@ -80,7 +81,7 @@ def build_labels(source, path_def=None, target=""):
             if art:
                 path_def["art"][i] = art
     elif source == "json" and path_def and target:
-        labels = {"label": path_def["label"], "content": "", "target": target}
+        labels = {"label": path_def["label"], "content": "videos", "target": target}
 
     labels["file"] = (
         path_def
@@ -206,6 +207,7 @@ def add_group(target, group_name=""):
             "id": group_id,
             "art": folder_sync if target == "widget" else folder_shortcut,
             "version": settings.get_addon_info("version"),
+            "content": "files",
         }
 
         utils.write_json(filename, group_def)
