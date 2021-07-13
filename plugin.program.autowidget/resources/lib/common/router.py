@@ -3,6 +3,7 @@ try:
 except ImportError:
     from urlparse import parse_qsl
 
+from resources.lib import add
 from resources.lib import backup
 from resources.lib import edit
 from resources.lib import menu
@@ -45,9 +46,9 @@ def dispatch(_plugin, _handle, _params):
         is_dir, category, is_type = menu.root_menu()
     elif mode == "manage":
         if action == "add_group":
-            manage.add_group(target)
+            add.add_group(target)
         elif action == "add_path" and group and target:
-            manage.add_path(group, target)
+            add.add_path(group, target)
         elif action == "shift_path" and group and path_id and target:
             edit.shift_path(group, path_id, target)
         elif action == "edit":

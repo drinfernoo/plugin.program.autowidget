@@ -94,6 +94,16 @@ def my_groups_menu():
             isFolder=False,
             props={"specialsort": "bottom"},
         )
+    directory.add_menu_item(
+        title=30010,
+        params={"mode": "manage", "action": "add_group", "target": "widget"},
+        art=utils.get_art("folder-sync"),
+    )
+    directory.add_menu_item(
+        title=30011,
+        params={"mode": "manage", "action": "add_group", "target": "shortcut"},
+        art=utils.get_art("folder-shortcut"),
+    )
 
     return True, utils.get_string(30007), "files"
 
