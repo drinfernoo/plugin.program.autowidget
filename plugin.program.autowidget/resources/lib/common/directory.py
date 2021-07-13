@@ -33,6 +33,8 @@ _exclude_keys = [
     "id",
 ]
 
+_remove_keys = ["fanart", "filetype", "mimetype", "runtime", "type"]
+
 _default_info_keys = {"type": "mediatype"}
 
 _video_keys = {
@@ -178,10 +180,14 @@ def add_menu_item(
                 new_key = valid_keys.get(key, key)
                 def_info[new_key] = new_value
 
+        item.setMimeType(def_info.get("mimetype", ""))
+        for key in _remove_keys:
+            if key in def_info:
+                def_info.pop(key)
+
         info_type = _info_types.get(mediatype)
         if info_type:
             item.setInfo(info_type, def_info)
-        item.setMimeType(def_info.get("mimetype", ""))
 
     if props is not None and isinstance(props, dict):
         for prop in props:
