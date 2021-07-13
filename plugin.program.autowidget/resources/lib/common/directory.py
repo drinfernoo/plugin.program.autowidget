@@ -185,7 +185,7 @@ def add_menu_item(
 
     if props is not None and isinstance(props, dict):
         for prop in props:
-            item.setProperty(prop, props[prop])
+            item.setProperty(prop, six.text_type(props[prop]))
 
     if art is not None and isinstance(art, dict):
         if not any([art.get(i) for i in ["landscape", "poster"]]) and all(
