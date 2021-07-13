@@ -61,18 +61,7 @@ def my_groups_menu():
             group_id = group["id"]
             group_type = group["type"]
 
-            cm = [
-                (
-                    utils.get_string(30042),
-                    (
-                        "RunPlugin("
-                        "plugin://plugin.program.autowidget/"
-                        "?mode=manage"
-                        "&action=edit"
-                        "&group={})"
-                    ).format(group_id),
-                )
-            ]
+            cm = _create_group_context_items(group_id, group_type)
 
             directory.add_menu_item(
                 title=six.text_type(group_name),
@@ -135,7 +124,7 @@ def group_menu(group_id):
 
         for idx, path_def in enumerate(paths):
             if _window == "media":
-                cm = _create_context_items(
+                cm = _create_path_context_items(
                     group_id, path_def["id"], idx, len(paths), group_type
                 )
 
@@ -562,7 +551,35 @@ def merged_path(group_id, widget_id):
         return True, group_name, "files"
 
 
-def _create_context_items(group_id, path_id, idx, length, target):
+def _create_group_context_items(group_id, target):
+    cm = [
+        (
+            utils.get_string(30042),
+            (
+                "RunPlugin("
+                "plugin://plugin.program.autowidget/"
+                "?mode=manage"
+                "&action=edit"
+                "&group={})"
+            ).format(group_id),
+        ),
+        (
+            utils.get_string(30120),
+            (
+                "RunPlugin("
+                "plugin://plugin.program.autowidget/"
+                "?mode=manage"
+                "&action=copy"
+                "&group={}"
+                "&target={})"
+            ).format(group_id, target),
+        ),
+    ]
+
+    return cm
+
+
+def _create_path_context_items(group_id, path_id, idx, length, target):
     if target not in ["shortcut", "widget"]:
         main_action = utils.get_string(30048)
     else:

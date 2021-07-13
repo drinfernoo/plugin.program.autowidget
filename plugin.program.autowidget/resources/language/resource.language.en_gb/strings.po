@@ -660,3 +660,13 @@ msgstr ""
 msgctxt "#30119"
 msgid "Select Content Type"
 msgstr "Select Content Type"
+
+#: /resources/lib/edit.py:366
+msgctxt "#30120"
+msgid "Copy Group"
+msgstr "Copy Group"
+
+#: /resources/lib/edit.py:366
+msgctxt "#30121"
+msgid "Choose Paths to Copy"
+msgstr "Choose Paths to Copy"

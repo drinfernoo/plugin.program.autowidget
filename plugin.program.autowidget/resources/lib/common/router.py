@@ -57,6 +57,9 @@ def dispatch(_plugin, _handle, _params):
             edit.edit_dialog(group, path_id)
         elif action == "edit_widget":
             edit.edit_widget_dialog(widget_id)
+        elif action == "copy":
+            if group and target:
+                add.copy_group(group, target)
     elif mode == "group":
         if not group:
             is_dir, category, is_type = menu.my_groups_menu()

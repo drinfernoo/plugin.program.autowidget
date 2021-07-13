@@ -218,6 +218,34 @@ def add_group(target, group_name=""):
     return group_id
 
 
+def copy_group(group_id, type):
+    old_group_def = manage.get_group_by_id(group_id)
+
+    new_group_id = add_group(type, old_group_def.get("label"))
+    if not new_group_id:
+        return
+    new_group_def = manage.get_group_by_id(new_group_id)
+    new_group_def["art"] = old_group_def.get("art", {})
+    new_group_def["content"] = old_group_def.get(
+        "content", new_group_def.get("content", "files")
+    )
+
+    paths = old_group_def.get("paths", [])
+    dialog = xbmcgui.Dialog()
+    idxs = dialog.multiselect(
+        utils.get_string(30121),
+        [i["label"] for i in paths],
+        preselect=list(range(len(paths))),
+    )
+    del dialog
+
+    if idxs:
+        new_group_def["paths"] = [paths[i] for i in idxs]
+        manage.write_path(new_group_def)
+
+    utils.update_container()
+
+
 def _add_path(group_def, labels, over=False):
     if not over:
         if group_def["type"] == "shortcut":
