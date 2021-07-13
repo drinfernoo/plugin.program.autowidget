@@ -46,7 +46,7 @@ msgctxt "#30005"
 msgid "Default time between widget refreshes (in hours)"
 msgstr "Tempo padrão entre as atualizações do widget (em horas)"
 
-#: addon.xml:20 /resources/settings.xml:27 /resources/lib/menu.py:249
+#: addon.xml:20 /resources/settings.xml:27 /resources/lib/menu.py:250
 msgctxt "#30006"
 msgid "Force Refresh Widgets"
 msgstr "Forçar atualização de widgets"
@@ -57,7 +57,7 @@ msgid "My Groups"
 msgstr "As Minhas Turmas"
 
 #: /resources/settings.xml:24 /resources/lib/menu.py:49
-#: /resources/lib/menu.py:274
+#: /resources/lib/menu.py:275
 msgctxt "#30008"
 msgid "Tools"
 msgstr "Ferramentas"
@@ -67,17 +67,17 @@ msgctxt "#30009"
 msgid "Actions"
 msgstr "Ações"
 
-#: /resources/lib/add.py:159
+#: /resources/lib/add.py:160
 msgctxt "#30010"
 msgid "Create New Widget Group"
 msgstr "Criar novo grupo de widgets"
 
-#: /resources/lib/add.py:163
+#: /resources/lib/add.py:164
 msgctxt "#30011"
 msgid "Create New Shortcut Group"
 msgstr "Criar Novo Grupo de Atalho"
 
-#: /resources/lib/menu.py:252
+#: /resources/lib/menu.py:253
 msgctxt "#30012"
 msgid "Force all defined widgets to refresh."
 msgstr "Força a atualização de todos os widgets definidos."
@@ -107,12 +107,12 @@ msgctxt "#30017"
 msgid "{} (Cycling)"
 msgstr "{} (Ciclismo)"
 
-#: /resources/lib/menu.py:191
+#: /resources/lib/menu.py:192
 msgctxt "#30018"
 msgid "Shortcuts from {}"
 msgstr "Atalhos de {}"
 
-#: /resources/lib/menu.py:143 /resources/lib/menu.py:455
+#: /resources/lib/menu.py:144 /resources/lib/menu.py:455
 #: /resources/lib/menu.py:510
 msgctxt "#30019"
 msgid "No paths have been defined for this group."
@@ -123,7 +123,7 @@ msgctxt "#30020"
 msgid "Refreshing widgets..."
 msgstr "Atualizando widgets ..."
 
-#: /resources/lib/add.py:183
+#: /resources/lib/add.py:184
 msgctxt "#30021"
 msgid "Addition cancelled."
 msgstr "Adição cancelada."
@@ -137,12 +137,12 @@ msgstr ""
 "Tem certeza de que deseja remover este caminho? Esta ação [tijolo refratário"
 " COLOR] [B] não pode [/ B] [/ COLOR] ser desfeita."
 
-#: /resources/lib/add.py:195
+#: /resources/lib/add.py:196
 msgctxt "#30023"
 msgid "Name for Group"
 msgstr "Nome do Grupo"
 
-#: /resources/lib/add.py:212
+#: /resources/lib/add.py:214
 msgctxt "#30024"
 msgid "Cannot create a group with no name."
 msgstr "Não é possível criar um grupo sem nome."
@@ -166,12 +166,12 @@ msgctxt "#30027"
 msgid "Show 'Refreshing Paths' Notification"
 msgstr "Mostrar notificação de 'caminhos de atualização'"
 
-#: /resources/lib/add.py:221
+#: /resources/lib/add.py:223
 msgctxt "#30028"
 msgid "Shortcut Label"
 msgstr "Rótulo de atalho"
 
-#: /resources/lib/add.py:223
+#: /resources/lib/add.py:225
 msgctxt "#30029"
 msgid "Widget Label"
 msgstr "Rótulo de widget"
@@ -187,7 +187,7 @@ msgctxt "#30031"
 msgid "Edit Shortcut"
 msgstr "Editar o Atalho"
 
-#: /resources/lib/edit.py:318 /resources/lib/edit.py:339
+#: /resources/lib/edit.py:316 /resources/lib/edit.py:337
 msgctxt "#30032"
 msgid "Select {}"
 msgstr "Selecionar {}"
@@ -207,7 +207,7 @@ msgctxt "#30035"
 msgid "Settings Shortcut"
 msgstr "Atalho de configurações"
 
-#: /resources/lib/add.py:177
+#: /resources/lib/add.py:178
 msgctxt "#30036"
 msgid "Choose a Group"
 msgstr "Choose a Group"
@@ -248,12 +248,12 @@ msgctxt "#30042"
 msgid "Edit Group"
 msgstr "Editar  grupo"
 
-#: /resources/settings.xml:29 /resources/lib/menu.py:262
+#: /resources/settings.xml:29 /resources/lib/menu.py:263
 msgctxt "#30043"
 msgid "Wipe Add-on Data"
 msgstr "Limpe os dados do complemento"
 
-#: /resources/lib/common/utils.py:241
+#: /resources/lib/common/utils.py:244
 msgctxt "#30044"
 msgid ""
 "This will remove [B]all[/B] data for AutoWidget, excluding backups. Any "
@@ -277,23 +277,23 @@ msgctxt "#30046"
 msgid "No groups have been defined."
 msgstr "Nenhum grupo foi definido."
 
-#: /resources/lib/menu.py:197
+#: /resources/lib/menu.py:198
 msgctxt "#30047"
 msgid "Refresh Widget"
 msgstr "Atualizar widget"
 
 #: /resources/lib/edit.py:125 /resources/lib/edit.py:160
-#: /resources/lib/menu.py:213 /resources/lib/menu.py:556
+#: /resources/lib/menu.py:214 /resources/lib/menu.py:556
 msgctxt "#30048"
 msgid "Edit Widget"
 msgstr "Editar Widget"
 
-#: /resources/lib/menu.py:226
+#: /resources/lib/menu.py:227
 msgctxt "#30049"
 msgid "Orphaned"
 msgstr "Orfandade"
 
-#: /resources/lib/menu.py:238
+#: /resources/lib/menu.py:239
 msgctxt "#30050"
 msgid "No widgets have been initialized."
 msgstr "Nenhum widget foi inicializado."
@@ -303,7 +303,7 @@ msgctxt "#30051"
 msgid "Broken Widget"
 msgstr "Widget Quebrado"
 
-#: /resources/lib/menu.py:43 /resources/lib/menu.py:244
+#: /resources/lib/menu.py:43 /resources/lib/menu.py:245
 msgctxt "#30052"
 msgid "Active Widgets"
 msgstr "Widgets ativos"
@@ -329,19 +329,19 @@ msgctxt "#30056"
 msgid "Add New Artwork"
 msgstr "Adicionar nova arte"
 
-#: /resources/lib/edit.py:243 /resources/lib/edit.py:379
+#: /resources/lib/edit.py:243 /resources/lib/edit.py:395
 #: /resources/lib/menu.py:471
 msgctxt "#30057"
 msgid "Random Path"
 msgstr "Caminho Aleatório"
 
-#: /resources/lib/edit.py:245 /resources/lib/edit.py:379
+#: /resources/lib/edit.py:245 /resources/lib/edit.py:395
 #: /resources/lib/menu.py:471
 msgctxt "#30058"
 msgid "Next Path"
 msgstr "Próximo Caminho"
 
-#: /resources/lib/edit.py:380 /resources/lib/menu.py:470
+#: /resources/lib/edit.py:396 /resources/lib/menu.py:470
 msgctxt "#30059"
 msgid "Choose an Action"
 msgstr "Escolher uma ação"
@@ -356,7 +356,7 @@ msgctxt "#30061"
 msgid "Explode as Widget Group"
 msgstr "Explodir como Grupo de Widget"
 
-#: /resources/lib/add.py:130
+#: /resources/lib/add.py:131
 msgctxt "#30062"
 msgid "Add as"
 msgstr "Adicionar como"
@@ -477,7 +477,7 @@ msgctxt "#30084"
 msgid "Not on Merged Widgets"
 msgstr "Não em widgets mesclados"
 
-#: /resources/lib/menu.py:308
+#: /resources/lib/menu.py:310
 msgctxt "#30085"
 msgid "Back to Page {}"
 msgstr "Voltar para a página {}"
@@ -492,12 +492,12 @@ msgctxt "#30087"
 msgid "Shift Path to Bottom"
 msgstr "Mudar o caminho para o fundo"
 
-#: /resources/lib/edit.py:428 /resources/lib/menu.py:462
+#: /resources/lib/edit.py:444 /resources/lib/menu.py:462
 msgctxt "#30088"
 msgid "Choose a Path"
 msgstr "Escolha um caminho"
 
-#: /resources/lib/edit.py:421 /resources/lib/menu.py:519
+#: /resources/lib/edit.py:437 /resources/lib/menu.py:519
 msgctxt "#30089"
 msgid "Choose Paths to Merge"
 msgstr "Escolha os caminhos para fundir"
@@ -507,38 +507,38 @@ msgctxt "#30090"
 msgid "Remove Widget"
 msgstr "Remover Widget"
 
-#: /resources/lib/edit.py:285
+#: /resources/lib/edit.py:283
 msgctxt "#30091"
 msgid "Edit Artwork"
 msgstr "Editar Obra de Arte"
 
-#: /resources/lib/edit.py:285
+#: /resources/lib/edit.py:283
 msgctxt "#30092"
 msgid "Edit InfoLabels"
 msgstr "Editar InfoLabels"
 
-#: /resources/lib/edit.py:301
+#: /resources/lib/edit.py:299
 msgctxt "#30093"
 msgid "Select Artwork to Add"
 msgstr "Selecione Obra para Adicionar"
 
-#: /resources/lib/edit.py:301
+#: /resources/lib/edit.py:299
 msgctxt "#30094"
 msgid "Select InfoLabel to Add"
 msgstr "Selecione InfoLabel para adicionar"
 
-#: /resources/lib/edit.py:309 /resources/lib/edit.py:354
-#: /resources/lib/edit.py:436
+#: /resources/lib/edit.py:307 /resources/lib/edit.py:370
+#: /resources/lib/edit.py:452
 msgctxt "#30095"
 msgid "New Value for {}:"
 msgstr "Novo valor para {}:"
 
-#: /resources/lib/edit.py:348
+#: /resources/lib/edit.py:346
 msgctxt "#30096"
 msgid "Select Filetype"
 msgstr "Selecione o tipo de arquivo"
 
-#: /resources/lib/edit.py:359
+#: /resources/lib/edit.py:375
 msgctxt "#30097"
 msgid ""
 "Do you want to clear or keep the current {}?\n"
@@ -549,32 +549,32 @@ msgstr ""
 "\n"
 " [B] {} [/ B]: {}"
 
-#: /resources/lib/edit.py:362
+#: /resources/lib/edit.py:378
 msgctxt "#30098"
 msgid "Clear"
 msgstr "Limpar"
 
-#: /resources/lib/edit.py:363
+#: /resources/lib/edit.py:379
 msgctxt "#30099"
 msgid "Keep"
 msgstr "Mantenha"
 
-#: /resources/lib/edit.py:402
+#: /resources/lib/edit.py:418
 msgctxt "#30100"
 msgid "Refresh Duration"
 msgstr "Duração da atualização"
 
-#: /resources/settings.xml:30 /resources/lib/menu.py:268
+#: /resources/settings.xml:30 /resources/lib/menu.py:269
 msgctxt "#30101"
 msgid "Toggle Skin Debugging"
 msgstr "Alternar depuração de skin"
 
-#: /resources/lib/menu.py:176
+#: /resources/lib/menu.py:177
 msgctxt "#30102"
 msgid "{} Paths Merged"
 msgstr "{} Caminhos mesclados"
 
-#: /resources/settings.xml:28 /resources/lib/menu.py:256
+#: /resources/settings.xml:28 /resources/lib/menu.py:257
 msgctxt "#30103"
 msgid "Clean Old Widget Files"
 msgstr "Limpar arquivos de widget antigos"
@@ -584,7 +584,7 @@ msgctxt "#30104"
 msgid "Icon Color"
 msgstr "Cor do Ícone"
 
-#: /resources/lib/add.py:257
+#: /resources/lib/add.py:259
 msgctxt "#30105"
 msgid "{} paths added to {}"
 msgstr "{} caminhos adicionados a {}"
@@ -594,32 +594,32 @@ msgctxt "#30106"
 msgid "{} unused widgets removed."
 msgstr "{} widgets não utilizados removidos."
 
-#: /resources/lib/common/utils.py:303
+#: /resources/lib/common/utils.py:306
 msgctxt "#30107"
 msgid "Choose from a predefined color or hexcode input?"
 msgstr "Escolha entre uma cor predefinida ou entrada de código hexadecimal?"
 
-#: /resources/lib/common/utils.py:304
+#: /resources/lib/common/utils.py:307
 msgctxt "#30108"
 msgid "Hex Input"
 msgstr "Entrada Hex"
 
-#: /resources/lib/common/utils.py:305
+#: /resources/lib/common/utils.py:308
 msgctxt "#30109"
 msgid "Predefined Color"
 msgstr "Cor Predefinida"
 
-#: /resources/lib/common/utils.py:309
+#: /resources/lib/common/utils.py:312
 msgctxt "#30110"
 msgid "Hex codes must be of the format '#RRGGBB'."
 msgstr "Os códigos hexadecimais devem estar no formato '#RRGGBB'."
 
-#: /resources/lib/common/utils.py:312
+#: /resources/lib/common/utils.py:315
 msgctxt "#30111"
 msgid "Select a Color"
 msgstr "Seleccionar uma cor"
 
-#: /resources/lib/common/utils.py:322
+#: /resources/lib/common/utils.py:325
 msgctxt "#30112"
 msgid "Invalid color code."
 msgstr "Código de cor inválido."
@@ -649,7 +649,7 @@ msgctxt "#30117"
 msgid "Clear Cache"
 msgstr "Limpar Cache"
 
-#: /resources/lib/common/utils.py:261
+#: /resources/lib/common/utils.py:264
 msgctxt "#30118"
 msgid ""
 "Are you sure you want to clear the cache? This action may make widgets load "
@@ -657,3 +657,8 @@ msgid ""
 msgstr ""
 "Tem certeza de que deseja limpar o cache? Esta ação pode tornar o "
 "carregamento dos widgets mais lento por algum tempo."
+
+#: /resources/lib/edit.py:366
+msgctxt "#30119"
+msgid "Select Content Type"
+msgstr "Seleccione o tipo de conteúdo"
