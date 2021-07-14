@@ -7,7 +7,9 @@ from resources.lib.common import settings
 from resources.lib.common import utils
 
 _addon_data = utils.translate_path(settings.get_addon_info("profile"))
-_skin_shortcuts = utils.translate_path(settings.get_addon_info("profile", addon="script.skinshortcuts"))
+_skin_shortcuts = utils.translate_path(
+    settings.get_addon_info("profile", addon="script.skinshortcuts")
+)
 
 
 def clean(widget_id=None, notify=False, all=False):
@@ -85,16 +87,24 @@ def initialize(group_def, action, widget_id, save=True, keep=None):
     duration = settings.get_setting_float("service.refresh_duration")
     paths = group_def.get("paths", [])
     path_def = []
+    cycle_paths = []
 
     if action != "merged":
         if action == "static" and keep is not None:
-            path_idx = keep
+            path_def = paths[keep]["id"]
         elif action in ["random", "next"]:
-            path_idx = random.randrange(len(paths)) if action == "random" else 0
-        path_def = paths[path_idx]
+            if keep is None:
+                path_idx = random.randrange(len(paths)) if action == "random" else 0
+            else:
+                path_idx = (
+                    keep[random.randrange(len(keep))] if action == "random" else keep[0]
+                )
+                for idx in keep:
+                    cycle_paths.append(paths[idx]["id"])
+            path_def = paths[path_idx]["id"]
     elif action == "merged" and keep:
         for idx in keep:
-            path_def.append(paths[idx])
+            path_def.append(paths[idx]["id"])
 
     params = {
         "action": action,
@@ -104,6 +114,9 @@ def initialize(group_def, action, widget_id, save=True, keep=None):
         "path": path_def,
         "version": settings.get_addon_info("version"),
     }
+    if cycle_paths:
+        params["cycle_paths"] = cycle_paths
+
     if save:
         save_path_details(params)
 
@@ -214,3 +227,41 @@ def find_defined_widgets(group_id=None):
                 widgets.append(widget_def)
 
     return widgets
+
+
+def choose_paths(
+    label=utils.get_string(30122),
+    paths=None,
+    threshold=None,
+    indices=True,
+    single=False,
+):
+    if paths is None:
+        return []
+
+    idx = None
+    idxs = []
+    dialog = xbmcgui.Dialog()
+    if single:
+        idx = dialog.select(
+            label,
+            [i["label"] for i in paths],
+        )
+    else:
+        idxs = dialog.multiselect(
+            label,
+            [i["label"] for i in paths],
+            preselect=(
+                list(range(len(paths)))
+                if len(paths) <= threshold or threshold == -1
+                else []
+            )
+            if threshold is not None
+            else list(range(len(paths))),
+        )
+    del dialog
+
+    if single and idx:
+        return idx if indices else paths[i]
+    elif not single and idxs:
+        return idxs if indices else [paths[i] for i in idxs]

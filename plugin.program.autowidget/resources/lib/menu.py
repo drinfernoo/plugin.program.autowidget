@@ -168,11 +168,7 @@ def active_widgets_menu():
             if path_def and group_def:
                 try:
                     if action != "merged":
-                        if isinstance(path_def, dict):
-                            label = path_def["label"].encode("utf-8")
-                        else:
-                            label = widget_def["stack"][0]["label"].encode("utf-8")
-                        group_def["label"] = group_def["label"].encode("utf-8")
+                        label = widget_def["label"].encode("utf-8")
                     else:
                         label = utils.get_string(30102).format(len(path_def))
                 except:
@@ -282,7 +278,14 @@ def tools_menu():
 
 
 def show_path(
-    group_id, path_label, widget_id, path, idx=0, titles=None, num=1, merged=False
+    group_id,
+    path_label,
+    widget_id,
+    widget_path,
+    idx=0,
+    titles=None,
+    num=1,
+    merged=False,
 ):
     hide_watched = settings.get_setting_bool("widgets.hide_watched")
     show_next = settings.get_setting_int("widgets.show_next")
@@ -297,20 +300,16 @@ def show_path(
     if not titles:
         titles = []
 
+    stack = widget_def.get("stack", [])
+    path = widget_path["file"]["file"] if not stack else stack[-1]
     files = refresh.get_files_list(path, widget_id)
     if not files:
         return titles, path_label, content
 
     utils.log("Loading items from {}".format(path), "debug")
 
-    if isinstance(widget_def["path"], list):
-        color = widget_def["path"][idx].get("color", default_color)
-    elif isinstance(widget_def["path"], six.text_type):
-        color = widget_def["stack"][0].get("color", default_color)
-    else:
-        color = widget_def["path"].get("color", default_color)
+    color = widget_path.get("color", default_color)
 
-    stack = widget_def.get("stack", [])
     if stack:
         title = _previous
         # title = utils.get_string(30085).format(len(stack))
@@ -465,9 +464,10 @@ def path_menu(group_id, action, widget_id):
     if not widget_def:
         dialog = xbmcgui.Dialog()
         if action == "static":
-            idx = dialog.select(utils.get_string(30088), [i["label"] for i in paths])
+            idx = manage.choose_paths(
+                utils.get_string(30088), paths, indices=True, single=True
+            )
             if idx == -1:
-                del dialog
                 return True, "AutoWidget", "videos"
 
             widget_def = manage.initialize(group_def, action, widget_id, keep=idx)
@@ -481,21 +481,24 @@ def path_menu(group_id, action, widget_id):
                 return True, "AutoWidget", "videos"
 
             _action = "random" if idx == 0 else "next"
-            widget_def = manage.initialize(group_def, _action, widget_id)
+
+            cycle_paths = manage.choose_paths(
+                utils.get_string(30123), paths, threshold=-1, indices=True
+            )
+
+            widget_def = manage.initialize(
+                group_def, _action, widget_id, keep=cycle_paths
+            )
         del dialog
 
     if widget_def:
-        widget_path = widget_def.get("path", {})
+        widget_path = widget_def.get("path", "")
+        if not isinstance(widget_path, dict):
+            widget_path = manage.get_path_by_id(widget_path, group_id)
 
         if isinstance(widget_path, dict):
             _label = widget_path["label"]
-            widget_path = widget_path["file"]["file"]
-        else:
-            stack = widget_def.get("stack", [])
-            if stack:
-                _label = stack[0]["label"]
-            else:
-                _label = widget_def.get("label", "")
+
         utils.log("Showing widget {}".format(widget_id), "debug")
         titles, cat, type = show_path(group_id, _label, widget_id, widget_path)
         return titles, cat, type
@@ -520,13 +523,7 @@ def merged_path(group_id, widget_id):
     if widget_def and _window != "dialog":
         paths = widget_def["path"]
     elif not widget_def:
-        dialog = xbmcgui.Dialog()
-        idxs = dialog.multiselect(
-            utils.get_string(30089),
-            [i["label"] for i in paths],
-            preselect=list(range(len(paths))) if len(paths) <= 5 else [],
-        )
-        del dialog
+        idxs = manage.choose_paths(utils.get_string(30089), paths, 5)
 
         if idxs is not None:
             if len(idxs) > 0:
@@ -537,12 +534,13 @@ def merged_path(group_id, widget_id):
 
     if widget_def:
         titles = []
-        for idx, path_def in enumerate(paths):
+        for idx, path in enumerate(paths):
+            path_def = manage.get_path_by_id(path, group_id)
             titles, cat, type = show_path(
                 group_id,
                 path_def["label"],
                 widget_id,
-                path_def["file"]["file"],
+                path_def,
                 idx=idx,
                 titles=titles,
                 num=len(paths),

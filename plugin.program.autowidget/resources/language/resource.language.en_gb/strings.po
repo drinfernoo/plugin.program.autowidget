@@ -670,3 +670,13 @@ msgstr "Copy Group"
 msgctxt "#30121"
 msgid "Choose Paths to Copy"
 msgstr "Choose Paths to Copy"
+
+#: /resources/lib/edit.py:366
+msgctxt "#30122"
+msgid "Choose Paths"
+msgstr "Choose Paths"
+
+#: /resources/lib/edit.py:366
+msgctxt "#30123"
+msgid "Choose Paths to Cycle"
+msgstr "Choose Paths to Cycle"

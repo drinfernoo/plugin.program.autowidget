@@ -231,17 +231,10 @@ def copy_group(group_id, type):
     )
 
     paths = old_group_def.get("paths", [])
-    dialog = xbmcgui.Dialog()
-    idxs = dialog.multiselect(
-        utils.get_string(30121),
-        [i["label"] for i in paths],
-        preselect=list(range(len(paths))),
+    new_group_def["paths"] = manage.choose_paths(
+        utils.get_string(30121), paths, indices=False
     )
-    del dialog
-
-    if idxs:
-        new_group_def["paths"] = [paths[i] for i in idxs]
-        manage.write_path(new_group_def)
+    manage.write_path(new_group_def)
 
     utils.update_container()
 

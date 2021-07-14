@@ -148,29 +148,19 @@ def update_path(widget_id, target, path=None):
 
     if target == "next" and path:
         utils.log("Next Page selected from {}".format(widget_id), "debug")
-        path_def = widget_def["path"]
+        path_def = manage.get_path_by_id(widget_def["path"], widget_def["group"])
         if isinstance(path_def, dict):
             widget_def["label"] = path_def["label"]
 
-        stack.append(widget_def["path"])
+        stack.append(path)
         widget_def["stack"] = stack
-        widget_def["path"] = path
     elif target == "back" and widget_def.get("stack"):
         utils.log("Previous Page selected from {}".format(widget_id), "debug")
-        widget_def["path"] = widget_def["stack"][-1]
         widget_def["stack"] = widget_def["stack"][:-1]
-
-        if len(widget_def["stack"]) == 0:
-            widget_def["label"] = ""
     elif target == "reset":
         if len(stack) > 0:
-            widget_def["path"] = widget_def["stack"][0]
             widget_def["stack"] = []
-            widget_def["label"] = ""
 
-    action = widget_def["path"] if widget_def["action"] != "merged" else "merged"
-    if isinstance(widget_def["path"], dict):
-        action = widget_def["path"]["file"]["file"]
     manage.save_path_details(widget_def)
     _update_strings(widget_def)
     utils.update_container(True)
@@ -203,26 +193,35 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
         action = widget_def.get("action")
         current = int(widget_def.get("current", -1))
         widget_def["stack"] = []
-        widget_def["label"] = ""
 
         if not paths:
-            paths = manage.find_defined_paths(group_id)
+            cycle_paths = widget_def.get("cycle_paths")
+            paths = (
+                [p for p in cycle_paths]
+                if cycle_paths
+                else manage.find_defined_paths(group_id)
+            )
 
         if action:
             if len(paths) > 0:
                 next = 0
                 if action == "next":
                     next = (current + 1) % len(paths)
+
                 elif action == "random":
                     random.shuffle(paths)
                     next = random.randrange(len(paths))
 
                 widget_def["current"] = next
-                path_def = paths[next]
+                path_id = paths[next]
                 paths.remove(paths[next])
 
-                widget_def["path"] = path_def
+                widget_def["path"] = path_id
                 if widget_def["path"]:
+                    path_label = manage.get_path_by_id(path_id, group_id).get(
+                        "label", ""
+                    )
+                    widget_def["label"] = path_label
                     widget_def["updated"] = 0 if force else current_time
 
                     manage.save_path_details(widget_def)
