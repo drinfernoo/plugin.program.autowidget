@@ -263,6 +263,8 @@ def _add_path(group_def, labels, over=False):
     if labels["target"] == "settings":
         labels["file"]["filetype"] = "file"
         labels["file"]["file"] = labels["file"]["file"].split("&")[0]
+    elif labels["target"] == "shortcut" and labels["file"]["filetype"] == "file":
+        labels["content"] = "files"
 
     manage.write_path(group_def, path_def=labels)
 
