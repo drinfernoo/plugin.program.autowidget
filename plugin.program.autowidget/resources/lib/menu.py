@@ -271,6 +271,12 @@ def tools_menu():
         art=utils.get_art("bug-outline"),
         isFolder=False,
     )
+    directory.add_menu_item(
+        title=30117,
+        params={"mode": "clear_cache"},
+        art=utils.get_art("cache"),
+        isFolder=False,
+    )
 
     return True, utils.get_string(30008), "files"
 
