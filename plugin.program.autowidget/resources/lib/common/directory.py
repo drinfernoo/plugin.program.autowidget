@@ -22,20 +22,20 @@ _sort_methods = [
     xbmcplugin.SORT_METHOD_LASTPLAYED,
 ]
 
-_exclude_keys = [
+_remove_keys = [
+    "fanart",
     "file",
-    "thumbnail",
+    "filetype",
+    "id",
     "label",
     "lastmodified",
-    "productioncode",
-    "firstaired",
+    "mimetype",
+    "runtime",
+    "showtitle",
+    "thumbnail",
+    "type",
     "watchedepisodes",
-    "id",
 ]
-
-_remove_keys = ["fanart", "filetype", "mimetype", "runtime", "type"]
-
-_default_info_keys = {"type": "mediatype"}
 
 _video_keys = {
     "specialsortepisode": "sortepisode",
@@ -44,12 +44,10 @@ _video_keys = {
     "showtitle": "tvshowtitle",
     "runtime": "duration",
     "file": "path",
+    "type": "mediatype",
 }
 
-_music_keys = {
-    "disc": "discnumber",
-    "track": "tracknumber",
-}
+_music_keys = {"disc": "discnumber", "track": "tracknumber", "type": "mediatype"}
 
 _translations = {"video": _video_keys, "music": _music_keys}
 _exclude_params = ["refresh", "reload"]
@@ -119,18 +117,16 @@ def add_menu_item(
     item = xbmcgui.ListItem(title)
 
     if info is not None and isinstance(info, dict):
-        def_info = {v: info.get(k, "") for k, v in _default_info_keys.items()}
-        mediatype = def_info.get("mediatype", "")
+        def_info = {}
+        mediatype = info.pop("type", "unknown")
 
-        for key in {k: v for k, v in info.items() if k not in _exclude_keys}:
-            value = info.get(key)
+        for key, value in info.items():
             new_value = None
             if isinstance(value, list):
                 if key == "cast":
                     item.setCast(value)
                 else:
                     new_value = value
-                    # new_value = " / ".join(value)
             elif isinstance(value, dict):
                 if key == "resume":
                     pos = value.get("position", 0)
@@ -144,19 +140,22 @@ def add_menu_item(
                     if art is None:
                         art = value
                 elif key == "customproperties":
-                    context_items = {
-                        k: v for k, v in value.items() if "contextmenu" in k
-                    }
-                    items = [
-                        (
-                            context_items.get("contextmenulabel({})".format(i)),
-                            context_items.get("contextmenuaction({})".format(i)),
-                        )
-                        for i in range(0, len(context_items) // 2)
-                    ]
-                    if cm is None:
-                        cm = []
-                    cm.extend(items)
+                    # THIS BLOCK IS FOR ATTACHING CONTEXT MENU ITEMS TO WIDGET ITEMS
+                    # BUT DOESN'T WORK, DUE TO KODI LIMITATIONS.
+                    #
+                    # context_items = {
+                    #     k: v for k, v in value.items() if "contextmenu" in k
+                    # }
+                    # items = [
+                    #     (
+                    #         context_items.get("contextmenulabel({})".format(i)),
+                    #         context_items.get("contextmenuaction({})".format(i)),
+                    #     )
+                    #     for i in range(0, len(context_items) // 2)
+                    # ]
+                    # if cm is None:
+                    #     cm = []
+                    # cm.extend(items)
 
                     if props is None:
                         props = {}
@@ -170,20 +169,21 @@ def add_menu_item(
                 else:
                     utils.log("Unknown dict-typed info key encountered: {}".format(key))
             else:
-                new_value = (
-                    value
-                    if isinstance(value, int) or isinstance(value, float)
-                    else six.text_type(value)
-                )
+                if key == "mimetype":
+                    item.setMimeType(value)
+                else:
+                    new_value = (
+                        value
+                        if isinstance(value, (int, float))
+                        else six.text_type(value)
+                    )
             if new_value is not None:
-                valid_keys = _translations.get(mediatype, {})
+                valid_keys = _translations.get(_info_types.get(mediatype, ""), {})
                 new_key = valid_keys.get(key, key)
                 def_info[new_key] = new_value
 
-        item.setMimeType(def_info.get("mimetype", ""))
         for key in _remove_keys:
-            if key in def_info:
-                def_info.pop(key)
+            def_info.pop(key, None)
 
         info_type = _info_types.get(mediatype)
         if info_type:
