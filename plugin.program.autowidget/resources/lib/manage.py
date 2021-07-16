@@ -261,7 +261,7 @@ def choose_paths(
         )
     del dialog
 
-    if single and idx:
+    if single and idx is not None:
         return idx if indices else paths[i]
-    elif not single and idxs:
+    elif not single and idxs is not None:
         return idxs if indices else [paths[i] for i in idxs]
