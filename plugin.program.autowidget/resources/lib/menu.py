@@ -502,8 +502,9 @@ def path_menu(group_id, action, widget_id):
 
         widget_path = manage.get_path_by_id(widget_path, group_id)
 
+        _label = ""
         if isinstance(widget_path, dict):
-            _label = widget_path["label"]
+            _label = widget_path.get("label", "")
 
         utils.log("Showing widget {}".format(widget_id), "debug")
         titles, cat, type = show_path(group_id, _label, widget_id, widget_path)

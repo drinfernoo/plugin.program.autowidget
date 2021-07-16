@@ -278,7 +278,7 @@ def get_files_list(path, widget_id=None):
 
         for file in files:
             new_file = {
-                k: v for k, v in file.items() if v not in [None, "", -1, [], {}]
+                k: v for k, v in file.items() if v is not None
             }
 
             if "art" in new_file:
