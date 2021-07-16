@@ -709,3 +709,13 @@ def _is_page_item(label, next=True):
         )
     else:
         return re.search(prev_pattern, cleaned_title)
+
+
+def show_error(id):
+    directory.add_menu_item(
+        title="Error showing {}".format(id),
+        art=utils.get_art("alert"),
+        isFolder=False,
+    )
+
+    return True, id, "files"

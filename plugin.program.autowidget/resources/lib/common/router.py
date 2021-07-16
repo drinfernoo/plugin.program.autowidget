@@ -1,3 +1,5 @@
+import traceback
+
 try:
     from urllib.parse import parse_qsl
 except ImportError:
@@ -66,14 +68,20 @@ def dispatch(_plugin, _handle, _params):
         else:
             is_dir, category, is_type = menu.group_menu(group)
     elif mode == "path":
-        if path_id:
-            menu.call_path(path_id)
-        elif action in ["static", "cycling"] and group:
-            is_dir, category, is_type = menu.path_menu(group, action, widget_id)
-        elif action == "merged" and group:
-            is_dir, category, is_type = menu.merged_path(group, widget_id)
-        elif action == "update" and target:
-            refresh.update_path(widget_id, target, path)
+        try:
+            if path_id:
+                menu.call_path(path_id)
+            elif action in ["static", "cycling"] and group:
+                is_dir, category, is_type = menu.path_menu(group, action, widget_id)
+            elif action == "merged" and group:
+                is_dir, category, is_type = menu.merged_path(group, widget_id)
+            elif action == "update" and target:
+                refresh.update_path(widget_id, target, path)
+        except Exception as e:
+            utils.log(traceback.format_exc(), "error")
+            is_dir, category, is_type = menu.show_error(
+                widget_id if widget_id else path_id
+            )
     elif mode == "widget":
         is_dir, category, is_type = menu.active_widgets_menu()
     elif mode == "refresh":
