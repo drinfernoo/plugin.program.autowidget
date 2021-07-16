@@ -119,7 +119,8 @@ def add_menu_item(
 
     if info is not None and isinstance(info, dict):
         def_info = {}
-        mediatype = info.pop("type", "unknown")
+        mediatype = info.get("type", "unknown")
+        info_type = _info_types.get(mediatype, "video")
 
         for key, value in info.items():
             new_value = None
@@ -186,9 +187,7 @@ def add_menu_item(
         for key in _remove_keys:
             def_info.pop(key, None)
 
-        info_type = _info_types.get(mediatype)
-        if info_type:
-            item.setInfo(info_type, def_info)
+        item.setInfo(info_type, def_info)
 
     if props is not None and isinstance(props, dict):
         for prop in props:
