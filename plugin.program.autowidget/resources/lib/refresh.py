@@ -159,6 +159,10 @@ def update_path(widget_id, target, path=None):
         widget_def["stack"] = widget_def["stack"][:-1]
     elif target == "reset":
         if len(stack) > 0:
+            # simple compatibility with pre-3.3.0 widgets
+            if isinstance(stack[0], dict):
+                widget_def["path"] = stack[0].get("id", "")
+
             widget_def["stack"] = []
 
     manage.save_path_details(widget_def)

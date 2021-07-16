@@ -493,8 +493,14 @@ def path_menu(group_id, action, widget_id):
 
     if widget_def:
         widget_path = widget_def.get("path", "")
-        if not isinstance(widget_path, dict):
-            widget_path = manage.get_path_by_id(widget_path, group_id)
+
+        # simple compatibility with pre-3.3.0 widgets
+        if isinstance(widget_path, dict):
+            widget_path = widget_def.get("path", {}).get("id", "")
+            widget_def["path"] = widget_path
+            manage.save_path_details(widget_def)
+
+        widget_path = manage.get_path_by_id(widget_path, group_id)
 
         if isinstance(widget_path, dict):
             _label = widget_path["label"]
@@ -535,6 +541,13 @@ def merged_path(group_id, widget_id):
     if widget_def:
         titles = []
         for idx, path in enumerate(paths):
+            # simple compatibility with pre-3.3.0 widgets
+            if isinstance(path, dict):
+                path = path.get("id", "")
+                paths[idx] = path
+                widget_def["path"] = paths
+                manage.save_path_details(widget_def)
+
             path_def = manage.get_path_by_id(path, group_id)
             titles, cat, type = show_path(
                 group_id,
