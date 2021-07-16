@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1286" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1234" provider-name="drinfernoo">
     <requires>
+        <import addon="script.module.kodi-six" />
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
     </requires>
@@ -35,12 +36,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-3.2.3
- - Add English (US) and Portugese localizations
-3.2.2
- - Add more localizations
- - Better "Next Page" detection
- - Support for "Next Page" items in other languages
 3.2.1
  - Fix for items with no artwork
 3.2.0
