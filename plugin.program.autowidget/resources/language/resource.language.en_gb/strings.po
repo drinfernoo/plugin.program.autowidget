@@ -680,3 +680,48 @@ msgstr "Choose Paths"
 msgctxt "#30123"
 msgid "Choose Paths to Cycle"
 msgstr "Choose Paths to Cycle"
+
+#: /resources/settings.xml:22
+msgctxt "#30124"
+msgid "Icons"
+msgstr "Icons"
+
+#: /resources/settings.xml:23
+msgctxt "#30125"
+msgid "Addon Icons"
+msgstr "Addon Icons"
+
+#: /resources/settings.xml:26
+msgctxt "#30126"
+msgid "Icon Packs"
+msgstr "Icon Packs"
+
+#: /resources/settings.xml:27
+msgctxt "#30127"
+msgid "Video Genre Icons"
+msgstr "Video Genre Icons"
+
+#: /resources/settings.xml:28
+msgctxt "#30128"
+msgid "Video Genre Fanart"
+msgstr "Video Genre Fanart"
+
+#: /resources/settings.xml:29
+msgctxt "#30129"
+msgid "Music Genre Icons"
+msgstr "Music Genre Icons"
+
+#: /resources/settings.xml:30
+msgctxt "#30130"
+msgid "Music Genre Fanart"
+msgstr "Music Genre Fanart"
+
+#: /resources/settings.xml:31
+msgctxt "#30131"
+msgid "Studio Icons"
+msgstr "Studio Icons"
+
+#: /resources/settings.xml:32
+msgctxt "#30132"
+msgid "Country Icons"
+msgstr "Country Icons"

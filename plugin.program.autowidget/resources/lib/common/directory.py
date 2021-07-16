@@ -5,6 +5,7 @@ import sys
 
 import six
 
+from resources.lib.common import settings
 from resources.lib.common import utils
 
 try:
@@ -194,6 +195,20 @@ def add_menu_item(
             item.setProperty(prop, six.text_type(props[prop]))
 
     if art is not None and isinstance(art, dict):
+        if info:
+            path = info.get("file", "")
+            if any(i in path for i in ["studios", "countries", "genres"]):
+                if "studios" in path:
+                    art["icon"] = "resource://{}/{}.png".format(settings.get_setting("icons.studios"), info.get("label", ""))
+                elif "countries" in path:
+                    art["icon"] = "resource://{}/{}.png".format(settings.get_setting("icons.countries"), info.get("label", ""))
+                elif all(i in path for i in ["genres", "movies"]):
+                    art["icon"] = "resource://{}/{}.png".format(settings.get_setting("icons.video_genre_icons"), info.get("label", ""))
+                    art["fanart"] = "resource://{}/{}.jpg".format(settings.get_setting("icons.video_genre_fanart"), info.get("label", ""))
+                elif all(i in path for i in ["genres", "music"]):
+                    art["icon"] = "resource://{}/{}.jpg".format(settings.get_setting("icons.music_genre_icons"), info.get("label", ""))
+                    art["fanart"] = "resource://{}/{}.jpg".format(settings.get_setting("icons.music_genre_fanart"), info.get("label", ""))
+    
         if not any([art.get(i) for i in ["landscape", "poster"]]) and all(
             [art.get(i) for i in ["thumb", "fanart"]]
         ):
