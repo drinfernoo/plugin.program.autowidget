@@ -295,8 +295,8 @@ def show_path(
     widget_def = manage.get_widget_by_id(widget_id)
     if not widget_def:
         return True, "AutoWidget", "videos"
-
-    content = widget_def.get("content", "videos")
+    
+    content = widget_path.get("content", "videos")
     if not titles:
         titles = []
 
