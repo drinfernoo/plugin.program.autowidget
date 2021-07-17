@@ -295,7 +295,7 @@ def show_path(
     widget_def = manage.get_widget_by_id(widget_id)
     if not widget_def:
         return True, "AutoWidget", "videos"
-    
+
     content = widget_path.get("content", "videos")
     action = widget_def.get("action", "")
     if not titles:
@@ -329,7 +329,11 @@ def show_path(
         )
 
     for pos, file in enumerate(files):
-        properties = {"autoLabel": path_label, "autoID": widget_id, "autoAction": action}
+        properties = {
+            "autoLabel": path_label,
+            "autoID": widget_id,
+            "autoAction": action,
+        }
         next_item = False
         prev_item = False
 
@@ -368,8 +372,9 @@ def show_path(
                 props=properties,
             )
         else:
+            filetype = file.get("type", "")
             title = {
-                "type": file.get("type"),
+                "type": filetype,
                 "label": file.get("label"),
                 "imdbnumber": file.get("imdbnumber"),
                 "showtitle": file.get("showtitle"),
@@ -378,12 +383,20 @@ def show_path(
 
             if (hide_watched and file.get("playcount", 0) > 0) or dupe:
                 continue
+                
+            filepath = ""
+            info_type = directory.info_types.get(filetype, "video")
+            is_folder = file["filetype"] == "directory"
+            if path.startswith("library://{}/".format(info_type)):
+                filepath = directory.make_library_path(
+                    info_type, filetype, file.get("id", -1)
+                )
 
             directory.add_menu_item(
                 title=file["label"],
-                path=file["file"],
+                path=file["file"] if not (filepath and is_folder) else filepath,
                 info=file,
-                isFolder=file["filetype"] == "directory",
+                isFolder=is_folder,
                 props=properties,
             )
 

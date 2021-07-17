@@ -46,6 +46,7 @@ _video_keys = {
     "runtime": "duration",
     "file": "path",
     "type": "mediatype",
+    "tvshowid": "id",
 }
 
 _music_keys = {"disc": "discnumber", "track": "tracknumber", "type": "mediatype"}
@@ -53,13 +54,13 @@ _music_keys = {"disc": "discnumber", "track": "tracknumber", "type": "mediatype"
 _translations = {"video": _video_keys, "music": _music_keys}
 _exclude_params = ["refresh", "reload"]
 
-_info_types = {}
-_info_types.update(
+info_types = {}
+info_types.update(
     dict.fromkeys(
         ["video", "movie", "set", "tvshow", "season", "episode", "musicvideo"], "video"
     )
 )
-_info_types.update(dict.fromkeys(["music", "song", "album", "artist"], "music"))
+info_types.update(dict.fromkeys(["music", "song", "album", "artist"], "music"))
 
 
 def add_separator(title="", char="-", sort=""):
@@ -120,7 +121,7 @@ def add_menu_item(
     if info is not None and isinstance(info, dict):
         def_info = {}
         mediatype = info.get("type", "unknown")
-        info_type = _info_types.get(mediatype, "video")
+        info_type = info_types.get(mediatype, "video")
 
         for key, value in info.items():
             new_value = None
@@ -180,7 +181,7 @@ def add_menu_item(
                         else six.text_type(value)
                     )
             if new_value is not None:
-                valid_keys = _translations.get(_info_types.get(mediatype, ""), {})
+                valid_keys = _translations.get(info_types.get(mediatype, ""), {})
                 new_key = valid_keys.get(key, key)
                 def_info[new_key] = new_value
 
@@ -237,6 +238,13 @@ def add_menu_item(
     xbmcplugin.addDirectoryItem(
         handle=_handle, url=_plugin, listitem=item, isFolder=isFolder
     )
+    
+    
+def make_library_path(library, type, id):
+    if not type or id == -1:
+        return ""
+    path = "{}db://{}s/titles/{}".format(library, type, id)
+    return path
 
 
 def finish_directory(handle, category, type):
