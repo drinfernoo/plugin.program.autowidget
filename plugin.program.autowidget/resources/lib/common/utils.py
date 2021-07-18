@@ -1,7 +1,6 @@
-from kodi_six import xbmc
-from kodi_six import xbmcaddon
-from kodi_six import xbmcgui
-from kodi_six import xbmcvfs
+import xbmc
+import xbmcgui
+import xbmcvfs
 
 import codecs
 import contextlib
@@ -19,6 +18,8 @@ import datetime
 import six
 from PIL import Image
 
+from resources.lib.common import settings
+
 try:
     from urllib.parse import unquote
 except ImportError:
@@ -31,16 +32,13 @@ except AttributeError:
 
 DEFAULT_CACHE_TIME = 60 * 5
 
-_addon = xbmcaddon.Addon()
-_addon_id = _addon.getAddonInfo("id")
-_addon_path = xbmc.translatePath(_addon.getAddonInfo("profile"))
-_addon_root = xbmc.translatePath(_addon.getAddonInfo("path"))
-_addon_version = _addon.getAddonInfo("version")
-_addon_data = xbmc.translatePath("special://profile/addon_data/")
+_addon_id = settings.get_addon_info("id")
+_addon_data = translate_path(settings.get_addon_info("profile"))
+_addon_root = translate_path(settings.get_addon_info("path"))
 
 _art_path = os.path.join(_addon_root, "resources", "media")
-_home = xbmc.translatePath("special://home/")
-_playback_history_path = os.path.join(_addon_path, "cache.history")
+_home = translate_path("special://home/")
+_playback_history_path = os.path.join(_addon_data, "cache.history")
 
 windows = {
     "programs": ["program", "script"],
@@ -49,74 +47,6 @@ windows = {
     "pictures": ["image", "picture"],
     "videos": ["video", "videos"],
 }
-
-info_types = [
-    "artist",
-    "albumartist",
-    "genre",
-    "year",
-    "rating",
-    "album",
-    "track",
-    "duration",
-    "comment",
-    "lyrics",
-    "musicbrainztrackid",
-    "plot",
-    "art",
-    "mpaa",
-    "cast",
-    "musicbrainzartistid",
-    "set",
-    "showlink",
-    "top250",
-    "votes",
-    "musicbrainzalbumid",
-    "disc",
-    "tag",
-    "genreid",
-    "season",
-    "musicbrainzalbumartistid",
-    "size",
-    "theme",
-    "mood",
-    "style",
-    "playcount",
-    "director",
-    "trailer",
-    "tagline",
-    "title",
-    "plotoutline",
-    "originaltitle",
-    "lastplayed",
-    "writer",
-    "studio",
-    "country",
-    "imdbnumber",
-    "premiered",
-    "productioncode",
-    "runtime",
-    "firstaired",
-    "episode",
-    "showtitle",
-    "artistid",
-    "albumid",
-    "tvshowid",
-    "setid",
-    "watchedepisodes",
-    "displayartist",
-    "mimetype",
-    "albumartistid",
-    "description",
-    "albumlabel",
-    "sorttitle",
-    "episodeguide",
-    "dateadded",
-    "lastmodified",
-    "specialsortseason",
-    "specialsortepisode",
-    "resume",
-]
 
 art_types = [
     "banner",
@@ -281,8 +211,8 @@ def ft(seconds):
 
 def log(msg, level="debug"):
     _level = xbmc.LOGDEBUG
-    debug = get_setting_bool("logging.debug")
-    logpath = os.path.join(_addon_path, "aw_debug.log")
+    debug = settings.get_setting_bool("logging.debug")
+    logpath = os.path.join(_addon_data, "aw_debug.log")
 
     if level == "debug":
         _level = xbmc.LOGDEBUG
@@ -295,7 +225,10 @@ def log(msg, level="debug"):
         _level = xbmc.LOGERROR
 
     msg = u"{}: {}".format(_addon_id, six.text_type(msg))
-    xbmc.log(msg, _level)
+    try:
+        xbmc.log(msg, _level)
+    except UnicodeEncodeError:
+        xbmc.log(msg.encode("utf-8"), _level)
     if debug:
         debug_size = os.path.getsize(logpath) if os.path.exists(logpath) else 0
         debug_msg = u"{}  {}{}".format(time.ctime(), level.upper(), msg[25:])
@@ -303,17 +236,20 @@ def log(msg, level="debug"):
 
 
 def ensure_addon_data():
-    if not os.path.exists(_addon_path):
-        os.makedirs(_addon_path)
+    if not os.path.exists(_addon_data):
+        os.makedirs(_addon_data)
 
 
-def wipe(folder=_addon_path):
+def wipe(folder=_addon_data):
     dialog = xbmcgui.Dialog()
     choice = dialog.yesno("AutoWidget", get_string(30044))
+    del dialog
 
     if choice:
         for root, dirs, files in os.walk(folder):
-            backup_location = xbmc.translatePath(_addon.getSetting("backup.location"))
+            backup_location = translate_path(
+                settings.get_setting_string("backup.location")
+            )
             for name in files:
                 file = os.path.join(root, name)
                 if backup_location not in file:
@@ -324,21 +260,26 @@ def wipe(folder=_addon_path):
                     os.rmdir(dir)
 
 
-def clear_cache():
-    dialog = xbmcgui.Dialog()
-    choice = dialog.yesno("AutoWidget", get_string(30118))
+def clear_cache(target):
+    if not target:
+        dialog = xbmcgui.Dialog()
+        choice = dialog.yesno("AutoWidget", get_string(30118))
+        del dialog
 
-    if choice:
-        for file in [i for i in os.listdir(_addon_path) if i.endswith(".cache")]:
-            os.remove(os.path.join(_addon_path, file))
+        if choice:
+            for file in [i for i in os.listdir(_addon_data) if i.endswith(".cache")]:
+                os.remove(os.path.join(_addon_data, file))
+    else:
+        os.remove(os.path.join(_addon_data, "{}.cache".format(target)))
+        update_container(True)
 
 
 def get_art(filename, color=None):
     art = {}
     if not color:
-        color = get_setting("ui.color")
+        color = settings.get_setting_string("ui.color")
 
-    themed_path = os.path.join(_addon_path, color)
+    themed_path = os.path.join(_addon_data, color)
     if not os.path.exists(themed_path):
         os.makedirs(themed_path)
 
@@ -363,7 +304,7 @@ def get_art(filename, color=None):
 
 def set_color(setting=False):
     dialog = xbmcgui.Dialog()
-    color = get_setting("ui.color")
+    color = settings.get_setting_string("ui.color")
 
     choice = dialog.yesno(
         "AutoWidget",
@@ -387,12 +328,14 @@ def set_color(setting=False):
         if value not in colors:
             if len(value) < 6:
                 dialog.notification("AutoWidget", get_string(30112))
+                del dialog
                 return
             elif len(value) == 6 and not value.startswith("#"):
                 value = "#{}".format(value)
         if setting:
-            set_setting("ui.color", value)
+            settings.set_setting_string("ui.color", value)
 
+    del dialog
     return value
 
 
@@ -421,12 +364,6 @@ def update_container(reload=False):
         xbmc.executebuiltin("UpdateLibrary(video, AutoWidget)")
     if get_active_window() == "media":
         xbmc.executebuiltin("Container.Refresh()")
-
-
-def _prettify(elem):
-    rough_string = ElementTree.tostring(elem, "utf-8")
-    reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="\t")
 
 
 def get_valid_filename(filename):
@@ -474,7 +411,7 @@ def remove_file(file):
 def read_file(file):
     content = None
     if os.path.exists(file):
-        with io.open(os.path.join(_addon_path, file), "r", encoding="utf-8") as f:
+        with io.open(os.path.join(_addon_data, file), "r", encoding="utf-8") as f:
             try:
                 content = f.read()
             except Exception as e:
@@ -499,7 +436,7 @@ def write_file(file, content, mode="w"):
 def read_json(file, log_file=False, default=None):
     data = None
     if os.path.exists(file):
-        with codecs.open(os.path.join(_addon_path, file), "r", encoding="utf-8") as f:
+        with codecs.open(os.path.join(_addon_data, file), "r", encoding="utf-8") as f:
             content = six.ensure_text(f.read())
             try:
                 data = json.loads(content)
@@ -523,47 +460,10 @@ def write_json(file, content):
             log("Could not write to {}: {}".format(file, e), level="error")
 
 
-def set_setting(setting, value):
-    return _addon.setSetting(setting, value)
-
-
-def get_setting(setting):
-    return _addon.getSetting(setting)
-
-
-def get_setting_bool(setting):
-    try:
-        return _addon.getSettingBool(setting)
-    except AttributeError:
-        return bool(_addon.getSetting(setting))
-
-
-def get_setting_int(setting):
-    try:
-        return _addon.getSettingInt(setting)
-    except AttributeError:
-        return int(_addon.getSetting(setting))
-
-
-def get_setting_float(setting):
-    try:
-        return _addon.getSettingNumber(setting)
-    except AttributeError:
-        return float(_addon.getSetting(setting))
-
-
-def get_skin_string(string):
-    return get_infolabel("Skin.String({})".format(string))
-
-
-def set_skin_string(string, value):
-    xbmc.executebuiltin("Skin.SetString({},{})".format(string, value))
-
-
 def get_string(_id, kodi=False):
     if kodi:
         return six.text_type(xbmc.getLocalizedString(_id))
-    return six.text_type(_addon.getLocalizedString(_id))
+    return settings.get_localized_string(_id)
 
 
 def set_property(property, value, window=10000):
@@ -598,16 +498,16 @@ def get_condition(cond):
 
 
 def clean_artwork_url(url):
-    url = unquote(url).replace(_home, "special://home/").replace("image://", "")
-    if url.endswith("/"):
-        url = url[:-1]
+    if url.startswith("image://") and "@" in url:
+        url = url.replace(_home, "special://home/").rstrip("/")
+    else:
+        url = (
+            unquote(url)
+            .replace(_home, "special://home/")
+            .replace("image://", "")
+            .rstrip("/")
+        )
     return url
-
-
-def _get_json_version():
-    params = {"jsonrpc": "2.0", "id": 1, "method": "JSONRPC.Version"}
-    result = json.loads(call_jsonrpc(json.dumps(params)))["result"]["version"]
-    return (result["major"], result["minor"], result["patch"])
 
 
 def hash_from_cache_path(path):
@@ -616,7 +516,7 @@ def hash_from_cache_path(path):
 
 
 def iter_queue():
-    queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_path, "*.queue")))
+    queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_data, "*.queue")))
     # TODO: sort by path instead so load plugins at the same time
     for path in sorted(queued, key=os.path.getmtime):
         yield path
@@ -635,7 +535,7 @@ def next_cache_queue():
         # TODO: need to workout if a blocking write is happen while it was queued or right now.
         # probably need a .lock file to ensure foreground calls can get priority.
         hash = hash_from_cache_path(path)
-        path = os.path.join(_addon_path, "{}.history".format(hash))
+        path = os.path.join(_addon_data, "{}.history".format(hash))
         cache_data = read_json(path)
         if cache_data:
             log("Dequeued cache update: {}".format(hash[:5]), "notice")
@@ -643,7 +543,7 @@ def next_cache_queue():
 
 
 def push_cache_queue(hash):
-    queue_path = os.path.join(_addon_path, "{}.queue".format(hash))
+    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
     if os.path.exists(queue_path):
         pass  # Leave original modification date so item is higher priority
     else:
@@ -651,12 +551,12 @@ def push_cache_queue(hash):
 
 
 def is_cache_queue(hash):
-    queue_path = os.path.join(_addon_path, "{}.queue".format(hash))
+    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
     return os.path.exists(queue_path)
 
 
 def remove_cache_queue(hash):
-    queue_path = os.path.join(_addon_path, "{}.queue".format(hash))
+    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
     remove_file(queue_path)
 
 
@@ -666,7 +566,7 @@ def path2hash(path):
 
 def widgets_for_path(path):
     hash = path2hash(path)
-    history_path = os.path.join(_addon_path, "{}.history".format(hash))
+    history_path = os.path.join(_addon_data, "{}.history".format(hash))
     cache_data = read_json(history_path) if os.path.exists(history_path) else None
     if cache_data is None:
         cache_data = {}
@@ -674,26 +574,38 @@ def widgets_for_path(path):
     return set(widgets)
 
 
+def get_info_keys():
+    params = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "JSONRPC.Introspect",
+        "params": {
+            "getmetadata": True,
+            "filter": {
+                "getreferences": True,
+                "id": "List.Fields.Files",
+                "type": "type",
+            },
+        },
+    }
+    info_keys = call_jsonrpc(params)
+    return info_keys["result"]["types"]["List.Fields.Files"]["items"]["enums"]
+
+
 def cache_files(path, widget_id):
     hash = path2hash(path)
-    version = _get_json_version()
-    props = (
-        version == (10, 3, 1)
-        or (version[0] >= 11 and version[1] >= 12)
-        or version[0] >= 12
-    )
-    props_info = info_types + ["customproperties"]
+
+    info_keys = get_info_keys()
     params = {
         "jsonrpc": "2.0",
         "method": "Files.GetDirectory",
         "params": {
-            "properties": info_types if not props else props_info,
+            "properties": info_keys,
             "directory": path,
         },
         "id": 1,
     }
-    files_json = call_jsonrpc(json.dumps(params))
-    files = json.loads(files_json)
+    files = call_jsonrpc(params)
     _, _, changed = cache_expiry(hash, widget_id, add=files)
     return (files, changed)
 
@@ -705,10 +617,10 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
     # It should also manage the cache files to remove any too old.
     # The cache expiry can also be used later to schedule a future background update.
 
-    cache_path = os.path.join(_addon_path, "{}.cache".format(hash))
+    cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
 
     # Read file every time as we might be called from multiple processes
-    history_path = os.path.join(_addon_path, "{}.history".format(hash))
+    history_path = os.path.join(_addon_data, "{}.history".format(hash))
     cache_data = read_json(history_path) if os.path.exists(history_path) else None
     if cache_data is None:
         cache_data = {}
@@ -787,7 +699,7 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
 def last_read(hash):
     # Technically this is last read or updated but we can change it to be last read Later
     # if we create another file
-    path = os.path.join(_addon_path, "{}.history".format(hash))
+    path = os.path.join(_addon_data, "{}.history".format(hash))
     return os.path.getmtime(path)
 
 
@@ -858,7 +770,7 @@ def widgets_changed_by_watching(media_type):
     # watching something
 
     all_cache = filter(
-        os.path.isfile, glob.glob(os.path.join(_addon_path, "*.history"))
+        os.path.isfile, glob.glob(os.path.join(_addon_data, "*.history"))
     )
 
     # Simple version. Anything updated recently (since startup?)
@@ -970,7 +882,9 @@ def call_builtin(action, delay=0):
 
 
 def call_jsonrpc(request):
-    return xbmc.executeJSONRPC(request)
+    call = json.dumps(request)
+    response = xbmc.executeJSONRPC(call)
+    return json.loads(response)
 
 
 @contextlib.contextmanager

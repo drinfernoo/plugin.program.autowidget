@@ -5,21 +5,26 @@ import zipfile
 
 import six
 
+from resources.lib.common import settings
 from resources.lib.common import utils
 
-_backup_location = utils.translate_path(utils.get_setting("backup.location"))
-dialog = xbmcgui.Dialog()
+_addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_backup_location = utils.translate_path(settings.get_setting_string("backup.location"))
 
 
 def location():
+    dialog = xbmcgui.Dialog()
     folder = dialog.browse(
-        0, utils.get_string(30068), "files", defaultt=backup_location
+        0, utils.get_string(30068), "files", defaultt=_backup_location
     )
+    del dialog
+
     if folder:
-        utils.set_setting("backup.location", folder)
+        settings.set_setting_string("backup.location", folder)
 
 
 def backup():
+    dialog = xbmcgui.Dialog()
     choice = dialog.yesno("AutoWidget", utils.get_string(30071))
 
     if choice:
@@ -27,6 +32,7 @@ def backup():
 
         if not filename:
             dialog.notification("AutoWidget", utils.get_string(30073))
+            del dialog
             return
 
         if not os.path.exists(_backup_location):
@@ -35,11 +41,20 @@ def backup():
             except Exception as e:
                 utils.log(str(e), "error")
                 dialog.notification("AutoWidget", utils.get_string(30074))
+                del dialog
                 return
 
-        files = [x for x in os.listdir(utils._addon_path) if x.endswith(".group")]
+        files = [
+            x
+            for x in os.listdir(_addon_data)
+            if any(
+                x.endswith(i)
+                for i in [".group", ".widget", ".history", ".cache", ".log"]
+            )
+        ]
         if len(files) == 0:
             dialog.notification("AutoWidget", utils.get_string(30046))
+            del dialog
             return
 
         path = os.path.join(
@@ -48,14 +63,16 @@ def backup():
         content = six.BytesIO()
         with zipfile.ZipFile(content, "w", zipfile.ZIP_DEFLATED) as z:
             for file in files:
-                with open(os.path.join(utils._addon_path, file), "r") as f:
+                with open(os.path.join(_addon_data, file), "r") as f:
                     z.writestr(file, six.ensure_text(f.read()))
 
         with open(path, "wb") as f:
             f.write(content.getvalue())
+    del dialog
 
 
 def restore():
+    dialog = xbmcgui.Dialog()
     backup = dialog.browse(
         1, utils.get_string(30075), "files", mask=".zip", defaultt=_backup_location
     )
@@ -72,14 +89,14 @@ def restore():
                 overwrite = dialog.yesno("AutoWidget", utils.get_string(30077))
 
                 if overwrite:
-                    files = [
-                        x for x in os.listdir(utils._addon_path) if x.endswith(".group")
-                    ]
+                    files = [x for x in os.listdir(_addon_data) if x.endswith(".group")]
                     for file in files:
                         utils.remove_file(file)
-                z.extractall(utils._addon_path)
+                z.extractall(_addon_data)
             else:
                 dialog.notification("AutoWidget", utils.get_string(30078))
+        del dialog
     else:
         dialog.notification("AutoWidget", utils.get_string(30078))
+        del dialog
         return

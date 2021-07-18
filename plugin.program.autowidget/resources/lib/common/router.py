@@ -1,8 +1,11 @@
+import traceback
+
 try:
     from urllib.parse import parse_qsl
 except ImportError:
     from urlparse import parse_qsl
 
+from resources.lib import add
 from resources.lib import backup
 from resources.lib import edit
 from resources.lib import menu
@@ -42,12 +45,12 @@ def dispatch(_plugin, _handle, _params):
     widget_id = params.get("id", "")
 
     if not mode:
-        is_dir, category = menu.root_menu()
+        is_dir, category, is_type = menu.root_menu()
     elif mode == "manage":
         if action == "add_group":
-            manage.add_group(target)
+            add.add_group(target)
         elif action == "add_path" and group and target:
-            manage.add_path(group, target)
+            add.add_path(group, target)
         elif action == "shift_path" and group and path_id and target:
             edit.shift_path(group, path_id, target)
         elif action == "edit":
@@ -56,30 +59,38 @@ def dispatch(_plugin, _handle, _params):
             edit.edit_dialog(group, path_id)
         elif action == "edit_widget":
             edit.edit_widget_dialog(widget_id)
+        elif action == "copy":
+            if group and target:
+                add.copy_group(group, target)
     elif mode == "group":
         if not group:
-            is_dir, category = menu.my_groups_menu()
+            is_dir, category, is_type = menu.my_groups_menu()
         else:
-            is_dir, category = menu.group_menu(group)
+            is_dir, category, is_type = menu.group_menu(group)
     elif mode == "path":
-        if path_id:
-            menu.call_path(path_id)
-        elif action in ["static", "cycling"] and group:
-            is_dir, category = menu.path_menu(group, action, widget_id)
-        elif action == "merged" and group:
-            is_dir, category = menu.merged_path(group, widget_id)
-        elif action == "update" and target:
-            refresh.update_path(widget_id, target, path)
-        is_type = "videos"
+        try:
+            if path_id:
+                menu.call_path(path_id)
+            elif action in ["static", "cycling"] and group:
+                is_dir, category, is_type = menu.path_menu(group, action, widget_id)
+            elif action == "merged" and group:
+                is_dir, category, is_type = menu.merged_path(group, widget_id)
+            elif action == "update" and target:
+                refresh.update_path(widget_id, target, path)
+        except Exception as e:
+            utils.log(traceback.format_exc(), "error")
+            is_dir, category, is_type = menu.show_error(
+                widget_id if widget_id else path_id
+            )
     elif mode == "widget":
-        is_dir, is_category = menu.active_widgets_menu()
+        is_dir, category, is_type = menu.active_widgets_menu()
     elif mode == "refresh":
         if not widget_id:
             refresh.refresh_paths()
         else:
             refresh.refresh(widget_id, force=True, single=True)
     elif mode == "tools":
-        is_dir, category = menu.tools_menu()
+        is_dir, category, is_type = menu.tools_menu()
     elif mode == "force":
         refresh.refresh_paths(notify=True, force=True)
     elif mode == "skindebug":
@@ -93,7 +104,10 @@ def dispatch(_plugin, _handle, _params):
             edit.remove_widget(widget_id, over=True)
             utils.update_container(True)
     elif mode == "clear_cache":
-        utils.clear_cache()
+        if not target:
+            utils.clear_cache()
+        else:
+            utils.clear_cache(target)
     elif mode == "set_color":
         utils.set_color(setting=True)
     elif mode == "backup" and action:

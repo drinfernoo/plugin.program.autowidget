@@ -11,7 +11,10 @@ except ImportError:
 
 from resources.lib import manage
 from resources.lib import refresh
+from resources.lib.common import settings
 from resources.lib.common import utils
+
+_addon_data = utils.translate_path(settings.get_addon_info("profile"))
 
 shortcut_types = [
     utils.get_string(30033),
@@ -26,8 +29,6 @@ folder_sync = utils.get_art("folder-sync")
 folder_settings = utils.get_art("folder-settings")
 folder_clone = utils.get_art("folder-clone")
 folder_explode = utils.get_art("folder-explode")
-
-dialog = xbmcgui.Dialog()
 
 
 def add(labels):
@@ -52,9 +53,10 @@ def add(labels):
 
 def build_labels(source, path_def=None, target=""):
     if source == "context" and not path_def and not target:
+        content = utils.get_infolabel("Container.Content")
         labels = {
             "label": utils.get_infolabel("ListItem.Label"),
-            "content": utils.get_infolabel("Container.Content"),
+            "content": content if content else "videos",
         }
 
         path_def = {
@@ -65,7 +67,7 @@ def build_labels(source, path_def=None, target=""):
             "art": {},
         }  # would be fun to set some "placeholder" art here
 
-        for i in utils.info_types:
+        for i in utils.get_info_keys():
             info = utils.get_infolabel("ListItem.{}".format(i.capitalize()))
             if info and not info.startswith("ListItem"):
                 path_def[i] = info
@@ -79,7 +81,7 @@ def build_labels(source, path_def=None, target=""):
             if art:
                 path_def["art"][i] = art
     elif source == "json" and path_def and target:
-        labels = {"label": path_def["label"], "content": "", "target": target}
+        labels = {"label": path_def["label"], "content": "videos", "target": target}
 
     labels["file"] = (
         path_def
@@ -94,7 +96,7 @@ def build_labels(source, path_def=None, target=""):
         path += "&widget=True"
     labels["file"]["file"] = path
 
-    labels["color"] = utils.get_setting("ui.color")
+    labels["color"] = settings.get_setting_string("ui.color")
 
     for _key in utils.windows:
         if any(i in path for i in utils.windows[_key]):
@@ -126,7 +128,10 @@ def _add_as(path_def):
         li.setArt(art[idx])
         options.append(li)
 
+    dialog = xbmcgui.Dialog()
     idx = dialog.select(utils.get_string(30062), options, useDetails=True)
+    del dialog
+
     if idx < 0:
         return
 
@@ -169,12 +174,16 @@ def _group_dialog(_type, group_id=None):
         item.setArt(folder_sync if group["type"] == "widget" else folder_shortcut)
         options.append(item)
 
+    dialog = xbmcgui.Dialog()
     choice = dialog.select(
         utils.get_string(30036), options, preselect=index, useDetails=True
     )
+    del dialog
 
     if choice < 0:
+        dialog = xbmcgui.Dialog()
         dialog.notification("AutoWidget", utils.get_string(30021))
+        del dialog
     elif (choice, _type) == (0, "widget"):
         return _group_dialog(_type, add_group("widget"))
     elif choice == 0:
@@ -184,26 +193,50 @@ def _group_dialog(_type, group_id=None):
 
 
 def add_group(target, group_name=""):
+    dialog = xbmcgui.Dialog()
     group_name = dialog.input(heading=utils.get_string(30023), defaultt=group_name)
     group_id = ""
 
     if group_name:
         group_id = utils.get_unique_id(group_name)
-        filename = os.path.join(utils._addon_path, "{}.group".format(group_id))
+        filename = os.path.join(_addon_data, "{}.group".format(group_id))
         group_def = {
             "label": group_name,
             "type": target,
             "paths": [],
             "id": group_id,
             "art": folder_sync if target == "widget" else folder_shortcut,
-            "version": utils._addon_version,
+            "version": settings.get_addon_info("version"),
+            "content": "files",
         }
 
         utils.write_json(filename, group_def)
     else:
         dialog.notification("AutoWidget", utils.get_string(30024))
 
+    del dialog
     return group_id
+
+
+def copy_group(group_id, type):
+    old_group_def = manage.get_group_by_id(group_id)
+
+    new_group_id = add_group(type, old_group_def.get("label"))
+    if not new_group_id:
+        return
+    new_group_def = manage.get_group_by_id(new_group_id)
+    new_group_def["art"] = old_group_def.get("art", {})
+    new_group_def["content"] = old_group_def.get(
+        "content", new_group_def.get("content", "files")
+    )
+
+    paths = old_group_def.get("paths", [])
+    new_group_def["paths"] = manage.choose_paths(
+        utils.get_string(30121), paths, indices=False
+    )
+    manage.write_path(new_group_def)
+
+    utils.update_container()
 
 
 def _add_path(group_def, labels, over=False):
@@ -213,14 +246,18 @@ def _add_path(group_def, labels, over=False):
         elif group_def["type"] == "widget":
             heading = utils.get_string(30029)
 
+        dialog = xbmcgui.Dialog()
         labels["label"] = dialog.input(heading=heading, defaultt=labels["label"])
+        del dialog
 
     labels["id"] = utils.get_unique_id(labels["label"])
-    labels["version"] = utils._addon_version
+    labels["version"] = settings.get_addon_info("version")
 
     if labels["target"] == "settings":
         labels["file"]["filetype"] = "file"
         labels["file"]["file"] = labels["file"]["file"].split("&")[0]
+    elif labels["target"] == "shortcut" and labels["file"]["filetype"] == "file":
+        labels["content"] = "files"
 
     manage.write_path(group_def, path_def=labels)
 
@@ -231,7 +268,7 @@ def _copy_path(path_def):
         return
 
     group_def = manage.get_group_by_id(group_id)
-    files = refresh.get_files_list(path_def["file"]["file"])
+    files, hash = refresh.get_files_list(path_def["file"]["file"])
     if not files:
         return
 
@@ -241,6 +278,8 @@ def _copy_path(path_def):
 
         labels = build_labels("json", file, path_def["target"])
         _add_path(group_def, labels, over=True)
+    dialog = xbmcgui.Dialog()
     dialog.notification(
         "AutoWidget", utils.get_string(30105).format(len(files), group_def["label"])
     )
+    del dialog

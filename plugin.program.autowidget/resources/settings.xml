@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-    <category label="$ADDON[plugin.program.autowidget 30000]">
-        <setting label="$ADDON[plugin.program.autowidget 30104]" type="action" id="ui.color" default="white" action="RunPlugin(plugin://plugin.program.autowidget/?mode=set_color)" option="close" />
-        
+    <category label="$ADDON[plugin.program.autowidget 30000]">        
         <!-- Widget Settings -->
         <setting label="$ADDON[plugin.program.autowidget 30080]" type="lsep" />
         <setting label="$ADDON[plugin.program.autowidget 30081]" type="bool" id="widgets.hide_watched" default="false" />
@@ -20,6 +18,19 @@
         
         <!-- Hidden Settings -->
         <setting type="bool" id="context.warning" default="false" visible="false" />
+    </category>
+
+    <category label="30124">
+		<setting label="$ADDON[plugin.program.autowidget 30125]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 30104]" type="action" id="ui.color" default="white" action="RunPlugin(plugin://plugin.program.autowidget/?mode=set_color)" option="close" />
+		
+		<setting label="$ADDON[plugin.program.autowidget 30126]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 30127]" type="addon" addontype="kodi.resource.images" id="icons.video_genre_icons" default="resource.images.moviegenreicons.transparent" />
+		<setting label="$ADDON[plugin.program.autowidget 30128]" type="addon" addontype="kodi.resource.images" id="icons.video_genre_fanart" default="resource.images.moviegenrefanart.metrocity" />
+		<setting label="$ADDON[plugin.program.autowidget 30129]" type="addon" addontype="kodi.resource.images" id="icons.music_genre_icons" default="resource.images.musicgenreicons.poster" />
+		<setting label="$ADDON[plugin.program.autowidget 30130]" type="addon" addontype="kodi.resource.images" id="icons.music_genre_fanart" default="resource.images.musicgenrefanart.coloured" />
+		<setting label="$ADDON[plugin.program.autowidget 30131]" type="addon" addontype="kodi.resource.images" id="icons.studios" default="resource.images.studios.white" />
+		<setting label="$ADDON[plugin.program.autowidget 30132]" type="addon" addontype="kodi.resource.images" id="icons.countries" default="resource.images.moviecountryicons.maps" />
     </category>
     
     <category label="$ADDON[plugin.program.autowidget 30008]">    

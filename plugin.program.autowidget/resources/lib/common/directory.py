@@ -5,6 +5,7 @@ import sys
 
 import six
 
+from resources.lib.common import settings
 from resources.lib.common import utils
 
 try:
@@ -22,29 +23,52 @@ _sort_methods = [
     xbmcplugin.SORT_METHOD_LASTPLAYED,
 ]
 
-_exclude_keys = [
-    "type",
-    "art",
-    "mimetype",
-    "thumbnail",
+_remove_keys = [
+    "fanart",
     "file",
-    "label",
     "filetype",
+    "id",
+    "label",
     "lastmodified",
-    "productioncode",
-    "firstaired",
+    "mimetype",
     "runtime",
     "showtitle",
+    "thumbnail",
+    "type",
+    "watchedepisodes",
+    "cast",
+    "castandrole",
+    "productioncode",
     "specialsortepisode",
     "specialsortseason",
     "track",
     "tvshowid",
-    "watchedepisodes",
-    "customproperties",
-    "id",
+    "disc"
 ]
 
+_video_keys = {
+    "specialsortepisode": "sortepisode",
+    "specialsortseason": "sortseason",
+    "track": "tracknumber",
+    "showtitle": "tvshowtitle",
+    "runtime": "duration",
+    "file": "path",
+    "type": "mediatype",
+    "tvshowid": "id",
+}
+
+_music_keys = {"disc": "discnumber", "track": "tracknumber", "type": "mediatype"}
+
+_translations = {"video": _video_keys, "music": _music_keys}
 _exclude_params = ["refresh", "reload"]
+
+info_types = {}
+info_types.update(
+    dict.fromkeys(
+        ["video", "movie", "set", "tvshow", "season", "episode", "musicvideo"], "video"
+    )
+)
+info_types.update(dict.fromkeys(["music", "song", "album", "artist"], "music"))
 
 
 def add_separator(title="", char="-", sort=""):
@@ -75,19 +99,26 @@ def add_sort_methods(handle):
 
 
 def add_menu_item(
-    title, params=None, path=None, info={}, cm=None, art=None, isFolder=False, props={}
+    title="",
+    params=None,
+    path=None,
+    info=None,
+    cm=None,
+    art=None,
+    isFolder=False,
+    props=None,
 ):
     _plugin = sys.argv[0]
     _handle = int(sys.argv[1])
 
-    if params is not None:
-        encode = {k: params[k] for k, v in params.items() if k not in _exclude_params}
+    if params is not None and isinstance(params, dict):
+        encode = {k: v for k, v in params.items() if k not in _exclude_params}
 
         _plugin += "?{}".format(urlencode(encode))
 
         for param in _exclude_params:
             _plugin += "&{}={}".format(param, params.get(param, ""))
-    elif path is not None:
+    elif path is not None and isinstance(path, six.text_type):
         _plugin = path
 
     if isinstance(title, int):
@@ -95,59 +126,140 @@ def add_menu_item(
 
     item = xbmcgui.ListItem(title)
 
-    if info:
-        def_info = {x: info[x] for x in info if x not in _exclude_keys}
-        mediatype = info.get("type", "video")
-        if mediatype != "unknown":
-            def_info["mediatype"] = mediatype
+    if info is not None and isinstance(info, dict):
+        def_info = {}
+        mediatype = info.get("type", "unknown")
+        info_type = info_types.get(mediatype, "video")
 
-        for key in def_info:
-            i = def_info.get(key)
-            if any(key == x for x in ["artist", "cast"]):
-                if not i:
-                    def_info[key] = []
-                elif not isinstance(i, list):
-                    def_info[key] = [i]
-                elif isinstance(i, list) and key == "cast":
-                    cast = []
-                    for actor in i:
-                        cast.append((actor["name"], actor["role"]))
-                    def_info[key] = cast
-            elif isinstance(i, list):
-                def_info[key] = " / ".join(i)
+        for key, value in info.items():
+            new_value = None
+            if isinstance(value, list):
+                if key in ["cast", "castandrole"]:
+                    item.setCast(value)
+                else:
+                    new_value = value
+            elif isinstance(value, dict):
+                if key == "resume":
+                    pos = value.get("position", 0)
+                    total = value.get("total", 0)
+                    if pos > 0 and pos < total:
+                        if props is None:
+                            props = {}
+                        props["ResumeTime"] = six.text_type(pos)
+                        props["TotalTime"] = six.text_type(total)
+                elif key == "art":
+                    if art is None:
+                        art = value
+                elif key == "customproperties":
+                    # THIS BLOCK IS FOR ATTACHING CONTEXT MENU ITEMS TO WIDGET ITEMS
+                    # BUT DOESN'T WORK, DUE TO KODI LIMITATIONS.
+                    #
+                    # context_items = {
+                    #     k: v for k, v in value.items() if "contextmenu" in k
+                    # }
+                    # items = [
+                    #     (
+                    #         context_items.get("contextmenulabel({})".format(i)),
+                    #         context_items.get("contextmenuaction({})".format(i)),
+                    #     )
+                    #     for i in range(0, len(context_items) // 2)
+                    # ]
+                    # if cm is None:
+                    #     cm = []
+                    # cm.extend(items)
+
+                    if props is None:
+                        props = {}
+                    props.update(value)
+                elif key == "uniqueid":
+                    item.setUniqueIDs(value)
+                elif key == "streamdetails":
+                    for d in value:
+                        if len(value[d]) > 0:
+                            item.addStreamInfo(d, value[d][0])
+                else:
+                    utils.log("Unknown dict-typed info key encountered: {}".format(key))
             else:
-                def_info[key] = six.text_type(i)
+                if key == "mimetype":
+                    item.setMimeType(value)
+                else:
+                    new_value = (
+                        value
+                        if isinstance(value, (int, float))
+                        else six.text_type(value)
+                    )
+            if new_value is not None:
+                valid_keys = _translations.get(info_types.get(mediatype, ""), {})
+                new_key = valid_keys.get(key, key)
+                def_info[new_key] = new_value
 
-        runtime = info.get("runtime", 0)
-        if runtime > 0:
-            def_info["duration"] = runtime
+        for key in _remove_keys:
+            def_info.pop(key, None)
 
-        resume = info.get("resume", {})
-        if "resume" in def_info:
-            def_info.pop("resume")
-        if resume.get("position", 0) > 0:
-            props["ResumeTime"] = six.text_type(resume["position"])
-            props["TotalTime"] = six.text_type(resume["total"])
+        item.setInfo(info_type, def_info)
 
-        item.setInfo("video", def_info)
-        item.setMimeType(def_info.get("mimetype", ""))
+    if props is not None and isinstance(props, dict):
+        for prop in props:
+            item.setProperty(prop, six.text_type(props[prop]))
 
-    if props:
-        try:
-            item.setProperties(props)
-        except AttributeError:
-            for prop in props:
-                item.setProperty(prop, props[prop])
+    if art is not None and isinstance(art, dict):
+        if info:
+            path = info.get("file", "")
+            if any(i in path for i in ["studios", "countries", "genres"]):
+                if "studios" in path:
+                    art["icon"] = "resource://{}/{}.png".format(
+                        settings.get_setting("icons.studios"), info.get("label", "")
+                    )
+                elif "countries" in path:
+                    art["icon"] = "resource://{}/{}.png".format(
+                        settings.get_setting("icons.countries"), info.get("label", "")
+                    )
+                elif "genres" in path:
+                    if "videodb" in path:
+                        art["icon"] = "resource://{}/{}.png".format(
+                            settings.get_setting("icons.video_genre_icons"),
+                            info.get("label", ""),
+                        )
+                        art["fanart"] = "resource://{}/{}.jpg".format(
+                            settings.get_setting("icons.video_genre_fanart"),
+                            info.get("label", ""),
+                        )
+                    elif "musicdb" in path:
+                        art["icon"] = "resource://{}/{}.jpg".format(
+                            settings.get_setting("icons.music_genre_icons"),
+                            info.get("label", ""),
+                        )
+                        art["fanart"] = "resource://{}/{}.jpg".format(
+                            settings.get_setting("icons.music_genre_fanart"),
+                            info.get("label", ""),
+                        )
 
-    if art:
+        if not any([art.get(i) for i in ["landscape", "poster"]]) and all(
+            [art.get(i) for i in ["thumb", "fanart"]]
+        ):
+            art["landscape"] = art["thumb"]
         item.setArt(art)
 
-    if cm:
+    if cm is not None and isinstance(cm, list):
         item.addContextMenuItems(cm)
 
     xbmcplugin.addDirectoryItem(
         handle=_handle, url=_plugin, listitem=item, isFolder=isFolder
     )
+    
+    
+def make_library_path(library, type, id):
+    if not library or not type or id == -1:
+        return ""
+
+    path = "{}db://".format(library)
+    if library == "video":
+        if type == "tvshow":
+            path = "{}{}s/titles/{}".format(path, type, id)
+    elif library == "music":
+        if type in ["artist", "album"]:
+            path = "{}{}s/{}/".format(path, type, id)
+    return path
 
 
 def finish_directory(handle, category, type):

@@ -6,10 +6,10 @@
 /.project
 /.pydevproject
 /.settings
+scripts/
 Thumbs.db
 *~
 .cache
-lib
 bin
 .venv
 .vscode
