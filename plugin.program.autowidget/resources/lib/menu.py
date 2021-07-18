@@ -297,6 +297,7 @@ def show_path(
         return True, "AutoWidget", "videos"
     
     content = widget_path.get("content", "videos")
+    action = widget_def.get("action", "")
     if not titles:
         titles = []
 
@@ -328,7 +329,7 @@ def show_path(
         )
 
     for pos, file in enumerate(files):
-        properties = {"autoLabel": path_label, "autoID": widget_id}
+        properties = {"autoLabel": path_label, "autoID": widget_id, "autoAction": action}
         next_item = False
         prev_item = False
 
