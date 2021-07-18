@@ -384,18 +384,21 @@ def show_path(
 
             if (hide_watched and file.get("playcount", 0) > 0) or dupe:
                 continue
-                
+
             filepath = ""
             info_type = directory.info_types.get(filetype, "video")
             is_folder = file["filetype"] == "directory"
-            if path.startswith("library://{}/".format(info_type)):
+            if (
+                path.startswith("library://{}/".format(info_type))
+                or path.startswith("{}db://".format(info_type) or path.endswith(".xsp"))
+            ) and is_folder:
                 filepath = directory.make_library_path(
                     info_type, filetype, file.get("id", -1)
                 )
 
             directory.add_menu_item(
                 title=file["label"],
-                path=file["file"] if not (filepath and is_folder) else filepath,
+                path=file["file"] if not filepath else filepath,
                 info=file,
                 isFolder=is_folder,
                 props=properties,

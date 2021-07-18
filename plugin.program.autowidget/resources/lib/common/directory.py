@@ -241,9 +241,16 @@ def add_menu_item(
     
     
 def make_library_path(library, type, id):
-    if not type or id == -1:
+    if not library or not type or id == -1:
         return ""
-    path = "{}db://{}s/titles/{}".format(library, type, id)
+
+    path = "{}db://".format(library)
+    if library == "video":
+        if type == "tvshow":
+            path = "{}{}s/titles/{}".format(path, type, id)
+    elif library == "music":
+        if type in ["artist", "album"]:
+            path = "{}{}s/{}/".format(path, type, id)
     return path
 
 
