@@ -204,6 +204,26 @@ colors = [
 
 _startup_time = time.time()  # TODO: could get reloaded so not accurate?
 
+_startup_time = time.time() #TODO: could get reloaded so not accurate?
+
+
+def make_holding_path(label, art):
+    return {
+        "jsonrpc": "2.0", 
+        "id": 1, 
+        "result": {
+            "files": [
+                {
+                    "title": label,
+                    "label": label,
+                    "file": "plugin://plugin.program.autowidget/?mode=force&refresh=&reload=",
+                    "art": get_art(art),
+                    "filetype": "file", 
+                }
+            ]
+        }
+}
+
 
 def ft(seconds):
     return str(datetime.timedelta(seconds=int(seconds)))
@@ -521,6 +541,21 @@ def iter_queue():
     for path in sorted(queued, key=os.path.getmtime):
         yield path
 
+def read_history(hash, create_if_missing=True):
+    history_path = os.path.join(_addon_path, '{}.history'.format(hash))
+    if not os.path.exists(history_path):
+        if create_if_missing:
+            cache_data = {}
+            history = cache_data.setdefault('history', [])
+            widgets = cache_data.setdefault('widgets', [])
+            write_json(history_path, cache_data) 
+        else:
+            cache_data = None
+    else:
+        cache_data = read_json(history_path)
+    return cache_data
+
+
 
 def next_cache_queue():
     # Simple queue by creating a .queue file
@@ -535,15 +570,18 @@ def next_cache_queue():
         # TODO: need to workout if a blocking write is happen while it was queued or right now.
         # probably need a .lock file to ensure foreground calls can get priority.
         hash = hash_from_cache_path(path)
-        path = os.path.join(_addon_data, "{}.history".format(hash))
-        cache_data = read_json(path)
-        if cache_data:
-            log("Dequeued cache update: {}".format(hash[:5]), "notice")
-            yield hash, cache_data.get("widgets", [])
+        cache_data = read_history(hash, create_if_missing=True)
+        yield hash, cache_data.get('widgets',[])
+            
 
+def push_cache_queue(hash, widget_id=None):
+    queue_path = os.path.join(_addon_path, '{}.queue'.format(hash))
+    history = read_history(hash, create_if_missing=True) # Ensure its created
+    if widget_id is not None and widget_id not in history['widgets']:
+        history_path = os.path.join(_addon_path, '{}.history'.format(hash))
+        history['widgets'].append(widget_id)
+        write_json(history_path, history)
 
-def push_cache_queue(hash):
-    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
     if os.path.exists(queue_path):
         pass  # Leave original modification date so item is higher priority
     else:
@@ -561,7 +599,10 @@ def remove_cache_queue(hash):
 
 
 def path2hash(path):
-    return hashlib.sha1(six.ensure_binary(path, "utf8")).hexdigest()
+    if path is not None:
+        return hashlib.sha1(six.ensure_binary(path, "utf8")).hexdigest()
+    else:
+        return None
 
 
 def widgets_for_path(path):
@@ -610,12 +651,12 @@ def cache_files(path, widget_id):
     return (files, changed)
 
 
-def cache_expiry(hash, widget_id, add=None, no_queue=False):
-    # Currently just caches for 5 min so that the background refresh doesn't go in a loop.
-    # In the future it will cache for longer based on the history of how often in changed
-    # and when it changed in relation to events like events events.
-    # It should also manage the cache files to remove any too old.
-    # The cache expiry can also be used later to schedule a future background update.
+def cache_expiry(hash, widget_id, add=None, background=True):
+    # Predict how long to cache for with a min of 5min so updates don't go in a loop
+    # TODO: find better way to prevents loops so that users trying to manually refresh can do so
+    # TODO: manage the cache files to remove any too old or no longer used
+    # TODO: update paths on autowidget refresh based on predicted update frequency. e.g. plugins with random paths should
+    # update when autowidget updates.
 
     cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
 
@@ -642,6 +683,12 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
         cache_json = json.dumps(add)
         if not add or not cache_json.strip():
             result = "Invalid Write"
+
+        elif 'error' in add or not add.get('result',{}).get('files'):
+            # In this case we don't want to cache a bad result
+            result = "Error"
+            # TODO: do we schedule a new update? or put dummy content up even if we have
+            # good cached content?
         else:
             write_json(cache_path, add)
             contents = add
@@ -652,15 +699,24 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
             write_json(history_path, cache_data)
             # expiry = history[-1][0] + DEFAULT_CACHE_TIME
             pred_dur = predict_update_frequency(history)
-            expiry = history[-1][0] + pred_dur / 2.0
+            expiry = history[-1][0] + pred_dur * 0.75 # less than prediction to ensure pred keeps up to date
             result = "Wrote"
     else:
+        # write any updated widget_ids so we know what to update when we dequeue
+        # Also important as wwe use last modified of .history as accessed time
+        write_json(history_path, cache_data) 
         if not os.path.exists(cache_path):
             result = "Empty"
+            if background:
+                contents = make_holding_path(u"Loading Content...", "refresh")
+                push_cache_queue(hash)
         else:
             contents = read_json(cache_path, log_file=True)
             if contents is None:
                 result = "Invalid Read"
+                if background:
+                    contents = make_holding_path("Error", "error")
+                    push_cache_queue(hash)
             else:
                 # write any updated widget_ids so we know what to update when we dequeue
                 # Also important as wwe use last modified of .history as accessed time
@@ -672,7 +728,7 @@ def cache_expiry(hash, widget_id, add=None, no_queue=False):
                 #                queue_len = len(list(iter_queue()))
                 if expiry > time.time():
                     result = "Read"
-                elif no_queue:
+                elif not background:
                     result = "Skip already updated"
                 # elif queue_len > 3:
                 #     # Try to give system more breathing space by returning empty cache but ensuring refresh
