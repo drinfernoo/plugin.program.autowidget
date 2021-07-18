@@ -260,14 +260,18 @@ def wipe(folder=_addon_data):
                     os.rmdir(dir)
 
 
-def clear_cache():
-    dialog = xbmcgui.Dialog()
-    choice = dialog.yesno("AutoWidget", get_string(30118))
-    del dialog
+def clear_cache(target):
+    if not target:
+        dialog = xbmcgui.Dialog()
+        choice = dialog.yesno("AutoWidget", get_string(30118))
+        del dialog
 
-    if choice:
-        for file in [i for i in os.listdir(_addon_data) if i.endswith(".cache")]:
-            os.remove(os.path.join(_addon_data, file))
+        if choice:
+            for file in [i for i in os.listdir(_addon_data) if i.endswith(".cache")]:
+                os.remove(os.path.join(_addon_data, file))
+    else:
+        os.remove(os.path.join(_addon_data, "{}.cache".format(target)))
+        update_container(True)
 
 
 def get_art(filename, color=None):

@@ -291,7 +291,7 @@ def get_files_list(path, widget_id=None):
                     )
             new_files.append(new_file)
 
-        return new_files
+        return new_files, hash
 
 
 def is_duplicate(title, titles):

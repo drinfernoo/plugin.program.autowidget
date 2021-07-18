@@ -303,7 +303,7 @@ def show_path(
 
     stack = widget_def.get("stack", [])
     path = widget_path["file"]["file"] if not stack else stack[-1]
-    files = refresh.get_files_list(path, widget_id)
+    files, hash = refresh.get_files_list(path, widget_id)
     if not files:
         return titles, path_label, content
 
@@ -333,6 +333,7 @@ def show_path(
             "autoLabel": path_label,
             "autoID": widget_id,
             "autoAction": action,
+            "autoCache": hash,
         }
         next_item = False
         prev_item = False
