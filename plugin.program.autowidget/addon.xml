@@ -6,7 +6,7 @@
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
-        <provides>executable video</provides>
+        <provides>executable video music</provides>
     </extension>
     
     <extension point="xbmc.service" library="service.py" />
