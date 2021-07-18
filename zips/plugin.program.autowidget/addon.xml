@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1296" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1280" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
@@ -21,10 +21,6 @@
                 <label>$ADDON[plugin.program.autowidget 30006]</label>
                 <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
             </item>
-			<item library="context_refresh_single.py">
-                <label>$ADDON[plugin.program.autowidget 30047]</label>
-                <visible>!String.IsEmpty(ListItem.Property(autoID)) + [!String.IsEqual(ListItem.Property(autoAction),static) + !String.IsEqual(ListItem.Property(autoAction),merged)]</visible>
-            </item>
         </menu>
     </extension>
     
@@ -39,18 +35,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-3.3.0
- - Fix translatePath reference again
- - Faster and more robust item creation
- - Remove dependency on Kodi Six
- - Support cast thumbnails for Kodi N
- - Allow editing content type
- - Add "Copy Group" in group context menu
- - Add "Create New ... Group" in "My Groups" menu
- - Add "Clear Cache" in "Tools" menu
- - Make `.widget` files much simpler
- - Add rudimentary error item for failed widgets
- - Add "Icon Packs" for library widgets from genres, studios, and countries
 3.2.3
  - Add English (US) and Portugese localizations
 3.2.2
@@ -301,6 +285,32 @@
         <assets>
             <icon>resources/media/icon.png</icon>
             <fanart>resources/media/fanart.png</fanart>
+            <poster>resources/media/poster.png</poster>
+            <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+   
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>resources/media/icon.png</icon>
+            <fanart>resources/media/fanart.png</fanart>
+            <poster>resources/media/poster.png</poster>
+            <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+sources/media/fanart.png</fanart>
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
