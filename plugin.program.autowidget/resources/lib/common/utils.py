@@ -498,12 +498,15 @@ def get_condition(cond):
 
 
 def clean_artwork_url(url):
-    url = (
-        unquote(url)
-        .replace(_home, "special://home/")
-        .replace("image://", "")
-        .rstrip("/")
-    )
+    if url.startswith("image://") and "@" in url:
+        url = url.replace(_home, "special://home/").rstrip("/")
+    else:
+        url = (
+            unquote(url)
+            .replace(_home, "special://home/")
+            .replace("image://", "")
+            .rstrip("/")
+        )
     return url
 
 
