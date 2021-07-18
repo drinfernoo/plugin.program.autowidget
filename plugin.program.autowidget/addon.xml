@@ -43,6 +43,23 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.3.0
+ - Add "Copy Group" in group context menu
+ - Add "Create New ... Group" in "My Groups" menu
+ - Add "Clear Cache" in "Tools" menu
+ - Add "Refresh Widget" to widget context menu
+ - Add "Clear Cache" to widget context menu
+ - Add rudimentary error item for failed widgets
+ - Add "Icon Packs" for library widgets from genres, studios, and countries
+ - Remove dependency on Kodi Six
+ - Allow editing content type
+ - Allow Cycling Widgets to pull from a subset of paths
+ - Support cast thumbnails for Kodi N
+ - Fix translatePath reference again
+ - Faster and more robust item creation
+ - Make `.widget` files much simpler
+ - Better support for library paths
+ - Better support for music
 3.2.3
  - Add English (US) and Portugese localizations
 3.2.2
