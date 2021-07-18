@@ -36,6 +36,14 @@ _remove_keys = [
     "thumbnail",
     "type",
     "watchedepisodes",
+    "cast",
+    "castandrole",
+    "productioncode",
+    "specialsortepisode",
+    "specialsortseason",
+    "track",
+    "tvshowid",
+    "disc"
 ]
 
 _video_keys = {
@@ -126,7 +134,7 @@ def add_menu_item(
         for key, value in info.items():
             new_value = None
             if isinstance(value, list):
-                if key == "cast":
+                if key in ["cast", "castandrole"]:
                     item.setCast(value)
                 else:
                     new_value = value
