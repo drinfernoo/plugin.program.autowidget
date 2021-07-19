@@ -306,7 +306,8 @@ def show_path(
 
     stack = widget_def.get("stack", [])
     path = widget_path["file"]["file"] if not stack else stack[-1]
-    files, hash = refresh.get_files_list(path, widget_id)
+    
+    files, hash = refresh.get_files_list(path, widget_id, background=False)
     if not files:
         return titles, path_label, content
 
@@ -367,18 +368,17 @@ def show_path(
                 "target": "next",
             }
 
-            next_path = file['file'] if not paged_widgets or merged else None
             directory.add_menu_item(
                 title=label,
                 params=update_params if paged_widgets and not merged else None,
-                path=next_path,
+                path=file['file'] if not paged_widgets or merged else None,
                 art=utils.get_art("next_page", color),
                 info=file,
                 isFolder=not paged_widgets or merged,
                 props=properties,
             )
             # Ensure we precache next page for faster access
-            utils.cache_expiry(utils.path2hash(next_path), widget_id)
+            utils.cache_expiry(utils.path2hash(file['file']), widget_id, background=True)
         else:
             filetype = file.get("type", "")
             title = {
