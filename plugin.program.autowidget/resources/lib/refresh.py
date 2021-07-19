@@ -360,17 +360,24 @@ def cache_and_update(widget_ids, notify=True):
         if not widget_def:
             continue
         changed = False
-        widget_path = widget_def.get("path", {})
+        widget_path = widget_def.get("path", "")
         utils.log(
             "trying to update {} with widget def {}".format(widget_id, widget_def),
             "inspect",
         )
+
         if type(widget_path) != list:
             widget_path = [widget_path]
-        for path in widget_path:
-            if isinstance(path, dict):
-                _label = path["label"]
-                path = path["file"]["file"]
+        for path_id in widget_path:
+            # simple compatibility with pre-3.3.0 widgets
+            if isinstance(path_id, dict):
+                path_id = path_id.get("id", "")
+            path = manage.get_path_by_id(path_id)
+            if not path:
+                continue
+
+            _label = path["label"]
+            path = path["file"]["file"]
             hash = utils.path2hash(path)
             # TODO: we might be updating paths used by widgets that weren't initiall queued.
             # We need to return those and ensure they get refreshed also.
