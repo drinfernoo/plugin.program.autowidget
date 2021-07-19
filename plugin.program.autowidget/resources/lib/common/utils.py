@@ -677,7 +677,7 @@ def cache_expiry(hash, widget_id, add=None, background=True):
         cache_data = {}
         since_read = 0
     else:
-        since_read = time.time() - os.path.getmtime(history_path)
+        since_read = time.time() - last_read(hash)
 
     history = cache_data.setdefault("history", [])
     widgets = cache_data.setdefault("widgets", [])
