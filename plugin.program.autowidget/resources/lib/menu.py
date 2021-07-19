@@ -380,7 +380,6 @@ def show_path(
                 "target": "next",
             }
 
-            next_path = file['file'] if not paged_widgets or merged else None
             directory.add_menu_item(
                 title=label,
                 params=update_params if paged_widgets and not merged else None,
