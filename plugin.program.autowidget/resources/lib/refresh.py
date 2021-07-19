@@ -18,7 +18,6 @@ _properties = ["context.autowidget"]
 _thread = None
 
 
-
 class RefreshService(xbmc.Monitor):
     def __init__(self):
         """Starts all of the actions of AutoWidget's service."""
@@ -74,8 +73,6 @@ class RefreshService(xbmc.Monitor):
                 break
             i += step
             yield i
-
-
 
     def _update_widgets(self):
         self._refresh(True)
@@ -145,7 +142,6 @@ class RefreshService(xbmc.Monitor):
                 if updated and self.refresh_enabled == 1 and not self.player.isPlayingVideo():
                     dialog = xbmcgui.Dialog()
                     dialog.notification(u'AutoWidget', u"Finished Updating Widgets", sound=False)
-
 
             if self.abortRequested():
                 break
