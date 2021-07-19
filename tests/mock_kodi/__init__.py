@@ -169,7 +169,7 @@ class Directory:
                     print("Please enter a valid entry")
 
     def _try_handle_menu_action(self, selected):
-        action = pick_item(selected, ["Back", "Home"]+[str(i[1]) for i in self.items], -2)
+        action = pick_item(selected, ["Back", "Home"] + [str(i[1]) for i in self.items], -2)
         if action is None:
             return False
         if action == -2:
@@ -232,7 +232,7 @@ class Directory:
         #from resources.lib.modules.globals import g
 
         #g.init_globals(["", 0, self.next_action])
-        for path,script in sorted(self.action_callbacks.items(), reverse=True):
+        for path, script in sorted(self.action_callbacks.items(), reverse=True):
             if not next_path.startswith(path):
                 continue
             if type(script) == type(""):
@@ -264,7 +264,7 @@ class Directory:
             old_items = self.items
             self.items = []
             self._execute_action(path)
-        result = json.loads(json.dumps([i.toJSONRPC(properties) for _,i,_ in self.items], cls=JsonEncoder))
+        result = json.loads(json.dumps([i.toJSONRPC(properties) for _, i, _ in self.items], cls=JsonEncoder))
         if path is not None:
             self.items = old_items
         else:
@@ -285,7 +285,7 @@ class Directory:
 
             @staticmethod
             def IsActive(window):
-                if window=='home':
+                if window == 'home':
                     return self.next_action == ""
                 raise Exception(f"Not handled Window.IsActive({window})")
 
@@ -313,7 +313,6 @@ class Directory:
             return self.current_list_item
         else:
             raise Exception(f"Not found {key}")
-
 
     def register_action(self, path, script):
         # TODO: read config from the addon.xml for actions and context menu
