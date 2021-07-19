@@ -647,7 +647,7 @@ def cache_files(path, widget_id):
         "id": 1,
     }
     files = call_jsonrpc(params)
-    _, _, changed = cache_expiry(hash, widget_id, add=files)
+    _, _, changed = cache_expiry(hash, widget_id, add=files, background=False)
     return (files, changed)
 
 
@@ -693,7 +693,7 @@ def cache_expiry(hash, widget_id, add=None, background=True):
             write_json(cache_path, add)
             contents = add
             size = len(cache_json)
-            content_hash = hashlib.sha1(cache_json.encode("utf8")).hexdigest()
+            content_hash = path2hash(cache_json)
             changed = history[-1][1] != content_hash if history else True
             history.append((time.time(), content_hash))
             write_json(history_path, cache_data)
