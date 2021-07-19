@@ -204,13 +204,13 @@ colors = [
 
 _startup_time = time.time()  # TODO: could get reloaded so not accurate?
 
-_startup_time = time.time() #TODO: could get reloaded so not accurate?
+_startup_time = time.time()  # TODO: could get reloaded so not accurate?
 
 
 def make_holding_path(label, art):
     return {
-        "jsonrpc": "2.0", 
-        "id": 1, 
+        "jsonrpc": "2.0",
+        "id": 1,
         "result": {
             "files": [
                 {
@@ -218,11 +218,11 @@ def make_holding_path(label, art):
                     "label": label,
                     "file": "plugin://plugin.program.autowidget/?mode=force&refresh=&reload=",
                     "art": get_art(art),
-                    "filetype": "file", 
+                    "filetype": "file",
                 }
             ]
-        }
-}
+        },
+    }
 
 
 def ft(seconds):
@@ -541,20 +541,20 @@ def iter_queue():
     for path in sorted(queued, key=os.path.getmtime):
         yield path
 
+
 def read_history(hash, create_if_missing=True):
-    history_path = os.path.join(_addon_data, '{}.history'.format(hash))
+    history_path = os.path.join(_addon_data, "{}.history".format(hash))
     if not os.path.exists(history_path):
         if create_if_missing:
             cache_data = {}
-            history = cache_data.setdefault('history', [])
-            widgets = cache_data.setdefault('widgets', [])
-            write_json(history_path, cache_data) 
+            history = cache_data.setdefault("history", [])
+            widgets = cache_data.setdefault("widgets", [])
+            write_json(history_path, cache_data)
         else:
             cache_data = None
     else:
         cache_data = read_json(history_path)
     return cache_data
-
 
 
 def next_cache_queue():
@@ -571,15 +571,15 @@ def next_cache_queue():
         # probably need a .lock file to ensure foreground calls can get priority.
         hash = hash_from_cache_path(path)
         cache_data = read_history(hash, create_if_missing=True)
-        yield hash, cache_data.get('widgets',[])
-            
+        yield hash, cache_data.get("widgets", [])
+
 
 def push_cache_queue(hash, widget_id=None):
-    queue_path = os.path.join(_addon_data, '{}.queue'.format(hash))
-    history = read_history(hash, create_if_missing=True) # Ensure its created
-    if widget_id is not None and widget_id not in history['widgets']:
-        history_path = os.path.join(_addon_data, '{}.history'.format(hash))
-        history['widgets'].append(widget_id)
+    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
+    history = read_history(hash, create_if_missing=True)  # Ensure its created
+    if widget_id is not None and widget_id not in history["widgets"]:
+        history_path = os.path.join(_addon_data, "{}.history".format(hash))
+        history["widgets"].append(widget_id)
         write_json(history_path, history)
 
     if os.path.exists(queue_path):
@@ -684,7 +684,7 @@ def cache_expiry(hash, widget_id, add=None, background=True):
         if not add or not cache_json.strip():
             result = "Invalid Write"
 
-        elif 'error' in add or not add.get('result',{}).get('files'):
+        elif "error" in add or not add.get("result", {}).get("files"):
             # In this case we don't want to cache a bad result
             result = "Error"
             # TODO: do we schedule a new update? or put dummy content up even if we have
@@ -699,12 +699,14 @@ def cache_expiry(hash, widget_id, add=None, background=True):
             write_json(history_path, cache_data)
             # expiry = history[-1][0] + DEFAULT_CACHE_TIME
             pred_dur = predict_update_frequency(history)
-            expiry = history[-1][0] + pred_dur * 0.75 # less than prediction to ensure pred keeps up to date
+            expiry = (
+                history[-1][0] + pred_dur * 0.75
+            )  # less than prediction to ensure pred keeps up to date
             result = "Wrote"
     else:
         # write any updated widget_ids so we know what to update when we dequeue
         # Also important as wwe use last modified of .history as accessed time
-        write_json(history_path, cache_data) 
+        write_json(history_path, cache_data)
         if not os.path.exists(cache_path):
             result = "Empty"
             if background:
