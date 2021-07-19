@@ -15,12 +15,11 @@ _properties = ["context.autowidget"]
 _thread = None
 
 
-
 class RefreshService(xbmc.Monitor):
     def __init__(self):
         """Starts all of the actions of AutoWidget's service."""
         super(RefreshService, self).__init__()
-        utils.log('+++++ STARTING AUTOWIDGET SERVICE +++++', 'info')
+        utils.log("+++++ STARTING AUTOWIDGET SERVICE +++++", "info")
 
         self.player = Player()
         utils.ensure_addon_data()
@@ -72,8 +71,6 @@ class RefreshService(xbmc.Monitor):
             i += step
             yield i
 
-
-
     def _update_widgets(self):
         self._refresh(True)
 
@@ -83,6 +80,7 @@ class RefreshService(xbmc.Monitor):
                 updated = False
                 unrefreshed_widgets = set()
                 queue = list(utils.next_cache_queue())
+
                 class Progress(object):
                     dialog = None
                     service = self
@@ -93,20 +91,29 @@ class RefreshService(xbmc.Monitor):
                             self.dialog = xbmcgui.DialogProgressBG()
                             self.dialog.create(u"Updating Widgets")
                         if not self.service.player.isPlayingVideo():
-                            percent = len(self.done)/float(len(queue)+len(self.done)+1) * 100
+                            percent = (
+                                len(self.done)
+                                / float(len(queue) + len(self.done) + 1)
+                                * 100
+                            )
                             self.dialog.update(int(percent), message=groupname)
                         self.done.add(path)
+
                 progress = Progress()
 
                 while queue:
                     hash, widget_ids = queue.pop(0)
-                    utils.log("Dequeued cache update: {}".format(hash[:5]), 'notice')
+                    utils.log("Dequeued cache update: {}".format(hash[:5]), "notice")
 
                     effected_widgets = cache_and_update(widget_ids, notify=progress)
                     if effected_widgets:
                         updated = True
-                    utils.remove_cache_queue(hash) # Just in queued path's widget defintion has changed and it didn't update this path
-                    unrefreshed_widgets = unrefreshed_widgets.union(effected_widgets).difference(set(widget_ids))
+                    utils.remove_cache_queue(
+                        hash
+                    )  # Just in queued path's widget defintion has changed and it didn't update this path
+                    unrefreshed_widgets = unrefreshed_widgets.union(
+                        effected_widgets
+                    ).difference(set(widget_ids))
                     # # wait 5s or for the skin to reload the widget
                     # # this should reduce churn at startup where widgets take too long too long show up
                     # before_update = time.time() # TODO: have .access file so we can put above update
@@ -124,7 +131,6 @@ class RefreshService(xbmc.Monitor):
                 if progress.dialog is not None:
                     progress.dialog.update(100, "")
                     progress.dialog.close()
-
 
             if self.abortRequested():
                 break
@@ -297,16 +303,14 @@ def get_files_list(path, widget_id=None, background=True):
         files, changed = utils.cache_files(path, widget_id)
 
     new_files = []
-    if 'error' not in files:
-        files = files.get('result').get('files', [])
+    if "error" not in files:
+        files = files.get("result").get("files", [])
         if not files:
             utils.log("No items found for {}".format(path))
             return
 
         for file in files:
-            new_file = {
-                k: v for k, v in file.items() if v is not None
-            }
+            new_file = {k: v for k, v in file.items() if v is not None}
 
             if "art" in new_file:
                 for art in new_file["art"]:
@@ -320,6 +324,7 @@ def get_files_list(path, widget_id=None, background=True):
 
         return new_files, hash
 
+
 def queue_widget_update(widget_id):
     global _thread
     new_thread = False
@@ -327,8 +332,8 @@ def queue_widget_update(widget_id):
         _thread = Worker()
         _thread.daemon = True
         new_thread = True
-    _thread.queue.put(widget_id)   
-    if new_thread: 
+    _thread.queue.put(widget_id)
+    if new_thread:
         _thread.start()
 
 
@@ -350,8 +355,8 @@ def is_duplicate(title, titles):
 
 
 def cache_and_update(widget_ids, notify=True):
-    """ a widget might have many paths. Ensure each path is either queued for an update
-    or is expired and if so force it to be refreshed. When going through the queue this 
+    """a widget might have many paths. Ensure each path is either queued for an update
+    or is expired and if so force it to be refreshed. When going through the queue this
     could mean we refresh paths that other widgets also use. These will then be skipped.
     """
     assert widget_ids
