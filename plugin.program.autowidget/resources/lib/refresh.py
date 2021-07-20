@@ -293,6 +293,17 @@ def get_files_list(path, widget_id=None):
 
         return new_files, hash
 
+def queue_widget_update(widget_id):
+    global _thread
+    new_thread = False
+    if _thread is None or not _thread.is_alive():
+        _thread = Worker()
+        _thread.daemon = True
+        new_thread = True
+    _thread.queue.put(widget_id)   
+    if new_thread: 
+        _thread.start()
+
 
 def is_duplicate(title, titles):
     if not settings.get_setting_bool("widgets.hide_duplicates"):

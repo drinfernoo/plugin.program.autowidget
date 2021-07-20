@@ -46,38 +46,38 @@ msgctxt "#30005"
 msgid "Default time between widget refreshes (in hours)"
 msgstr "Tiempo predeterminado entre actualizaciones de widgets (en horas)"
 
-#: addon.xml:20 /resources/settings.xml:38 /resources/lib/menu.py:245
+#: addon.xml:20 /resources/settings.xml:38 /resources/lib/menu.py:248
 msgctxt "#30006"
 msgid "Force Refresh Widgets"
 msgstr "Forzar widgets de actualización"
 
-#: /resources/lib/menu.py:37 /resources/lib/menu.py:96
+#: /resources/lib/menu.py:40 /resources/lib/menu.py:99
 msgctxt "#30007"
 msgid "My Groups"
 msgstr "Mis grupos"
 
-#: /resources/settings.xml:35 /resources/lib/menu.py:49
-#: /resources/lib/menu.py:276
+#: /resources/settings.xml:35 /resources/lib/menu.py:52
+#: /resources/lib/menu.py:279
 msgctxt "#30008"
 msgid "Tools"
 msgstr "Herramientas"
 
-#: /resources/lib/menu.py:657
+#: /resources/lib/menu.py:678
 msgctxt "#30009"
 msgid "Actions"
 msgstr "Acciones"
 
-#: /resources/lib/add.py:160 /resources/lib/menu.py:86
+#: /resources/lib/add.py:160 /resources/lib/menu.py:89
 msgctxt "#30010"
 msgid "Create New Widget Group"
 msgstr "Crear nuevo grupo de widgets"
 
-#: /resources/lib/add.py:164 /resources/lib/menu.py:91
+#: /resources/lib/add.py:164 /resources/lib/menu.py:94
 msgctxt "#30011"
 msgid "Create New Shortcut Group"
 msgstr "Crear nuevo grupo de accesos directos"
 
-#: /resources/lib/menu.py:248
+#: /resources/lib/menu.py:251
 msgctxt "#30012"
 msgid "Force all defined widgets to refresh."
 msgstr "Fuerce la actualización de todos los widgets definidos."
@@ -92,28 +92,28 @@ msgctxt "#30014"
 msgid "Remove"
 msgstr "Retirar"
 
-#: /resources/lib/menu.py:620
+#: /resources/lib/menu.py:641
 msgctxt "#30015"
 msgid "Shift Path Up"
 msgstr "Desplazar ruta hacia arriba"
 
-#: /resources/lib/menu.py:632
+#: /resources/lib/menu.py:653
 msgctxt "#30016"
 msgid "Shift Path Down"
 msgstr "Desplazar ruta hacia abajo"
 
-#: /resources/lib/menu.py:672
+#: /resources/lib/menu.py:693
 msgctxt "#30017"
 msgid "{} (Cycling)"
 msgstr "{} (Cycling)"
 
-#: /resources/lib/menu.py:187
+#: /resources/lib/menu.py:190
 msgctxt "#30018"
 msgid "Shortcuts from {}"
 msgstr "Accesos directos de {}"
 
-#: /resources/lib/menu.py:143 /resources/lib/menu.py:459
-#: /resources/lib/menu.py:525
+#: /resources/lib/menu.py:146 /resources/lib/menu.py:480
+#: /resources/lib/menu.py:546
 msgctxt "#30019"
 msgid "No paths have been defined for this group."
 msgstr "No se ha definido ninguna ruta de acceso para este grupo."
@@ -182,7 +182,7 @@ msgctxt "#30030"
 msgid "{} removed."
 msgstr "{} removed."
 
-#: /resources/lib/edit.py:128 /resources/lib/menu.py:604
+#: /resources/lib/edit.py:128 /resources/lib/menu.py:625
 msgctxt "#30031"
 msgid "Edit Shortcut"
 msgstr "Editar acceso rápido"
@@ -243,12 +243,12 @@ msgctxt "#30041"
 msgid "[COLOR lawngreen][B]Disable[/B][/COLOR]"
 msgstr "[COLOR césped verde] [B] Desactivar[/B][/COLOR]"
 
-#: /resources/lib/edit.py:133 /resources/lib/menu.py:574
+#: /resources/lib/edit.py:133 /resources/lib/menu.py:595
 msgctxt "#30042"
 msgid "Edit Group"
 msgstr "Editar grupo"
 
-#: /resources/settings.xml:40 /resources/lib/menu.py:258
+#: /resources/settings.xml:40 /resources/lib/menu.py:261
 msgctxt "#30043"
 msgid "Wipe Add-on Data"
 msgstr "Borrar datos del complemento"
@@ -267,55 +267,55 @@ msgstr ""
 "haga si tiene la intención de volver a nombrar todos esos widgets. Este "
 "[COLOR firebrick]no se puede[/COLOR] deshacer."
 
-#: /resources/lib/menu.py:513 /resources/lib/menu.py:566
+#: /resources/lib/menu.py:534 /resources/lib/menu.py:587
 msgctxt "#30045"
 msgid "Point a widget here to show items."
 msgstr "Apunte un widget aquí para mostrar los elementos."
 
-#: /resources/lib/backup.py:55 /resources/lib/menu.py:80
+#: /resources/lib/backup.py:55 /resources/lib/menu.py:83
 msgctxt "#30046"
 msgid "No groups have been defined."
 msgstr "No se han definido grupos."
 
-#: /resources/lib/menu.py:193
+#: addon.xml:24 /resources/lib/menu.py:196
 msgctxt "#30047"
 msgid "Refresh Widget"
 msgstr "Actualizar widget"
 
 #: /resources/lib/edit.py:125 /resources/lib/edit.py:160
-#: /resources/lib/menu.py:209 /resources/lib/menu.py:601
+#: /resources/lib/menu.py:212 /resources/lib/menu.py:622
 msgctxt "#30048"
 msgid "Edit Widget"
 msgstr "Editar Widget"
 
-#: /resources/lib/menu.py:222
+#: /resources/lib/menu.py:225
 msgctxt "#30049"
 msgid "Orphaned"
 msgstr "Orphaned"
 
-#: /resources/lib/menu.py:234
+#: /resources/lib/menu.py:237
 msgctxt "#30050"
 msgid "No widgets have been initialized."
 msgstr "No se ha inicializado ningún widget."
 
-#: /resources/lib/menu.py:449
+#: /resources/lib/menu.py:470
 msgctxt "#30051"
 msgid "Broken Widget"
 msgstr "Widget roto"
 
-#: /resources/lib/menu.py:43 /resources/lib/menu.py:240
+#: /resources/lib/menu.py:46 /resources/lib/menu.py:243
 msgctxt "#30052"
 msgid "Active Widgets"
 msgstr "Widgets activos"
 
-#: /resources/lib/menu.py:450
+#: /resources/lib/menu.py:471
 msgctxt "#30053"
 msgid "This widget is broken, repoint or remove it to stop seeing this."
 msgstr ""
 "Este widget está roto, vuelva a nombrarlo o elimínelo para dejar de ver "
 "esto."
 
-#: /resources/lib/menu.py:659
+#: /resources/lib/menu.py:680
 msgctxt "#30054"
 msgid "{} (Static)"
 msgstr "{} (Estática)"
@@ -331,18 +331,18 @@ msgid "Add New Artwork"
 msgstr "Agregar nueva ilustración"
 
 #: /resources/lib/edit.py:243 /resources/lib/edit.py:395
-#: /resources/lib/menu.py:476
+#: /resources/lib/menu.py:497
 msgctxt "#30057"
 msgid "Random Path"
 msgstr "Ruta aleatoria"
 
 #: /resources/lib/edit.py:245 /resources/lib/edit.py:395
-#: /resources/lib/menu.py:476
+#: /resources/lib/menu.py:497
 msgctxt "#30058"
 msgid "Next Path"
 msgstr "Siguiente ruta de acceso"
 
-#: /resources/lib/edit.py:396 /resources/lib/menu.py:475
+#: /resources/lib/edit.py:396 /resources/lib/menu.py:496
 msgctxt "#30059"
 msgid "Choose an Action"
 msgstr "Elegir una acción"
@@ -379,7 +379,7 @@ msgctxt "#30065"
 msgid "Never"
 msgstr "Nunca"
 
-#: /resources/lib/menu.py:685
+#: /resources/lib/menu.py:706
 msgctxt "#30066"
 msgid "{} (Merged)"
 msgstr "{} (Mezclado)"
@@ -478,27 +478,27 @@ msgctxt "#30084"
 msgid "Not on Merged Widgets"
 msgstr "No en widgets combinados"
 
-#: /resources/lib/menu.py:314
+#: /resources/lib/menu.py:318
 msgctxt "#30085"
 msgid "Back to Page {}"
 msgstr "Volver a la página {}"
 
-#: /resources/lib/menu.py:632
+#: /resources/lib/menu.py:653
 msgctxt "#30086"
 msgid "Shift Path to Top"
 msgstr "Desplazar ruta a la parte superior"
 
-#: /resources/lib/menu.py:620
+#: /resources/lib/menu.py:641
 msgctxt "#30087"
 msgid "Shift Path to Bottom"
 msgstr "Cambiar ruta a la parte inferior"
 
-#: /resources/lib/edit.py:444 /resources/lib/menu.py:467
+#: /resources/lib/edit.py:444 /resources/lib/menu.py:488
 msgctxt "#30088"
 msgid "Choose a Path"
 msgstr "Elija una ruta de acceso"
 
-#: /resources/lib/edit.py:437 /resources/lib/menu.py:532
+#: /resources/lib/edit.py:437 /resources/lib/menu.py:553
 msgctxt "#30089"
 msgid "Choose Paths to Merge"
 msgstr "Elija las rutas de acceso para combinar"
@@ -565,17 +565,17 @@ msgctxt "#30100"
 msgid "Refresh Duration"
 msgstr "Duración de la actualización"
 
-#: /resources/settings.xml:41 /resources/lib/menu.py:264
+#: /resources/settings.xml:41 /resources/lib/menu.py:267
 msgctxt "#30101"
 msgid "Toggle Skin Debugging"
 msgstr "Alternar depuración de máscaras"
 
-#: /resources/lib/menu.py:172
+#: /resources/lib/menu.py:175
 msgctxt "#30102"
 msgid "{} Paths Merged"
 msgstr "{} Rutas de acceso combinadas"
 
-#: /resources/settings.xml:39 /resources/lib/menu.py:252
+#: /resources/settings.xml:39 /resources/lib/menu.py:255
 msgctxt "#30103"
 msgid "Clean Old Widget Files"
 msgstr "Limpiar archivos widget antiguos"
@@ -595,32 +595,32 @@ msgctxt "#30106"
 msgid "{} unused widgets removed."
 msgstr "{} widgets no utilizados eliminados."
 
-#: /resources/lib/common/utils.py:306
+#: /resources/lib/common/utils.py:310
 msgctxt "#30107"
 msgid "Choose from a predefined color or hexcode input?"
 msgstr "¿Elegir entre una entrada predefinida de color o hexcode?"
 
-#: /resources/lib/common/utils.py:307
+#: /resources/lib/common/utils.py:311
 msgctxt "#30108"
 msgid "Hex Input"
 msgstr "Entrada hexadecimal"
 
-#: /resources/lib/common/utils.py:308
+#: /resources/lib/common/utils.py:312
 msgctxt "#30109"
 msgid "Predefined Color"
 msgstr "Color predefinido"
 
-#: /resources/lib/common/utils.py:312
+#: /resources/lib/common/utils.py:316
 msgctxt "#30110"
 msgid "Hex codes must be of the format '#RRGGBB'."
 msgstr "Los códigos hexadecimales deben tener el formato '#RRGGBB'."
 
-#: /resources/lib/common/utils.py:315
+#: /resources/lib/common/utils.py:319
 msgctxt "#30111"
 msgid "Select a Color"
 msgstr "Seleccione un color"
 
-#: /resources/lib/common/utils.py:325
+#: /resources/lib/common/utils.py:329
 msgctxt "#30112"
 msgid "Invalid color code."
 msgstr "Código de color no válido."
@@ -630,7 +630,7 @@ msgctxt "#30113"
 msgid "Debug Logging"
 msgstr "Registro de depuración"
 
-#: /resources/lib/edit.py:130 /resources/lib/menu.py:604
+#: /resources/lib/edit.py:130 /resources/lib/menu.py:625
 msgctxt "#30114"
 msgid "Edit Path"
 msgstr "编辑路径"
@@ -645,12 +645,12 @@ msgctxt "#30116"
 msgid "Prefer Episode if Show Available"
 msgstr "Preferir episodio si show disponible"
 
-#: /resources/settings.xml:42 /resources/lib/menu.py:270
+#: addon.xml:28 /resources/settings.xml:42 /resources/lib/menu.py:273
 msgctxt "#30117"
 msgid "Clear Cache"
 msgstr "Limpiar cache"
 
-#: /resources/lib/common/utils.py:264
+#: /resources/lib/common/utils.py:265
 msgctxt "#30118"
 msgid ""
 "Are you sure you want to clear the cache? This action may make widgets load "
@@ -664,7 +664,7 @@ msgctxt "#30119"
 msgid "Select Content Type"
 msgstr "Seleccionar tipo de contenido"
 
-#: /resources/lib/menu.py:584
+#: /resources/lib/menu.py:605
 msgctxt "#30120"
 msgid "Copy Group"
 msgstr "Copiar Grupo"
@@ -679,7 +679,7 @@ msgctxt "#30122"
 msgid "Choose Paths"
 msgstr "Elija caminos"
 
-#: /resources/lib/menu.py:485
+#: /resources/lib/menu.py:506
 msgctxt "#30123"
 msgid "Choose Paths to Cycle"
 msgstr "Elija rutas para recorrer en bicicleta"
@@ -724,7 +724,37 @@ msgctxt "#30131"
 msgid "Studio Icons"
 msgstr "Iconos de estudio"
 
-#: /resources/settings.xml:32
+#: /resources/settings.xml:32 /resources/lib/menu.py:30
 msgctxt "#30132"
 msgid "Country Icons"
 msgstr "Iconos de país"
+
+#: /resources/settings.xml:32 /resources/lib/menu.py:30
+msgctxt "#30132"
+msgid "Next"
+msgstr "Siguiente"
+
+#: /resources/lib/menu.py:31
+msgctxt "#30133"
+msgid "Next Page"
+msgstr "Siguiente página"
+
+#: /resources/lib/menu.py:32
+msgctxt "#30134"
+msgid "Previous"
+msgstr "Anterior"
+
+#: /resources/lib/menu.py:33
+msgctxt "#30135"
+msgid "Previous Page"
+msgstr "Pagina anterior"
+
+#: /resources/lib/menu.py:34
+msgctxt "#30136"
+msgid "Back"
+msgstr "Volver"
+
+#: /resources/lib/menu.py:35
+msgctxt "#30137"
+msgid "Page"
+msgstr "Página"

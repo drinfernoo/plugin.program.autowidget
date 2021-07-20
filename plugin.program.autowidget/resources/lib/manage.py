@@ -33,7 +33,7 @@ def clean(widget_id=None, notify=False, all=False):
             path = os.path.join(_addon_data, addon["addonid"], "settings.xml")
             if os.path.exists(path):
                 files.append(path)
-    if os.path.exists(_skin_shortcuts):
+    if _skin_shortcuts and os.path.exists(_skin_shortcuts):
         for xml in os.listdir(_skin_shortcuts):
             ext = xml.split(".")
             if ext[-1] in ["xml", "properties"]:
