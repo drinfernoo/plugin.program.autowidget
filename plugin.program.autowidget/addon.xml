@@ -43,6 +43,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.3.3
+ - Fix "Clear Cache"
 3.3.2
  - Fix bug when paths return no items
 3.3.1
