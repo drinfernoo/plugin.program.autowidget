@@ -728,3 +728,33 @@ msgstr "Studio-ikoner"
 msgctxt "#30132"
 msgid "Country Icons"
 msgstr "Landsikoner"
+
+#: /resources/lib/menu.py:30
+msgctxt "#30132"
+msgid "Next"
+msgstr "Næste"
+
+#: /resources/lib/menu.py:31
+msgctxt "#30133"
+msgid "Next Page"
+msgstr "Næste side"
+
+#: /resources/lib/menu.py:32
+msgctxt "#30134"
+msgid "Previous"
+msgstr "Forrig"
+
+#: /resources/lib/menu.py:33
+msgctxt "#30135"
+msgid "Previous Page"
+msgstr "Forrige side"
+
+#: /resources/lib/menu.py:34
+msgctxt "#30136"
+msgid "Back"
+msgstr "Tilbage"
+
+#: /resources/lib/menu.py:35
+msgctxt "#30137"
+msgid "Page"
+msgstr "Side"
