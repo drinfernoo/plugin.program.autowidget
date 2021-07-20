@@ -163,22 +163,24 @@ def active_widgets_menu():
             widget_id = widget_def.get("id", "")
             action = widget_def.get("action", "")
             group = widget_def.get("group", "")
-            path_def = widget_def.get("path", {})
-
+            path_id = widget_def.get("path", {})
+            
             group_def = manage.get_group_by_id(group)
+            path_def = manage.get_path_by_id(path_id, group)
 
             title = ""
+            label = group_def.get("label", "")
             if path_def and group_def:
                 try:
                     if action != "merged":
-                        label = widget_def["label"].encode("utf-8")
+                        label = path_def.get("label", "").encode("utf-8")
                     else:
-                        label = utils.get_string(30102).format(len(path_def))
+                        label = utils.get_string(30102).format(len(path_id))
                 except:
                     pass
 
                 title = "{} - {}".format(
-                    six.ensure_text(label), six.ensure_text(group_def["label"])
+                    six.ensure_text(label), six.ensure_text(group_def.get("label", ""))
                 )
             elif group_def:
                 title = group_def.get("label")
