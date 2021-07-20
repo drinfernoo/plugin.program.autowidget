@@ -112,7 +112,11 @@ def open_settings(addon=None):
 
 
 def get_addon_info(label, addon=None):
-    _addon = xbmcaddon.Addon() if not addon else xbmcaddon.Addon(addon)
-    s = _addon.getAddonInfo(label)
-    del _addon
+    s = ""
+    try:
+        _addon = xbmcaddon.Addon() if not addon else xbmcaddon.Addon(addon)
+        s = _addon.getAddonInfo(label)
+        del _addon
+    except:
+        pass
     return s
