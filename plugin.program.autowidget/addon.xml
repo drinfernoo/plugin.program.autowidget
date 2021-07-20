@@ -43,6 +43,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.3.4
+ - Fix "Next Page" localizations
 3.3.3
  - Fix "Clear Cache"
 3.3.2
