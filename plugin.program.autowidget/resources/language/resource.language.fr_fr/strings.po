@@ -724,37 +724,37 @@ msgctxt "#30131"
 msgid "Studio Icons"
 msgstr "Icônes de studio"
 
-#: /resources/settings.xml:32 /resources/lib/menu.py:30
+#: /resources/settings.xml:32
 msgctxt "#30132"
 msgid "Country Icons"
 msgstr "Icônes de pays"
 
-#: /resources/settings.xml:32 /resources/lib/menu.py:30
-msgctxt "#30132"
+#: /resources/lib/menu.py:30
+msgctxt "#30133"
 msgid "Next"
 msgstr "Suivant"
 
 #: /resources/lib/menu.py:31
-msgctxt "#30133"
+msgctxt "#30134"
 msgid "Next Page"
 msgstr "Page suivante"
 
 #: /resources/lib/menu.py:32
-msgctxt "#30134"
+msgctxt "#30135"
 msgid "Previous"
 msgstr "Précédent"
 
 #: /resources/lib/menu.py:33
-msgctxt "#30135"
+msgctxt "#30136"
 msgid "Previous Page"
 msgstr "Page précédente"
 
 #: /resources/lib/menu.py:34
-msgctxt "#30136"
+msgctxt "#30137"
 msgid "Back"
 msgstr "Retour"
 
 #: /resources/lib/menu.py:35
-msgctxt "#30137"
+msgctxt "#30138"
 msgid "Page"
 msgstr "Page"

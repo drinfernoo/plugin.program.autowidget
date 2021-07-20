@@ -28,12 +28,12 @@ sync = utils.get_art("sync")
 tools = utils.get_art("tools")
 unpack = utils.get_art("unpack")
 
-_next = utils.get_string(30132)
-_next_page = utils.get_string(30133)
-_previous = utils.get_string(30134)
-_previous_page = utils.get_string(30135)
-_back = utils.get_string(30136)
-_page = utils.get_string(30137)
+_next = utils.get_string(30133)
+_next_page = utils.get_string(30134)
+_previous = utils.get_string(30135)
+_previous_page = utils.get_string(30136)
+_back = utils.get_string(30137)
+_page = utils.get_string(30138)
 
 
 def root_menu():
@@ -731,19 +731,20 @@ def _is_page_item(label, next=True):
     next_page_words = _next_page.split("\s*")
     prev_page_words = _previous_page.split("\s*")
 
-    contains_dir = re.search(next_pattern if next else prev_pattern, cleaned_title) is not None
-    contains_dir_page = re.search(next_page_pattern if next else prev_page_pattern, cleaned_title) is not None
+    contains_dir = (
+        re.search(next_pattern if next else prev_pattern, cleaned_title) is not None
+    )
+    contains_dir_page = (
+        re.search(next_page_pattern if next else prev_page_pattern, cleaned_title)
+        is not None
+    )
     word_matches = [
         re.search(base_pattern.format(i, page_count_pattern), cleaned_title)
         for i in (next_page_words if next else prev_page_words)
     ]
     if not next:
         word_matches.append(re.search(back_pattern, cleaned_title))
-    return (
-        contains_dir
-        or contains_dir_page
-        or any(i is not None for i in word_matches)
-    )
+    return contains_dir or contains_dir_page or any(i is not None for i in word_matches)
 
 
 def show_error(id):

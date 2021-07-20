@@ -729,37 +729,37 @@ msgctxt "#30131"
 msgid "Studio Icons"
 msgstr "Εικονίδια στούντιο"
 
-#: /resources/settings.xml:32 /resources/lib/menu.py:30
+#: /resources/settings.xml:32
 msgctxt "#30132"
 msgid "Country Icons"
 msgstr "Εικονίδια χώρας"
 
-#: /resources/settings.xml:32 /resources/lib/menu.py:30
-msgctxt "#30132"
+#: /resources/lib/menu.py:30
+msgctxt "#30133"
 msgid "Next"
 msgstr "Επόμενο"
 
 #: /resources/lib/menu.py:31
-msgctxt "#30133"
+msgctxt "#30134"
 msgid "Next Page"
 msgstr "Επόμενη σελίδα"
 
 #: /resources/lib/menu.py:32
-msgctxt "#30134"
+msgctxt "#30135"
 msgid "Previous"
 msgstr "Προηγούμενο"
 
 #: /resources/lib/menu.py:33
-msgctxt "#30135"
+msgctxt "#30136"
 msgid "Previous Page"
 msgstr "Προηγούμενη"
 
 #: /resources/lib/menu.py:34
-msgctxt "#30136"
+msgctxt "#30137"
 msgid "Back"
 msgstr "Πίσω"
 
 #: /resources/lib/menu.py:35
-msgctxt "#30137"
+msgctxt "#30138"
 msgid "Page"
 msgstr "Σελίδα"
