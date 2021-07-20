@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="3.2.3" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="3.1.6" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.kodi-six" />
         <import addon="script.module.pil" />
@@ -15,11 +15,11 @@
     <extension point="kodi.context.item">
         <menu id="kodi.core.main">
             <item library="context_add.py">
-                <label>$ADDON[plugin.program.autowidget 30003]</label>
+                <label>$ADDON[plugin.program.autowidget 32003]</label>
                 <visible>String.IsEqual(Window(10000).Property(context.autowidget),true)</visible>
             </item>
             <item library="context_refresh.py">
-                <label>$ADDON[plugin.program.autowidget 30006]</label>
+                <label>$ADDON[plugin.program.autowidget 32006]</label>
                 <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
             </item>
         </menu>
@@ -36,28 +36,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-3.2.3
- - Add English (US) and Portugese localizations
-3.2.2
- - Add more localizations
- - Better "Next Page" detection
- - Support for "Next Page" items in other languages
-3.2.1
- - Fix for items with no artwork
-3.2.0
- - Add setting to prefer episodes/shows when removing duplicates
- - Rework duplicate removal
- - Fix bug in Active Widgets editor dialog
- - Fix landscape art for some items
- - Fix paged widgets not resetting on boot
- - Format with black
-3.1.9
- - Fix error with translatePath
-3.1.8
- - Fix resume progress on items
-3.1.7
- - Fix widget cleaning
- - Fix Active Widgets menu
 3.1.6
  - Fix detection of JSON-RPC version
 3.1.5
@@ -292,7 +270,32 @@
         </assets>
     </extension>
 </addon>
-oup dialog calls
+t context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>resources/media/icon.png</icon>
+            <fanart>resources/media/fanart.png</fanart>
+            <poster>resources/media/poster.png</poster>
+            <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+tcuts skin support
+ - Fix issues with groups and paths with the same name
+ - Fix settings shortcuts
+ - Add rudimentary JSON migration
+1.2.5
+ - Update some skin localizations
+ - Add more widget artwork
+ - Update documentation
+1.2.3
+ - Fix paths made from add-on browser
+ - Add ability to set plot
+1.2.2
+ - Fix group dialog calls
 1.2.1
  - Fix imports
 1.2.0
@@ -334,10 +337,6 @@ oup dialog calls
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
-        </assets>
-    </extension>
-</addon>
-<clearlogo>resources/media/clearlogo.png</clearlogo>
         </assets>
     </extension>
 </addon>
