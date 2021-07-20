@@ -43,7 +43,7 @@ _remove_keys = [
     "specialsortseason",
     "track",
     "tvshowid",
-    "disc"
+    "disc",
 ]
 
 _video_keys = {
@@ -137,7 +137,7 @@ def add_menu_item(
                 if key in ["cast", "castandrole"]:
                     item.setCast(value)
                 else:
-                    new_value = value
+                    new_value = [six.text_type(i) for i in value]
             elif isinstance(value, dict):
                 if key == "resume":
                     pos = value.get("position", 0)
@@ -182,6 +182,8 @@ def add_menu_item(
             else:
                 if key == "mimetype":
                     item.setMimeType(value)
+                elif key == "artist":
+                    new_value = [value]
                 else:
                     new_value = (
                         value
@@ -246,8 +248,8 @@ def add_menu_item(
     xbmcplugin.addDirectoryItem(
         handle=_handle, url=_plugin, listitem=item, isFolder=isFolder
     )
-    
-    
+
+
 def make_library_path(library, type, id):
     if not library or not type or id == -1:
         return ""
