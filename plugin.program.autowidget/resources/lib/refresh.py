@@ -274,12 +274,10 @@ def get_files_list(path, widget_id=None):
         files = files.get("result").get("files")
         if not files:
             utils.log("No items found for {}".format(path))
-            return
+            return [], hash
 
         for file in files:
-            new_file = {
-                k: v for k, v in file.items() if v is not None
-            }
+            new_file = {k: v for k, v in file.items() if v is not None}
 
             if "art" in new_file:
                 for art in new_file["art"]:
@@ -293,6 +291,7 @@ def get_files_list(path, widget_id=None):
 
         return new_files, hash
 
+
 def queue_widget_update(widget_id):
     global _thread
     new_thread = False
@@ -300,8 +299,8 @@ def queue_widget_update(widget_id):
         _thread = Worker()
         _thread.daemon = True
         new_thread = True
-    _thread.queue.put(widget_id)   
-    if new_thread: 
+    _thread.queue.put(widget_id)
+    if new_thread:
         _thread.start()
 
 
