@@ -720,37 +720,37 @@ msgctxt "#30131"
 msgid "Studio Icons"
 msgstr "أيقونات الاستوديو"
 
-#: /resources/settings.xml:32 /resources/lib/menu.py:30
+#: /resources/settings.xml:32
 msgctxt "#30132"
 msgid "Country Icons"
 msgstr "أيقونات البلد"
 
-#: /resources/settings.xml:32 /resources/lib/menu.py:30
-msgctxt "#30132"
+#: /resources/lib/menu.py:30
+msgctxt "#30133"
 msgid "Next"
 msgstr "التالي"
 
 #: /resources/lib/menu.py:31
-msgctxt "#30133"
+msgctxt "#30134"
 msgid "Next Page"
 msgstr "الصفحة التالية"
 
 #: /resources/lib/menu.py:32
-msgctxt "#30134"
+msgctxt "#30135"
 msgid "Previous"
 msgstr "السابق"
 
 #: /resources/lib/menu.py:33
-msgctxt "#30135"
+msgctxt "#30136"
 msgid "Previous Page"
 msgstr "الصفحة السابقة"
 
 #: /resources/lib/menu.py:34
-msgctxt "#30136"
+msgctxt "#30137"
 msgid "Back"
 msgstr "العودة"
 
 #: /resources/lib/menu.py:35
-msgctxt "#30137"
+msgctxt "#30138"
 msgid "Page"
 msgstr "خطأ في الصفحة! تحديث الصفحة وحاول مرة أخرى."
