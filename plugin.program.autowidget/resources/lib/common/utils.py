@@ -260,8 +260,8 @@ def wipe(folder=_addon_data):
                     os.rmdir(dir)
 
 
-def clear_cache(target):
-    if not target:
+def clear_cache(target=None):
+    if target is None:
         dialog = xbmcgui.Dialog()
         choice = dialog.yesno("AutoWidget", get_string(30118))
         del dialog
