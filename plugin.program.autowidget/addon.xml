@@ -43,6 +43,9 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.3.1
+ - Fix bug when Skin Shortcuts is not installed
+ - More improvements to page item handling
 3.3.0
  - Add "Copy Group" in group context menu
  - Add "Create New ... Group" in "My Groups" menu
