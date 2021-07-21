@@ -299,6 +299,7 @@ def get_files_list(path, widget_id=None):
 
         return new_files, hash
     else:
+        os.remove(os.path.join(_addon_data, "{}.cache".format(hash)))
         return None, hash
 
 
