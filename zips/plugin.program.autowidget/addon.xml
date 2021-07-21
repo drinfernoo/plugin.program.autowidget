@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1278" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1315" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
-        <provides>executable video</provides>
+        <provides>executable video music</provides>
     </extension>
     
     <extension point="xbmc.service" library="service.py" />
@@ -20,6 +20,14 @@
             <item library="context_refresh.py">
                 <label>$ADDON[plugin.program.autowidget 30006]</label>
                 <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
+            </item>
+			<item library="context_refresh_single.py">
+                <label>$ADDON[plugin.program.autowidget 30047]</label>
+                <visible>!String.IsEmpty(ListItem.Property(autoID)) + [!String.IsEqual(ListItem.Property(autoAction),static) + !String.IsEqual(ListItem.Property(autoAction),merged)]</visible>
+            </item>
+			<item library="clear_cache_single.py">
+                <label>$ADDON[plugin.program.autowidget 30117]</label>
+                <visible>!String.IsEmpty(ListItem.Property(autoCache))</visible>
             </item>
         </menu>
     </extension>
@@ -262,27 +270,6 @@
 1.1.0
  - Remove Skin Shortcuts dependency
  - Expand context menu options
- - Add support for skins with "basic" Skin Shortcuts integration
- - Add setting to pause AutoWidget's service
-1.0.7
- - Fix context menu option not showing
-1.0.6
- - Fix paths not saving
-1.0.5
- - Raise required Skin Shortcuts version to  1.0.19
-1.0.4
- - Allow custom labels
- - Add removal notifications    
-1.0.3
- - Fix shortcuts and widgets added from context menu
-1.0.2
- - Fix crash from non-XML files
-1.0.1
- - Fix crash from non-existent context menu setting
-1.0.0
- - First stable release
-        </news>
-        <asset Expand context menu options
  - Add support for skins with "basic" Skin Shortcuts integration
  - Add setting to pause AutoWidget's service
 1.0.7
