@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1340" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1294" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
     </requires>
     
     <extension point="xbmc.python.pluginsource" library="main.py">
-        <provides>executable video music</provides>
+        <provides>executable video</provides>
     </extension>
     
     <extension point="xbmc.service" library="service.py" />
@@ -25,10 +25,6 @@
                 <label>$ADDON[plugin.program.autowidget 30047]</label>
                 <visible>!String.IsEmpty(ListItem.Property(autoID)) + [!String.IsEqual(ListItem.Property(autoAction),static) + !String.IsEqual(ListItem.Property(autoAction),merged)]</visible>
             </item>
-			<item library="clear_cache_single.py">
-                <label>$ADDON[plugin.program.autowidget 30117]</label>
-                <visible>!String.IsEmpty(ListItem.Property(autoCache))</visible>
-            </item>
         </menu>
     </extension>
     
@@ -43,28 +39,18 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-3.3.2
- - Fix bug when paths return no items
-3.3.1
- - Fix bug when Skin Shortcuts is not installed
- - More improvements to page item handling
 3.3.0
+ - Fix translatePath reference again
+ - Faster and more robust item creation
+ - Remove dependency on Kodi Six
+ - Support cast thumbnails for Kodi N
+ - Allow editing content type
  - Add "Copy Group" in group context menu
  - Add "Create New ... Group" in "My Groups" menu
  - Add "Clear Cache" in "Tools" menu
- - Add "Refresh Widget" to widget context menu
- - Add "Clear Cache" to widget context menu
+ - Make `.widget` files much simpler
  - Add rudimentary error item for failed widgets
  - Add "Icon Packs" for library widgets from genres, studios, and countries
- - Remove dependency on Kodi Six
- - Allow editing content type
- - Allow Cycling Widgets to pull from a subset of paths
- - Support cast thumbnails for Kodi N
- - Fix translatePath reference again
- - Faster and more robust item creation
- - Make `.widget` files much simpler
- - Better support for library paths
- - Better support for music
 3.2.3
  - Add English (US) and Portugese localizations
 3.2.2
@@ -312,6 +298,22 @@
 1.0.0
  - First stable release
         </news>
+        <assets>
+            <icon>resources/media/icon.png</icon>
+            <fanart>resources/media/fanart.png</fanart>
+            <poster>resources/media/poster.png</poster>
+            <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+           <poster>resources/media/poster.png</poster>
+            <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+</news>
         <assets>
             <icon>resources/media/icon.png</icon>
             <fanart>resources/media/fanart.png</fanart>
