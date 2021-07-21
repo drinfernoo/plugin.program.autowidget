@@ -722,31 +722,21 @@ def _create_action_items(group_def, _id):
 def _is_page_item(label, next=True):
     tag_pattern = r"(\[[^\]]*\])"
     page_count_pattern = r"(?:\W*(?:(?:\d+\D*\d*))\W*)?"
-    base_pattern = r"^(?:(?:\W*)?\s*(?:{})+\s*(?:\W*)?{})?(?:\W*)?$"
-    next_pattern = base_pattern.format(_next.lower(), page_count_pattern)
-    next_page_pattern = base_pattern.format(_next_page.lower(), page_count_pattern)
-    prev_pattern = base_pattern.format(_previous.lower(), page_count_pattern)
-    prev_page_pattern = base_pattern.format(_previous_page.lower(), page_count_pattern)
-    back_pattern = base_pattern.format(_back.lower(), page_count_pattern)
-
+    base_pattern = r"^(?:(?:.+)?(?:(?:\b{}\b)|(?:\b{}\b)){{1,2}}{}){{1}}(?:\W+)?$"
+    
     cleaned_title = re.sub(tag_pattern, "", label.lower()).strip()
-    next_page_words = _next_page.split("\s*")
-    prev_page_words = _previous_page.split("\s*")
-
-    contains_dir = (
-        re.search(next_pattern if next else prev_pattern, cleaned_title) is not None
-    )
+    next_page_words = [i.lower() for i in re.split(r"\s+", _next_page)]
+    prev_page_words = [i.lower() for i in re.split(r"\s+", _previous_page)]
+    
+    next_page_pattern = base_pattern.format(*next_page_words, page_count_pattern)
+    prev_page_pattern = base_pattern.format(*prev_page_words, page_count_pattern)
+    
     contains_dir_page = (
         re.search(next_page_pattern if next else prev_page_pattern, cleaned_title)
         is not None
     )
-    word_matches = [
-        re.search(base_pattern.format(i, page_count_pattern), cleaned_title)
-        for i in (next_page_words if next else prev_page_words)
-    ]
-    if not next:
-        word_matches.append(re.search(back_pattern, cleaned_title))
-    return contains_dir or contains_dir_page or any(i is not None for i in word_matches)
+    
+    return contains_dir_page
 
 
 def show_error(id):
