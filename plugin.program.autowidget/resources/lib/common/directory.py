@@ -44,6 +44,7 @@ _remove_keys = [
     "track",
     "tvshowid",
     "disc",
+    "firstaired",
 ]
 
 _video_keys = {
