@@ -738,7 +738,7 @@ def _is_page_item(label, next=True):
 
 def show_error(id):
     directory.add_menu_item(
-        title="Error showing {}".format(id),
+        title=settings.get_localized_string(30139).format(id),
         art=utils.get_art("alert"),
         isFolder=False,
     )
@@ -748,7 +748,7 @@ def show_error(id):
 
 def show_empty(id):
     directory.add_menu_item(
-        title="No content found for {}".format(id),
+        title=settings.get_localized_string(30140).format(id),
         art=info,
         isFolder=False,
     )

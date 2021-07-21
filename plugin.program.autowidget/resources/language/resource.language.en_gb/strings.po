@@ -46,7 +46,7 @@ msgctxt "#30005"
 msgid "Default time between widget refreshes (in hours)"
 msgstr "Default time between widget refreshes (in hours)"
 
-#: addon.xml:20 /resources/settings.xml:38 /resources/lib/menu.py:248
+#: addon.xml:20 /resources/settings.xml:38 /resources/lib/menu.py:250
 msgctxt "#30006"
 msgid "Force Refresh Widgets"
 msgstr "Force Refresh Widgets"
@@ -57,12 +57,12 @@ msgid "My Groups"
 msgstr "My Groups"
 
 #: /resources/settings.xml:35 /resources/lib/menu.py:52
-#: /resources/lib/menu.py:279
+#: /resources/lib/menu.py:281
 msgctxt "#30008"
 msgid "Tools"
 msgstr "Tools"
 
-#: /resources/lib/menu.py:678
+#: /resources/lib/menu.py:677
 msgctxt "#30009"
 msgid "Actions"
 msgstr "Actions"
@@ -77,7 +77,7 @@ msgctxt "#30011"
 msgid "Create New Shortcut Group"
 msgstr "Create New Shortcut Group"
 
-#: /resources/lib/menu.py:251
+#: /resources/lib/menu.py:253
 msgctxt "#30012"
 msgid "Force all defined widgets to refresh."
 msgstr "Force all defined widgets to refresh."
@@ -92,33 +92,33 @@ msgctxt "#30014"
 msgid "Remove"
 msgstr "Remove"
 
-#: /resources/lib/menu.py:641
+#: /resources/lib/menu.py:640
 msgctxt "#30015"
 msgid "Shift Path Up"
 msgstr "Shift Path Up"
 
-#: /resources/lib/menu.py:653
+#: /resources/lib/menu.py:652
 msgctxt "#30016"
 msgid "Shift Path Down"
 msgstr "Shift Path Down"
 
-#: /resources/lib/menu.py:693
+#: /resources/lib/menu.py:692
 msgctxt "#30017"
 msgid "{} (Cycling)"
 msgstr "{} (Cycling)"
 
-#: /resources/lib/menu.py:190
+#: /resources/lib/menu.py:192
 msgctxt "#30018"
 msgid "Shortcuts from {}"
 msgstr "Shortcuts from {}"
 
-#: /resources/lib/menu.py:146 /resources/lib/menu.py:480
-#: /resources/lib/menu.py:546
+#: /resources/lib/menu.py:146 /resources/lib/menu.py:483
+#: /resources/lib/menu.py:547
 msgctxt "#30019"
 msgid "No paths have been defined for this group."
 msgstr "No paths have been defined for this group."
 
-#: /resources/lib/refresh.py:244
+#: /resources/lib/refresh.py:252
 msgctxt "#30020"
 msgid "Refreshing widgets..."
 msgstr "Refreshing widgets..."
@@ -182,7 +182,7 @@ msgctxt "#30030"
 msgid "{} removed."
 msgstr "{} removed."
 
-#: /resources/lib/edit.py:128 /resources/lib/menu.py:625
+#: /resources/lib/edit.py:128 /resources/lib/menu.py:624
 msgctxt "#30031"
 msgid "Edit Shortcut"
 msgstr "Edit Shortcut"
@@ -243,12 +243,12 @@ msgctxt "#30041"
 msgid "[COLOR lawngreen][B]Disable[/B][/COLOR]"
 msgstr "[COLOR lawngreen][B]Disable[/B][/COLOR]"
 
-#: /resources/lib/edit.py:133 /resources/lib/menu.py:595
+#: /resources/lib/edit.py:133 /resources/lib/menu.py:594
 msgctxt "#30042"
 msgid "Edit Group"
 msgstr "Edit Group"
 
-#: /resources/settings.xml:40 /resources/lib/menu.py:261
+#: /resources/settings.xml:40 /resources/lib/menu.py:263
 msgctxt "#30043"
 msgid "Wipe Add-on Data"
 msgstr "Wipe Add-on Data"
@@ -266,7 +266,7 @@ msgstr ""
 "recommended that this only be done if you intend on repointing all of those "
 "widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
 
-#: /resources/lib/menu.py:534 /resources/lib/menu.py:587
+#: /resources/lib/menu.py:536 /resources/lib/menu.py:587
 msgctxt "#30045"
 msgid "Point a widget here to show items."
 msgstr "Point a widget here to show items."
@@ -276,43 +276,43 @@ msgctxt "#30046"
 msgid "No groups have been defined."
 msgstr "No groups have been defined."
 
-#: addon.xml:24 /resources/lib/menu.py:196
+#: addon.xml:24 /resources/lib/menu.py:198
 msgctxt "#30047"
 msgid "Refresh Widget"
 msgstr "Refresh Widget"
 
 #: /resources/lib/edit.py:125 /resources/lib/edit.py:160
-#: /resources/lib/menu.py:212 /resources/lib/menu.py:622
+#: /resources/lib/menu.py:214 /resources/lib/menu.py:621
 msgctxt "#30048"
 msgid "Edit Widget"
 msgstr "Edit Widget"
 
-#: /resources/lib/menu.py:225
+#: /resources/lib/menu.py:227
 msgctxt "#30049"
 msgid "Orphaned"
 msgstr "Orphaned"
 
-#: /resources/lib/menu.py:237
+#: /resources/lib/menu.py:239
 msgctxt "#30050"
 msgid "No widgets have been initialized."
 msgstr "No widgets have been initialized."
 
-#: /resources/lib/menu.py:470
+#: /resources/lib/menu.py:473
 msgctxt "#30051"
 msgid "Broken Widget"
 msgstr "Broken Widget"
 
-#: /resources/lib/menu.py:46 /resources/lib/menu.py:243
+#: /resources/lib/menu.py:46 /resources/lib/menu.py:245
 msgctxt "#30052"
 msgid "Active Widgets"
 msgstr "Active Widgets"
 
-#: /resources/lib/menu.py:471
+#: /resources/lib/menu.py:474
 msgctxt "#30053"
 msgid "This widget is broken, repoint or remove it to stop seeing this."
 msgstr "This widget is broken, repoint or remove it to stop seeing this."
 
-#: /resources/lib/menu.py:680
+#: /resources/lib/menu.py:679
 msgctxt "#30054"
 msgid "{} (Static)"
 msgstr "{} (Static)"
@@ -328,18 +328,18 @@ msgid "Add New Artwork"
 msgstr "Add New Artwork"
 
 #: /resources/lib/edit.py:243 /resources/lib/edit.py:395
-#: /resources/lib/menu.py:497
+#: /resources/lib/menu.py:500
 msgctxt "#30057"
 msgid "Random Path"
 msgstr "Random Path"
 
 #: /resources/lib/edit.py:245 /resources/lib/edit.py:395
-#: /resources/lib/menu.py:497
+#: /resources/lib/menu.py:500
 msgctxt "#30058"
 msgid "Next Path"
 msgstr "Next Path"
 
-#: /resources/lib/edit.py:396 /resources/lib/menu.py:496
+#: /resources/lib/edit.py:396 /resources/lib/menu.py:499
 msgctxt "#30059"
 msgid "Choose an Action"
 msgstr "Choose an Action"
@@ -376,7 +376,7 @@ msgctxt "#30065"
 msgid "Never"
 msgstr "Never"
 
-#: /resources/lib/menu.py:706
+#: /resources/lib/menu.py:705
 msgctxt "#30066"
 msgid "{} (Merged)"
 msgstr "{} (Merged)"
@@ -475,27 +475,27 @@ msgctxt "#30084"
 msgid "Not on Merged Widgets"
 msgstr "Not on Merged Widgets"
 
-#: /resources/lib/menu.py:318
+#: /resources/lib/menu.py:321
 msgctxt "#30085"
 msgid "Back to Page {}"
 msgstr "Back to Page {}"
 
-#: /resources/lib/menu.py:653
+#: /resources/lib/menu.py:652
 msgctxt "#30086"
 msgid "Shift Path to Top"
 msgstr "Shift Path to Top"
 
-#: /resources/lib/menu.py:641
+#: /resources/lib/menu.py:640
 msgctxt "#30087"
 msgid "Shift Path to Bottom"
 msgstr "Shift Path to Bottom"
 
-#: /resources/lib/edit.py:444 /resources/lib/menu.py:488
+#: /resources/lib/edit.py:444 /resources/lib/menu.py:491
 msgctxt "#30088"
 msgid "Choose a Path"
 msgstr "Choose a Path"
 
-#: /resources/lib/edit.py:437 /resources/lib/menu.py:553
+#: /resources/lib/edit.py:437 /resources/lib/menu.py:554
 msgctxt "#30089"
 msgid "Choose Paths to Merge"
 msgstr "Choose Paths to Merge"
@@ -562,17 +562,17 @@ msgctxt "#30100"
 msgid "Refresh Duration"
 msgstr "Refresh Duration"
 
-#: /resources/settings.xml:41 /resources/lib/menu.py:267
+#: /resources/settings.xml:41 /resources/lib/menu.py:269
 msgctxt "#30101"
 msgid "Toggle Skin Debugging"
 msgstr "Toggle Skin Debugging"
 
-#: /resources/lib/menu.py:175
+#: /resources/lib/menu.py:177
 msgctxt "#30102"
 msgid "{} Paths Merged"
 msgstr "{} Paths Merged"
 
-#: /resources/settings.xml:39 /resources/lib/menu.py:255
+#: /resources/settings.xml:39 /resources/lib/menu.py:257
 msgctxt "#30103"
 msgid "Clean Old Widget Files"
 msgstr "Clean Old Widget Files"
@@ -627,7 +627,7 @@ msgctxt "#30113"
 msgid "Debug Logging"
 msgstr "Debug Logging"
 
-#: /resources/lib/edit.py:130 /resources/lib/menu.py:625
+#: /resources/lib/edit.py:130 /resources/lib/menu.py:624
 msgctxt "#30114"
 msgid "Edit Path"
 msgstr "Edit Path"
@@ -642,7 +642,7 @@ msgctxt "#30116"
 msgid "Prefer Episode if Show Available"
 msgstr "Prefer Episode if Show Available"
 
-#: addon.xml:28 /resources/settings.xml:42 /resources/lib/menu.py:273
+#: addon.xml:28 /resources/settings.xml:42 /resources/lib/menu.py:275
 msgctxt "#30117"
 msgid "Clear Cache"
 msgstr "Clear Cache"
@@ -661,7 +661,7 @@ msgctxt "#30119"
 msgid "Select Content Type"
 msgstr "Select Content Type"
 
-#: /resources/lib/menu.py:605
+#: /resources/lib/menu.py:604
 msgctxt "#30120"
 msgid "Copy Group"
 msgstr "Copy Group"
@@ -671,12 +671,12 @@ msgctxt "#30121"
 msgid "Choose Paths to Copy"
 msgstr "Choose Paths to Copy"
 
-#: /resources/lib/manage.py:232
+#: /resources/lib/manage.py:234
 msgctxt "#30122"
 msgid "Choose Paths"
 msgstr "Choose Paths"
 
-#: /resources/lib/menu.py:506
+#: /resources/lib/menu.py:509
 msgctxt "#30123"
 msgid "Choose Paths to Cycle"
 msgstr "Choose Paths to Cycle"
@@ -755,3 +755,13 @@ msgstr "Back"
 msgctxt "#30138"
 msgid "Page"
 msgstr "Page"
+
+#: /resources/lib/menu.py:740
+msgctxt "#30139"
+msgid "Error showing {}"
+msgstr "Error showing {}"
+
+#: /resources/lib/menu.py:750
+msgctxt "#30140"
+msgid "No content found for {}"
+msgstr "No content found for {}"
