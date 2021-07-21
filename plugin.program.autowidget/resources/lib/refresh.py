@@ -278,8 +278,8 @@ def get_files_list(path, widget_id=None):
         files, changed = utils.cache_files(path, widget_id)
 
     new_files = []
-    if "error" not in files:
-        files = files.get("result").get("files")
+    if "result" in files:
+        files = files.get("result", {}).get("files", [])
         if not files:
             utils.log("No items found for {}".format(path))
             return [], hash
@@ -298,8 +298,12 @@ def get_files_list(path, widget_id=None):
             new_files.append(new_file)
 
         return new_files, hash
-    else:
+    elif "error" in files:
         os.remove(os.path.join(_addon_data, "{}.cache".format(hash)))
+        utils.log("Invalid cache file removed for {}".format(hash))
+        return None, hash
+    else:
+        utils.log("Error processing {}".format(hash), "error")
         return None, hash
 
 
