@@ -1,6 +1,7 @@
 import xbmc
 import xbmcgui
 
+import os
 import random
 import time
 import threading
@@ -8,6 +9,8 @@ import threading
 from resources.lib import manage
 from resources.lib.common import settings
 from resources.lib.common import utils
+
+_addon_data = utils.translate_path(settings.get_addon_info("profile"))
 
 skin_string_pattern = "autowidget-{}-{}"
 _properties = ["context.autowidget"]
@@ -98,6 +101,11 @@ class RefreshService(xbmc.Monitor):
                     if not widget_def:
                         continue
                     _update_strings(widget_def)
+                if (
+                    os.path.exists(os.path.join(_addon_data, "refresh.time"))
+                    and utils.get_active_window() == "home"
+                ):
+                    utils.update_container(True)
 
             if self.abortRequested():
                 break

@@ -359,10 +359,18 @@ def get_active_window():
 
 
 def update_container(reload=False):
+    refresh_time = os.path.join(_addon_data, "refresh.time")
+    in_media = get_active_window() == "media"
+    in_plugin = in_media and get_infolabel("Container.PluginName") == _addon_id
     if reload:
-        log("Triggering library update to reload widgets", "debug")
-        xbmc.executebuiltin("UpdateLibrary(video, AutoWidget)")
-    if get_active_window() == "media":
+        if in_media:
+            write_file(refresh_time, six.text_type(time.time()))
+        else:
+            log("Triggering library update to reload widgets", "debug")
+            xbmc.executebuiltin("UpdateLibrary(video, AutoWidget)")
+            if os.path.exists(refresh_time):
+                os.remove(refresh_time)
+    if in_plugin:
         xbmc.executebuiltin("Container.Refresh()")
 
 
