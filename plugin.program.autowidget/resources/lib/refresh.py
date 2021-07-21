@@ -195,7 +195,7 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
     if updated_at <= current_time - (3600 * refresh_duration) or force:
         group_id = widget_def["group"]
         action = widget_def.get("action")
-        current = int(widget_def.get("current", -1))
+        current = int(widget_def.get("current", 0))
         widget_def["stack"] = []
 
         if not paths:
