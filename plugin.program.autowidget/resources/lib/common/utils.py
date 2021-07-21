@@ -270,7 +270,9 @@ def clear_cache(target=None):
             for file in [i for i in os.listdir(_addon_data) if i.endswith(".cache")]:
                 os.remove(os.path.join(_addon_data, file))
     else:
-        os.remove(os.path.join(_addon_data, "{}.cache".format(target)))
+        target_path = os.path.join(_addon_data, "{}.cache".format(target))
+        if os.path.exists(target_path):
+            os.remove(target_path)
         update_container(True)
 
 
