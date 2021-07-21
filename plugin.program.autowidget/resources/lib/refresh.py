@@ -299,7 +299,7 @@ def get_files_list(path, widget_id=None):
 
         return new_files, hash
     else:
-        return [], hash
+        return None, hash
 
 
 def queue_widget_update(widget_id):

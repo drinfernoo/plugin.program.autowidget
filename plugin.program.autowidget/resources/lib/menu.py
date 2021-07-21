@@ -310,7 +310,10 @@ def show_path(
     path = widget_path["file"]["file"] if not stack else stack[-1]
     files, hash = refresh.get_files_list(path, widget_id)
     if not files:
-        show_empty(path_label)
+        if files is None:
+            show_error(path_label)
+        elif files == []:
+            show_empty(path_label)
         return titles if titles else True, path_label, content
 
     utils.log("Loading items from {}".format(path), "debug")
