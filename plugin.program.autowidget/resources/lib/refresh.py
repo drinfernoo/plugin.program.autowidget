@@ -298,6 +298,8 @@ def get_files_list(path, widget_id=None):
             new_files.append(new_file)
 
         return new_files, hash
+    else:
+        return [], hash
 
 
 def queue_widget_update(widget_id):
