@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="3.3.3" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="3.3.2" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
@@ -43,8 +43,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-3.3.3
- - Fix "Clear Cache"
 3.3.2
  - Fix bug when paths return no items
 3.3.1
@@ -256,7 +254,14 @@
 1.3.5
  - Add extra error checking for file operations
 1.3.4
- - Add proper migration fring conversion
+ - Add proper migration from old JSON to current
+1.3.3
+ - Rewrite editor dialog
+ - Fix path conversion for skin string paths
+1.3.2
+ - Fixes and cleanup in editor dialog
+1.3.1
+ - Cleanup skin string conversion
 1.3.0
  - Add group editing dialog
  - Non-Skin Shortcuts skin support
@@ -316,12 +321,13 @@
         </assets>
     </extension>
 </addon>
-r>
-            <banner>resources/media/banner.png</banner>
-            <clearlogo>resources/media/clearlogo.png</clearlogo>
+rlogo.png</clearlogo>
         </assets>
     </extension>
 </addon>
-   </assets>
+er>
+            <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
     </extension>
 </addon>
