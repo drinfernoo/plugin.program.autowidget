@@ -108,7 +108,7 @@ class RefreshService(xbmc.Monitor):
                     hash, widget_ids = queue.pop(0)
                     utils.log("Dequeued cache update: {}".format(hash[:5]), "notice")
 
-                    effected_widgets = cache_and_update(widget_ids, notify=progress)
+                    effected_widgets = cache_and_update(hash, widget_ids, notify=progress)
                     if effected_widgets:
                         updated = True
                     utils.remove_cache_queue(
@@ -372,18 +372,40 @@ def is_duplicate(title, titles):
         return False
 
 
-def cache_and_update(widget_ids, notify=True):
+def cache_and_update(hash, widget_ids, notify=True):
     """a widget might have many paths. Ensure each path is either queued for an update
     or is expired and if so force it to be refreshed. When going through the queue this
     could mean we refresh paths that other widgets also use. These will then be skipped.
     """
     assert widget_ids
     effected_widgets = set()
+
+    changed = False
+    hash = utils.path2hash(path)
+    # TODO: we might be updating paths used by widgets that weren't initiall queued.
+    # We need to return those and ensure they get refreshed also.
+    effected_widgets = effected_widgets.union(utils.widgets_for_path(path))
+    if utils.is_cache_queue(hash):
+        # we need to update this path regardless
+        if notify is not None:
+            notify(_label, path)
+        new_files, files_changed = utils.cache_files(path, widget_id)
+        changed = changed or files_changed
+        utils.remove_cache_queue(hash)
+    # else:
+    #     # double check this hasn't been updated already when updating another widget
+    #     expiry, _  = utils.cache_expiry(hash, widget_id, no_queue=True)
+    #     if expiry <= time.time():
+    #         utils.cache_files(path, widget_id)
+    #     else:
+    #         pass # Skipping this path because its already been updated
+
+
+    # TODO: update every widget?
     for widget_id in widget_ids:
         widget_def = manage.get_widget_by_id(widget_id)
         if not widget_def:
             continue
-        changed = False
         widget_path = widget_def.get("path", "")
         utils.log(
             "trying to update {} with widget def {}".format(widget_id, widget_def),
@@ -402,24 +424,6 @@ def cache_and_update(widget_ids, notify=True):
 
             _label = path["label"]
             path = path["file"]["file"]
-            hash = utils.path2hash(path)
-            # TODO: we might be updating paths used by widgets that weren't initiall queued.
-            # We need to return those and ensure they get refreshed also.
-            effected_widgets = effected_widgets.union(utils.widgets_for_path(path))
-            if utils.is_cache_queue(hash):
-                # we need to update this path regardless
-                if notify is not None:
-                    notify(_label, path)
-                new_files, files_changed = utils.cache_files(path, widget_id)
-                changed = changed or files_changed
-                utils.remove_cache_queue(hash)
-            # else:
-            #     # double check this hasn't been updated already when updating another widget
-            #     expiry, _  = utils.cache_expiry(hash, widget_id, no_queue=True)
-            #     if expiry <= time.time():
-            #         utils.cache_files(path, widget_id)
-            #     else:
-            #         pass # Skipping this path because its already been updated
         # TODO: only need to do that if a path has changed which we can tell from the history
         if changed:
             _update_strings(widget_def)
@@ -521,9 +525,9 @@ class Player(xbmc.Player):
 
         # wait for a bit so scrobing can happen
         time.sleep(5)
-        for hash in utils.widgets_changed_by_watching(self.type):
+        for hash, path in utils.widgets_changed_by_watching(self.type):
             # Queue them for refresh
-            utils.push_cache_queue(hash)
+            utils.push_cache_queue(path)
             utils.log("Queued cache update: {}".format(hash[:5]), "notice")
 
     def onPlayBackStopped(self):
