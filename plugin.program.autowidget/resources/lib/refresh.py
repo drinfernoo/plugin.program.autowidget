@@ -1,6 +1,7 @@
 import xbmc
 import xbmcgui
 
+import os
 import random
 import time
 import threading
@@ -8,6 +9,8 @@ import threading
 from resources.lib import manage
 from resources.lib.common import settings
 from resources.lib.common import utils
+
+_addon_data = utils.translate_path(settings.get_addon_info("profile"))
 
 skin_string_pattern = "autowidget-{}-{}"
 _properties = ["context.autowidget"]
@@ -98,6 +101,11 @@ class RefreshService(xbmc.Monitor):
                     if not widget_def:
                         continue
                     _update_strings(widget_def)
+                if (
+                    os.path.exists(os.path.join(_addon_data, "refresh.time"))
+                    and utils.get_active_window() == "home"
+                ):
+                    utils.update_container(True)
 
             if self.abortRequested():
                 break
@@ -195,7 +203,7 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
     if updated_at <= current_time - (3600 * refresh_duration) or force:
         group_id = widget_def["group"]
         action = widget_def.get("action")
-        current = int(widget_def.get("current", -1))
+        current = int(widget_def.get("current", 0))
         widget_def["stack"] = []
 
         if not paths:
@@ -270,8 +278,8 @@ def get_files_list(path, widget_id=None):
         files, changed = utils.cache_files(path, widget_id)
 
     new_files = []
-    if "error" not in files:
-        files = files.get("result").get("files")
+    if "result" in files:
+        files = files.get("result", {}).get("files", [])
         if not files:
             utils.log("No items found for {}".format(path))
             return [], hash
@@ -290,6 +298,13 @@ def get_files_list(path, widget_id=None):
             new_files.append(new_file)
 
         return new_files, hash
+    elif "error" in files:
+        os.remove(os.path.join(_addon_data, "{}.cache".format(hash)))
+        utils.log("Invalid cache file removed for {}".format(hash))
+        return None, hash
+    else:
+        utils.log("Error processing {}".format(hash), "error")
+        return None, hash
 
 
 def queue_widget_update(widget_id):

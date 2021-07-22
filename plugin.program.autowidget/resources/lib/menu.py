@@ -15,7 +15,7 @@ folder_shortcut = utils.get_art("folder-shortcut")
 folder_sync = utils.get_art("folder-sync")
 folder_next = utils.get_art("folder-next")
 folder_merged = utils.get_art("folder-dots")
-info = utils.get_art("information_outline")
+info = utils.get_art("information-outline")
 merge = utils.get_art("merge")
 next = utils.get_art("next")
 next_page = utils.get_art("next_page")
@@ -163,22 +163,24 @@ def active_widgets_menu():
             widget_id = widget_def.get("id", "")
             action = widget_def.get("action", "")
             group = widget_def.get("group", "")
-            path_def = widget_def.get("path", {})
+            path_id = widget_def.get("path", {})
 
             group_def = manage.get_group_by_id(group)
+            path_def = manage.get_path_by_id(path_id, group)
 
             title = ""
+            label = group_def.get("label", "")
             if path_def and group_def:
                 try:
                     if action != "merged":
-                        label = widget_def["label"].encode("utf-8")
+                        label = path_def.get("label", "").encode("utf-8")
                     else:
-                        label = utils.get_string(30102).format(len(path_def))
+                        label = utils.get_string(30102).format(len(path_id))
                 except:
                     pass
 
                 title = "{} - {}".format(
-                    six.ensure_text(label), six.ensure_text(group_def["label"])
+                    six.ensure_text(label), six.ensure_text(group_def.get("label", ""))
                 )
             elif group_def:
                 title = group_def.get("label")
@@ -308,7 +310,17 @@ def show_path(
     path = widget_path["file"]["file"] if not stack else stack[-1]
     files, hash = refresh.get_files_list(path, widget_id)
     if not files:
-        return titles, path_label, content
+        properties = {
+            "autoLabel": path_label,
+            "autoID": widget_id,
+            "autoAction": action,
+            "autoCache": hash,
+        }
+        if files is None:
+            show_error(path_label, properties)
+        elif files == []:
+            show_empty(path_label, properties)
+        return titles if titles else True, path_label, content
 
     utils.log("Loading items from {}".format(path), "debug")
 
@@ -531,9 +543,7 @@ def path_menu(group_id, action, widget_id):
         titles, cat, type = show_path(group_id, _label, widget_id, widget_path)
         return titles, cat, type
     else:
-        directory.add_menu_item(
-            title=30045, art=utils.get_art("information_outline"), isFolder=True
-        )
+        directory.add_menu_item(title=30045, art=info, isFolder=True)
         return True, group_name, "files"
 
 
@@ -584,9 +594,7 @@ def merged_path(group_id, widget_id):
 
         return titles, cat, type
     else:
-        directory.add_menu_item(
-            title=30045, art=utils.get_art("information_outline"), isFolder=True
-        )
+        directory.add_menu_item(title=30045, art=info, isFolder=True)
         return True, group_name, "files"
 
 
@@ -720,37 +728,39 @@ def _create_action_items(group_def, _id):
 def _is_page_item(label, next=True):
     tag_pattern = r"(\[[^\]]*\])"
     page_count_pattern = r"(?:\W*(?:(?:\d+\D*\d*))\W*)?"
-    base_pattern = r"^(?:(?:\W*)?\s*(?:{})+\s*(?:\W*)?{})?(?:\W*)?$"
-    next_pattern = base_pattern.format(_next.lower(), page_count_pattern)
-    next_page_pattern = base_pattern.format(_next_page.lower(), page_count_pattern)
-    prev_pattern = base_pattern.format(_previous.lower(), page_count_pattern)
-    prev_page_pattern = base_pattern.format(_previous_page.lower(), page_count_pattern)
-    back_pattern = base_pattern.format(_back.lower(), page_count_pattern)
+    base_pattern = r"^(?:(?:.+)?(?:(?:\b{}\b)|(?:\b{}\b)){{1,2}}{}){{1}}(?:\W+)?$"
 
     cleaned_title = re.sub(tag_pattern, "", label.lower()).strip()
-    next_page_words = _next_page.split("\s*")
-    prev_page_words = _previous_page.split("\s*")
+    next_page_words = [i.lower() for i in re.split(r"\s+", _next_page)]
+    prev_page_words = [i.lower() for i in re.split(r"\s+", _previous_page)]
 
-    contains_dir = (
-        re.search(next_pattern if next else prev_pattern, cleaned_title) is not None
-    )
+    next_page_pattern = base_pattern.format(*next_page_words, page_count_pattern)
+    prev_page_pattern = base_pattern.format(*prev_page_words, page_count_pattern)
+
     contains_dir_page = (
         re.search(next_page_pattern if next else prev_page_pattern, cleaned_title)
         is not None
     )
-    word_matches = [
-        re.search(base_pattern.format(i, page_count_pattern), cleaned_title)
-        for i in (next_page_words if next else prev_page_words)
-    ]
-    if not next:
-        word_matches.append(re.search(back_pattern, cleaned_title))
-    return contains_dir or contains_dir_page or any(i is not None for i in word_matches)
+
+    return contains_dir_page
 
 
-def show_error(id):
+def show_error(id, props=None):
     directory.add_menu_item(
-        title="Error showing {}".format(id),
+        title=settings.get_localized_string(30139).format(id),
         art=utils.get_art("alert"),
+        props=props,
+        isFolder=False,
+    )
+
+    return True, id, "files"
+
+
+def show_empty(id, props=None):
+    directory.add_menu_item(
+        title=settings.get_localized_string(30140).format(id),
+        art=info,
+        props=props,
         isFolder=False,
     )
 

@@ -89,6 +89,7 @@ def initialize(group_def, action, widget_id, save=True, keep=None):
     path_def = []
     cycle_paths = []
 
+    path_idx = 0
     if action != "merged":
         if action == "static" and keep is not None:
             path_def = paths[keep]["id"]
@@ -113,6 +114,7 @@ def initialize(group_def, action, widget_id, save=True, keep=None):
         "refresh": duration,
         "path": path_def,
         "version": settings.get_addon_info("version"),
+        "current": path_idx,
     }
     if cycle_paths:
         params["cycle_paths"] = cycle_paths
