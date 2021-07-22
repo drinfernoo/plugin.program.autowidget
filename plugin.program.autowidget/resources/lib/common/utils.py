@@ -592,7 +592,7 @@ def push_cache_queue(path, widget_id=None):
     if os.path.exists(queue_path):
         pass  # Leave original modification date so item is higher priority
     else:
-        touch(queue_path)
+        write_json(queue_path, {"hash": hash, "path": path})
 
 
 def is_cache_queue(hash):
@@ -931,14 +931,6 @@ def save_playback_history(media_type, playback_percentage):
     plays = history.setdefault("plays", [])
     plays.append((time.time(), media_type))
     write_json(_playback_history_path, history)
-
-
-def touch(fname, times=None):
-    fhandle = open(fname, "a")
-    try:
-        os.utime(fname, times)
-    finally:
-        fhandle.close()
 
 
 def call_builtin(action, delay=0):

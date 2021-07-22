@@ -360,56 +360,58 @@ def cache_and_update(hash, widget_ids, notify=True):
     could mean we refresh paths that other widgets also use. These will then be skipped.
     """
     assert widget_ids
-    effected_widgets = set()
+    affected_widgets = set()
 
     changed = False
+    path = widget_ids.get("path", "")
     hash = utils.path2hash(path)
     # TODO: we might be updating paths used by widgets that weren't initiall queued.
     # We need to return those and ensure they get refreshed also.
-    effected_widgets = effected_widgets.union(utils.widgets_for_path(path))
-    if utils.is_cache_queue(hash):
-        # we need to update this path regardless
-        if notify is not None:
-            notify(_label, path)
-        new_files, files_changed = utils.cache_files(path, widget_id)
-        changed = changed or files_changed
-        utils.remove_cache_queue(hash)
-    # else:
-    #     # double check this hasn't been updated already when updating another widget
-    #     expiry, _  = utils.cache_expiry(hash, widget_id, no_queue=True)
-    #     if expiry <= time.time():
-    #         utils.cache_files(path, widget_id)
-    #     else:
-    #         pass # Skipping this path because its already been updated
+    affected_widgets = affected_widgets.union(utils.widgets_for_path(path))
+    for widget_id in affected_widgets:
+        if utils.is_cache_queue(hash):
+            # we need to update this path regardless
+            # if notify is not None:
+                # notify(_label, path)
+            new_files, files_changed = utils.cache_files(path, widget_id)
+            changed = changed or files_changed
+            utils.remove_cache_queue(hash)
+        else:
+            # double check this hasn't been updated already when updating another widget
+            expiry, _  = utils.cache_expiry(hash, widget_id, no_queue=True)
+            if expiry <= time.time():
+                utils.cache_files(path, widget_id)
+            else:
+                pass # Skipping this path because its already been updated
 
 
     # TODO: update every widget?
-    for widget_id in widget_ids:
-        widget_def = manage.get_widget_by_id(widget_id)
-        if not widget_def:
-            continue
-        widget_path = widget_def.get("path", "")
-        utils.log(
-            "trying to update {} with widget def {}".format(widget_id, widget_def),
-            "inspect",
-        )
+    # for widget_id in widget_ids:
+        # widget_def = manage.get_widget_by_id(widget_id)
+        # if not widget_def:
+            # continue
+        # widget_path = widget_def.get("path", "")
+        # utils.log(
+            # "trying to update {} with widget def {}".format(widget_id, widget_def),
+            # "inspect",
+        # )
 
-        if type(widget_path) != list:
-            widget_path = [widget_path]
-        for path_id in widget_path:
-            # simple compatibility with pre-3.3.0 widgets
-            if isinstance(path_id, dict):
-                path_id = path_id.get("id", "")
-            path = manage.get_path_by_id(path_id)
-            if not path:
-                continue
+        # if type(widget_path) != list:
+            # widget_path = [widget_path]
+        # for path_id in widget_path:
+            # # simple compatibility with pre-3.3.0 widgets
+            # if isinstance(path_id, dict):
+                # path_id = path_id.get("id", "")
+            # path = manage.get_path_by_id(path_id)
+            # if not path:
+                # continue
 
-            _label = path["label"]
-            path = path["file"]["file"]
-        # TODO: only need to do that if a path has changed which we can tell from the history
-        if changed:
-            _update_strings(widget_def)
-    return effected_widgets
+            # _label = path["label"]
+            # path = path["file"]["file"]
+        # # TODO: only need to do that if a path has changed which we can tell from the history
+        # if changed:
+            # _update_strings(widget_def)
+    return affected_widgets
 
 
 # Get info on whats playing and use it to update the right widgets when playback stopped
