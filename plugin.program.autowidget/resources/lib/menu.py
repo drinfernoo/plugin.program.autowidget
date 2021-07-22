@@ -310,10 +310,16 @@ def show_path(
     path = widget_path["file"]["file"] if not stack else stack[-1]
     files, hash = refresh.get_files_list(path, widget_id)
     if not files:
+        properties = {
+            "autoLabel": path_label,
+            "autoID": widget_id,
+            "autoAction": action,
+            "autoCache": hash,
+        }
         if files is None:
-            show_error(path_label)
+            show_error(path_label, properties)
         elif files == []:
-            show_empty(path_label)
+            show_empty(path_label, properties)
         return titles if titles else True, path_label, content
 
     utils.log("Loading items from {}".format(path), "debug")
@@ -739,20 +745,22 @@ def _is_page_item(label, next=True):
     return contains_dir_page
 
 
-def show_error(id):
+def show_error(id, props=None):
     directory.add_menu_item(
         title=settings.get_localized_string(30139).format(id),
         art=utils.get_art("alert"),
+        props=props,
         isFolder=False,
     )
 
     return True, id, "files"
 
 
-def show_empty(id):
+def show_empty(id, props=None):
     directory.add_menu_item(
         title=settings.get_localized_string(30140).format(id),
         art=info,
+        props=props,
         isFolder=False,
     )
 
