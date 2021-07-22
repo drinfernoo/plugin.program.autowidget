@@ -571,15 +571,22 @@ def next_cache_queue():
         # probably need a .lock file to ensure foreground calls can get priority.
         hash = hash_from_cache_path(path)
         cache_data = read_history(hash, create_if_missing=True)
-        yield hash, cache_data.get("widgets", [])
+        yield hash, cache_data
 
 
-def push_cache_queue(hash, widget_id=None):
+def push_cache_queue(path, widget_id=None):
+    hash = path2hash(path)
     queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
     history = read_history(hash, create_if_missing=True)  # Ensure its created
+    changed = False
     if widget_id is not None and widget_id not in history["widgets"]:
-        history_path = os.path.join(_addon_data, "{}.history".format(hash))
         history["widgets"].append(widget_id)
+        changed = True
+    if history.get("path") != "path":
+        history["path"] = path
+        changed = True
+    if changed:
+        history_path = os.path.join(_addon_data, "{}.history".format(hash))
         write_json(history_path, history)
 
     if os.path.exists(queue_path):
@@ -647,16 +654,17 @@ def cache_files(path, widget_id):
         "id": 1,
     }
     files = call_jsonrpc(params)
-    _, _, changed = cache_expiry(hash, widget_id, add=files)
+    _, _, changed = cache_expiry(path, widget_id, add=files)
     return (files, changed)
 
 
-def cache_expiry(hash, widget_id, add=None, background=True):
+def cache_expiry(path, widget_id, add=None, background=True):
     # Predict how long to cache for with a min of 5min so updates don't go in a loop
     # TODO: find better way to prevents loops so that users trying to manually refresh can do so
     # TODO: manage the cache files to remove any too old or no longer used
     # TODO: update paths on autowidget refresh based on predicted update frequency. e.g. plugins with random paths should
     # update when autowidget updates.
+    hash = path2hash(path)
 
     cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
 
@@ -711,14 +719,14 @@ def cache_expiry(hash, widget_id, add=None, background=True):
             result = "Empty"
             if background:
                 contents = make_holding_path(u"Loading Content...", "refresh")
-                push_cache_queue(hash)
+                push_cache_queue(path)
         else:
             contents = read_json(cache_path, log_file=True)
             if contents is None:
                 result = "Invalid Read"
                 if background:
                     contents = make_holding_path("Error", "error")
-                    push_cache_queue(hash)
+                    push_cache_queue(path)
             else:
                 # write any updated widget_ids so we know what to update when we dequeue
                 # Also important as wwe use last modified of .history as accessed time
@@ -740,7 +748,7 @@ def cache_expiry(hash, widget_id, add=None, background=True):
                 #     result = "Skip (queue={})".format(queue_len)
                 #     contents = dict(result=dict(files=[]))
                 else:
-                    push_cache_queue(hash)
+                    push_cache_queue(path)
                     result = "Read and queue"
     # TODO: some metric that tells us how long to the first and last widgets becomes visible and then get updated
     # not how to measure the time delay when when the cache is read until it appears on screen?
@@ -859,7 +867,7 @@ def widgets_changed_by_watching(media_type):
                 "chance widget changed after play {}% {}".format(chance, hash[:5]),
                 "notice",
             )
-            yield hash
+            yield hash, path
 
 
 def chance_playback_updates_widget(history_path, plays, cutoff_time=60 * 5):
