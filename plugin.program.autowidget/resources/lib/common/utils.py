@@ -549,10 +549,12 @@ def iter_queue():
     queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_data, "*.queue")))
     # TODO: sort by path instead so load plugins at the same time
     for path in sorted(queued, key=os.path.getmtime):
-        yield path
+        queue_data = read_json(path)
+        yield queue_data.get("path", "")
 
 
-def read_history(hash, create_if_missing=True):
+def read_history(path, create_if_missing=True):
+    hash = path2hash(path)
     history_path = os.path.join(_addon_data, "{}.history".format(hash))
     if not os.path.exists(history_path):
         if create_if_missing:
@@ -585,27 +587,28 @@ def next_cache_queue():
     # TODO: use watchdog to use less resources
     for path in iter_queue():
         # TODO: sort by path instead so load plugins at the same time
-        if not os.path.exists(path):
+        hash = path2hash(path)
+        queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
+        if not os.path.exists(queue_path):
             # a widget update has already taken care of updating this path
             continue
         # We will let the update operation remove the item from the queue
 
         # TODO: need to workout if a blocking write is happen while it was queued or right now.
         # probably need a .lock file to ensure foreground calls can get priority.
-        hash = hash_from_cache_path(path)
-        cache_data = read_history(hash, create_if_missing=True)
+        cache_data = read_history(path, create_if_missing=True)
         yield hash, cache_data
 
 
 def push_cache_queue(path, widget_id=None):
     hash = path2hash(path)
     queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
-    history = read_history(hash, create_if_missing=True)  # Ensure its created
+    history = read_history(path, create_if_missing=True)  # Ensure its created
     changed = False
     if widget_id is not None and widget_id not in history["widgets"]:
         history["widgets"].append(widget_id)
         changed = True
-    if history.get("path") != "path":
+    if history.get("path", "") != path:
         history["path"] = path
         changed = True
     if changed:
@@ -694,7 +697,6 @@ def cache_expiry(path, widget_id, add=None, background=True):
     # TODO: update paths on autowidget refresh based on predicted update frequency. e.g. plugins with random paths should
     # update when autowidget updates.
     hash = path2hash(path)
-
     cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
 
     # Read file every time as we might be called from multiple processes
@@ -733,6 +735,8 @@ def cache_expiry(path, widget_id, add=None, background=True):
             content_hash = path2hash(cache_json)
             changed = history[-1][1] != content_hash if history else True
             history.append((time.time(), content_hash))
+            if cache_data.get("path") != path:
+                cache_data["path"] = path
             write_json(history_path, cache_data)
             # expiry = history[-1][0] + DEFAULT_CACHE_TIME
             pred_dur = predict_update_frequency(history)
