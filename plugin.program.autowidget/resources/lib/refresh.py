@@ -391,7 +391,7 @@ def cache_and_update(hash, widget_ids, notify=True):
         if utils.is_cache_queue(hash):
             # we need to update this path regardless
             # if notify is not None:
-                # notify(_label, path)
+            #     notify(_label, path)
             new_files, files_changed = utils.cache_files(path, widget_id)
             changed = changed or files_changed
             utils.remove_cache_queue(hash)
@@ -403,33 +403,32 @@ def cache_and_update(hash, widget_ids, notify=True):
             else:
                 pass  # Skipping this path because its already been updated
 
-
     # TODO: update every widget?
     # for widget_id in widget_ids:
-        # widget_def = manage.get_widget_by_id(widget_id)
-        # if not widget_def:
-            # continue
-        # widget_path = widget_def.get("path", "")
-        # utils.log(
-            # "trying to update {} with widget def {}".format(widget_id, widget_def),
-            # "inspect",
-        # )
+    #     widget_def = manage.get_widget_by_id(widget_id)
+    #     if not widget_def:
+    #         continue
+    #     widget_path = widget_def.get("path", "")
+    #     utils.log(
+    #         "trying to update {} with widget def {}".format(widget_id, widget_def),
+    #         "inspect",
+    #     )
 
-        # if type(widget_path) != list:
-            # widget_path = [widget_path]
-        # for path_id in widget_path:
-            # # simple compatibility with pre-3.3.0 widgets
-            # if isinstance(path_id, dict):
-                # path_id = path_id.get("id", "")
-            # path = manage.get_path_by_id(path_id)
-            # if not path:
-                # continue
+    #     if type(widget_path) != list:
+    #         widget_path = [widget_path]
+    #     for path_id in widget_path:
+    #         # simple compatibility with pre-3.3.0 widgets
+    #         if isinstance(path_id, dict):
+    #             path_id = path_id.get("id", "")
+    #         path = manage.get_path_by_id(path_id)
+    #         if not path:
+    #             continue
 
-            # _label = path["label"]
-            # path = path["file"]["file"]
-        # # TODO: only need to do that if a path has changed which we can tell from the history
-        # if changed:
-            # _update_strings(widget_def)
+    #         _label = path["label"]
+    #         path = path["file"]["file"]
+    #     # TODO: only need to do that if a path has changed which we can tell from the history
+    #     if changed:
+    #         _update_strings(widget_def)
     return affected_widgets
 
 
