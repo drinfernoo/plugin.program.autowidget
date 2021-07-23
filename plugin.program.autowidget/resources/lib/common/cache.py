@@ -9,6 +9,7 @@ import time
 
 import six
 
+from resources.lib import manage
 from resources.lib.common import settings
 from resources.lib.common import utils
 
@@ -129,7 +130,7 @@ def widgets_for_path(path):
     return set(widgets)
 
 
-def cache_and_update(hash, widget_ids, notify=True):
+def cache_and_update(hash, widget_ids, notify=None):
     """a widget might have many paths. Ensure each path is either queued for an update
     or is expired and if so force it to be refreshed. When going through the queue this
     could mean we refresh paths that other widgets also use. These will then be skipped.
@@ -145,8 +146,9 @@ def cache_and_update(hash, widget_ids, notify=True):
     for widget_id in affected_widgets:
         if is_cache_queue(hash):
             # we need to update this path regardless
-            # if notify is not None:
-            #     notify(_label, path)
+            if notify is not None:
+                widget_def = manage.get_widget_by_id(widget_id)
+                notify(widget_def.get("label", ""), path)
             new_files, files_changed = cache_files(path, widget_id)
             changed = changed or files_changed
             remove_cache_queue(hash)
@@ -264,14 +266,16 @@ def cache_expiry(path, widget_id, add=None, background=True):
         if not os.path.exists(cache_path):
             result = "Empty"
             if background:
-                contents = utils.make_holding_path(u"Loading Content...", "refresh")
+                contents = utils.make_holding_path(utils.get_string(30145), "refresh")
                 push_cache_queue(path)
         else:
             contents = utils.read_json(cache_path, log_file=True)
             if contents is None:
                 result = "Invalid Read"
                 if background:
-                    contents = utils.make_holding_path("Error", "error")
+                    contents = utils.make_holding_path(
+                        utils.get_string(30139).format(hash), "alert"
+                    )
                     push_cache_queue(path)
             else:
                 # write any updated widget_ids so we know what to update when we dequeue

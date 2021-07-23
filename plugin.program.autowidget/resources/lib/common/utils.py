@@ -208,7 +208,9 @@ def make_holding_path(label, art, hash=None):
                     "label": label,
                     "file": "plugin://plugin.program.autowidget/?mode=clear_cache&target={}&refresh=&reload=".format(
                         hash
-                    ),
+                    )
+                    if hash
+                    else "plugin://plugin.program.autowidget/?mode=force&refresh=&reload=",
                     "art": get_art(art),
                     "filetype": "file",
                 }

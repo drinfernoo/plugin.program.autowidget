@@ -93,14 +93,16 @@ class RefreshService(xbmc.Monitor):
                     def __call__(self, groupname, path):
                         if self.dialog is None:
                             self.dialog = xbmcgui.DialogProgressBG()
-                            self.dialog.create(u"Updating Widgets")
+                            self.dialog.create("AutoWidget", utils.get_string(30141))
                         if not self.service.player.isPlayingVideo():
                             percent = (
                                 len(self.done)
                                 / float(len(queue) + len(self.done) + 1)
                                 * 100
                             )
-                            self.dialog.update(int(percent), message=groupname)
+                            self.dialog.update(
+                                int(percent), "AutoWidget", message=groupname
+                            )
                         self.done.add(path)
 
                 progress = Progress()
@@ -140,7 +142,7 @@ class RefreshService(xbmc.Monitor):
                 ):
                     utils.update_container(True)
                 if progress.dialog is not None:
-                    progress.dialog.update(100, "")
+                    progress.dialog.update(100)
                     progress.dialog.close()
                 if (
                     updated
@@ -149,7 +151,7 @@ class RefreshService(xbmc.Monitor):
                 ):
                     dialog = xbmcgui.Dialog()
                     dialog.notification(
-                        u"AutoWidget", u"Finished Updating Widgets", sound=False
+                        u"AutoWidget", utils.get_string(30142), sound=False
                     )
 
             if self.abortRequested():
@@ -328,7 +330,7 @@ def get_files_list(path, label=None, widget_id=None, background=True):
     elif "error" in files:
         utils.log("Error processing {}".format(hash), "error")
         error_tile = utils.make_holding_path(
-            "Error loading {}".format(label), "alert", hash=hash
+            utils.get_string(30139).format(label), "alert", hash=hash
         )
         files = error_tile.get("result", {}).get("files", [])
         cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
@@ -339,7 +341,7 @@ def get_files_list(path, label=None, widget_id=None, background=True):
     if not files:
         utils.log("No items found for {}".format(hash))
         empty_tile = utils.make_holding_path(
-            "No items found for {}".format(label), "information-outline", hash=hash
+            utils.get_string(30140).format(label), "information-outline", hash=hash
         )
         files = empty_tile.get("result", {}).get("files", [])
 

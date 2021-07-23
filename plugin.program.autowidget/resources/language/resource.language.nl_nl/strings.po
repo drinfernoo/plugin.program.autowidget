@@ -46,38 +46,38 @@ msgctxt "#30005"
 msgid "Default time between widget refreshes (in hours)"
 msgstr "Standaardtijd tussen het vernieuwen van de widget (in uren)"
 
-#: addon.xml:20 /resources/settings.xml:38 /resources/lib/menu.py:250
+#: addon.xml:20 /resources/settings.xml:38 /resources/lib/menu.py:251
 msgctxt "#30006"
 msgid "Force Refresh Widgets"
 msgstr "Widgets voor vernieuwen forceren"
 
-#: /resources/lib/menu.py:40 /resources/lib/menu.py:99
+#: /resources/lib/menu.py:41 /resources/lib/menu.py:100
 msgctxt "#30007"
 msgid "My Groups"
 msgstr "Mijn Groepen"
 
-#: /resources/settings.xml:35 /resources/lib/menu.py:52
-#: /resources/lib/menu.py:281
+#: /resources/settings.xml:35 /resources/lib/menu.py:53
+#: /resources/lib/menu.py:282
 msgctxt "#30008"
 msgid "Tools"
 msgstr "Gereedschappen"
 
-#: /resources/lib/menu.py:677
+#: /resources/lib/menu.py:690
 msgctxt "#30009"
 msgid "Actions"
 msgstr "Acties"
 
-#: /resources/lib/add.py:160 /resources/lib/menu.py:89
+#: /resources/lib/add.py:160 /resources/lib/menu.py:90
 msgctxt "#30010"
 msgid "Create New Widget Group"
 msgstr "Nieuwe widgetgroep maken"
 
-#: /resources/lib/add.py:164 /resources/lib/menu.py:94
+#: /resources/lib/add.py:164 /resources/lib/menu.py:95
 msgctxt "#30011"
 msgid "Create New Shortcut Group"
 msgstr "Nieuwe snelkoppelingsgroep maken"
 
-#: /resources/lib/menu.py:253
+#: /resources/lib/menu.py:254
 msgctxt "#30012"
 msgid "Force all defined widgets to refresh."
 msgstr "Dwing alle gedefinieerde widgets te vernieuwen."
@@ -92,33 +92,33 @@ msgctxt "#30014"
 msgid "Remove"
 msgstr "Verwijderen"
 
-#: /resources/lib/menu.py:640
+#: /resources/lib/menu.py:653
 msgctxt "#30015"
 msgid "Shift Path Up"
 msgstr "Pad omhoog verschuiven"
 
-#: /resources/lib/menu.py:652
+#: /resources/lib/menu.py:665
 msgctxt "#30016"
 msgid "Shift Path Down"
 msgstr "Pad naar beneden verschuiven"
 
-#: /resources/lib/menu.py:692
+#: /resources/lib/menu.py:705
 msgctxt "#30017"
 msgid "{} (Cycling)"
 msgstr "{} (Wielrennen)"
 
-#: /resources/lib/menu.py:192
+#: /resources/lib/menu.py:193
 msgctxt "#30018"
 msgid "Shortcuts from {}"
 msgstr "Snelkoppelingen van {}"
 
-#: /resources/lib/menu.py:146 /resources/lib/menu.py:483
-#: /resources/lib/menu.py:547
+#: /resources/lib/menu.py:147 /resources/lib/menu.py:496
+#: /resources/lib/menu.py:560
 msgctxt "#30019"
 msgid "No paths have been defined for this group."
 msgstr "Er zijn geen paden gedefinieerd voor deze groep."
 
-#: /resources/lib/refresh.py:252
+#: /resources/lib/refresh.py:299
 msgctxt "#30020"
 msgid "Refreshing widgets..."
 msgstr "Widgets vernieuwen..."
@@ -182,7 +182,7 @@ msgctxt "#30030"
 msgid "{} removed."
 msgstr "{} wordt verwijderd."
 
-#: /resources/lib/edit.py:128 /resources/lib/menu.py:624
+#: /resources/lib/edit.py:128 /resources/lib/menu.py:637
 msgctxt "#30031"
 msgid "Edit Shortcut"
 msgstr "Bewerk sneltoets"
@@ -243,17 +243,17 @@ msgctxt "#30041"
 msgid "[COLOR lawngreen][B]Disable[/B][/COLOR]"
 msgstr "[COLOR gazongroen] [B] Uitschakelen[/B][/COLOR]"
 
-#: /resources/lib/edit.py:133 /resources/lib/menu.py:594
+#: /resources/lib/edit.py:133 /resources/lib/menu.py:607
 msgctxt "#30042"
 msgid "Edit Group"
 msgstr "Bewerk de groep"
 
-#: /resources/settings.xml:40 /resources/lib/menu.py:263
+#: /resources/settings.xml:40 /resources/lib/menu.py:264
 msgctxt "#30043"
 msgid "Wipe Add-on Data"
 msgstr "Add-on-gegevens wissen"
 
-#: /resources/lib/common/utils.py:244
+#: /resources/lib/common/utils.py:258
 msgctxt "#30044"
 msgid ""
 "This will remove [B]all[/B] data for AutoWidget, excluding backups. Any "
@@ -267,54 +267,54 @@ msgstr ""
 "alleen te doen als u van plan bent al deze widgets opnieuw te lokaliseren. "
 "Deze [COLOR firebrick]kan niet ongedaan worden gemaakt."
 
-#: /resources/lib/menu.py:536 /resources/lib/menu.py:587
+#: /resources/lib/menu.py:549 /resources/lib/menu.py:600
 msgctxt "#30045"
 msgid "Point a widget here to show items."
 msgstr "Wijs hier een widget aan om items weer te geven."
 
-#: /resources/lib/backup.py:55 /resources/lib/menu.py:83
+#: /resources/lib/backup.py:55 /resources/lib/menu.py:84
 msgctxt "#30046"
 msgid "No groups have been defined."
 msgstr "Er zijn geen groepen gedefinieerd."
 
-#: addon.xml:24 /resources/lib/menu.py:198
+#: addon.xml:24 /resources/lib/menu.py:199
 msgctxt "#30047"
 msgid "Refresh Widget"
 msgstr "Widget Vernieuwen"
 
 #: /resources/lib/edit.py:125 /resources/lib/edit.py:160
-#: /resources/lib/menu.py:214 /resources/lib/menu.py:621
+#: /resources/lib/menu.py:215 /resources/lib/menu.py:634
 msgctxt "#30048"
 msgid "Edit Widget"
 msgstr "Widget bewerken"
 
-#: /resources/lib/menu.py:227
+#: /resources/lib/menu.py:228
 msgctxt "#30049"
 msgid "Orphaned"
 msgstr "Zwevend"
 
-#: /resources/lib/menu.py:239
+#: /resources/lib/menu.py:240
 msgctxt "#30050"
 msgid "No widgets have been initialized."
 msgstr "Er zijn geen widgets geïnitialiseerd."
 
-#: /resources/lib/menu.py:473
+#: /resources/lib/menu.py:486
 msgctxt "#30051"
 msgid "Broken Widget"
 msgstr "Gebroken widget"
 
-#: /resources/lib/menu.py:46 /resources/lib/menu.py:245
+#: /resources/lib/menu.py:47 /resources/lib/menu.py:246
 msgctxt "#30052"
 msgid "Active Widgets"
 msgstr "Actieve widgets"
 
-#: /resources/lib/menu.py:474
+#: /resources/lib/menu.py:487
 msgctxt "#30053"
 msgid "This widget is broken, repoint or remove it to stop seeing this."
 msgstr ""
 "Deze widget is kapot, herpunt of verwijder deze om dit niet meer te zien."
 
-#: /resources/lib/menu.py:679
+#: /resources/lib/menu.py:692
 msgctxt "#30054"
 msgid "{} (Static)"
 msgstr "{} (Static)"
@@ -330,18 +330,18 @@ msgid "Add New Artwork"
 msgstr "Nieuwe illustraties toevoegen"
 
 #: /resources/lib/edit.py:243 /resources/lib/edit.py:395
-#: /resources/lib/menu.py:500
+#: /resources/lib/menu.py:513
 msgctxt "#30057"
 msgid "Random Path"
 msgstr "Willekeurig pad"
 
 #: /resources/lib/edit.py:245 /resources/lib/edit.py:395
-#: /resources/lib/menu.py:500
+#: /resources/lib/menu.py:513
 msgctxt "#30058"
 msgid "Next Path"
 msgstr "Volgende pad"
 
-#: /resources/lib/edit.py:396 /resources/lib/menu.py:499
+#: /resources/lib/edit.py:396 /resources/lib/menu.py:512
 msgctxt "#30059"
 msgid "Choose an Action"
 msgstr "Kies een actie"
@@ -378,7 +378,7 @@ msgctxt "#30065"
 msgid "Never"
 msgstr "Nooit"
 
-#: /resources/lib/menu.py:705
+#: /resources/lib/menu.py:718
 msgctxt "#30066"
 msgid "{} (Merged)"
 msgstr "{} (Samengevoegd)"
@@ -477,27 +477,27 @@ msgctxt "#30084"
 msgid "Not on Merged Widgets"
 msgstr "Niet op samengevoegde widgets"
 
-#: /resources/lib/menu.py:321
+#: /resources/lib/menu.py:332
 msgctxt "#30085"
 msgid "Back to Page {}"
 msgstr "Back to Page {}"
 
-#: /resources/lib/menu.py:652
+#: /resources/lib/menu.py:665
 msgctxt "#30086"
 msgid "Shift Path to Top"
 msgstr "Pad verschuiven naar boven"
 
-#: /resources/lib/menu.py:640
+#: /resources/lib/menu.py:653
 msgctxt "#30087"
 msgid "Shift Path to Bottom"
 msgstr "Pad verschuiven naar onder"
 
-#: /resources/lib/edit.py:444 /resources/lib/menu.py:491
+#: /resources/lib/edit.py:444 /resources/lib/menu.py:504
 msgctxt "#30088"
 msgid "Choose a Path"
 msgstr "Kies een Path"
 
-#: /resources/lib/edit.py:437 /resources/lib/menu.py:554
+#: /resources/lib/edit.py:437 /resources/lib/menu.py:567
 msgctxt "#30089"
 msgid "Choose Paths to Merge"
 msgstr "Paden kiezen om samen te voegen"
@@ -564,17 +564,17 @@ msgctxt "#30100"
 msgid "Refresh Duration"
 msgstr "Vernieuwingsduur"
 
-#: /resources/settings.xml:41 /resources/lib/menu.py:269
+#: /resources/settings.xml:41 /resources/lib/menu.py:270
 msgctxt "#30101"
 msgid "Toggle Skin Debugging"
 msgstr "Skin Debugging in- en uitschakelen"
 
-#: /resources/lib/menu.py:177
+#: /resources/lib/menu.py:178
 msgctxt "#30102"
 msgid "{} Paths Merged"
 msgstr "{} Paden samengevoegd"
 
-#: /resources/settings.xml:39 /resources/lib/menu.py:257
+#: /resources/settings.xml:39 /resources/lib/menu.py:258
 msgctxt "#30103"
 msgid "Clean Old Widget Files"
 msgstr "Oude widgetbestanden opschonen"
@@ -584,7 +584,7 @@ msgctxt "#30104"
 msgid "Icon Color"
 msgstr "Pictogram kleur"
 
-#: /resources/lib/add.py:282
+#: /resources/lib/add.py:295
 msgctxt "#30105"
 msgid "{} paths added to {}"
 msgstr "{} paden toegevoegd aan {}"
@@ -629,7 +629,7 @@ msgctxt "#30113"
 msgid "Debug Logging"
 msgstr "Logboekregistratie opsporen van fouten"
 
-#: /resources/lib/edit.py:130 /resources/lib/menu.py:624
+#: /resources/lib/edit.py:130 /resources/lib/menu.py:637
 msgctxt "#30114"
 msgid "Edit Path"
 msgstr "Naar pad"
@@ -644,12 +644,12 @@ msgctxt "#30116"
 msgid "Prefer Episode if Show Available"
 msgstr "Geef de voorkeur aan Aflevering als Show beschikbaar is"
 
-#: addon.xml:28 /resources/settings.xml:42 /resources/lib/menu.py:275
+#: addon.xml:28 /resources/settings.xml:42 /resources/lib/menu.py:276
 msgctxt "#30117"
 msgid "Clear Cache"
 msgstr "Wis cache"
 
-#: /resources/lib/common/utils.py:265
+#: /resources/lib/common/cache.py:26
 msgctxt "#30118"
 msgid ""
 "Are you sure you want to clear the cache? This action may make widgets load "
@@ -663,7 +663,7 @@ msgctxt "#30119"
 msgid "Select Content Type"
 msgstr "Selecteer het content-type"
 
-#: /resources/lib/menu.py:604
+#: /resources/lib/menu.py:617
 msgctxt "#30120"
 msgid "Copy Group"
 msgstr "Groep kopiëren"
@@ -678,7 +678,7 @@ msgctxt "#30122"
 msgid "Choose Paths"
 msgstr "Kies paden"
 
-#: /resources/lib/menu.py:509
+#: /resources/lib/menu.py:522
 msgctxt "#30123"
 msgid "Choose Paths to Cycle"
 msgstr "Kies paden om te fietsen"
@@ -728,42 +728,68 @@ msgctxt "#30132"
 msgid "Country Icons"
 msgstr "Landpictogrammen"
 
-#: /resources/lib/menu.py:30
+#: /resources/lib/menu.py:31
 msgctxt "#30133"
 msgid "Next"
 msgstr "Volgende"
 
-#: /resources/lib/menu.py:31
+#: /resources/lib/menu.py:32
 msgctxt "#30134"
 msgid "Next Page"
 msgstr "Volgende pagina"
 
-#: /resources/lib/menu.py:32
+#: /resources/lib/menu.py:33
 msgctxt "#30135"
 msgid "Previous"
 msgstr "Vorige"
 
-#: /resources/lib/menu.py:33
+#: /resources/lib/menu.py:34
 msgctxt "#30136"
 msgid "Previous Page"
 msgstr "Vorige pagina"
 
-#: /resources/lib/menu.py:34
+#: /resources/lib/menu.py:35
 msgctxt "#30137"
 msgid "Back"
 msgstr "Achterkant"
 
-#: /resources/lib/menu.py:35
+#: /resources/lib/menu.py:36
 msgctxt "#30138"
 msgid "Page"
 msgstr "Pagina"
 
-#: /resources/lib/menu.py:740
+#: /resources/lib/menu.py:753 /resources/lib/refresh.py:332
+#: /resources/lib/common/cache.py:276
 msgctxt "#30139"
 msgid "Error showing {}"
 msgstr "Fout bij het weergeven van {}"
 
-#: /resources/lib/menu.py:750
+#: /resources/lib/menu.py:764 /resources/lib/refresh.py:343
 msgctxt "#30140"
 msgid "No content found for {}"
 msgstr "Geen content gevonden for {}"
+
+#: /resources/lib/refresh.py:95
+msgctxt "#30141"
+msgid "Updating Widgets"
+msgstr "Widgets bijwerken"
+
+#: /resources/lib/refresh.py:153
+msgctxt "#30142"
+msgid "Finished Updating Widgets"
+msgstr "Updaten van widgets voltooid"
+
+#: /resources/lib/add.py:270 /resources/lib/add.py:285
+msgctxt "#30143"
+msgid "Copying paths..."
+msgstr "Paden kopiëren..."
+
+#: /resources/lib/add.py:271
+msgctxt "#30144"
+msgid "Retrieving paths..."
+msgstr "Paden ophalen..."
+
+#: /resources/lib/common/cache.py:268
+msgctxt "#30145"
+msgid "Loading content..."
+msgstr "Bezig met het laden van informatie..."
