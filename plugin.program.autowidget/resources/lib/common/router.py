@@ -16,7 +16,7 @@ from resources.lib.common import directory
 from resources.lib.common import utils
 
 
-def _log_params(_plugin, _handle, _params):
+def _log_params(_params):
     msg = "[{}]"
 
     params = dict(parse_qsl(_params))
@@ -29,8 +29,8 @@ def _log_params(_plugin, _handle, _params):
     return params
 
 
-def dispatch(_plugin, _handle, _params):
-    params = _log_params(_plugin, int(_handle), _params)
+def dispatch(_handle, _params):
+    params = _log_params(_params)
     category = "AutoWidget"
     is_dir = False
     is_type = "files"
