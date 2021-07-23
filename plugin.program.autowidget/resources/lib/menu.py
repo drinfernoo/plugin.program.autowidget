@@ -310,21 +310,8 @@ def show_path(
     stack = widget_def.get("stack", [])
     path = widget_path["file"]["file"] if not stack else stack[-1]
 
-    files, hash = refresh.get_files_list(path, path_label, widget_id)
-    # if not files:
-    #     properties = {
-    #         "autoLabel": path_label,
-    #         "autoID": widget_id,
-    #         "autoAction": action,
-    #         "autoCache": hash,
-    #     }
-    #     if files is None:
-    #         show_error(path_label, properties)
-    #     elif files == []:
-    #         show_empty(path_label, properties)
-    #     return titles if titles else True, path_label, content
-
     utils.log("Loading items from {}".format(path), "debug")
+    files, hash = refresh.get_files_list(path, path_label, widget_id)
 
     color = widget_path.get("color", default_color)
 
