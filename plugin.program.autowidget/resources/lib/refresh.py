@@ -338,7 +338,9 @@ def get_files_list(path, widget_id=None, background=True):
 
         return new_files, hash
     elif "error" in files:
-        os.remove(os.path.join(_addon_data, "{}.cache".format(hash)))
+        cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
+        if os.path.exists(cache_path):
+            os.remove(cache_path)
         utils.log("Invalid cache file removed for {}".format(hash))
         return None, hash
     else:
