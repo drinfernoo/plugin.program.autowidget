@@ -672,8 +672,6 @@ def get_info_keys():
 
 
 def cache_files(path, widget_id):
-    hash = path2hash(path)
-
     info_keys = get_info_keys()
     params = {
         "jsonrpc": "2.0",
