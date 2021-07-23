@@ -105,7 +105,9 @@ class RefreshService(xbmc.Monitor):
                     hash, widget_ids = queue.pop(0)
                     utils.log("Dequeued cache update: {}".format(hash[:5]), "notice")
 
-                    effected_widgets = cache_and_update(hash, widget_ids, notify=progress)
+                    effected_widgets = cache_and_update(
+                        hash, widget_ids, notify=progress
+                    )
                     if effected_widgets:
                         updated = True
                     utils.remove_cache_queue(
@@ -364,7 +366,6 @@ def cache_and_update(hash, widget_ids, notify=True):
 
     changed = False
     path = widget_ids.get("path", "")
-    hash = utils.path2hash(path)
     # TODO: we might be updating paths used by widgets that weren't initiall queued.
     # We need to return those and ensure they get refreshed also.
     affected_widgets = affected_widgets.union(utils.widgets_for_path(path))
@@ -378,11 +379,11 @@ def cache_and_update(hash, widget_ids, notify=True):
             utils.remove_cache_queue(hash)
         else:
             # double check this hasn't been updated already when updating another widget
-            expiry, _  = utils.cache_expiry(hash, widget_id, no_queue=True)
+            expiry, _ = utils.cache_expiry(hash, widget_id, no_queue=True)
             if expiry <= time.time():
                 utils.cache_files(path, widget_id)
             else:
-                pass # Skipping this path because its already been updated
+                pass  # Skipping this path because its already been updated
 
 
     # TODO: update every widget?
