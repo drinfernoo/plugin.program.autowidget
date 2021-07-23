@@ -109,16 +109,16 @@ class RefreshService(xbmc.Monitor):
                     hash, widget_ids = queue.pop(0)
                     utils.log("Dequeued cache update: {}".format(hash[:5]), "notice")
 
-                    effected_widgets = cache_and_update(
+                    affected_widgets = cache.cache_and_update(
                         hash, widget_ids, notify=progress
                     )
-                    if effected_widgets:
+                    if affected_widgets:
                         updated = True
                     cache.remove_cache_queue(
                         hash
                     )  # Just in queued path's widget defintion has changed and it didn't update this path
                     unrefreshed_widgets = unrefreshed_widgets.union(
-                        effected_widgets
+                        affected_widgets
                     ).difference(set(widget_ids))
                     # # wait 5s or for the skin to reload the widget
                     # # this should reduce churn at startup where widgets take too long too long show up
@@ -348,18 +348,6 @@ def get_files_list(path, widget_id=None, background=True):
         return None, hash
 
 
-def queue_widget_update(widget_id):
-    global _thread
-    new_thread = False
-    if _thread is None or not _thread.is_alive():
-        _thread = Worker()
-        _thread.daemon = True
-        new_thread = True
-    _thread.queue.put(widget_id)
-    if new_thread:
-        _thread.start()
-
-
 def is_duplicate(title, titles):
     if not settings.get_setting_bool("widgets.hide_duplicates"):
         return False
@@ -375,64 +363,6 @@ def is_duplicate(title, titles):
         return title["showtitle"] in [t["showtitle"] for t in titles]
     else:
         return False
-
-
-def cache_and_update(hash, widget_ids, notify=True):
-    """a widget might have many paths. Ensure each path is either queued for an update
-    or is expired and if so force it to be refreshed. When going through the queue this
-    could mean we refresh paths that other widgets also use. These will then be skipped.
-    """
-    assert widget_ids
-    affected_widgets = set()
-
-    changed = False
-    path = widget_ids.get("path", "")
-    # TODO: we might be updating paths used by widgets that weren't initiall queued.
-    # We need to return those and ensure they get refreshed also.
-    affected_widgets = affected_widgets.union(cache.widgets_for_path(path))
-    for widget_id in affected_widgets:
-        if cache.is_cache_queue(hash):
-            # we need to update this path regardless
-            # if notify is not None:
-            #     notify(_label, path)
-            new_files, files_changed = cache.cache_files(path, widget_id)
-            changed = changed or files_changed
-            cache.remove_cache_queue(hash)
-        else:
-            # double check this hasn't been updated already when updating another widget
-            expiry, _ = cache.cache_expiry(hash, widget_id, no_queue=True)
-            if expiry <= time.time():
-                cache.cache_files(path, widget_id)
-            else:
-                pass  # Skipping this path because its already been updated
-
-    # TODO: update every widget?
-    # for widget_id in widget_ids:
-    #     widget_def = manage.get_widget_by_id(widget_id)
-    #     if not widget_def:
-    #         continue
-    #     widget_path = widget_def.get("path", "")
-    #     utils.log(
-    #         "trying to update {} with widget def {}".format(widget_id, widget_def),
-    #         "inspect",
-    #     )
-
-    #     if type(widget_path) != list:
-    #         widget_path = [widget_path]
-    #     for path_id in widget_path:
-    #         # simple compatibility with pre-3.3.0 widgets
-    #         if isinstance(path_id, dict):
-    #             path_id = path_id.get("id", "")
-    #         path = manage.get_path_by_id(path_id)
-    #         if not path:
-    #             continue
-
-    #         _label = path["label"]
-    #         path = path["file"]["file"]
-    #     # TODO: only need to do that if a path has changed which we can tell from the history
-    #     if changed:
-    #         _update_strings(widget_def)
-    return affected_widgets
 
 
 # Get info on whats playing and use it to update the right widgets when playback stopped
