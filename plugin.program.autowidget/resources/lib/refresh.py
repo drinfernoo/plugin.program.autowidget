@@ -142,9 +142,15 @@ class RefreshService(xbmc.Monitor):
                 if progress.dialog is not None:
                     progress.dialog.update(100, "")
                     progress.dialog.close()
-                if updated and self.refresh_enabled == 1 and not self.player.isPlayingVideo():
+                if (
+                    updated
+                    and self.refresh_enabled == 1
+                    and not self.player.isPlayingVideo()
+                ):
                     dialog = xbmcgui.Dialog()
-                    dialog.notification(u'AutoWidget', u"Finished Updating Widgets", sound=False)
+                    dialog.notification(
+                        u"AutoWidget", u"Finished Updating Widgets", sound=False
+                    )
 
             if self.abortRequested():
                 break

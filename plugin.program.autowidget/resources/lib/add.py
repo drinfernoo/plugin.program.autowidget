@@ -270,7 +270,7 @@ def _copy_path(path_def):
     progress = xbmcgui.DialogProgressBG()
     progress.create(u"Copying")
     progress.update(1, u"Retrieving")
-        
+
     group_def = manage.get_group_by_id(group_id)
     files, hash = refresh.get_files_list(path_def["file"]["file"], background=False)
     if not files:
@@ -279,16 +279,16 @@ def _copy_path(path_def):
     done = 0
     for file in files:
         done += 1
-        if file['type'] in ['movie', 'episode', 'musicvideo', 'song']:
+        if file["type"] in ["movie", "episode", "musicvideo", "song"]:
             continue
-        progress.update(int(done/float(len(files))*100), file.get('label'))
-            
-        labels = build_labels('json', file, path_def['target'])
+        progress.update(int(done / float(len(files)) * 100), file.get("label"))
+
+        labels = build_labels("json", file, path_def["target"])
         _add_path(group_def, labels, over=True)
     progress.close()
     del progress
     dialog = xbmcgui.Dialog()
-    dialog.notification('AutoWidget', utils.get_string(32131)
-                                      .format(len(files), group_def['label']))
+    dialog.notification(
+        "AutoWidget", utils.get_string(30105).format(len(files), group_def["label"])
+    )
     del dialog
-    
