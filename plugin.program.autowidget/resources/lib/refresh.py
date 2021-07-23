@@ -7,6 +7,7 @@ import time
 import threading
 
 from resources.lib import manage
+from resources.lib.common import cache
 from resources.lib.common import settings
 from resources.lib.common import utils
 
@@ -82,7 +83,7 @@ class RefreshService(xbmc.Monitor):
                 # TODO: somehow delay till all other plugins loaded?
                 updated = False
                 unrefreshed_widgets = set()
-                queue = list(utils.next_cache_queue())
+                queue = list(cache.next_cache_queue())
 
                 class Progress(object):
                     dialog = None
@@ -113,7 +114,7 @@ class RefreshService(xbmc.Monitor):
                     )
                     if effected_widgets:
                         updated = True
-                    utils.remove_cache_queue(
+                    cache.remove_cache_queue(
                         hash
                     )  # Just in queued path's widget defintion has changed and it didn't update this path
                     unrefreshed_widgets = unrefreshed_widgets.union(
@@ -122,12 +123,12 @@ class RefreshService(xbmc.Monitor):
                     # # wait 5s or for the skin to reload the widget
                     # # this should reduce churn at startup where widgets take too long too long show up
                     # before_update = time.time() # TODO: have .access file so we can put above update
-                    # while _ in self.tick(1, 10, lambda: utils.last_read(hash) > before_update):
+                    # while _ in self.tick(1, 10, lambda: cache.last_read(hash) > before_update):
                     #     pass
-                    # utils.log("paused queue until read {:.2} for {}".format(utils.last_read(hash)-before_update, hash[:5]), 'info')
+                    # utils.log("paused queue until read {:.2} for {}".format(cache.last_read(hash)-before_update, hash[:5]), 'info')
                     if self.abortRequested():
                         break
-                    queue = list(utils.next_cache_queue())
+                    queue = list(cache.next_cache_queue())
                 for widget_id in unrefreshed_widgets:
                     widget_def = manage.get_widget_by_id(widget_id)
                     if not widget_def:
@@ -308,12 +309,12 @@ def refresh_paths(notify=False, force=False):
 
 
 def get_files_list(path, widget_id=None, background=True):
-    hash = utils.path2hash(path)
-    _, files, _ = utils.cache_expiry(path, widget_id, background=background)
+    hash = cache.path2hash(path)
+    _, files, _ = cache.cache_expiry(path, widget_id, background=background)
     if files is None:
         # Should only happen now when background is False
         utils.log("Blocking cache path read: {}".format(hash[:5]), "info")
-        files, changed = utils.cache_files(path, widget_id)
+        files, changed = cache.cache_files(path, widget_id)
 
     new_files = []
     if "result" in files:
@@ -386,20 +387,20 @@ def cache_and_update(hash, widget_ids, notify=True):
     path = widget_ids.get("path", "")
     # TODO: we might be updating paths used by widgets that weren't initiall queued.
     # We need to return those and ensure they get refreshed also.
-    affected_widgets = affected_widgets.union(utils.widgets_for_path(path))
+    affected_widgets = affected_widgets.union(cache.widgets_for_path(path))
     for widget_id in affected_widgets:
-        if utils.is_cache_queue(hash):
+        if cache.is_cache_queue(hash):
             # we need to update this path regardless
             # if notify is not None:
             #     notify(_label, path)
-            new_files, files_changed = utils.cache_files(path, widget_id)
+            new_files, files_changed = cache.cache_files(path, widget_id)
             changed = changed or files_changed
-            utils.remove_cache_queue(hash)
+            cache.remove_cache_queue(hash)
         else:
             # double check this hasn't been updated already when updating another widget
-            expiry, _ = utils.cache_expiry(hash, widget_id, no_queue=True)
+            expiry, _ = cache.cache_expiry(hash, widget_id, no_queue=True)
             if expiry <= time.time():
-                utils.cache_files(path, widget_id)
+                cache.cache_files(path, widget_id)
             else:
                 pass  # Skipping this path because its already been updated
 
@@ -522,14 +523,14 @@ class Player(xbmc.Player):
         self.totalTime = -1.0
         self.playingTime = 0.0
         self.info = {}
-        utils.save_playback_history(self.type, pp)
+        cache.save_playback_history(self.type, pp)
         utils.log("recorded playback of {}% {}".format(pp, self.type), "notice")
 
         # wait for a bit so scrobing can happen
         time.sleep(5)
-        for hash, path in utils.widgets_changed_by_watching(self.type):
+        for hash, path in cache.widgets_changed_by_watching(self.type):
             # Queue them for refresh
-            utils.push_cache_queue(path)
+            cache.push_cache_queue(path)
             utils.log("Queued cache update: {}".format(hash[:5]), "notice")
 
     def onPlayBackStopped(self):
