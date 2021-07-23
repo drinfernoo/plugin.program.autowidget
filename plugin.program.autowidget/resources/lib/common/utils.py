@@ -197,7 +197,7 @@ colors = [
 ]  # brown
 
 
-def make_holding_path(label, art):
+def make_holding_path(label, art, hash=None):
     return {
         "jsonrpc": "2.0",
         "id": 1,
@@ -206,7 +206,9 @@ def make_holding_path(label, art):
                 {
                     "title": label,
                     "label": label,
-                    "file": "plugin://plugin.program.autowidget/?mode=force&refresh=&reload=",
+                    "file": "plugin://plugin.program.autowidget/?mode=clear_cache&target={}&refresh=&reload=".format(
+                        hash
+                    ),
                     "art": get_art(art),
                     "filetype": "file",
                 }

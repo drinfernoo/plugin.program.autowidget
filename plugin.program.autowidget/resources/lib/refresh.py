@@ -327,7 +327,9 @@ def get_files_list(path, label=None, widget_id=None, background=True):
         files = files.get("result", {}).get("files", [])
     elif "error" in files:
         utils.log("Error processing {}".format(hash), "error")
-        error_tile = utils.make_holding_path("Error loading {}".format(label), "alert")
+        error_tile = utils.make_holding_path(
+            "Error loading {}".format(label), "alert", hash=hash
+        )
         files = error_tile.get("result", {}).get("files", [])
         cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
         if os.path.exists(cache_path):
@@ -337,7 +339,7 @@ def get_files_list(path, label=None, widget_id=None, background=True):
     if not files:
         utils.log("No items found for {}".format(hash))
         empty_tile = utils.make_holding_path(
-            "No items found for {}".format(label), "information-outline"
+            "No items found for {}".format(label), "information-outline", hash=hash
         )
         files = empty_tile.get("result", {}).get("files", [])
 
