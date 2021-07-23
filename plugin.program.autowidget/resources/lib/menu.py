@@ -7,6 +7,7 @@ import six
 
 from resources.lib import manage
 from resources.lib import refresh
+from resources.lib.common import cache
 from resources.lib.common import directory
 from resources.lib.common import settings
 from resources.lib.common import utils
@@ -390,7 +391,7 @@ def show_path(
                 props=properties,
             )
             # Ensure we precache next page for faster access
-            utils.cache_expiry(file['file'], widget_id, background=True)
+            cache.cache_expiry(file['file'], widget_id, background=True)
         else:
             filetype = file.get("type", "")
             title = {
