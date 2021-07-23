@@ -378,7 +378,7 @@ def show_path(
                 props=properties,
             )
             # Ensure we precache next page for faster access
-            cache.cache_expiry(file["file"], widget_id, background=True)
+            cache.cache_expiry(file["file"], widget_id)
         else:
             filetype = file.get("type", "")
             title = {
