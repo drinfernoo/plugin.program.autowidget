@@ -308,7 +308,7 @@ def refresh_paths(notify=False, force=False):
     return True, "AutoWidget"
 
 
-def get_files_list(path, widget_id=None, background=True):
+def get_files_list(path, label=None, widget_id=None, background=True):
     hash = cache.path2hash(path)
     _, files, _ = cache.cache_expiry(path, widget_id, background=background)
     if files is None:
@@ -319,33 +319,36 @@ def get_files_list(path, widget_id=None, background=True):
     new_files = []
     if "result" in files:
         files = files.get("result", {}).get("files", [])
-        if not files:
-            utils.log("No items found for {}".format(path))
-            return [], hash
-
-        for file in files:
-            new_file = {k: v for k, v in file.items() if v is not None}
-
-            if "art" in new_file:
-                for art in new_file["art"]:
-                    new_file["art"][art] = utils.clean_artwork_url(file["art"][art])
-            if "cast" in new_file:
-                for idx, cast in enumerate(new_file["cast"]):
-                    new_file["cast"][idx]["thumbnail"] = utils.clean_artwork_url(
-                        cast.get("thumbnail", "")
-                    )
-            new_files.append(new_file)
-
-        return new_files, hash
     elif "error" in files:
+        utils.log("Error processing {}".format(hash), "error")
+        error_tile = utils.make_holding_path("Error loading {}".format(label), "alert")
+        files = error_tile.get("result", {}).get("files", [])
         cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
         if os.path.exists(cache_path):
             os.remove(cache_path)
         utils.log("Invalid cache file removed for {}".format(hash))
-        return None, hash
-    else:
-        utils.log("Error processing {}".format(hash), "error")
-        return None, hash
+
+    if not files:
+        utils.log("No items found for {}".format(hash))
+        empty_tile = utils.make_holding_path(
+            "No items found for {}".format(label), "information-outline"
+        )
+        files = empty_tile.get("result", {}).get("files", [])
+
+    for file in files:
+        new_file = {k: v for k, v in file.items() if v is not None}
+
+        if "art" in new_file:
+            for art in new_file["art"]:
+                new_file["art"][art] = utils.clean_artwork_url(file["art"][art])
+        if "cast" in new_file:
+            for idx, cast in enumerate(new_file["cast"]):
+                new_file["cast"][idx]["thumbnail"] = utils.clean_artwork_url(
+                    cast.get("thumbnail", "")
+                )
+        new_files.append(new_file)
+
+    return new_files, hash
 
 
 def is_duplicate(title, titles):

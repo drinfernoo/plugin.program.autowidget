@@ -309,20 +309,20 @@ def show_path(
 
     stack = widget_def.get("stack", [])
     path = widget_path["file"]["file"] if not stack else stack[-1]
-    
-    files, hash = refresh.get_files_list(path, widget_id, background=False)
-    if not files:
-        properties = {
-            "autoLabel": path_label,
-            "autoID": widget_id,
-            "autoAction": action,
-            "autoCache": hash,
-        }
-        if files is None:
-            show_error(path_label, properties)
-        elif files == []:
-            show_empty(path_label, properties)
-        return titles if titles else True, path_label, content
+
+    files, hash = refresh.get_files_list(path, path_label, widget_id)
+    # if not files:
+    #     properties = {
+    #         "autoLabel": path_label,
+    #         "autoID": widget_id,
+    #         "autoAction": action,
+    #         "autoCache": hash,
+    #     }
+    #     if files is None:
+    #         show_error(path_label, properties)
+    #     elif files == []:
+    #         show_empty(path_label, properties)
+    #     return titles if titles else True, path_label, content
 
     utils.log("Loading items from {}".format(path), "debug")
 
@@ -384,14 +384,14 @@ def show_path(
             directory.add_menu_item(
                 title=label,
                 params=update_params if paged_widgets and not merged else None,
-                path=file['file'] if not paged_widgets or merged else None,
+                path=file["file"] if not paged_widgets or merged else None,
                 art=utils.get_art("next_page", color),
                 info=file,
                 isFolder=not paged_widgets or merged,
                 props=properties,
             )
             # Ensure we precache next page for faster access
-            cache.cache_expiry(file['file'], widget_id, background=True)
+            cache.cache_expiry(file["file"], widget_id, background=True)
         else:
             filetype = file.get("type", "")
             title = {
