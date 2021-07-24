@@ -43,6 +43,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.3.6
+ - Fix "Next Page" for Python 2.7
 3.3.5
  - Better handling of error and empty states
  - Better handling of "Next Page" items
