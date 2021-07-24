@@ -351,6 +351,7 @@ def _get_value(edit_def, key):
             value = utils.set_color()
         elif key == "content":
             options = [
+                "none",
                 "files",
                 "movies",
                 "tvshows",
@@ -364,7 +365,9 @@ def _get_value(edit_def, key):
                 "games",
             ]
             type = dialog.select(
-                utils.get_string(30119), options, preselect=options.index(default)
+                utils.get_string(30119),
+                options,
+                preselect=options.index(default if default in options else "none"),
             )
             value = options[type]
         else:

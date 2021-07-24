@@ -53,7 +53,7 @@ def root_menu():
         title=30008, params={"mode": "tools"}, art=utils.get_art("tools"), isFolder=True
     )
 
-    return True, "AutoWidget", "files"
+    return True, "AutoWidget", None
 
 
 def my_groups_menu():
@@ -87,17 +87,19 @@ def my_groups_menu():
             props={"specialsort": "bottom"},
         )
     directory.add_menu_item(
-        title=30010,
-        params={"mode": "manage", "action": "add_group", "target": "widget"},
-        art=utils.get_art("folder-sync"),
-    )
-    directory.add_menu_item(
         title=30011,
         params={"mode": "manage", "action": "add_group", "target": "shortcut"},
         art=utils.get_art("folder-shortcut"),
+        props={"specialsort": "bottom"},
+    )
+    directory.add_menu_item(
+        title=30010,
+        params={"mode": "manage", "action": "add_group", "target": "widget"},
+        art=utils.get_art("folder-sync"),
+        props={"specialsort": "bottom"},
     )
 
-    return True, utils.get_string(30007), "files"
+    return True, utils.get_string(30007), None
 
 
 def group_menu(group_id):
@@ -110,12 +112,12 @@ def group_menu(group_id):
             '"{}" is missing, please repoint the widget to fix it.'.format(group_id),
             "error",
         )
-        return False, "AutoWidget", "files"
+        return False, "AutoWidget", None
 
     group_name = group_def["label"]
     group_type = group_def["type"]
     paths = group_def["paths"]
-    content = group_def.get("content", "files")
+    content = group_def.get("content")
 
     if len(paths) > 0:
         utils.log(
@@ -243,7 +245,7 @@ def active_widgets_menu():
             props={"specialsort": "bottom"},
         )
 
-    return True, utils.get_string(30052), "files"
+    return True, utils.get_string(30052), None
 
 
 def tools_menu():
@@ -251,7 +253,6 @@ def tools_menu():
         title=30006,
         params={"mode": "force"},
         art=utils.get_art("refresh"),
-        info={"plot": utils.get_string(30012)},
         isFolder=False,
     )
     directory.add_menu_item(
@@ -279,7 +280,7 @@ def tools_menu():
         isFolder=False,
     )
 
-    return True, utils.get_string(30008), "files"
+    return True, utils.get_string(30008), None
 
 
 def show_path(
@@ -299,28 +300,29 @@ def show_path(
 
     widget_def = manage.get_widget_by_id(widget_id)
     if not widget_def:
-        return True, "AutoWidget", "videos"
+        return True, "AutoWidget", None
 
-    content = widget_path.get("content", "videos")
+    content = widget_path.get("content")
     action = widget_def.get("action", "")
     if not titles:
         titles = []
 
     stack = widget_def.get("stack", [])
     path = widget_path["file"]["file"] if not stack else stack[-1]
-    files, hash = refresh.get_files_list(path, widget_id)
-    if not files:
-        properties = {
-            "autoLabel": path_label,
-            "autoID": widget_id,
-            "autoAction": action,
-            "autoCache": hash,
-        }
-        if files is None:
-            show_error(path_label, properties)
-        elif files == []:
-            show_empty(path_label, properties)
-        return titles if titles else True, path_label, content
+
+    files, hash = refresh.get_files_list(path, path_label, widget_id)
+    # if not files:
+    #     properties = {
+    #         "autoLabel": path_label,
+    #         "autoID": widget_id,
+    #         "autoAction": action,
+    #         "autoCache": hash,
+    #     }
+    #     if files is None:
+    #         show_error(path_label, properties)
+    #     elif files == []:
+    #         show_empty(path_label, properties)
+    #     return titles if titles else True, path_label, content
 
     utils.log("Loading items from {}".format(path), "debug")
 
@@ -485,13 +487,13 @@ def path_menu(group_id, action, widget_id):
             art=utils.get_art("alert"),
             isFolder=True,
         )
-        return True, "AutoWidget", "files"
+        return True, "AutoWidget", None
 
     group_name = group_def.get("label", "")
     paths = group_def.get("paths", [])
     if len(paths) == 0:
         directory.add_menu_item(title=30019, art=utils.get_art("alert"), isFolder=True)
-        return True, group_name, "files"
+        return True, group_name, None
 
     widget_def = manage.get_widget_by_id(widget_id, group_id)
     if not widget_def:
@@ -501,7 +503,7 @@ def path_menu(group_id, action, widget_id):
                 utils.get_string(30088), paths, indices=True, single=True
             )
             if idx == -1:
-                return True, "AutoWidget", "videos"
+                return True, "AutoWidget", None
 
             widget_def = manage.initialize(group_def, action, widget_id, keep=idx)
         elif action == "cycling":
@@ -511,7 +513,7 @@ def path_menu(group_id, action, widget_id):
             )
             if idx == -1:
                 del dialog
-                return True, "AutoWidget", "videos"
+                return True, "AutoWidget", None
 
             _action = "random" if idx == 0 else "next"
 
@@ -544,7 +546,7 @@ def path_menu(group_id, action, widget_id):
         return titles, cat, type
     else:
         directory.add_menu_item(title=30045, art=info, isFolder=True)
-        return True, group_name, "files"
+        return True, group_name, None
 
 
 def merged_path(group_id, widget_id):
@@ -555,7 +557,7 @@ def merged_path(group_id, widget_id):
     paths = group_def.get("paths", [])
     if len(paths) == 0:
         directory.add_menu_item(title=30019, art=utils.get_art("alert"), isFolder=False)
-        return True, group_name, "files"
+        return True, group_name, None
 
     widget_def = manage.get_widget_by_id(widget_id, group_id)
     if widget_def and _window != "dialog":
@@ -595,7 +597,7 @@ def merged_path(group_id, widget_id):
         return titles, cat, type
     else:
         directory.add_menu_item(title=30045, art=info, isFolder=True)
-        return True, group_name, "files"
+        return True, group_name, None
 
 
 def _create_group_context_items(group_id, target):
@@ -764,7 +766,7 @@ def show_error(id, props=None):
         isFolder=False,
     )
 
-    return True, id, "files"
+    return True, id, None
 
 
 def show_empty(id, props=None):
@@ -775,4 +777,4 @@ def show_empty(id, props=None):
         isFolder=False,
     )
 
-    return True, id, "files"
+    return True, id, None
