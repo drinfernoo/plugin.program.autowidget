@@ -728,14 +728,25 @@ def _create_action_items(group_def, _id):
 def _is_page_item(label, next=True):
     tag_pattern = r"(\[[^\]]*\])"
     page_count_pattern = r"(?:\W*(?:(?:\d+\D*\d*))\W*)?"
-    base_pattern = r"^(?:(?:.+)?(?:(?:\b{}\b)|(?:\b{}\b)){{1,2}}{}){{1}}(?:\W+)?$"
+    # base_pattern = r"^(?:(?:.+)?(?:(?:\b{}\b)|(?:\b{}\b)){{1,2}}{}){{1}}(?:\W+)?$"
+    base_pattern_prefix = r"^(?:(?:.+)?(?:"
+    word_pattern = r"(?:\b{}\b)"
+    base_pattern_suffix = r"){{1,2}}{}){{1}}(?:\W+)?$"
 
     cleaned_title = re.sub(tag_pattern, "", label.lower()).strip()
     next_page_words = [i.lower() for i in re.split(r"\s+", _next_page)]
     prev_page_words = [i.lower() for i in re.split(r"\s+", _previous_page)]
 
-    next_page_pattern = base_pattern.format(*next_page_words, page_count_pattern)
-    prev_page_pattern = base_pattern.format(*prev_page_words, page_count_pattern)
+    next_page_pattern = (
+        base_pattern_prefix
+        + "|".join([word_pattern.format(i) for i in next_page_words])
+        + base_pattern_suffix.format(page_count_pattern)
+    )
+    prev_page_pattern = (
+        base_pattern_prefix
+        + "|".join([word_pattern.format(i) for i in prev_page_words])
+        + base_pattern_suffix.format(page_count_pattern)
+    )
 
     contains_dir_page = (
         re.search(next_page_pattern if next else prev_page_pattern, cleaned_title)
