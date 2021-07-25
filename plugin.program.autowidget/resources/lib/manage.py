@@ -7,6 +7,7 @@ from resources.lib.common import settings
 from resources.lib.common import utils
 
 _addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_userdata = utils.translate_path("special://userdata/")
 _skin_shortcuts = utils.translate_path(
     settings.get_addon_info("profile", addon="script.skinshortcuts")
 )
@@ -39,6 +40,9 @@ def clean(widget_id=None, notify=False, all=False):
             if ext[-1] in ["xml", "properties"]:
                 path = os.path.join(_skin_shortcuts, xml)
                 files.append(path)
+    favorites = os.path.join(_userdata, "favourites.xml")
+    if os.path.exists(favorites):
+        files.append(favorites)
 
     remove = []
     removed = 0
