@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="3.3.5" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="3.3.0" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
@@ -43,20 +43,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-3.3.5
- - Better handling of error and empty states
- - Better handling of "Next Page" items
- - Fix "Active Widgets" menu
- - Delay library updates when inside media views
-3.3.4
- - Fix "Next Page" localizations
-3.3.3
- - Fix "Clear Cache"
-3.3.2
- - Fix bug when paths return no items
-3.3.1
- - Fix bug when Skin Shortcuts is not installed
- - More improvements to page item handling
 3.3.0
  - Add "Copy Group" in group context menu
  - Add "Create New ... Group" in "My Groups" menu
@@ -270,6 +256,35 @@
 1.3.2
  - Fixes and cleanup in editor dialog
 1.3.1
+ - Cleanup skin st
+ - Gracefully handle remote artwork
+ - Use special paths for artwork
+1.4.2
+ - Fix bug in conversion
+1.4.1
+ - Fix bug in migration
+1.4.0
+ - Add "Clean Old References" shortcuts
+ - Change main menu layout
+1.3.9
+ - Fix label bug in Embuary (and maybe elsewhere)
+1.3.8
+ - Add "Wipe Add-on Data" shortcuts
+ - Allow Unicode characters in labels
+1.3.7
+ - Fix typo in path handling
+1.3.6
+ - Fix error handling
+1.3.5
+ - Add extra error checking for file operations
+1.3.4
+ - Add proper migration from old JSON to current
+1.3.3
+ - Rewrite editor dialog
+ - Fix path conversion for skin string paths
+1.3.2
+ - Fixes and cleanup in editor dialog
+1.3.1
  - Cleanup skin string conversion
 1.3.0
  - Add group editing dialog
@@ -328,8 +343,5 @@
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
         </assets>
-    </extension>
-</addon>
-    </assets>
     </extension>
 </addon>
