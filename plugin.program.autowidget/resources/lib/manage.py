@@ -31,7 +31,9 @@ def clean(widget_id=None, notify=False, all=False):
     addons = utils.call_jsonrpc(params)
     if "error" not in addons:
         for addon in addons["result"]["addons"]:
-            path = os.path.join(_addon_data, addon["addonid"], "settings.xml")
+            path = os.path.join(
+                _userdata, "addon_data", addon["addonid"], "settings.xml"
+            )
             if os.path.exists(path):
                 files.append(path)
     if _skin_shortcuts and os.path.exists(_skin_shortcuts):
@@ -40,11 +42,7 @@ def clean(widget_id=None, notify=False, all=False):
             if ext[-1] in ["xml", "properties"]:
                 path = os.path.join(_skin_shortcuts, xml)
                 files.append(path)
-    favorites = os.path.join(_userdata, "favourites.xml")
-    if os.path.exists(favorites):
-        files.append(favorites)
 
-    remove = []
     removed = 0
 
     if widget_id:
