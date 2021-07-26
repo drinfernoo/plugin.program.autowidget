@@ -108,20 +108,18 @@ class RefreshService(xbmc.Monitor):
                 progress = Progress()
 
                 while queue:
-                    hash, widget_ids = queue.pop(0)
+                    path, cache_data, widget_id = queue.pop(0)
+                    hash = cache.path2hash(path)
                     utils.log("Dequeued cache update: {}".format(hash[:5]), "notice")
 
-                    affected_widgets = cache.cache_and_update(
-                        hash, widget_ids, notify=progress
-                    )
+                    affected_widgets = set(cache.cache_and_update(
+                        path, widget_id, cache_data, notify=progress
+                    ))
                     if affected_widgets:
                         updated = True
-                    cache.remove_cache_queue(
-                        hash
-                    )  # Just in queued path's widget defintion has changed and it didn't update this path
                     unrefreshed_widgets = unrefreshed_widgets.union(
                         affected_widgets
-                    ).difference(set(widget_ids))
+                    )
                     # # wait 5s or for the skin to reload the widget
                     # # this should reduce churn at startup where widgets take too long too long show up
                     # before_update = time.time() # TODO: have .access file so we can put above update
@@ -255,11 +253,11 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
 
         if not paths:
             cycle_paths = widget_def.get("cycle_paths")
-            paths = (
-                [p for p in cycle_paths]
-                if cycle_paths
-                else manage.find_defined_paths(group_id)
-            )
+            if cycle_paths is None:
+                cycle_paths = [p.get("id") for p in manage.find_defined_paths(group_id)]
+                widget_def["cycle_paths"] = cycle_paths
+
+            paths = [p for p in cycle_paths]
 
         if action:
             if len(paths) > 0:
