@@ -310,7 +310,7 @@ def show_path(
     stack = widget_def.get("stack", [])
     path = widget_path["file"]["file"] if not stack else stack[-1]
 
-    files, hash = refresh.get_files_list(path, path_label, widget_id)
+    files, hash = refresh.get_files_list(path, widget_id)
     # if not files:
     #     properties = {
     #         "autoLabel": path_label,
