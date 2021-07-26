@@ -351,6 +351,7 @@ def _get_value(edit_def, key):
             value = utils.set_color()
         elif key == "content":
             options = [
+                "none",
                 "files",
                 "movies",
                 "tvshows",
@@ -362,9 +363,25 @@ def _get_value(edit_def, key):
                 "musicvideos",
                 "images",
                 "games",
+                "genres",
+                "years",
+                "actors",
+                "playlists",
+                "plugins",
+                "studios",
+                "directors",
+                "sets",
+                "tags",
+                "countries",
+                "roles",
+                "images",
+                "addons",
+                "livetv",
             ]
             type = dialog.select(
-                utils.get_string(30119), options, preselect=options.index(default)
+                utils.get_string(30119),
+                options,
+                preselect=options.index(default if default in options else "none"),
             )
             value = options[type]
         else:

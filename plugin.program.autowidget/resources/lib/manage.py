@@ -7,6 +7,7 @@ from resources.lib.common import settings
 from resources.lib.common import utils
 
 _addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_userdata = utils.translate_path("special://userdata/")
 _skin_shortcuts = utils.translate_path(
     settings.get_addon_info("profile", addon="script.skinshortcuts")
 )
@@ -30,7 +31,9 @@ def clean(widget_id=None, notify=False, all=False):
     addons = utils.call_jsonrpc(params)
     if "error" not in addons:
         for addon in addons["result"]["addons"]:
-            path = os.path.join(_addon_data, addon["addonid"], "settings.xml")
+            path = os.path.join(
+                _userdata, "addon_data", addon["addonid"], "settings.xml"
+            )
             if os.path.exists(path):
                 files.append(path)
     if _skin_shortcuts and os.path.exists(_skin_shortcuts):
@@ -40,7 +43,6 @@ def clean(widget_id=None, notify=False, all=False):
                 path = os.path.join(_skin_shortcuts, xml)
                 files.append(path)
 
-    remove = []
     removed = 0
 
     if widget_id:
@@ -148,7 +150,7 @@ def save_path_details(params):
 
 def get_group_by_id(group_id):
     if not group_id:
-        return
+        return {}
 
     filename = "{}.group".format(group_id)
     path = os.path.join(_addon_data, filename)
@@ -164,7 +166,7 @@ def get_group_by_id(group_id):
 
 def get_path_by_id(path_id, group_id=None):
     if not path_id:
-        return
+        return {}
 
     for defined in find_defined_paths(group_id):
         if defined.get("id", "") == path_id:
@@ -173,7 +175,7 @@ def get_path_by_id(path_id, group_id=None):
 
 def get_widget_by_id(widget_id, group_id=None):
     if not widget_id:
-        return
+        return {}
 
     for defined in find_defined_widgets(group_id):
         if defined.get("id", "") == widget_id:

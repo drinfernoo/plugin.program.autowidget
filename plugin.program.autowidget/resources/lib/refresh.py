@@ -208,11 +208,11 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
 
         if not paths:
             cycle_paths = widget_def.get("cycle_paths")
-            paths = (
-                [p for p in cycle_paths]
-                if cycle_paths
-                else manage.find_defined_paths(group_id)
-            )
+            if cycle_paths is None:
+                cycle_paths = [p.get("id") for p in manage.find_defined_paths(group_id)]
+                widget_def["cycle_paths"] = cycle_paths
+
+            paths = [p for p in cycle_paths]
 
         if action:
             if len(paths) > 0:

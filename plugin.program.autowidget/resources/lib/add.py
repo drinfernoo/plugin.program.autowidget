@@ -207,7 +207,7 @@ def add_group(target, group_name=""):
             "id": group_id,
             "art": folder_sync if target == "widget" else folder_shortcut,
             "version": settings.get_addon_info("version"),
-            "content": "files",
+            "content": None,
         }
 
         utils.write_json(filename, group_def)
@@ -257,7 +257,7 @@ def _add_path(group_def, labels, over=False):
         labels["file"]["filetype"] = "file"
         labels["file"]["file"] = labels["file"]["file"].split("&")[0]
     elif labels["target"] == "shortcut" and labels["file"]["filetype"] == "file":
-        labels["content"] = "files"
+        labels["content"] = None
 
     manage.write_path(group_def, path_def=labels)
 
