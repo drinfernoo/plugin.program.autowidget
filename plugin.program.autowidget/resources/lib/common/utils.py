@@ -362,6 +362,12 @@ def update_container(reload=False):
     refresh_time = os.path.join(_addon_data, "refresh.time")
     in_media = get_active_window() == "media"
     in_plugin = in_media and get_infolabel("Container.PluginName") == _addon_id
+    is_scanning = get_condition("Library.IsScanningVideo") or get_condition(
+        "Library.IsScanningMusic"
+    )
+    if is_scanning:
+        return
+
     if reload:
         if in_media:
             write_file(refresh_time, six.text_type(time.time()))

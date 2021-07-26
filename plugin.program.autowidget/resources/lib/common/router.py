@@ -121,4 +121,6 @@ def dispatch(_handle, _params):
 
     if is_dir:
         directory.add_sort_methods(_handle)
-        directory.finish_directory(_handle, category, is_type)
+        directory.finish_directory(
+            _handle, category, is_type if is_type not in [None, "none"] else ""
+        )

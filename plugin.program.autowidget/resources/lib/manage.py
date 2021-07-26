@@ -7,6 +7,7 @@ from resources.lib.common import settings
 from resources.lib.common import utils
 
 _addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_userdata = utils.translate_path("special://userdata/")
 _skin_shortcuts = utils.translate_path(
     settings.get_addon_info("profile", addon="script.skinshortcuts")
 )
@@ -39,6 +40,9 @@ def clean(widget_id=None, notify=False, all=False):
             if ext[-1] in ["xml", "properties"]:
                 path = os.path.join(_skin_shortcuts, xml)
                 files.append(path)
+    favorites = os.path.join(_userdata, "favourites.xml")
+    if os.path.exists(favorites):
+        files.append(favorites)
 
     remove = []
     removed = 0
@@ -148,7 +152,7 @@ def save_path_details(params):
 
 def get_group_by_id(group_id):
     if not group_id:
-        return
+        return {}
 
     filename = "{}.group".format(group_id)
     path = os.path.join(_addon_data, filename)
@@ -164,7 +168,7 @@ def get_group_by_id(group_id):
 
 def get_path_by_id(path_id, group_id=None):
     if not path_id:
-        return
+        return {}
 
     for defined in find_defined_paths(group_id):
         if defined.get("id", "") == path_id:
@@ -173,7 +177,7 @@ def get_path_by_id(path_id, group_id=None):
 
 def get_widget_by_id(widget_id, group_id=None):
     if not widget_id:
-        return
+        return {}
 
     for defined in find_defined_widgets(group_id):
         if defined.get("id", "") == widget_id:
