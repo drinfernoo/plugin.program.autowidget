@@ -108,20 +108,18 @@ class RefreshService(xbmc.Monitor):
                 progress = Progress()
 
                 while queue:
-                    hash, widget_ids = queue.pop(0)
+                    path, cache_data, widget_id = queue.pop(0)
+                    hash = cache.path2hash(path)
                     utils.log("Dequeued cache update: {}".format(hash[:5]), "notice")
 
-                    affected_widgets = cache.cache_and_update(
-                        hash, widget_ids, notify=progress
-                    )
+                    affected_widgets = set(cache.cache_and_update(
+                        path, widget_id, cache_data, notify=progress
+                    ))
                     if affected_widgets:
                         updated = True
-                    cache.remove_cache_queue(
-                        hash
-                    )  # Just in queued path's widget defintion has changed and it didn't update this path
                     unrefreshed_widgets = unrefreshed_widgets.union(
                         affected_widgets
-                    ).difference(set(widget_ids))
+                    )
                     # # wait 5s or for the skin to reload the widget
                     # # this should reduce churn at startup where widgets take too long too long show up
                     # before_update = time.time() # TODO: have .access file so we can put above update

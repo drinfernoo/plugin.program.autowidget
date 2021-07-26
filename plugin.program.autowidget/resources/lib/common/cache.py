@@ -79,7 +79,8 @@ def next_cache_queue():
         # TODO: need to workout if a blocking write is happen while it was queued or right now.
         # probably need a .lock file to ensure foreground calls can get priority.
         cache_data = read_history(path, create_if_missing=True)
-        yield hash, cache_data
+        widget_id = utils.read_json(queue_path).get("widget_id", None)
+        yield path, cache_data, widget_id
 
 
 def push_cache_queue(path, widget_id=None):
@@ -100,7 +101,7 @@ def push_cache_queue(path, widget_id=None):
     if os.path.exists(queue_path):
         pass  # Leave original modification date so item is higher priority
     else:
-        utils.write_json(queue_path, {"hash": hash, "path": path})
+        utils.write_json(queue_path, {"hash": hash, "path": path, "widget_id": widget_id})
 
 
 def is_cache_queue(hash):
@@ -130,63 +131,30 @@ def widgets_for_path(path):
     return set(widgets)
 
 
-def cache_and_update(hash, widget_ids, notify=None):
+def cache_and_update(path, widget_id, cache_data, notify=None):
     """a widget might have many paths. Ensure each path is either queued for an update
     or is expired and if so force it to be refreshed. When going through the queue this
     could mean we refresh paths that other widgets also use. These will then be skipped.
     """
-    assert widget_ids
-    affected_widgets = set()
+    assert widget_id
+    assert cache_data.get("path") == path
+    assert widget_id in cache_data["widgets"]
 
-    changed = False
-    path = widget_ids.get("path", "")
-    # TODO: we might be updating paths used by widgets that weren't initiall queued.
-    # We need to return those and ensure they get refreshed also.
-    affected_widgets = affected_widgets.union(widgets_for_path(path))
-    for widget_id in affected_widgets:
-        if is_cache_queue(hash):
-            # we need to update this path regardless
-            if notify is not None:
-                widget_def = manage.get_widget_by_id(widget_id)
-                notify(widget_def.get("label", ""), path)
-            new_files, files_changed = cache_files(path, widget_id)
-            changed = changed or files_changed
-            remove_cache_queue(hash)
-        # else: This bit is broken down below
-        #     # double check this hasn't been updated already when updating another widget
-        #     expiry, _ = cache.cache_expiry(hash, widget_id, no_queue=True)
-        #     if expiry <= time.time():
-        #         cache.cache_files(path, widget_id)
-        #     else:
-        #         pass  # Skipping this path because its already been updated
+    hash = path2hash(path)
+    if not is_cache_queue(hash):
+        return []
 
-    # TODO: update every widget?
-    # for widget_id in widget_ids:
-    #     widget_def = manage.get_widget_by_id(widget_id)
-    #     if not widget_def:
-    #         continue
-    #     widget_path = widget_def.get("path", "")
-    #     utils.log(
-    #         "trying to update {} with widget def {}".format(widget_id, widget_def),
-    #         "inspect",
-    #     )
+    if notify is not None:
+        widget_def = manage.get_widget_by_id(widget_id)
+        if widget_def is not None:
+            notify(widget_def.get("label", ""), path)
 
-    #     if type(widget_path) != list:
-    #         widget_path = [widget_path]
-    #     for path_id in widget_path:
-    #         # simple compatibility with pre-3.3.0 widgets
-    #         if isinstance(path_id, dict):
-    #             path_id = path_id.get("id", "")
-    #         path = manage.get_path_by_id(path_id)
-    #         if not path:
-    #             continue
+    new_files, files_changed = cache_files(path, widget_id)
+    remove_cache_queue(hash)
 
-    #         _label = path["label"]
-    #         path = path["file"]["file"]
-    #     # TODO: only need to do that if a path has changed which we can tell from the history
-    #     if changed:
-    #         _update_strings(widget_def)
-    return affected_widgets
+    # TODO: this is all widgets that ever requested this path. do we
+    # need to update all of them?
+    return cache_data["widgets"] if files_changed else []
 
 
 def cache_files(path, widget_id):
