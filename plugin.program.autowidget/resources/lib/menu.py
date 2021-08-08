@@ -638,7 +638,7 @@ def search_path(group_id, widget_id):
 
     if widget_def:
         directory.add_menu_item(
-            title="New Search",  # TODO: Add translation
+            title=30204,
             params={"mode": "search", "search_term": "{}-searchterm".format(widget_id)},
             art=utils.get_art("search"),  # TODO: Add other versions of this icon
             isFolder=False,

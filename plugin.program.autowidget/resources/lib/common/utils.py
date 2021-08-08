@@ -914,7 +914,7 @@ def timing(description):
 
 def search(search_term):
     dialog = xbmcgui.Dialog()
-    query = dialog.input(heading="Enter Search Query")  # TODO: Translate this
+    query = dialog.input(heading=get_string(30205))
     set_property(search_term, query)
 
     update_container(True)

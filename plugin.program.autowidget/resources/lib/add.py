@@ -281,7 +281,7 @@ def _add_path(group_def, labels, over=False):
             heading = utils.get_string(30029)
         elif group_def["type"] == "search":
             heading = utils.get_string(30202)
-            term = dialog.input(heading="Search Term")  # TODO: Translate this
+            term = dialog.input(heading=utils.get_string(30203))
             # TODO: Seems some (most?) addons URL encode their search queries by default...
             #       Using a non-encoded query seems to work just fine, but replacement
             #       doesn't quite "just work" here, because the user needs to enter their

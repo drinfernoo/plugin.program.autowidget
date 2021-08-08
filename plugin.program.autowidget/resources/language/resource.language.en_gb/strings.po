@@ -779,3 +779,15 @@ msgstr "Create New Search Group"
 msgctxt "#30202"
 msgid "Search Path Label"
 msgstr "Search Path Label"
+
+msgctxt "#30203"
+msgid "Search Term"
+msgstr "Search Term"
+
+msgctxt "#30204"
+msgid "New Search"
+msgstr "New Search"
+
+msgctxt "#30205"
+msgid "Enter Search Query"
+msgstr "Enter Search Query"
