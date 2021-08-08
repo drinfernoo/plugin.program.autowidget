@@ -765,3 +765,17 @@ msgstr "Error showing {}"
 msgctxt "#30140"
 msgid "No content found for {}"
 msgstr "No content found for {}"
+
+
+# TODO: Finish translating these
+msgctxt "#30200"
+msgid "Search Path"
+msgstr "Search Path"
+
+msgctxt "#30201"
+msgid "Create New Search Group"
+msgstr "Create New Search Group"
+
+msgctxt "#30202"
+msgid "Search Path Label"
+msgstr "Search Path Label"

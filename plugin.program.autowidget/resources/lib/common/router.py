@@ -43,6 +43,7 @@ def dispatch(_plugin, _handle, _params):
     path_id = params.get("path_id", "")
     target = params.get("target", "")
     widget_id = params.get("id", "")
+    search_term = params.get("search_term", "")
 
     if not mode:
         is_dir, category, is_type = menu.root_menu()
@@ -77,6 +78,8 @@ def dispatch(_plugin, _handle, _params):
                 is_dir, category, is_type = menu.merged_path(group, widget_id)
             elif action == "update" and target:
                 refresh.update_path(widget_id, target, path)
+            elif action == "search" and group:
+                is_dir, category, is_type = menu.search_path(group, widget_id)
         except Exception as e:
             utils.log(traceback.format_exc(), "error")
             is_dir, category, is_type = menu.show_error(
@@ -117,6 +120,8 @@ def dispatch(_plugin, _handle, _params):
             backup.backup()
         elif action == "restore":
             backup.restore()
+    elif mode == "search" and search_term:
+        utils.search(search_term)
 
     if is_dir:
         directory.add_sort_methods(_handle)

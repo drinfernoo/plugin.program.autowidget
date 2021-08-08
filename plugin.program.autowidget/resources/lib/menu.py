@@ -63,6 +63,15 @@ def my_groups_menu():
             group_name = group["label"]
             group_id = group["id"]
             group_type = group["type"]
+            group_art = group.get("art")
+
+            if group_art is None:
+                if group_type == "shortcut":
+                    group_art = utils.get_art("folder-shortcut")
+                elif group_type == "widget":
+                    group_art = utils.get_art("folder-sync")
+                elif group_type == "widget":
+                    group_art = utils.get_art("folder-search")
 
             cm = _create_group_context_items(group_id, group_type)
 
@@ -70,12 +79,7 @@ def my_groups_menu():
                 title=six.text_type(group_name),
                 params={"mode": "group", "group": group_id},
                 info=group.get("info", {}),
-                art=group.get("art")
-                or (
-                    utils.get_art("folder-shortcut")
-                    if group_type == "shortcut"
-                    else utils.get_art("folder-sync")
-                ),
+                art=group_art,
                 cm=cm,
                 isFolder=True,
             )
@@ -96,6 +100,12 @@ def my_groups_menu():
         title=30010,
         params={"mode": "manage", "action": "add_group", "target": "widget"},
         art=utils.get_art("folder-sync"),
+        props={"specialsort": "bottom"},
+    )
+    directory.add_menu_item(
+        title=30201,
+        params={"mode": "manage", "action": "add_group", "target": "search"},
+        art=utils.get_art("folder-search"),
         props={"specialsort": "bottom"},
     )
 
@@ -125,7 +135,11 @@ def group_menu(group_id):
             "debug",
         )
         cm = []
-        art = folder_shortcut if group_type == "shortcut" else folder_sync
+        art = folder_shortcut
+        if group_type == "widget":
+            art = folder_sync
+        elif group_type == "search":
+            art = utils.get_art("folder-search")
 
         for idx, path_def in enumerate(paths):
             if _window == "media":
@@ -310,20 +324,17 @@ def show_path(
     stack = widget_def.get("stack", [])
     path = widget_path["file"]["file"] if not stack else stack[-1]
 
-    files, hash = refresh.get_files_list(path, widget_id)
-    # if not files:
-    #     properties = {
-    #         "autoLabel": path_label,
-    #         "autoID": widget_id,
-    #         "autoAction": action,
-    #         "autoCache": hash,
-    #     }
-    #     if files is None:
-    #         show_error(path_label, properties)
-    #     elif files == []:
-    #         show_empty(path_label, properties)
-    #     return titles if titles else True, path_label, content
+    if widget_path.get("target") == "search":
+        path_id = widget_path.get("id", "")
+        search_term = utils.get_property("{}-searchterm".format(widget_id))
+        # TODO: some addons don't like sending ''... not sure how to handle this on the first run
+        #       besides passing a query from the start
+        path = path.replace(
+            "{}-searchterm".format(path_id),
+            search_term if search_term is not None else "",
+        )
 
+    files, hash = refresh.get_files_list(path, widget_id)
     utils.log("Loading items from {}".format(path), "debug")
 
     color = widget_path.get("color", default_color)
@@ -600,6 +611,69 @@ def merged_path(group_id, widget_id):
         return True, group_name, None
 
 
+def search_path(group_id, widget_id):
+    # TODO: Refactor this, merged_path, and path_menu...
+    #       there's a lot of duplicated code I think
+
+    _window = utils.get_active_window()
+
+    group_def = manage.get_group_by_id(group_id)
+    group_name = group_def.get("label", "")
+    paths = group_def.get("paths", [])
+    if len(paths) == 0:
+        directory.add_menu_item(title=30019, art=utils.get_art("alert"), isFolder=False)
+        return True, group_name, None
+
+    widget_def = manage.get_widget_by_id(widget_id, group_id)
+
+    if widget_def and _window != "dialog":
+        paths = widget_def["path"]
+    elif not widget_def:
+        idxs = manage.choose_paths(utils.get_string(30089), paths, 5)
+
+        if idxs is not None:
+            if len(idxs) > 0:
+                widget_def = manage.initialize(
+                    group_def, "search", widget_id, keep=idxs
+                )
+                paths = widget_def["path"]
+
+    if widget_def:
+        directory.add_menu_item(
+            title="New Search",  # TODO: Add translation
+            params={"mode": "search", "search_term": "{}-searchterm".format(widget_id)},
+            art=utils.get_art("search"),  # TODO: Add other versions of this icon
+            isFolder=False,
+        )
+
+        titles = []
+        for idx, path in enumerate(paths):
+            # simple compatibility with pre-3.3.0 widgets
+            if isinstance(path, dict):
+                path = path.get("id", "")
+                paths[idx] = path
+                widget_def["path"] = paths
+                manage.save_path_details(widget_def)
+
+            path_def = manage.get_path_by_id(path, group_id)
+
+            titles, cat, type = show_path(
+                group_id,
+                path_def["label"],
+                widget_id,
+                path_def,
+                idx=idx,
+                titles=titles,
+                num=len(paths),
+                merged=True,
+            )
+
+        return True, cat, type
+    else:
+        directory.add_menu_item(title=30045, art=info, isFolder=True)
+        return True, group_name, None
+
+
 def _create_group_context_items(group_id, target):
     cm = [
         (
@@ -722,6 +796,23 @@ def _create_action_items(group_def, _id):
                 "id": six.text_type(_id),
             },
             art=utils.get_art("merge"),
+            isFolder=True,
+            props=props,
+        )
+    elif group_type == "search":
+        directory.add_separator(title=30009, char="/", sort="bottom")
+        directory.add_menu_item(
+            title=utils.get_string(30054).format(
+                six.text_type(group_name)
+            ),  # TODO: Update this to not say "Static"
+            params={
+                "mode": "path",
+                "action": "search",
+                "group": group_id,
+                "id": six.text_type(_id),
+                "refresh": refresh,
+            },
+            art=utils.get_art("folder-search"),
             isFolder=True,
             props=props,
         )

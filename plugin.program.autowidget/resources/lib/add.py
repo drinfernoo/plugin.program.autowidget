@@ -22,6 +22,7 @@ shortcut_types = [
     utils.get_string(30060),
     utils.get_string(30061),
     utils.get_string(30035),
+    utils.get_string(30200),
 ]
 
 folder_shortcut = utils.get_art("folder-shortcut")
@@ -29,6 +30,7 @@ folder_sync = utils.get_art("folder-sync")
 folder_settings = utils.get_art("folder-settings")
 folder_clone = utils.get_art("folder-clone")
 folder_explode = utils.get_art("folder-explode")
+folder_search = utils.get_art("folder-search")  # TODO: Add other versions of this icon
 
 
 def add(labels):
@@ -106,7 +108,14 @@ def build_labels(source, path_def=None, target=""):
 
 
 def _add_as(path_def):
-    art = [folder_shortcut, folder_sync, folder_clone, folder_explode, folder_settings]
+    art = [
+        folder_shortcut,
+        folder_sync,
+        folder_clone,
+        folder_explode,
+        folder_settings,
+        folder_search,
+    ]
 
     path = path_def["file"]
     types = shortcut_types[:]
@@ -120,12 +129,16 @@ def _add_as(path_def):
             pass
         else:
             types = [shortcut_types[0]]
+    if "search" in path.lower():
+        types.append(shortcut_types[-1])
 
     options = []
     for idx, type in enumerate(types):
         li = xbmcgui.ListItem(type)
 
-        li.setArt(art[idx])
+        li.setArt(
+            art[idx]
+        )  # TODO: Fix art indices, since they are not always consecutive
         options.append(li)
 
     dialog = xbmcgui.Dialog()
@@ -146,6 +159,8 @@ def _add_as(path_def):
         return "explode"
     elif chosen == shortcut_types[4]:
         return "settings"
+    elif chosen == shortcut_types[5]:
+        return "search"
 
 
 def _group_dialog(_type, group_id=None):
@@ -157,21 +172,28 @@ def _group_dialog(_type, group_id=None):
     options = []
     offset = 1
 
+    new_item = None  # TODO: Test this bit of refactoring
+    new_art = {}
     if _type == "widget":
-        new_widget = xbmcgui.ListItem(utils.get_string(30010))
-        new_widget.setArt(folder_sync)
-        options.append(new_widget)
-    else:
-        new_shortcut = xbmcgui.ListItem(utils.get_string(30011))
-        new_shortcut.setArt(folder_shortcut)
-        options.append(new_shortcut)
+        new_item = xbmcgui.ListItem(utils.get_string(30010))
+    elif _type == "shortcut":
+        new_item = xbmcgui.ListItem(utils.get_string(30011))
+    elif _type == "search":
+        new_item = xbmcgui.ListItem(utils.get_string(30201))
+    new_item.setArt(new_art)
+    options.append(new_item)
 
     if group_id:
         index = ids.index(group_id) + 1
 
     for group in groups:
         item = xbmcgui.ListItem(group["label"])
-        item.setArt(folder_sync if group["type"] == "widget" else folder_shortcut)
+        art = folder_shortcut
+        if group["type"] == "widget":
+            art = folder_sync
+        elif group["type"] == "search":
+            art = folder_search
+        item.setArt(art)
         options.append(item)
 
     dialog = xbmcgui.Dialog()
@@ -184,10 +206,12 @@ def _group_dialog(_type, group_id=None):
         dialog = xbmcgui.Dialog()
         dialog.notification("AutoWidget", utils.get_string(30021))
         del dialog
-    elif (choice, _type) == (0, "widget"):
-        return _group_dialog(_type, add_group("widget"))
-    elif choice == 0:
-        return _group_dialog(_type, add_group("shortcut"))
+    elif choice == 0 and _type in [
+        "widget",
+        "shortcut",
+        "search",
+    ]:  # TODO: Test this bit of refactoring
+        return _group_dialog(_type, add_group(_type))
     else:
         return groups[choice - offset]
 
@@ -200,12 +224,18 @@ def add_group(target, group_name=""):
     if group_name:
         group_id = utils.get_unique_id(group_name)
         filename = os.path.join(_addon_data, "{}.group".format(group_id))
+        art = folder_shortcut
+        if target == "widget":
+            art = folder_sync
+        elif target == "search":
+            art = folder_search
+
         group_def = {
             "label": group_name,
             "type": target,
             "paths": [],
             "id": group_id,
-            "art": folder_sync if target == "widget" else folder_shortcut,
+            "art": art,
             "version": settings.get_addon_info("version"),
             "content": None,
         }
@@ -240,18 +270,29 @@ def copy_group(group_id, type):
 
 
 def _add_path(group_def, labels, over=False):
+    labels["id"] = utils.get_unique_id(labels["label"])
+    labels["version"] = settings.get_addon_info("version")
+
     if not over:
+        dialog = xbmcgui.Dialog()
         if group_def["type"] == "shortcut":
             heading = utils.get_string(30028)
         elif group_def["type"] == "widget":
             heading = utils.get_string(30029)
+        elif group_def["type"] == "search":
+            heading = utils.get_string(30202)
+            term = dialog.input(heading="Search Term")  # TODO: Translate this
+            # TODO: Seems some (most?) addons URL encode their search queries by default...
+            #       Using a non-encoded query seems to work just fine, but replacement
+            #       doesn't quite "just work" here, because the user needs to enter their
+            #       "Search Term" as a URL-encoded string. This also doesn't handle different
+            #       cases or anything unexpected at all.
+            labels["file"]["file"] = labels["file"]["file"].replace(
+                term, "{}-searchterm".format(labels["id"])
+            )
 
-        dialog = xbmcgui.Dialog()
         labels["label"] = dialog.input(heading=heading, defaultt=labels["label"])
         del dialog
-
-    labels["id"] = utils.get_unique_id(labels["label"])
-    labels["version"] = settings.get_addon_info("version")
 
     if labels["target"] == "settings":
         labels["file"]["filetype"] = "file"
