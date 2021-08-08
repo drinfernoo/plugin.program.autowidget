@@ -327,12 +327,10 @@ def show_path(
     if widget_path.get("target") == "search":
         path_id = widget_path.get("id", "")
         search_term = utils.get_property("{}-searchterm".format(widget_id))
-        # TODO: some addons don't like sending ''... not sure how to handle this on the first run
-        #       besides passing a query from the start
-        path = path.replace(
-            "{}-searchterm".format(path_id),
-            search_term if search_term is not None else "",
-        )
+        if not search_term:
+            return titles, "AutoWidget", None
+
+        path = path.replace("{}-searchterm".format(path_id), search_term)
 
     files, hash = refresh.get_files_list(path, widget_id)
     utils.log("Loading items from {}".format(path), "debug")
