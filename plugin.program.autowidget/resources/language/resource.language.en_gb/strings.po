@@ -791,3 +791,7 @@ msgstr "New Search"
 msgctxt "#30205"
 msgid "Enter Search Query"
 msgstr "Enter Search Query"
+
+msgctxt "#30206"
+msgid "{} (Search)"
+msgstr "{} (Search)"

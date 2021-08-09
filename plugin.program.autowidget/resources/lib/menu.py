@@ -801,9 +801,7 @@ def _create_action_items(group_def, _id):
     elif group_type == "search":
         directory.add_separator(title=30009, char="/", sort="bottom")
         directory.add_menu_item(
-            title=utils.get_string(30054).format(
-                six.text_type(group_name)
-            ),  # TODO: Update this to not say "Static"
+            title=utils.get_string(30206).format(six.text_type(group_name)),
             params={
                 "mode": "path",
                 "action": "search",
