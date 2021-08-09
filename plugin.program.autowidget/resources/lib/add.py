@@ -16,21 +16,21 @@ from resources.lib.common import utils
 
 _addon_data = utils.translate_path(settings.get_addon_info("profile"))
 
-shortcut_types = [
-    utils.get_string(30033),
-    utils.get_string(30034),
-    utils.get_string(30060),
-    utils.get_string(30061),
-    utils.get_string(30035),
-    utils.get_string(30200),
-]
-
 folder_shortcut = utils.get_art("folder-shortcut")
 folder_sync = utils.get_art("folder-sync")
 folder_settings = utils.get_art("folder-settings")
 folder_clone = utils.get_art("folder-clone")
 folder_explode = utils.get_art("folder-explode")
 folder_search = utils.get_art("folder-search")
+
+shortcut_types = [  # TODO: Untested
+    (utils.get_string(30033), folder_shortcut, "shortcut"),
+    (utils.get_string(30034), folder_sync, "widget"),
+    (utils.get_string(30060), folder_clone, "clone"),
+    (utils.get_string(30061), folder_explode, "explode"),
+    (utils.get_string(30035), folder_settings, "settings"),
+    (utils.get_string(30200), folder_search, "search"),
+]
 
 
 def add(labels):
@@ -108,15 +108,6 @@ def build_labels(source, path_def=None, target=""):
 
 
 def _add_as(path_def):
-    art = [
-        folder_shortcut,
-        folder_sync,
-        folder_clone,
-        folder_explode,
-        folder_settings,
-        folder_search,
-    ]
-
     path = path_def["file"]
     types = shortcut_types[:]
     if path_def["filetype"] == "directory" and utils.get_active_window() != "home":
@@ -134,11 +125,9 @@ def _add_as(path_def):
 
     options = []
     for idx, type in enumerate(types):
-        li = xbmcgui.ListItem(type)
+        li = xbmcgui.ListItem(type[0])
 
-        li.setArt(
-            art[idx]
-        )  # TODO: Fix art indices, since they are not always consecutive
+        li.setArt(type[1])
         options.append(li)
 
     dialog = xbmcgui.Dialog()
@@ -149,18 +138,7 @@ def _add_as(path_def):
         return
 
     chosen = types[idx]
-    if chosen == shortcut_types[0]:
-        return "shortcut"
-    elif chosen == shortcut_types[1]:
-        return "widget"
-    elif chosen == shortcut_types[2]:
-        return "clone"
-    elif chosen == shortcut_types[3]:
-        return "explode"
-    elif chosen == shortcut_types[4]:
-        return "settings"
-    elif chosen == shortcut_types[5]:
-        return "search"
+    return chosen[2]
 
 
 def _group_dialog(_type, group_id=None):
