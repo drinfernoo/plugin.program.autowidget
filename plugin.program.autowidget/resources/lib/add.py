@@ -30,7 +30,7 @@ folder_sync = utils.get_art("folder-sync")
 folder_settings = utils.get_art("folder-settings")
 folder_clone = utils.get_art("folder-clone")
 folder_explode = utils.get_art("folder-explode")
-folder_search = utils.get_art("folder-search")  # TODO: Add other versions of this icon
+folder_search = utils.get_art("folder-search")
 
 
 def add(labels):

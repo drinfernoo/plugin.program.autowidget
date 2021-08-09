@@ -15,6 +15,7 @@ folder_shortcut = utils.get_art("folder-shortcut")
 folder_sync = utils.get_art("folder-sync")
 folder_next = utils.get_art("folder-next")
 folder_merged = utils.get_art("folder-dots")
+folder_search = utils.get_art("folder-search")
 info = utils.get_art("information-outline")
 merge = utils.get_art("merge")
 next = utils.get_art("next")
@@ -71,7 +72,7 @@ def my_groups_menu():
                 elif group_type == "widget":
                     group_art = utils.get_art("folder-sync")
                 elif group_type == "widget":
-                    group_art = utils.get_art("folder-search")
+                    group_art = folder_search
 
             cm = _create_group_context_items(group_id, group_type)
 
@@ -105,7 +106,7 @@ def my_groups_menu():
     directory.add_menu_item(
         title=30201,
         params={"mode": "manage", "action": "add_group", "target": "search"},
-        art=utils.get_art("folder-search"),
+        art=folder_search,
         props={"specialsort": "bottom"},
     )
 
@@ -139,7 +140,7 @@ def group_menu(group_id):
         if group_type == "widget":
             art = folder_sync
         elif group_type == "search":
-            art = utils.get_art("folder-search")
+            art = folder_search
 
         for idx, path_def in enumerate(paths):
             if _window == "media":
@@ -640,7 +641,7 @@ def search_path(group_id, widget_id):
         directory.add_menu_item(
             title=30204,
             params={"mode": "search", "search_term": "{}-searchterm".format(widget_id)},
-            art=utils.get_art("search"),  # TODO: Add other versions of this icon
+            art=utils.get_art("search"),
             isFolder=False,
         )
 
@@ -810,7 +811,7 @@ def _create_action_items(group_def, _id):
                 "id": six.text_type(_id),
                 "refresh": refresh,
             },
-            art=utils.get_art("folder-search"),
+            art=folder_search,
             isFolder=True,
             props=props,
         )
