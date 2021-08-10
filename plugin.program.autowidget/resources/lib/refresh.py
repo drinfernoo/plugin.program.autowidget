@@ -169,7 +169,7 @@ def update_path(widget_id, target, path=None):
         if len(stack) > 0:
             # simple compatibility with pre-3.3.0 widgets
             if isinstance(stack[0], dict):
-                widget_def["path"] = stack[0].get("id", "")
+                widget_def["path"] = [stack[0].get("id", "")]
 
             widget_def["stack"] = []
 
@@ -228,7 +228,7 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
                 path_id = paths[next]
                 paths.remove(paths[next])
 
-                widget_def["path"] = path_id
+                widget_def["path"] = [path_id]
                 if widget_def["path"]:
                     path_label = manage.get_path_by_id(path_id, group_id).get(
                         "label", ""

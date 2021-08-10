@@ -72,14 +72,14 @@ def dispatch(_plugin, _handle, _params):
         try:
             if path_id:
                 menu.call_path(path_id)
-            elif action in ["static", "cycling"] and group:
-                is_dir, category, is_type = menu.path_menu(group, action, widget_id)
-            elif action == "merged" and group:
-                is_dir, category, is_type = menu.merged_path(group, widget_id)
+            elif (
+                action in ["static", "cycling", "merged", "search"]
+                and group
+                and widget_id
+            ):
+                is_dir, category, is_type = menu.show_widget(group, widget_id, action)
             elif action == "update" and target:
                 refresh.update_path(widget_id, target, path)
-            elif action == "search" and group:
-                is_dir, category, is_type = menu.search_path(group, widget_id)
         except Exception as e:
             utils.log(traceback.format_exc(), "error")
             is_dir, category, is_type = menu.show_error(

@@ -94,7 +94,7 @@ def initialize(group_def, action, widget_id, save=True, keep=None):
     path_idx = 0
     if action not in ["merged", "search"]:
         if action == "static" and keep is not None:
-            path_def = paths[keep]["id"]
+            path_def.append(paths[keep]["id"])
         elif action in ["random", "next"]:
             if keep is None:
                 path_idx = random.randrange(len(paths)) if action == "random" else 0
@@ -104,7 +104,7 @@ def initialize(group_def, action, widget_id, save=True, keep=None):
                 )
                 for idx in keep:
                     cycle_paths.append(paths[idx]["id"])
-            path_def = paths[path_idx]["id"]
+            path_def.append(paths[path_idx]["id"])
     elif action in ["merged", "search"] and keep:
         for idx in keep:
             path_def.append(paths[idx]["id"])

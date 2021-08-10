@@ -299,11 +299,9 @@ def tools_menu():
 
 
 def show_path(
-    group_id,
     path_label,
     widget_id,
     widget_path,
-    idx=0,
     titles=None,
     num=1,
     merged=False,
@@ -488,7 +486,9 @@ def call_path(path_id):
         utils.call_builtin(final_path)
 
 
-def path_menu(group_id, action, widget_id):
+def show_widget(group_id, widget_id, action):
+    _window = utils.get_active_window()
+
     group_def = manage.get_group_by_id(group_id)
     if not group_def:
         directory.add_menu_item(
@@ -500,17 +500,17 @@ def path_menu(group_id, action, widget_id):
         return True, "AutoWidget", None
 
     group_name = group_def.get("label", "")
-    paths = group_def.get("paths", [])
-    if len(paths) == 0:
-        directory.add_menu_item(title=30019, art=utils.get_art("alert"), isFolder=True)
+    all_paths = group_def.get("paths", [])
+    if len(all_paths) == 0:
+        directory.add_menu_item(title=30019, art=utils.get_art("alert"), isFolder=False)
         return True, group_name, None
 
-    widget_def = manage.get_widget_by_id(widget_id, group_id)
+    widget_def = manage.get_widget_by_id(widget_id)
     if not widget_def:
         dialog = xbmcgui.Dialog()
         if action == "static":
             idx = manage.choose_paths(
-                utils.get_string(30088), paths, indices=True, single=True
+                utils.get_string(30088), all_paths, indices=True, single=True
             )
             if idx == -1:
                 return True, "AutoWidget", None
@@ -528,61 +528,37 @@ def path_menu(group_id, action, widget_id):
             _action = "random" if idx == 0 else "next"
 
             cycle_paths = manage.choose_paths(
-                utils.get_string(30123), paths, threshold=-1, indices=True
+                utils.get_string(30123), all_paths, threshold=-1, indices=True
             )
 
             widget_def = manage.initialize(
                 group_def, _action, widget_id, keep=cycle_paths
             )
+        elif action in ["merged", "search"]:
+            if widget_def and _window != "dialog":
+                paths = widget_def["path"]
+            elif not widget_def:
+                idxs = manage.choose_paths(utils.get_string(30089), all_paths, threshold=5)
+
+                if idxs is not None:
+                    if len(idxs) > 0:
+                        widget_def = manage.initialize(
+                            group_def, action, widget_id, keep=idxs
+                        )
         del dialog
-
     if widget_def:
-        widget_path = widget_def.get("path", "")
+        paths = widget_def.get("path", [])
+        if action == "search":
+            directory.add_menu_item(
+                title=30204,
+                params={
+                    "mode": "search",
+                    "search_term": "{}-searchterm".format(widget_id),
+                },
+                art=utils.get_art("search"),
+                isFolder=False,
+            )
 
-        # simple compatibility with pre-3.3.0 widgets
-        if isinstance(widget_path, dict):
-            widget_path = widget_def.get("path", {}).get("id", "")
-            widget_def["path"] = widget_path
-            manage.save_path_details(widget_def)
-
-        widget_path = manage.get_path_by_id(widget_path, group_id)
-
-        _label = ""
-        if isinstance(widget_path, dict):
-            _label = widget_path.get("label", "")
-
-        utils.log("Showing widget {}".format(widget_id), "debug")
-        titles, cat, type = show_path(group_id, _label, widget_id, widget_path)
-        return titles, cat, type
-    else:
-        directory.add_menu_item(title=30045, art=info, isFolder=True)
-        return True, group_name, None
-
-
-def merged_path(group_id, widget_id):
-    _window = utils.get_active_window()
-
-    group_def = manage.get_group_by_id(group_id)
-    group_name = group_def.get("label", "")
-    paths = group_def.get("paths", [])
-    if len(paths) == 0:
-        directory.add_menu_item(title=30019, art=utils.get_art("alert"), isFolder=False)
-        return True, group_name, None
-
-    widget_def = manage.get_widget_by_id(widget_id, group_id)
-    if widget_def and _window != "dialog":
-        paths = widget_def["path"]
-    elif not widget_def:
-        idxs = manage.choose_paths(utils.get_string(30089), paths, 5)
-
-        if idxs is not None:
-            if len(idxs) > 0:
-                widget_def = manage.initialize(
-                    group_def, "merged", widget_id, keep=idxs
-                )
-                paths = widget_def["path"]
-
-    if widget_def:
         titles = []
         for idx, path in enumerate(paths):
             # simple compatibility with pre-3.3.0 widgets
@@ -594,80 +570,15 @@ def merged_path(group_id, widget_id):
 
             path_def = manage.get_path_by_id(path, group_id)
             titles, cat, type = show_path(
-                group_id,
                 path_def["label"],
                 widget_id,
                 path_def,
-                idx=idx,
                 titles=titles,
                 num=len(paths),
-                merged=True,
+                merged=action in ["merged", "search"],
             )
 
         return titles, cat, type
-    else:
-        directory.add_menu_item(title=30045, art=info, isFolder=True)
-        return True, group_name, None
-
-
-def search_path(group_id, widget_id):
-    # TODO: Refactor this, merged_path, and path_menu...
-    #       there's a lot of duplicated code I think
-
-    _window = utils.get_active_window()
-
-    group_def = manage.get_group_by_id(group_id)
-    group_name = group_def.get("label", "")
-    paths = group_def.get("paths", [])
-    if len(paths) == 0:
-        directory.add_menu_item(title=30019, art=utils.get_art("alert"), isFolder=False)
-        return True, group_name, None
-
-    widget_def = manage.get_widget_by_id(widget_id, group_id)
-
-    if widget_def and _window != "dialog":
-        paths = widget_def["path"]
-    elif not widget_def:
-        idxs = manage.choose_paths(utils.get_string(30089), paths, 5)
-
-        if idxs is not None:
-            if len(idxs) > 0:
-                widget_def = manage.initialize(
-                    group_def, "search", widget_id, keep=idxs
-                )
-                paths = widget_def["path"]
-
-    if widget_def:
-        directory.add_menu_item(
-            title=30204,
-            params={"mode": "search", "search_term": "{}-searchterm".format(widget_id)},
-            art=utils.get_art("search"),
-            isFolder=False,
-        )
-
-        titles = []
-        for idx, path in enumerate(paths):
-            # simple compatibility with pre-3.3.0 widgets
-            if isinstance(path, dict):
-                path = path.get("id", "")
-                paths[idx] = path
-                widget_def["path"] = paths
-                manage.save_path_details(widget_def)
-
-            path_def = manage.get_path_by_id(path, group_id)
-
-            titles, cat, type = show_path(
-                group_id,
-                path_def["label"],
-                widget_id,
-                path_def,
-                idx=idx,
-                titles=titles,
-                num=len(paths),
-                merged=True,
-            )
-
-        return True, cat, type
     else:
         directory.add_menu_item(title=30045, art=info, isFolder=True)
         return True, group_name, None
