@@ -123,7 +123,7 @@ def dispatch(_plugin, _handle, _params):
     elif mode == "search" and search_term:
         utils.search(search_term)
 
-    if is_dir:
+    if is_dir not in [None, False]:
         directory.add_sort_methods(_handle)
         directory.finish_directory(
             _handle, category, is_type if is_type not in [None, "none"] else ""
