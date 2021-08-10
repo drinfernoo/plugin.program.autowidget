@@ -422,7 +422,7 @@ def show_path(
                 )
 
             directory.add_menu_item(
-                title=file["label"],
+                title=file["label"] if action != "search" else "{} - {}".format(file["label"], path_label),
                 path=file["file"] if not filepath else filepath,
                 info=file,
                 isFolder=is_folder,
