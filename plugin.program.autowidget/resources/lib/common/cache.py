@@ -369,15 +369,15 @@ def widgets_changed_by_watching(media_type):
     plays_for_type = [(time, t) for time, t in plays if t == media_type]
     priority = sorted(
         [
-            (chance_playback_updates_widget(path, plays_for_type), path)
+            (chance_playback_updates_widget(path, plays_for_type), utils.read_json(path).get("path", ""), path)
             for path in all_cache
         ],
         reverse=True,
     )
-
-    for chance, path in priority:
-        hash = hash_from_cache_path(path)
-        last_update = os.path.getmtime(path) - _startup_time
+    
+    for chance, path, history_path in priority:
+        hash = path2hash(path)
+        last_update = os.path.getmtime(history_path) - _startup_time
         if last_update < 0:
             utils.log(
                 "widget not updated since startup {} {}".format(last_update, hash[:5]),

@@ -475,6 +475,7 @@ class Player(xbmc.Player):
             # Queue them for refresh
             cache.push_cache_queue(path)
             utils.log("Queued cache update: {}".format(hash[:5]), "notice")
+        utils.update_container(reload=True)
 
     def onPlayBackStopped(self):
         self.onPlayBackEnded()

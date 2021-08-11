@@ -710,6 +710,7 @@ def _create_action_items(group_def, _id):
                 "action": "merged",
                 "group": group_id,
                 "id": six.text_type(_id),
+                "refresh": refresh,
             },
             art=utils.get_art("merge"),
             isFolder=True,
