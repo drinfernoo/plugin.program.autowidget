@@ -80,6 +80,10 @@ class RefreshService(xbmc.Monitor):
 
         while not self.abortRequested():
             for _ in self.tick(step=1, max=60 * 15):
+                # don't process cache queue during video playback
+                if self.player.isPlayingVideo():
+                    continue
+
                 # TODO: somehow delay till all other plugins loaded?
                 updated = False
                 unrefreshed_widgets = set()
@@ -112,14 +116,14 @@ class RefreshService(xbmc.Monitor):
                     hash = cache.path2hash(path)
                     utils.log("Dequeued cache update: {}".format(hash[:5]), "notice")
 
-                    affected_widgets = set(cache.cache_and_update(
-                        path, widget_id, cache_data, notify=progress
-                    ))
+                    affected_widgets = set(
+                        cache.cache_and_update(
+                            path, widget_id, cache_data, notify=progress
+                        )
+                    )
                     if affected_widgets:
                         updated = True
-                    unrefreshed_widgets = unrefreshed_widgets.union(
-                        affected_widgets
-                    )
+                    unrefreshed_widgets = unrefreshed_widgets.union(affected_widgets)
                     # # wait 5s or for the skin to reload the widget
                     # # this should reduce churn at startup where widgets take too long too long show up
                     # before_update = time.time() # TODO: have .access file so we can put above update
