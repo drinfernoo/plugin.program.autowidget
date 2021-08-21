@@ -132,6 +132,9 @@ class RefreshService(xbmc.Monitor):
                     # utils.log("paused queue until read {:.2} for {}".format(cache.last_read(hash)-before_update, hash[:5]), 'info')
                     if self.abortRequested():
                         break
+                    if self.player.isPlayingVideo():
+                        # Video stop will cause another refresh anyway.
+                        break
                     queue = list(cache.next_cache_queue())
                 for widget_id in unrefreshed_widgets:
                     widget_def = manage.get_widget_by_id(widget_id)
