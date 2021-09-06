@@ -7,6 +7,7 @@ import six
 
 from resources.lib import manage
 from resources.lib import refresh
+from resources.lib.common import cache
 from resources.lib.common import directory
 from resources.lib.common import settings
 from resources.lib.common import utils
@@ -310,21 +311,8 @@ def show_path(
     stack = widget_def.get("stack", [])
     path = widget_path["file"]["file"] if not stack else stack[-1]
 
-    files, hash = refresh.get_files_list(path, widget_id)
-    # if not files:
-    #     properties = {
-    #         "autoLabel": path_label,
-    #         "autoID": widget_id,
-    #         "autoAction": action,
-    #         "autoCache": hash,
-    #     }
-    #     if files is None:
-    #         show_error(path_label, properties)
-    #     elif files == []:
-    #         show_empty(path_label, properties)
-    #     return titles if titles else True, path_label, content
-
     utils.log("Loading items from {}".format(path), "debug")
+    files, hash = refresh.get_files_list(path, path_label, widget_id)
 
     color = widget_path.get("color", default_color)
 
@@ -390,6 +378,8 @@ def show_path(
                 isFolder=not paged_widgets or merged,
                 props=properties,
             )
+            # Ensure we precache next page for faster access
+            cache.cache_expiry(file["file"], widget_id)
         else:
             filetype = file.get("type", "")
             title = {
@@ -720,6 +710,7 @@ def _create_action_items(group_def, _id):
                 "action": "merged",
                 "group": group_id,
                 "id": six.text_type(_id),
+                "refresh": refresh,
             },
             art=utils.get_art("merge"),
             isFolder=True,

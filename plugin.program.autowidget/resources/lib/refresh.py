@@ -7,6 +7,7 @@ import time
 import threading
 
 from resources.lib import manage
+from resources.lib.common import cache
 from resources.lib.common import settings
 from resources.lib.common import utils
 
@@ -23,6 +24,7 @@ class RefreshService(xbmc.Monitor):
         """Starts all of the actions of AutoWidget's service."""
         super(RefreshService, self).__init__()
         utils.log("+++++ STARTING AUTOWIDGET SERVICE +++++", "info")
+
         self.player = Player()
         utils.ensure_addon_data()
         self._update_properties()
@@ -77,25 +79,63 @@ class RefreshService(xbmc.Monitor):
         self._refresh(True)
 
         while not self.abortRequested():
-            for _ in self.tick(15, 60 * 15):
-                # TODO: somehow delay to all other plugins loaded?
+            for _ in self.tick(step=1, max=60 * 15):
+                # don't process cache queue during video playback
+                if self.player.isPlayingVideo():
+                    continue
+
+                # TODO: somehow delay till all other plugins loaded?
+                updated = False
                 unrefreshed_widgets = set()
-                for hash, widget_ids in utils.next_cache_queue():
-                    effected_widgets = cache_and_update(widget_ids)
-                    utils.remove_cache_queue(
-                        hash
-                    )  # Just in queued path's widget defintion has changed and it didn't update this path
-                    unrefreshed_widgets = unrefreshed_widgets.union(
-                        effected_widgets
-                    ).difference(set(widget_ids))
+                queue = list(cache.next_cache_queue())
+
+                class Progress(object):
+                    dialog = None
+                    service = self
+                    done = set()
+
+                    def __call__(self, groupname, path):
+                        if self.dialog is None:
+                            self.dialog = xbmcgui.DialogProgressBG()
+                            self.dialog.create("AutoWidget", utils.get_string(30141))
+                        if not self.service.player.isPlayingVideo():
+                            percent = (
+                                len(self.done)
+                                / float(len(queue) + len(self.done) + 1)
+                                * 100
+                            )
+                            self.dialog.update(
+                                int(percent), "AutoWidget", message=groupname
+                            )
+                        self.done.add(path)
+
+                progress = Progress()
+
+                while queue:
+                    path, cache_data, widget_id = queue.pop(0)
+                    hash = cache.path2hash(path)
+                    utils.log("Dequeued cache update: {}".format(hash[:5]), "notice")
+
+                    affected_widgets = set(
+                        cache.cache_and_update(
+                            path, widget_id, cache_data, notify=progress
+                        )
+                    )
+                    if affected_widgets:
+                        updated = True
+                    unrefreshed_widgets = unrefreshed_widgets.union(affected_widgets)
                     # # wait 5s or for the skin to reload the widget
                     # # this should reduce churn at startup where widgets take too long too long show up
                     # before_update = time.time() # TODO: have .access file so we can put above update
-                    # while _ in self.tick(1, 10, lambda: utils.last_read(hash) > before_update):
+                    # while _ in self.tick(1, 10, lambda: cache.last_read(hash) > before_update):
                     #     pass
-                    # utils.log("paused queue until read {:.2} for {}".format(utils.last_read(hash)-before_update, hash[:5]), 'info')
+                    # utils.log("paused queue until read {:.2} for {}".format(cache.last_read(hash)-before_update, hash[:5]), 'info')
                     if self.abortRequested():
                         break
+                    if self.player.isPlayingVideo():
+                        # Video stop will cause another refresh anyway.
+                        break
+                    queue = list(cache.next_cache_queue())
                 for widget_id in unrefreshed_widgets:
                     widget_def = manage.get_widget_by_id(widget_id)
                     if not widget_def:
@@ -106,6 +146,18 @@ class RefreshService(xbmc.Monitor):
                     and utils.get_active_window() == "home"
                 ):
                     utils.update_container(True)
+                if progress.dialog is not None:
+                    progress.dialog.update(100)
+                    progress.dialog.close()
+                if (
+                    updated
+                    and self.refresh_enabled == 1
+                    and not self.player.isPlayingVideo()
+                ):
+                    dialog = xbmcgui.Dialog()
+                    dialog.notification(
+                        u"AutoWidget", utils.get_string(30142), sound=False
+                    )
 
             if self.abortRequested():
                 break
@@ -269,54 +321,49 @@ def refresh_paths(notify=False, force=False):
     return True, "AutoWidget"
 
 
-def get_files_list(path, widget_id=None):
-    hash = utils.path2hash(path)
-    _, files, _ = utils.cache_expiry(hash, widget_id)
+def get_files_list(path, label=None, widget_id=None, background=True):
+    hash = cache.path2hash(path)
+    _, files, _ = cache.cache_expiry(path, widget_id, background=background)
     if files is None:
-        # We had no old content so have to block and get it now
+        # Should only happen now when background is False
         utils.log("Blocking cache path read: {}".format(hash[:5]), "info")
-        files, changed = utils.cache_files(path, widget_id)
+        files, changed = cache.cache_files(path, widget_id)
 
     new_files = []
     if "result" in files:
         files = files.get("result", {}).get("files", [])
-        if not files:
-            utils.log("No items found for {}".format(path))
-            return [], hash
-
-        for file in files:
-            new_file = {k: v for k, v in file.items() if v is not None}
-
-            if "art" in new_file:
-                for art in new_file["art"]:
-                    new_file["art"][art] = utils.clean_artwork_url(file["art"][art])
-            if "cast" in new_file:
-                for idx, cast in enumerate(new_file["cast"]):
-                    new_file["cast"][idx]["thumbnail"] = utils.clean_artwork_url(
-                        cast.get("thumbnail", "")
-                    )
-            new_files.append(new_file)
-
-        return new_files, hash
     elif "error" in files:
-        os.remove(os.path.join(_addon_data, "{}.cache".format(hash)))
-        utils.log("Invalid cache file removed for {}".format(hash))
-        return None, hash
-    else:
         utils.log("Error processing {}".format(hash), "error")
-        return None, hash
+        error_tile = utils.make_holding_path(
+            utils.get_string(30139).format(label), "alert", hash=hash
+        )
+        files = error_tile.get("result", {}).get("files", [])
+        cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
+        if os.path.exists(cache_path):
+            os.remove(cache_path)
+        utils.log("Invalid cache file removed for {}".format(hash))
 
+    if not files:
+        utils.log("No items found for {}".format(hash))
+        empty_tile = utils.make_holding_path(
+            utils.get_string(30140).format(label), "information-outline", hash=hash
+        )
+        files = empty_tile.get("result", {}).get("files", [])
 
-def queue_widget_update(widget_id):
-    global _thread
-    new_thread = False
-    if _thread is None or not _thread.is_alive():
-        _thread = Worker()
-        _thread.daemon = True
-        new_thread = True
-    _thread.queue.put(widget_id)
-    if new_thread:
-        _thread.start()
+    for file in files:
+        new_file = {k: v for k, v in file.items() if v is not None}
+
+        if "art" in new_file:
+            for art in new_file["art"]:
+                new_file["art"][art] = utils.clean_artwork_url(file["art"][art])
+        if "cast" in new_file:
+            for idx, cast in enumerate(new_file["cast"]):
+                new_file["cast"][idx]["thumbnail"] = utils.clean_artwork_url(
+                    cast.get("thumbnail", "")
+                )
+        new_files.append(new_file)
+
+    return new_files, hash
 
 
 def is_duplicate(title, titles):
@@ -334,52 +381,6 @@ def is_duplicate(title, titles):
         return title["showtitle"] in [t["showtitle"] for t in titles]
     else:
         return False
-
-
-def cache_and_update(widget_ids):
-    """a widget might have many paths. Ensure each path is either queued for an update
-    or is expired and if so force it to be refreshed. When going through the queue this
-    could mean we refresh paths that other widgets also use. These will then be skipped.
-    """
-
-    assert widget_ids
-    effected_widgets = set()
-    for widget_id in widget_ids:
-        widget_def = manage.get_widget_by_id(widget_id)
-        if not widget_def:
-            continue
-        changed = False
-        widget_path = widget_def.get("path", {})
-        utils.log(
-            "trying to update {} with widget def {}".format(widget_id, widget_def),
-            "inspect",
-        )
-        if type(widget_path) != list:
-            widget_path = [widget_path]
-        for path in widget_path:
-            if isinstance(path, dict):
-                _label = path["label"]
-                path = path["file"]["file"]
-            hash = utils.path2hash(path)
-            # TODO: we might be updating paths used by widgets that weren't initiall queued.
-            # We need to return those and ensure they get refreshed also.
-            effected_widgets = effected_widgets.union(utils.widgets_for_path(path))
-            if utils.is_cache_queue(hash):
-                # we need to update this path regardless
-                new_files, files_changed = utils.cache_files(path, widget_id)
-                changed = changed or files_changed
-                utils.remove_cache_queue(hash)
-            # else:
-            #     # double check this hasn't been updated already when updating another widget
-            #     expiry, _  = utils.cache_expiry(hash, widget_id, no_queue=True)
-            #     if expiry <= time.time():
-            #         utils.cache_files(path, widget_id)
-            #     else:
-            #         pass # Skipping this path because its already been updated
-        # TODO: only need to do that if a path has changed which we can tell from the history
-        if changed:
-            _update_strings(widget_def)
-    return effected_widgets
 
 
 # Get info on whats playing and use it to update the right widgets when playback stopped
@@ -472,15 +473,16 @@ class Player(xbmc.Player):
         self.totalTime = -1.0
         self.playingTime = 0.0
         self.info = {}
-        utils.save_playback_history(self.type, pp)
+        cache.save_playback_history(self.type, pp)
         utils.log("recorded playback of {}% {}".format(pp, self.type), "notice")
 
         # wait for a bit so scrobing can happen
         time.sleep(5)
-        for hash in utils.widgets_changed_by_watching(self.type):
+        for hash, path in cache.widgets_changed_by_watching(self.type):
             # Queue them for refresh
-            utils.push_cache_queue(hash)
+            cache.push_cache_queue(path)
             utils.log("Queued cache update: {}".format(hash[:5]), "notice")
+        utils.update_container(reload=True)
 
     def onPlayBackStopped(self):
         self.onPlayBackEnded()

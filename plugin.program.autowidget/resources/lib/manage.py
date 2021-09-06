@@ -246,6 +246,13 @@ def choose_paths(
     idx = None
     idxs = []
     dialog = xbmcgui.Dialog()
+
+    if len(paths) == 1:
+        if indices:
+            return 0 if single else [0]
+        else:
+            return paths[0] if single else [paths[0]]
+
     if single:
         idx = dialog.select(
             label,
@@ -266,6 +273,6 @@ def choose_paths(
     del dialog
 
     if single and idx is not None:
-        return idx if indices else paths[i]
+        return idx if indices else paths[idx]
     elif not single and idxs is not None:
         return idxs if indices else [paths[i] for i in idxs]

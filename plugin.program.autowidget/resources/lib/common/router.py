@@ -11,11 +11,12 @@ from resources.lib import edit
 from resources.lib import menu
 from resources.lib import manage
 from resources.lib import refresh
+from resources.lib.common import cache
 from resources.lib.common import directory
 from resources.lib.common import utils
 
 
-def _log_params(_plugin, _handle, _params):
+def _log_params(_params):
     msg = "[{}]"
 
     params = dict(parse_qsl(_params))
@@ -28,8 +29,8 @@ def _log_params(_plugin, _handle, _params):
     return params
 
 
-def dispatch(_plugin, _handle, _params):
-    params = _log_params(_plugin, int(_handle), _params)
+def dispatch(_handle, _params):
+    params = _log_params(_params)
     category = "AutoWidget"
     is_dir = False
     is_type = "files"
@@ -105,9 +106,9 @@ def dispatch(_plugin, _handle, _params):
             utils.update_container(True)
     elif mode == "clear_cache":
         if not target:
-            utils.clear_cache()
+            cache.clear_cache()
         else:
-            utils.clear_cache(target)
+            cache.clear_cache(target)
     elif mode == "set_color":
         utils.set_color(setting=True)
     elif mode == "backup" and action:
