@@ -250,7 +250,9 @@ def add_menu_item(
         handle=_handle, url=_plugin, listitem=item, isFolder=isFolder
     )
 
-
+    return _plugin
+    
+    
 def make_library_path(library, type, id):
     if not library or not type or id == -1:
         return ""

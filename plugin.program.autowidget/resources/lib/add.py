@@ -267,17 +267,30 @@ def _copy_path(path_def):
     if not group_id:
         return
 
-    group_def = manage.get_group_by_id(group_id)
-    files, hash = refresh.get_files_list(path_def["file"]["file"])
-    if not files:
-        return
+    progress = xbmcgui.DialogProgressBG()
+    progress.create("AutoWidget", utils.get_string(30143))
+    progress.update(1, "AutoWidget", utils.get_string(30144))
 
+    group_def = manage.get_group_by_id(group_id)
+    files, hash = refresh.get_files_list(path_def["file"]["file"], background=False)
+    if not files:
+        progress.close()
+        return
+    done = 0
     for file in files:
-        if file.get("type") in ["movie", "episode", "musicvideo", "song"]:
+        done += 1
+        if file["type"] in ["movie", "episode", "musicvideo", "song"]:
             continue
+        progress.update(
+            int(done / float(len(files)) * 100),
+            heading=utils.get_string(30143),
+            message=file.get("label"),
+        )
 
         labels = build_labels("json", file, path_def["target"])
         _add_path(group_def, labels, over=True)
+    progress.close()
+    del progress
     dialog = xbmcgui.Dialog()
     dialog.notification(
         "AutoWidget", utils.get_string(30105).format(len(files), group_def["label"])
