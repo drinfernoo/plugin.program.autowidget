@@ -43,6 +43,10 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.4.0
+ - Rework caching mechanism
+ - Add more notifications of progress
+ - Add placeholder items when no content is loaded
 3.3.7
  - Delay widget updates during library scans or when in media views
  - Fix widget cleaning scan for skins which don't use Skin Shortcuts
