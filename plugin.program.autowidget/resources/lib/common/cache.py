@@ -21,7 +21,7 @@ _startup_time = time.time()  # TODO: could get reloaded so not accurate?
 DEFAULT_CACHE_TIME = 60 * 5
 
 
-def clear_cache(target):
+def clear_cache(target=None):
     if not target:
         dialog = xbmcgui.Dialog()
         choice = dialog.yesno("AutoWidget", utils.get_string(30118))
