@@ -43,6 +43,8 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.4.1
+ - Fix clearing cache from settings
 3.4.0
  - Rework caching mechanism
  - Add more notifications of progress
