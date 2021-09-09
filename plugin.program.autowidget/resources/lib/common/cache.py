@@ -6,6 +6,7 @@ import json
 import math
 import os
 import time
+import random
 
 import six
 
@@ -375,22 +376,34 @@ def widgets_changed_by_watching(media_type):
         reverse=True,
     )
     
+    not_changed = []
     for chance, path, history_path in priority:
         hash = path2hash(path)
         last_update = os.path.getmtime(history_path) - _startup_time
         if last_update < 0:
             utils.log(
-                "widget not updated since startup {} {}".format(last_update, hash[:5]),
-                "notice",
+                "skipped. unused {:0.2} {} {}".format(chance, hash[:5], path),
+                "debug",
             )
-        # elif chance < 0.3:
-        #     log("chance widget changed after play {}% {}".format(chance, hash[:5]), 'notice')
+            pass
+        elif chance < 0.3:
+            not_changed.append((hash, path, chance))
         else:
             utils.log(
-                "chance widget changed after play {}% {}".format(chance, hash[:5]),
+                "Queue {:.2}% {} {}".format(chance, hash[:5], path),
                 "notice",
             )
             yield hash, path
+    # If widgets never get updated after playback we never get to know if they change after playback. So always pick 2 randomly
+    count = 0
+    random.shuffle(not_changed)
+    for hash, path, chance in not_changed:
+        if count < 2:
+            utils.log("Queue random {:.2}% {} {}".format(chance, hash[:5], path), 'notice')
+            yield hash, path
+        else:
+            utils.log("Skip queue {:.2}% {} {}".format(chance, hash[:5], path), 'notice')
+        count += 1
 
 
 def chance_playback_updates_widget(history_path, plays, cutoff_time=60 * 5):

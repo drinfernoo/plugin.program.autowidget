@@ -477,11 +477,11 @@ class Player(xbmc.Player):
         utils.log("recorded playback of {}% {}".format(pp, self.type), "notice")
 
         # wait for a bit so scrobing can happen
-        time.sleep(5)
+        # time.sleep(5)
         for hash, path in cache.widgets_changed_by_watching(self.type):
             # Queue them for refresh
             cache.push_cache_queue(path)
-            utils.log("Queued cache update: {}".format(hash[:5]), "notice")
+            # utils.log("Queued cache update: {}".format(hash[:5]), "notice")
         utils.update_container(reload=True)
 
     def onPlayBackStopped(self):
