@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="3.3.4" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="3.3.6" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
@@ -43,6 +43,13 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.3.6
+ - Fix "Next Page" for Python 2.7
+3.3.5
+ - Better handling of error and empty states
+ - Better handling of "Next Page" items
+ - Fix "Active Widgets" menu
+ - Delay library updates when inside media views
 3.3.4
  - Fix "Next Page" localizations
 3.3.3
@@ -325,16 +332,7 @@
         </assets>
     </extension>
 </addon>
-1.0.19
-1.0.4
- - Allow custom labels
- - Add removal notifications    
-1.0.3
- - Fix shortcuts and widgets added from context menu
-1.0.2
- - Fix crash from non-XML files
-1.0.1
- - Fix crash from non-existent context menu setting
+t menu setting
 1.0.0
  - First stable release
         </news>
