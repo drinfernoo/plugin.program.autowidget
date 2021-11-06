@@ -15,7 +15,7 @@ _backup_location = utils.translate_path(settings.get_setting_string("backup.loca
 def location():
     dialog = xbmcgui.Dialog()
     folder = dialog.browse(
-        0, utils.get_string(30068), "files", defaultt=_backup_location
+        0, utils.get_string(30067), "files", defaultt=_backup_location
     )
     del dialog
 
@@ -25,13 +25,13 @@ def location():
 
 def backup():
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno("AutoWidget", utils.get_string(30071))
+    choice = dialog.yesno("AutoWidget", utils.get_string(30070))
 
     if choice:
-        filename = dialog.input(utils.get_string(30072))
+        filename = dialog.input(utils.get_string(30071))
 
         if not filename:
-            dialog.notification("AutoWidget", utils.get_string(30073))
+            dialog.notification("AutoWidget", utils.get_string(30072))
             del dialog
             return
 
@@ -40,7 +40,7 @@ def backup():
                 os.makedirs(_backup_location)
             except Exception as e:
                 utils.log(str(e), "error")
-                dialog.notification("AutoWidget", utils.get_string(30074))
+                dialog.notification("AutoWidget", utils.get_string(30073))
                 del dialog
                 return
 
@@ -53,7 +53,7 @@ def backup():
             )
         ]
         if len(files) == 0:
-            dialog.notification("AutoWidget", utils.get_string(30046))
+            dialog.notification("AutoWidget", utils.get_string(30045))
             del dialog
             return
 
@@ -74,7 +74,7 @@ def backup():
 def restore():
     dialog = xbmcgui.Dialog()
     backup = dialog.browse(
-        1, utils.get_string(30075), "files", mask=".zip", defaultt=_backup_location
+        1, utils.get_string(30074), "files", mask=".zip", defaultt=_backup_location
     )
 
     if backup.endswith("zip"):
@@ -82,11 +82,11 @@ def restore():
             info = z.infolist()
             choice = dialog.yesno(
                 "AutoWidget",
-                utils.get_string(30076).format(len(info), "s" if len(info) > 1 else ""),
+                utils.get_string(30075).format(len(info), "s" if len(info) > 1 else ""),
             )
 
             if choice:
-                overwrite = dialog.yesno("AutoWidget", utils.get_string(30077))
+                overwrite = dialog.yesno("AutoWidget", utils.get_string(30076))
 
                 if overwrite:
                     files = [x for x in os.listdir(_addon_data) if x.endswith(".group")]
@@ -94,9 +94,9 @@ def restore():
                         utils.remove_file(file)
                 z.extractall(_addon_data)
             else:
-                dialog.notification("AutoWidget", utils.get_string(30078))
+                dialog.notification("AutoWidget", utils.get_string(30077))
         del dialog
     else:
-        dialog.notification("AutoWidget", utils.get_string(30078))
+        dialog.notification("AutoWidget", utils.get_string(30077))
         del dialog
         return

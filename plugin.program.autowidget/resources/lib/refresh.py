@@ -97,7 +97,7 @@ class RefreshService(xbmc.Monitor):
                 #     def __call__(self, groupname, path):
                 #         if self.dialog is None:
                 #             self.dialog = xbmcgui.DialogProgressBG()
-                #             self.dialog.create("AutoWidget", utils.get_string(30141))
+                #             self.dialog.create("AutoWidget", utils.get_string(30140))
                 #         if not self.service.player.isPlayingVideo():
                 #             percent = (
                 #                 len(self.done)
@@ -158,7 +158,7 @@ class RefreshService(xbmc.Monitor):
                 ):
                     dialog = xbmcgui.Dialog()
                     dialog.notification(
-                        u"AutoWidget", utils.get_string(30142), sound=False
+                        u"AutoWidget", utils.get_string(30141), sound=False
                     )
 
             if self.abortRequested():
@@ -304,7 +304,7 @@ def refresh_paths(notify=False, force=False):
         dialog = xbmcgui.Dialog()
         dialog.notification(
             "AutoWidget",
-            utils.get_string(30020),
+            utils.get_string(30019),
             sound=settings.get_setting_bool("service.refresh_sound"),
         )
         del dialog
@@ -337,7 +337,7 @@ def get_files_list(path, label=None, widget_id=None, background=True):
     elif "error" in files:
         utils.log("Error processing {}".format(hash), "error")
         error_tile = utils.make_holding_path(
-            utils.get_string(30139).format(label), "alert", hash=hash
+            utils.get_string(30138).format(label), "alert", hash=hash
         )
         files = error_tile.get("result", {}).get("files", [])
         cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
@@ -348,7 +348,7 @@ def get_files_list(path, label=None, widget_id=None, background=True):
     if not files:
         utils.log("No items found for {}".format(hash))
         empty_tile = utils.make_holding_path(
-            utils.get_string(30140).format(label), "information-outline", hash=hash
+            utils.get_string(30139).format(label), "information-outline", hash=hash
         )
         files = empty_tile.get("result", {}).get("files", [])
 

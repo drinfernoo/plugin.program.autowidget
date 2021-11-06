@@ -79,7 +79,7 @@ def clean(widget_id=None, notify=False, all=False):
     if notify:
         dialog.notification(
             "AutoWidget",
-            utils.get_string(30106).format("No" if removed == 0 else removed),
+            utils.get_string(30105).format("No" if removed == 0 else removed),
         )
         del dialog
     del dialog
@@ -236,7 +236,7 @@ def find_defined_widgets(group_id=None):
 
 
 def choose_paths(
-    label=utils.get_string(30122),
+    label=utils.get_string(30121),
     paths=None,
     threshold=None,
     indices=True,
