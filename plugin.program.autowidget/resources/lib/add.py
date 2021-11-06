@@ -41,11 +41,8 @@ def add(labels):
         group_def = _group_dialog(_type)
         if group_def:
             _add_path(group_def, labels)
-    elif _type == "clone":
-        labels["target"] = "shortcut"
-        _copy_path(labels)
-    elif _type == "explode":
-        labels["target"] = "widget"
+    else:
+        labels["target"] = "shortcut" if _type == "clone" else "widget"
         _copy_path(labels)
 
     utils.update_container(_type == "shortcut")
@@ -263,15 +260,14 @@ def _add_path(group_def, labels, over=False):
 
 
 def _copy_path(path_def):
-    group_id = add_group(path_def["target"], path_def["label"])
-    if not group_id:
+    group_def = _group_dialog(path_def['target'])
+    if not group_def:
         return
 
     progress = xbmcgui.DialogProgressBG()
     progress.create("AutoWidget", utils.get_string(30143))
     progress.update(1, "AutoWidget", utils.get_string(30144))
 
-    group_def = manage.get_group_by_id(group_id)
     files, hash = refresh.get_files_list(path_def["file"]["file"], background=False)
     if not files:
         progress.close()
