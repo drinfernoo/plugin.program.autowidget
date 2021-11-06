@@ -794,3 +794,29 @@ msgstr "Henter stier ..."
 msgctxt "#30145"
 msgid "Loading content..."
 msgstr "Indlæser indhold ..."
+
+#: /resources/lib/add.py:27
+msgctxt "#30145"
+msgid "Create a Shortcut to this item"
+msgstr "Opret en genvej til dette element"
+
+#: /resources/lib/add.py:28
+msgctxt "#30146"
+msgid "Create a Widget out of this item's contents"
+msgstr "Opret en widget ud af dette elements indhold"
+
+#: /resources/lib/add.py:29
+msgctxt "#30147"
+msgid "Create a Shortcut to each sub-item inside of this item"
+msgstr "Opret en genvej til hvert underelement inde i dette element"
+
+#: /resources/lib/add.py:30
+msgctxt "#30148"
+msgid "Create a Widget out of each sub-item's contents inside of this item"
+msgstr ""
+"Opret en widget ud af hvert underelements indhold inde i dette element"
+
+#: /resources/lib/add.py:31
+msgctxt "#30149"
+msgid "Create a Shortcut to this add-on's Settings dialog"
+msgstr "Opret en genvej til denne tilføjelses dialogboks Indstillinger"

@@ -17,11 +17,19 @@ from resources.lib.common import utils
 _addon_data = utils.translate_path(settings.get_addon_info("profile"))
 
 shortcut_types = [
-    utils.get_string(30033),
-    utils.get_string(30034),
-    utils.get_string(30060),
-    utils.get_string(30061),
-    utils.get_string(30035),
+    30032,
+    30033,
+    30059,
+    30060,
+    30034,
+]
+
+type_labels = [
+    30145,
+    30146,
+    30147,
+    30148,
+    30149,
 ]
 
 folder_shortcut = utils.get_art("folder-shortcut")
@@ -106,9 +114,9 @@ def _add_as(path_def):
     art = [folder_shortcut, folder_sync, folder_clone, folder_explode, folder_settings]
 
     path = path_def["file"]
-    types = shortcut_types[:]
+    types = list(zip(shortcut_types[:], type_labels[:]))
     if path_def["filetype"] == "directory" and utils.get_active_window() != "home":
-        types = shortcut_types[:4]
+        types = list(zip(shortcut_types[:4], type_labels[:4]))
     else:
         if (
             any(i in path for i in ["addons://user", "plugin://", "script://"])
@@ -116,11 +124,11 @@ def _add_as(path_def):
         ) or ("widget", "True") in parse_qsl(path):
             pass
         else:
-            types = [shortcut_types[0]]
+            types = list(zip(shortcut_types[0], type_labels[0]))
 
     options = []
     for idx, type in enumerate(types):
-        li = xbmcgui.ListItem(type)
+        li = xbmcgui.ListItem(utils.get_string(type[0]), utils.get_string(type[1]))
 
         li.setArt(art[idx])
         options.append(li)
@@ -132,7 +140,7 @@ def _add_as(path_def):
     if idx < 0:
         return
 
-    chosen = types[idx]
+    chosen = types[idx][0]
     if chosen == shortcut_types[0]:
         return "shortcut"
     elif chosen == shortcut_types[1]:

@@ -794,3 +794,32 @@ msgstr "Recuperando rutas ..."
 msgctxt "#30145"
 msgid "Loading content..."
 msgstr "Cargando el contenido..."
+
+#: /resources/lib/add.py:27
+msgctxt "#30145"
+msgid "Create a Shortcut to this item"
+msgstr "Crear un acceso directo a este elemento"
+
+#: /resources/lib/add.py:28
+msgctxt "#30146"
+msgid "Create a Widget out of this item's contents"
+msgstr "Cree un widget a partir del contenido de este elemento"
+
+#: /resources/lib/add.py:29
+msgctxt "#30147"
+msgid "Create a Shortcut to each sub-item inside of this item"
+msgstr "Cree un acceso directo a cada subelemento dentro de este artículo"
+
+#: /resources/lib/add.py:30
+msgctxt "#30148"
+msgid "Create a Widget out of each sub-item's contents inside of this item"
+msgstr ""
+"Cree un widget a partir del contenido de cada subelemento dentro de este "
+"artículo"
+
+#: /resources/lib/add.py:31
+msgctxt "#30149"
+msgid "Create a Shortcut to this add-on's Settings dialog"
+msgstr ""
+"Crear un acceso directo al cuadro de diálogo Configuración de este "
+"complemento"

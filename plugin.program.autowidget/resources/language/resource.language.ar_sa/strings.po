@@ -790,3 +790,28 @@ msgstr "جاري استرداد المسارات ..."
 msgctxt "#30145"
 msgid "Loading content..."
 msgstr "تحميل المحتوى ..."
+
+#: /resources/lib/add.py:27
+msgctxt "#30145"
+msgid "Create a Shortcut to this item"
+msgstr "قم بإنشاء اختصار لهذا العنصر"
+
+#: /resources/lib/add.py:28
+msgctxt "#30146"
+msgid "Create a Widget out of this item's contents"
+msgstr "قم بإنشاء عنصر واجهة مستخدم من محتويات هذا العنصر"
+
+#: /resources/lib/add.py:29
+msgctxt "#30147"
+msgid "Create a Shortcut to each sub-item inside of this item"
+msgstr "قم بإنشاء اختصار لكل عنصر فرعي داخل هذا العنصر"
+
+#: /resources/lib/add.py:30
+msgctxt "#30148"
+msgid "Create a Widget out of each sub-item's contents inside of this item"
+msgstr "قم بإنشاء عنصر واجهة مستخدم من محتويات كل عنصر فرعي داخل هذا العنصر"
+
+#: /resources/lib/add.py:31
+msgctxt "#30149"
+msgid "Create a Shortcut to this add-on's Settings dialog"
+msgstr "قم بإنشاء اختصار لمربع حوار الإعدادات الخاص بهذه الوظيفة الإضافية"
