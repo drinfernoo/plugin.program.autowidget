@@ -22,14 +22,18 @@ _startup_time = time.time()  # TODO: could get reloaded so not accurate?
 DEFAULT_CACHE_TIME = 60 * 5
 
 
-def clear_cache(target):
+def clear_cache(target=None):
     if not target:
         dialog = xbmcgui.Dialog()
         choice = dialog.yesno("AutoWidget", utils.get_string(30118))
         del dialog
 
         if choice:
-            for file in [i for i in os.listdir(_addon_data) if i.endswith(".cache")]:
+            for file in [
+                i
+                for i in os.listdir(_addon_data)
+                if i.split('.')[-1] in ["cache", "history", "queue"]
+            ]:
                 os.remove(os.path.join(_addon_data, file))
     else:
         os.remove(os.path.join(_addon_data, "{}.cache".format(target)))
@@ -45,8 +49,8 @@ def iter_queue():
     queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_data, "*.queue")))
     # TODO: sort by path instead so load plugins at the same time
     for path in sorted(queued, key=os.path.getmtime):
-        queue_data = utils.read_json(path)
-        yield queue_data.get("path", "")
+        queue_data = utils.read_json(path, None)
+        yield queue_data.get("path", "") if queue_data else ""
 
 
 def read_history(path, create_if_missing=True):
@@ -102,7 +106,9 @@ def push_cache_queue(path, widget_id=None):
     if os.path.exists(queue_path):
         pass  # Leave original modification date so item is higher priority
     else:
-        utils.write_json(queue_path, {"hash": hash, "path": path, "widget_id": widget_id})
+        utils.write_json(
+            queue_path, {"hash": hash, "path": path, "widget_id": widget_id}
+        )
 
 
 def is_cache_queue(hash):
@@ -370,13 +376,18 @@ def widgets_changed_by_watching(media_type):
     plays_for_type = [(time, t) for time, t in plays if t == media_type]
     priority = sorted(
         [
-            (chance_playback_updates_widget(path, plays_for_type), utils.read_json(path).get("path", ""), path)
+            (
+                chance_playback_updates_widget(path, plays_for_type),
+                utils.read_json(path).get("path", ""),
+                path,
+            )
             for path in all_cache
         ],
         reverse=True,
     )
     
     not_changed = []
+
     for chance, path, history_path in priority:
         hash = path2hash(path)
         last_update = os.path.getmtime(history_path) - _startup_time

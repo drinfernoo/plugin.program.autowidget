@@ -89,27 +89,27 @@ class RefreshService(xbmc.Monitor):
                 unrefreshed_widgets = set()
                 queue = list(cache.next_cache_queue())
 
-                class Progress(object):
-                    dialog = None
-                    service = self
-                    done = set()
+                # class Progress(object):
+                #     dialog = None
+                #     service = self
+                #     done = set()
 
-                    def __call__(self, groupname, path):
-                        if self.dialog is None:
-                            self.dialog = xbmcgui.DialogProgressBG()
-                            self.dialog.create("AutoWidget", utils.get_string(30141))
-                        if not self.service.player.isPlayingVideo():
-                            percent = (
-                                len(self.done)
-                                / float(len(queue) + len(self.done) + 1)
-                                * 100
-                            )
-                            self.dialog.update(
-                                int(percent), "AutoWidget", message=groupname
-                            )
-                        self.done.add(path)
+                #     def __call__(self, groupname, path):
+                #         if self.dialog is None:
+                #             self.dialog = xbmcgui.DialogProgressBG()
+                #             self.dialog.create("AutoWidget", utils.get_string(30141))
+                #         if not self.service.player.isPlayingVideo():
+                #             percent = (
+                #                 len(self.done)
+                #                 / float(len(queue) + len(self.done) + 1)
+                #                 * 100
+                #             )
+                #             self.dialog.update(
+                #                 int(percent), "AutoWidget", message=groupname
+                #             )
+                #         self.done.add(path)
 
-                progress = Progress()
+                # progress = Progress()
 
                 while queue:
                     path, cache_data, widget_id = queue.pop(0)
@@ -118,7 +118,9 @@ class RefreshService(xbmc.Monitor):
 
                     affected_widgets = set(
                         cache.cache_and_update(
-                            path, widget_id, cache_data, notify=progress
+                            path,
+                            widget_id,
+                            cache_data,  # notify=progress
                         )
                     )
                     if affected_widgets:
@@ -146,9 +148,9 @@ class RefreshService(xbmc.Monitor):
                     and utils.get_active_window() == "home"
                 ):
                     utils.update_container(True)
-                if progress.dialog is not None:
-                    progress.dialog.update(100)
-                    progress.dialog.close()
+                # if progress.dialog is not None:
+                #     progress.dialog.update(100)
+                #     progress.dialog.close()
                 if (
                     updated
                     and self.refresh_enabled == 1

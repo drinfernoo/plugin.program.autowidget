@@ -207,6 +207,8 @@ def find_defined_paths(group_id=None):
         group_def = utils.read_json(path)
         if group_def:
             return group_def.get("paths", [])
+        else:
+            return []
     else:
         paths = []
         for group in find_defined_groups():

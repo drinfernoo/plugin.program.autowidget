@@ -451,10 +451,10 @@ def read_json(file, log_file=False, default=None):
     data = None
     if os.path.exists(file):
         with codecs.open(os.path.join(_addon_data, file), "r", encoding="utf-8") as f:
-            content = six.ensure_text(f.read())
             try:
+                content = six.ensure_text(f.read())
                 data = json.loads(content)
-            except (ValueError, TypeError) as e:
+            except (ValueError, TypeError, UnicodeDecodeError) as e:
                 log("Could not read JSON from {}: {}".format(file, e), level="error")
                 if log_file:
                     log(content, level="debug")
