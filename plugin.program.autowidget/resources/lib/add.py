@@ -213,7 +213,7 @@ def add_group(target, group_name=""):
             "art": folder_sync if target == "widget" else folder_shortcut,
             "version": settings.get_addon_info("version"),
             "content": "",
-            "sort_order": manage.highest_group_sort_order(target) + 1,
+            "sort_order": "{}".format(int(manage.highest_group_sort_order()) + 1),
         }
 
         utils.write_json(filename, group_def)
