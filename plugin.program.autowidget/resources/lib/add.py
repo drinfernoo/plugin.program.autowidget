@@ -118,10 +118,9 @@ def _add_as(path_def):
     if path_def["filetype"] == "directory" and utils.get_active_window() != "home":
         types = list(zip(shortcut_types[:4], type_labels[:4]))
     else:
-        if (
-            any(i in path for i in ["addons://user", "plugin://", "script://"])
-            and not parse_qsl(path)
-        ) or ("widget", "True") in parse_qsl(path):
+        if any(
+            i in path for i in ["addons://user", "plugin://", "script://"]
+        ) and not parse_qsl(path):
             pass
         else:
             types = [(shortcut_types[0], type_labels[0])]
