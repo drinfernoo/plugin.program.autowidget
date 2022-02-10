@@ -60,12 +60,12 @@ def root_menu():
 def my_groups_menu():
     groups = manage.find_defined_groups()
     if len(groups) > 0:
-        for group in groups:
+        for idx, group in enumerate(groups):
             group_name = group["label"]
             group_id = group["id"]
             group_type = group["type"]
 
-            cm = _create_group_context_items(group_id, group_type)
+            cm = _create_group_context_items(group_id, group_type, idx, len(groups))
 
             directory.add_menu_item(
                 title=six.text_type(group_name),
@@ -590,7 +590,7 @@ def merged_path(group_id, widget_id):
         return True, group_name, None
 
 
-def _create_group_context_items(group_id, target):
+def _create_group_context_items(group_id, target, idx, length):
     cm = [
         (
             utils.get_string(30041),
@@ -599,6 +599,28 @@ def _create_group_context_items(group_id, target):
                 "plugin://plugin.program.autowidget/"
                 "?mode=manage"
                 "&action=edit"
+                "&group={})"
+            ).format(group_id),
+        ),
+        (
+            utils.get_string(30150) if idx > 0 else utils.get_string(30152),
+            (
+                "RunPlugin("
+                "plugin://plugin.program.autowidget/"
+                "?mode=manage"
+                "&action=shift_group"
+                "&target=up"
+                "&group={})"
+            ).format(group_id),
+        ),
+        (
+            utils.get_string(30151) if idx < length - 1 else utils.get_string(30153),
+            (
+                "RunPlugin("
+                "plugin://plugin.program.autowidget/"
+                "?mode=manage"
+                "&action=shift_group"
+                "&target=down"
                 "&group={})"
             ).format(group_id),
         ),

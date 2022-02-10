@@ -182,8 +182,8 @@ def get_widget_by_id(widget_id, group_id=None):
             return defined
 
 
-def highest_group_sort_order(_type=""):
-    groups = find_defined_groups(_type)
+def highest_group_sort_order():
+    groups = find_defined_groups()
     return groups[-1].get("sort_order", 0) if len(groups) > 0 else 0
 
 

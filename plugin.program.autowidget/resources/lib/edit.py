@@ -26,6 +26,41 @@ color_tag = "\[\w+(?: \w+)*\](?:\[\w+(?: \w+)*\])?(\w+)(?:\[\/\w+\])?\[\/\w+\]"
 plus = utils.get_art("plus")
 
 
+def shift_group(group_id, target):
+    groups = manage.find_defined_groups()
+    group_def = None
+    swap_def = None
+    
+    for idx, group in enumerate(groups):
+        if group["id"] == group_id:
+            group_def = group
+            if target == "up" and idx >= 0:
+                if idx > 0:
+                    swap_def = groups[idx - 1]
+                    order = group.get("sort_order", "0")
+                    new_order = swap_def.get("sort_order", "0")
+                    swap_def["sort_order"] = order
+                    group["sort_order"] = new_order
+                    manage.write_path(swap_def)
+                else:
+                    new_order = int(groups[-1].get("sort_order", "0")) + 1
+                    group["sort_order"] = "{}".format(new_order)
+            elif target == "down" and idx <= len(groups) - 1:
+                if idx < len(groups) - 1:
+                    swap_def = groups[idx + 1]
+                    order = group.get("sort_order", "0")
+                    new_order = swap_def.get("sort_order", "0")
+                    swap_def["sort_order"] = order
+                    group["sort_order"] = new_order
+                    manage.write_path(swap_def)
+                else:
+                    new_order = int(groups[0].get("sort_order", "0")) - 1
+                    group["sort_order"] = "{}".format(new_order)
+            break
+    manage.write_path(group_def)
+    utils.update_container()
+
+
 def shift_path(group_id, path_id, target):
     group_def = manage.get_group_by_id(group_id)
     paths = group_def["paths"]

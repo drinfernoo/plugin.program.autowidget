@@ -811,3 +811,23 @@ msgstr "Create a Widget out of each sub-item's contents inside of this item"
 msgctxt "#30149"
 msgid "Create a Shortcut to this add-on's Settings dialog"
 msgstr "Create a Shortcut to this add-on's Settings dialog"
+
+#: /resources/lib/menu.py:641
+msgctxt "#30150"
+msgid "Shift Group Up"
+msgstr "Shift Group Up"
+
+#: /resources/lib/menu.py:653
+msgctxt "#30151"
+msgid "Shift Group Down"
+msgstr "Shift Group Down"
+
+#: /resources/lib/menu.py:641
+msgctxt "#30152"
+msgid "Shift Group to Bottom"
+msgstr "Shift Group to Bottom"
+
+#: /resources/lib/menu.py:653
+msgctxt "#30153"
+msgid "Shift Group to Top"
+msgstr "Shift Group to Top"
