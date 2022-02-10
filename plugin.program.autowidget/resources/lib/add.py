@@ -124,7 +124,7 @@ def _add_as(path_def):
         ) or ("widget", "True") in parse_qsl(path):
             pass
         else:
-            types = list(zip(shortcut_types[0], type_labels[0]))
+            types = [(shortcut_types[0], type_labels[0])]
 
     options = []
     for idx, type in enumerate(types):
