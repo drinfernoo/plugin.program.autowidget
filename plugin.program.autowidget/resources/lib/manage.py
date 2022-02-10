@@ -134,15 +134,18 @@ def write_path(group_def, path_def=None, update=""):
         if update:
             for path in group_def["paths"]:
                 if path["id"] == update:
+                    path["version"] = settings.get_addon_info("version")
                     group_def["paths"][group_def["paths"].index(path)] = path_def
         else:
             group_def["paths"].append(path_def)
 
+    group_def["version"] = settings.get_addon_info("version")
     utils.write_json(filename, group_def)
 
 
 def save_path_details(params):
     path_to_saved = os.path.join(_addon_data, "{}.widget".format(params["id"]))
+    params["version"] = settings.get_addon_info("version")
     utils.write_json(path_to_saved, params)
 
     return params
