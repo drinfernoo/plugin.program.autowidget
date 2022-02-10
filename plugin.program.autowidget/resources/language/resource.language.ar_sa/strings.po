@@ -62,7 +62,7 @@ msgctxt "#30008"
 msgid "Tools"
 msgstr "أدوات"
 
-#: /resources/lib/menu.py:678
+#: /resources/lib/menu.py:700
 msgctxt "#30009"
 msgid "Actions"
 msgstr "الأفعال"
@@ -77,27 +77,27 @@ msgctxt "#30011"
 msgid "Create New Shortcut Group"
 msgstr "إنشاء مجموعة اختصار جديدة"
 
-#: /resources/lib/edit.py:120
+#: /resources/lib/edit.py:155
 msgctxt "#30012"
 msgid "Remove Group"
 msgstr "إزالة المجموعة"
 
-#: /resources/lib/edit.py:120
+#: /resources/lib/edit.py:155
 msgctxt "#30013"
 msgid "Remove"
 msgstr "حذف"
 
-#: /resources/lib/menu.py:641
+#: /resources/lib/menu.py:663
 msgctxt "#30014"
 msgid "Shift Path Up"
 msgstr "مسار التحول لأعلى"
 
-#: /resources/lib/menu.py:653
+#: /resources/lib/menu.py:675
 msgctxt "#30015"
 msgid "Shift Path Down"
 msgstr "مسار التحول لأسفل"
 
-#: /resources/lib/menu.py:693
+#: /resources/lib/menu.py:715
 msgctxt "#30016"
 msgid "{} (Cycling)"
 msgstr "{} (ركوب الدراجات)"
@@ -123,7 +123,7 @@ msgctxt "#30020"
 msgid "Addition cancelled."
 msgstr "تم إلغاء الإضافة."
 
-#: /resources/lib/edit.py:72
+#: /resources/lib/edit.py:107
 msgctxt "#30021"
 msgid ""
 "Are you sure you want to remove this path? This action [COLOR "
@@ -137,12 +137,12 @@ msgctxt "#30022"
 msgid "Name for Group"
 msgstr "اسم المجموعة"
 
-#: /resources/lib/add.py:219
+#: /resources/lib/add.py:220
 msgctxt "#30023"
 msgid "Cannot create a group with no name."
 msgstr "لا يمكن إنشاء مجموعة بدون اسم."
 
-#: /resources/lib/edit.py:58 /resources/lib/edit.py:92
+#: /resources/lib/edit.py:93 /resources/lib/edit.py:127
 msgctxt "#30024"
 msgid ""
 "Are you sure you want to remove this group? This action [COLOR "
@@ -161,28 +161,28 @@ msgctxt "#30026"
 msgid "Show 'Refreshing Paths' Notification"
 msgstr "إظهار إعلام \"المسارات المنعشة\""
 
-#: /resources/lib/add.py:249
+#: /resources/lib/add.py:250
 msgctxt "#30027"
 msgid "Shortcut Label"
 msgstr "تسمية الاختصار"
 
-#: /resources/lib/add.py:251
+#: /resources/lib/add.py:252
 msgctxt "#30028"
 msgid "Widget Label"
 msgstr "تسمية القطعة"
 
-#: /resources/lib/edit.py:64 /resources/lib/edit.py:83
-#: /resources/lib/edit.py:97
+#: /resources/lib/edit.py:99 /resources/lib/edit.py:118
+#: /resources/lib/edit.py:132
 msgctxt "#30029"
 msgid "{} removed."
 msgstr "{} removed."
 
-#: /resources/lib/edit.py:128 /resources/lib/menu.py:625
+#: /resources/lib/edit.py:163 /resources/lib/menu.py:647
 msgctxt "#30030"
 msgid "Edit Shortcut"
 msgstr "حرّر الاختصار"
 
-#: /resources/lib/edit.py:316 /resources/lib/edit.py:337
+#: /resources/lib/edit.py:351 /resources/lib/edit.py:372
 msgctxt "#30031"
 msgid "Select {}"
 msgstr "اختار {}"
@@ -217,7 +217,7 @@ msgctxt "#30037"
 msgid "Show Advanced Editing Options"
 msgstr "إظهار خيارات التحرير المتقدمة"
 
-#: /resources/lib/edit.py:105
+#: /resources/lib/edit.py:140
 msgctxt "#30038"
 msgid ""
 "Changing of any of the advanced options may cause paths to [COLOR "
@@ -227,17 +227,17 @@ msgstr ""
 "تغيير أي من الخيارات المتقدمة قد يسبب مسارات إلى [COLOR firebrick] لم تعد "
 "[/COLOR] تعمل بشكل صحيح. سيتم عرض هذه الرسالة مرة واحدة فقط."
 
-#: /resources/lib/edit.py:106
+#: /resources/lib/edit.py:141
 msgctxt "#30039"
 msgid "[COLOR firebrick][B]Continue[/B][/COLOR]"
 msgstr "[COLOR فايربريك] [ب] متابعة [/B][/COLOR]"
 
-#: /resources/lib/edit.py:107
+#: /resources/lib/edit.py:142
 msgctxt "#30040"
 msgid "[COLOR lawngreen][B]Disable[/B][/COLOR]"
 msgstr "[لون لون القانون] [ب] تعطيل [/B][/COLOR]"
 
-#: /resources/lib/edit.py:133 /resources/lib/menu.py:595
+#: /resources/lib/edit.py:168 /resources/lib/menu.py:595
 msgctxt "#30041"
 msgid "Edit Group"
 msgstr "تعديل المجموعة"
@@ -275,8 +275,8 @@ msgctxt "#30046"
 msgid "Refresh Widget"
 msgstr "تحديث القطعة"
 
-#: /resources/lib/edit.py:125 /resources/lib/edit.py:160
-#: /resources/lib/menu.py:217 /resources/lib/menu.py:622
+#: /resources/lib/edit.py:160 /resources/lib/edit.py:195
+#: /resources/lib/menu.py:217 /resources/lib/menu.py:644
 msgctxt "#30047"
 msgid "Edit Widget"
 msgstr "تعديل عدد سابق"
@@ -306,34 +306,34 @@ msgctxt "#30052"
 msgid "This widget is broken, repoint or remove it to stop seeing this."
 msgstr "يتم تقسيم هذه القطعة، إعادة توجيه أو إزالته لوقف رؤية هذا."
 
-#: /resources/lib/menu.py:680
+#: /resources/lib/menu.py:702
 msgctxt "#30053"
 msgid "{} (Static)"
 msgstr "{} (Static)"
 
-#: /resources/lib/edit.py:213
+#: /resources/lib/edit.py:248
 msgctxt "#30054"
 msgid "Add New InfoLabel"
 msgstr "إضافة معلومات جديدةلابيل"
 
-#: /resources/lib/edit.py:213
+#: /resources/lib/edit.py:248
 msgctxt "#30055"
 msgid "Add New Artwork"
 msgstr "إضافة عمل فني جديد"
 
-#: /resources/lib/edit.py:243 /resources/lib/edit.py:412
+#: /resources/lib/edit.py:278 /resources/lib/edit.py:447
 #: /resources/lib/menu.py:501
 msgctxt "#30056"
 msgid "Random Path"
 msgstr "مسار عشوائي"
 
-#: /resources/lib/edit.py:245 /resources/lib/edit.py:412
+#: /resources/lib/edit.py:280 /resources/lib/edit.py:447
 #: /resources/lib/menu.py:501
 msgctxt "#30057"
 msgid "Next Path"
 msgstr "المسار التالي"
 
-#: /resources/lib/edit.py:413 /resources/lib/menu.py:500
+#: /resources/lib/edit.py:448 /resources/lib/menu.py:500
 msgctxt "#30058"
 msgid "Choose an Action"
 msgstr "Choose an Action"
@@ -370,7 +370,7 @@ msgctxt "#30064"
 msgid "Never"
 msgstr "أبدًا"
 
-#: /resources/lib/menu.py:706
+#: /resources/lib/menu.py:728
 msgctxt "#30065"
 msgid "{} (Merged)"
 msgstr "{} (مُدمَج)"
@@ -474,63 +474,63 @@ msgctxt "#30084"
 msgid "Back to Page {}"
 msgstr "العودة إلى الصفحة {}"
 
-#: /resources/lib/menu.py:653
+#: /resources/lib/menu.py:675
 msgctxt "#30085"
 msgid "Shift Path to Top"
 msgstr "مسار التحول إلى الأعلى"
 
-#: /resources/lib/menu.py:641
+#: /resources/lib/menu.py:663
 msgctxt "#30086"
 msgid "Shift Path to Bottom"
 msgstr "مسار التحول إلى الأسفل"
 
-#: /resources/lib/edit.py:461 /resources/lib/menu.py:492
+#: /resources/lib/edit.py:496 /resources/lib/menu.py:492
 msgctxt "#30087"
 msgid "Choose a Path"
 msgstr "أختر Path"
 
-#: /resources/lib/edit.py:454 /resources/lib/menu.py:555
+#: /resources/lib/edit.py:489 /resources/lib/menu.py:555
 msgctxt "#30088"
 msgid "Choose Paths to Merge"
 msgstr "اختيار المسارات إلى دمج"
 
-#: /resources/lib/edit.py:157
+#: /resources/lib/edit.py:192
 msgctxt "#30089"
 msgid "Remove Widget"
 msgstr "إزالة واجهة التطبيق المصغر"
 
-#: /resources/lib/edit.py:283
+#: /resources/lib/edit.py:318
 msgctxt "#30090"
 msgid "Edit Artwork"
 msgstr "تحرير العمل الفني"
 
-#: /resources/lib/edit.py:283
+#: /resources/lib/edit.py:318
 msgctxt "#30091"
 msgid "Edit InfoLabels"
 msgstr "تحرير InfoLabels"
 
-#: /resources/lib/edit.py:299
+#: /resources/lib/edit.py:334
 msgctxt "#30092"
 msgid "Select Artwork to Add"
 msgstr "حدد عمل فني لإضافته"
 
-#: /resources/lib/edit.py:299
+#: /resources/lib/edit.py:334
 msgctxt "#30093"
 msgid "Select InfoLabel to Add"
 msgstr "حدد InfoLabel لإضافته"
 
-#: /resources/lib/edit.py:307 /resources/lib/edit.py:387
-#: /resources/lib/edit.py:469
+#: /resources/lib/edit.py:342 /resources/lib/edit.py:422
+#: /resources/lib/edit.py:504
 msgctxt "#30094"
 msgid "New Value for {}:"
 msgstr "قيمة جديدة ل {}:"
 
-#: /resources/lib/edit.py:346
+#: /resources/lib/edit.py:381
 msgctxt "#30095"
 msgid "Select Filetype"
 msgstr "تحديد نوع الملف"
 
-#: /resources/lib/edit.py:392
+#: /resources/lib/edit.py:427
 msgctxt "#30096"
 msgid ""
 "Do you want to clear or keep the current {}?\n"
@@ -541,17 +541,17 @@ msgstr ""
 "\n"
 "[ب] {}[/B]: {}"
 
-#: /resources/lib/edit.py:395
+#: /resources/lib/edit.py:430
 msgctxt "#30097"
 msgid "Clear"
 msgstr "مسح"
 
-#: /resources/lib/edit.py:396
+#: /resources/lib/edit.py:431
 msgctxt "#30098"
 msgid "Keep"
 msgstr "أبقِ"
 
-#: /resources/lib/edit.py:435
+#: /resources/lib/edit.py:470
 msgctxt "#30099"
 msgid "Refresh Duration"
 msgstr "تحديث المدة"
@@ -576,7 +576,7 @@ msgctxt "#30103"
 msgid "Icon Color"
 msgstr "لون الأيقونة"
 
-#: /resources/lib/add.py:299
+#: /resources/lib/add.py:300
 msgctxt "#30104"
 msgid "{} paths added to {}"
 msgstr "{} مسارات تمت إضافتها إلى {}"
@@ -621,7 +621,7 @@ msgctxt "#30112"
 msgid "Debug Logging"
 msgstr "تسجيل التصحيح"
 
-#: /resources/lib/edit.py:130 /resources/lib/menu.py:625
+#: /resources/lib/edit.py:165 /resources/lib/menu.py:647
 msgctxt "#30113"
 msgid "Edit Path"
 msgstr "تحرير المسار"
@@ -650,22 +650,22 @@ msgstr ""
 "هل تريد بالتأكيد مسح ذاكرة التخزين المؤقت؟ قد يجعل هذا الإجراء تحميل "
 "الحاجيات أبطأ لبعض الوقت."
 
-#: /resources/lib/edit.py:381
+#: /resources/lib/edit.py:416
 msgctxt "#30118"
 msgid "Select Content Type"
 msgstr "حدد نوع المحتوى"
 
-#: /resources/lib/menu.py:605
+#: /resources/lib/menu.py:627
 msgctxt "#30119"
 msgid "Copy Group"
 msgstr "نسخ المجموعة"
 
-#: /resources/lib/add.py:239
+#: /resources/lib/add.py:240
 msgctxt "#30120"
 msgid "Choose Paths to Copy"
 msgstr "اختر المسارات المراد نسخها"
 
-#: /resources/lib/manage.py:238
+#: /resources/lib/manage.py:252
 msgctxt "#30121"
 msgid "Choose Paths"
 msgstr "اختر المسارات"
@@ -750,13 +750,13 @@ msgctxt "#30137"
 msgid "Page"
 msgstr "خطأ في الصفحة! تحديث الصفحة وحاول مرة أخرى."
 
-#: /resources/lib/menu.py:753 /resources/lib/refresh.py:339
+#: /resources/lib/menu.py:775 /resources/lib/refresh.py:339
 #: /resources/lib/common/cache.py:250
 msgctxt "#30138"
 msgid "Error showing {}"
 msgstr "خطأ في إظهار {}"
 
-#: /resources/lib/menu.py:764 /resources/lib/refresh.py:350
+#: /resources/lib/menu.py:786 /resources/lib/refresh.py:350
 msgctxt "#30139"
 msgid "No content found for {}"
 msgstr "لم يتم العثور على محتوى لـ {}"
@@ -771,12 +771,12 @@ msgctxt "#30141"
 msgid "Finished Updating Widgets"
 msgstr "تم الانتهاء من تحديث الأدوات"
 
-#: /resources/lib/add.py:275 /resources/lib/add.py:289
+#: /resources/lib/add.py:276 /resources/lib/add.py:290
 msgctxt "#30142"
 msgid "Copying paths..."
 msgstr "جاري نسخ المسارات ..."
 
-#: /resources/lib/add.py:276
+#: /resources/lib/add.py:277
 msgctxt "#30143"
 msgid "Retrieving paths..."
 msgstr "جاري استرداد المسارات ..."
@@ -810,3 +810,23 @@ msgstr "قم بإنشاء عنصر واجهة مستخدم من محتويات �
 msgctxt "#30149"
 msgid "Create a Shortcut to this add-on's Settings dialog"
 msgstr "قم بإنشاء اختصار لمربع حوار الإعدادات الخاص بهذه الوظيفة الإضافية"
+
+#: /resources/lib/menu.py:605
+msgctxt "#30150"
+msgid "Shift Group Up"
+msgstr "مجموعة Shift لأعلى"
+
+#: /resources/lib/menu.py:616
+msgctxt "#30151"
+msgid "Shift Group Down"
+msgstr "مجموعة Shift لأسفل"
+
+#: /resources/lib/menu.py:605
+msgctxt "#30152"
+msgid "Shift Group to Bottom"
+msgstr "نقل المجموعة إلى أسفل"
+
+#: /resources/lib/menu.py:616
+msgctxt "#30153"
+msgid "Shift Group to Top"
+msgstr "مجموعة التحول إلى الأعلى"
