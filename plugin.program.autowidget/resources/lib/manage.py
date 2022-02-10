@@ -182,21 +182,34 @@ def get_widget_by_id(widget_id, group_id=None):
             return defined
 
 
+def count_defined_groups(_type=""):
+    return len(find_defined_groups(_type))
+
+
 def find_defined_groups(_type=""):
     groups = []
+    sort_order = 0
 
     for filename in [x for x in os.listdir(_addon_data) if x.endswith(".group")]:
         path = os.path.join(_addon_data, filename)
 
         group_def = utils.read_json(path)
         if group_def:
+            if not group_def.get("sort_order"):
+                group_def["sort_order"] = "{}".format(sort_order)
+                utils.write_json(path, group_def)
+            if group_def.get("content") is None:
+                group_def["content"] = ""
+                utils.write_json(path, group_def)
+
             if _type:
                 if group_def["type"] == _type:
                     groups.append(group_def)
             else:
                 groups.append(group_def)
+        sort_order += 1
 
-    return groups
+    return sorted(groups, key=lambda x: x["sort_order"])
 
 
 def find_defined_paths(group_id=None):

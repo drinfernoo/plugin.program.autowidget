@@ -212,7 +212,8 @@ def add_group(target, group_name=""):
             "id": group_id,
             "art": folder_sync if target == "widget" else folder_shortcut,
             "version": settings.get_addon_info("version"),
-            "content": None,
+            "content": "",
+            "sort_order": manage.count_defined_groups(target) + 1,
         }
 
         utils.write_json(filename, group_def)

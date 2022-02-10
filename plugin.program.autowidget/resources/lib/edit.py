@@ -15,7 +15,7 @@ advanced = settings.get_setting_bool("context.advanced")
 warning_shown = settings.get_setting_bool("context.warning")
 
 filter = {
-    "include": ["label", "file", "art", "color"] + utils.art_types,
+    "include": ["label", "file", "art", "color", "sort_order"] + utils.art_types,
     "exclude": ["paths", "version", "type"],
 }
 widget_filter = {
