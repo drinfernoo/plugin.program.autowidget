@@ -15,8 +15,8 @@ advanced = settings.get_setting_bool("context.advanced")
 warning_shown = settings.get_setting_bool("context.warning")
 
 filter = {
-    "include": ["label", "file", "art", "color", "sort_order"] + utils.art_types,
-    "exclude": ["paths", "version", "type"],
+    "include": ["label", "file", "art", "color"] + utils.art_types,
+    "exclude": ["paths", "version", "type", "sort_order"],
 }
 widget_filter = {
     "include": ["action", "refresh", "path"],
@@ -30,7 +30,7 @@ def shift_group(group_id, target):
     groups = manage.find_defined_groups()
     group_def = None
     swap_def = None
-    
+
     for idx, group in enumerate(groups):
         if group["id"] == group_id:
             group_def = group
