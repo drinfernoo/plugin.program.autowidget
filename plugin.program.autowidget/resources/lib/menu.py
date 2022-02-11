@@ -29,12 +29,12 @@ sync = utils.get_art("sync")
 tools = utils.get_art("tools")
 unpack = utils.get_art("unpack")
 
-_next = utils.get_string(30133)
-_next_page = utils.get_string(30134)
-_previous = utils.get_string(30135)
-_previous_page = utils.get_string(30136)
-_back = utils.get_string(30137)
-_page = utils.get_string(30138)
+_next = utils.get_string(30132)
+_next_page = utils.get_string(30133)
+_previous = utils.get_string(30134)
+_previous_page = utils.get_string(30135)
+_back = utils.get_string(30136)
+_page = utils.get_string(30137)
 
 
 def root_menu():
@@ -45,7 +45,7 @@ def root_menu():
         isFolder=True,
     )
     directory.add_menu_item(
-        title=30052,
+        title=30051,
         params={"mode": "widget"},
         art=utils.get_art("folder"),
         isFolder=True,
@@ -60,12 +60,12 @@ def root_menu():
 def my_groups_menu():
     groups = manage.find_defined_groups()
     if len(groups) > 0:
-        for group in groups:
+        for idx, group in enumerate(groups):
             group_name = group["label"]
             group_id = group["id"]
             group_type = group["type"]
 
-            cm = _create_group_context_items(group_id, group_type)
+            cm = _create_group_context_items(group_id, group_type, idx, len(groups))
 
             directory.add_menu_item(
                 title=six.text_type(group_name),
@@ -82,7 +82,7 @@ def my_groups_menu():
             )
     else:
         directory.add_menu_item(
-            title=30046,
+            title=30045,
             art=utils.get_art("alert"),
             isFolder=False,
             props={"specialsort": "bottom"},
@@ -147,7 +147,7 @@ def group_menu(group_id):
             _create_action_items(group_def, _id)
     else:
         directory.add_menu_item(
-            title=30019,
+            title=30018,
             art=utils.get_art("alert"),
             isFolder=False,
             props={"specialsort": "bottom"},
@@ -178,7 +178,7 @@ def active_widgets_menu():
                     if action != "merged":
                         label = path_def.get("label", "").encode("utf-8")
                     else:
-                        label = utils.get_string(30102).format(len(path_id))
+                        label = utils.get_string(30101).format(len(path_id))
                 except:
                     pass
 
@@ -193,13 +193,13 @@ def active_widgets_menu():
             cm = []
             if not action:
                 art = folder_shortcut
-                title = utils.get_string(30018).format(title)
+                title = utils.get_string(30017).format(title)
             else:
                 if action in ["random", "next"]:
                     art = shuffle
                     cm.append(
                         (
-                            utils.get_string(30047),
+                            utils.get_string(30046),
                             (
                                 "RunPlugin("
                                 "plugin://plugin.program.autowidget/"
@@ -215,7 +215,7 @@ def active_widgets_menu():
 
             cm.append(
                 (
-                    utils.get_string(30048),
+                    utils.get_string(30047),
                     (
                         "RunPlugin("
                         "plugin://plugin.program.autowidget/"
@@ -228,7 +228,7 @@ def active_widgets_menu():
 
             if not group_def:
                 title = "{} - [COLOR firebrick]{}[/COLOR]".format(
-                    widget_id, utils.get_string(30049)
+                    widget_id, utils.get_string(30048)
                 )
 
             directory.add_menu_item(
@@ -240,13 +240,13 @@ def active_widgets_menu():
             )
     else:
         directory.add_menu_item(
-            title=30050,
+            title=30049,
             art=utils.get_art("alert"),
             isFolder=False,
             props={"specialsort": "bottom"},
         )
 
-    return True, utils.get_string(30052), None
+    return True, utils.get_string(30051), None
 
 
 def tools_menu():
@@ -257,25 +257,25 @@ def tools_menu():
         isFolder=False,
     )
     directory.add_menu_item(
-        title=30103,
+        title=30102,
         params={"mode": "clean"},
         art=utils.get_art("spray-bottle"),
         isFolder=False,
     )
     directory.add_menu_item(
-        title=30043,
+        title=30042,
         params={"mode": "wipe"},
         art=utils.get_art("remove"),
         isFolder=False,
     )
     directory.add_menu_item(
-        title=30101,
+        title=30100,
         params={"mode": "skindebug"},
         art=utils.get_art("bug-outline"),
         isFolder=False,
     )
     directory.add_menu_item(
-        title=30117,
+        title=30116,
         params={"mode": "clear_cache"},
         art=utils.get_art("cache"),
         isFolder=False,
@@ -318,7 +318,7 @@ def show_path(
 
     if stack:
         title = _previous
-        # title = utils.get_string(30085).format(len(stack))
+        # title = utils.get_string(30084).format(len(stack))
         directory.add_menu_item(
             title=title,
             params={
@@ -472,8 +472,8 @@ def path_menu(group_id, action, widget_id):
     group_def = manage.get_group_by_id(group_id)
     if not group_def:
         directory.add_menu_item(
-            title=30051,
-            info={"plot": utils.get_string(30053)},
+            title=30050,
+            info={"plot": utils.get_string(30052)},
             art=utils.get_art("alert"),
             isFolder=True,
         )
@@ -482,7 +482,7 @@ def path_menu(group_id, action, widget_id):
     group_name = group_def.get("label", "")
     paths = group_def.get("paths", [])
     if len(paths) == 0:
-        directory.add_menu_item(title=30019, art=utils.get_art("alert"), isFolder=True)
+        directory.add_menu_item(title=30018, art=utils.get_art("alert"), isFolder=True)
         return True, group_name, None
 
     widget_def = manage.get_widget_by_id(widget_id, group_id)
@@ -490,7 +490,7 @@ def path_menu(group_id, action, widget_id):
         dialog = xbmcgui.Dialog()
         if action == "static":
             idx = manage.choose_paths(
-                utils.get_string(30088), paths, indices=True, single=True
+                utils.get_string(30087), paths, indices=True, single=True
             )
             if idx == -1:
                 return True, "AutoWidget", None
@@ -498,8 +498,8 @@ def path_menu(group_id, action, widget_id):
             widget_def = manage.initialize(group_def, action, widget_id, keep=idx)
         elif action == "cycling":
             idx = dialog.select(
-                utils.get_string(30059),
-                [utils.get_string(30057), utils.get_string(30058)],
+                utils.get_string(30058),
+                [utils.get_string(30056), utils.get_string(30057)],
             )
             if idx == -1:
                 del dialog
@@ -508,7 +508,7 @@ def path_menu(group_id, action, widget_id):
             _action = "random" if idx == 0 else "next"
 
             cycle_paths = manage.choose_paths(
-                utils.get_string(30123), paths, threshold=-1, indices=True
+                utils.get_string(30122), paths, threshold=-1, indices=True
             )
 
             widget_def = manage.initialize(
@@ -535,7 +535,7 @@ def path_menu(group_id, action, widget_id):
         titles, cat, type = show_path(group_id, _label, widget_id, widget_path)
         return titles, cat, type
     else:
-        directory.add_menu_item(title=30045, art=info, isFolder=True)
+        directory.add_menu_item(title=30044, art=info, isFolder=True)
         return True, group_name, None
 
 
@@ -546,14 +546,14 @@ def merged_path(group_id, widget_id):
     group_name = group_def.get("label", "")
     paths = group_def.get("paths", [])
     if len(paths) == 0:
-        directory.add_menu_item(title=30019, art=utils.get_art("alert"), isFolder=False)
+        directory.add_menu_item(title=30018, art=utils.get_art("alert"), isFolder=False)
         return True, group_name, None
 
     widget_def = manage.get_widget_by_id(widget_id, group_id)
     if widget_def and _window != "dialog":
         paths = widget_def["path"]
     elif not widget_def:
-        idxs = manage.choose_paths(utils.get_string(30089), paths, 5)
+        idxs = manage.choose_paths(utils.get_string(30088), paths, 5)
 
         if idxs is not None:
             if len(idxs) > 0:
@@ -586,14 +586,14 @@ def merged_path(group_id, widget_id):
 
         return titles, cat, type
     else:
-        directory.add_menu_item(title=30045, art=info, isFolder=True)
+        directory.add_menu_item(title=30044, art=info, isFolder=True)
         return True, group_name, None
 
 
-def _create_group_context_items(group_id, target):
+def _create_group_context_items(group_id, target, idx, length):
     cm = [
         (
-            utils.get_string(30042),
+            utils.get_string(30041),
             (
                 "RunPlugin("
                 "plugin://plugin.program.autowidget/"
@@ -603,7 +603,29 @@ def _create_group_context_items(group_id, target):
             ).format(group_id),
         ),
         (
-            utils.get_string(30120),
+            utils.get_string(30150) if idx > 0 else utils.get_string(30152),
+            (
+                "RunPlugin("
+                "plugin://plugin.program.autowidget/"
+                "?mode=manage"
+                "&action=shift_group"
+                "&target=up"
+                "&group={})"
+            ).format(group_id),
+        ),
+        (
+            utils.get_string(30151) if idx < length - 1 else utils.get_string(30153),
+            (
+                "RunPlugin("
+                "plugin://plugin.program.autowidget/"
+                "?mode=manage"
+                "&action=shift_group"
+                "&target=down"
+                "&group={})"
+            ).format(group_id),
+        ),
+        (
+            utils.get_string(30119),
             (
                 "RunPlugin("
                 "plugin://plugin.program.autowidget/"
@@ -620,10 +642,10 @@ def _create_group_context_items(group_id, target):
 
 def _create_path_context_items(group_id, path_id, idx, length, target):
     if target not in ["shortcut", "widget"]:
-        main_action = utils.get_string(30048)
+        main_action = utils.get_string(30047)
     else:
         main_action = (
-            utils.get_string(30031) if target == "shortcut" else utils.get_string(30114)
+            utils.get_string(30030) if target == "shortcut" else utils.get_string(30113)
         )
 
     cm = [
@@ -639,7 +661,7 @@ def _create_path_context_items(group_id, path_id, idx, length, target):
             ).format(group_id, path_id),
         ),
         (
-            utils.get_string(30015) if idx > 0 else utils.get_string(30087),
+            utils.get_string(30014) if idx > 0 else utils.get_string(30086),
             (
                 "RunPlugin("
                 "plugin://plugin.program.autowidget/"
@@ -651,7 +673,7 @@ def _create_path_context_items(group_id, path_id, idx, length, target):
             ).format(group_id, path_id),
         ),
         (
-            utils.get_string(30016) if idx < length - 1 else utils.get_string(30086),
+            utils.get_string(30015) if idx < length - 1 else utils.get_string(30085),
             (
                 "RunPlugin("
                 "plugin://plugin.program.autowidget/"
@@ -678,7 +700,7 @@ def _create_action_items(group_def, _id):
     if group_type == "widget":
         directory.add_separator(title=30009, char="/", sort="bottom")
         directory.add_menu_item(
-            title=utils.get_string(30054).format(six.text_type(group_name)),
+            title=utils.get_string(30053).format(six.text_type(group_name)),
             params={
                 "mode": "path",
                 "action": "static",
@@ -691,7 +713,7 @@ def _create_action_items(group_def, _id):
             props=props,
         )
         directory.add_menu_item(
-            title=utils.get_string(30017).format(six.text_type(group_name)),
+            title=utils.get_string(30016).format(six.text_type(group_name)),
             params={
                 "mode": "path",
                 "action": "cycling",
@@ -704,7 +726,7 @@ def _create_action_items(group_def, _id):
             props=props,
         )
         directory.add_menu_item(
-            title=utils.get_string(30066).format(six.text_type(group_name)),
+            title=utils.get_string(30065).format(six.text_type(group_name)),
             params={
                 "mode": "path",
                 "action": "merged",
@@ -751,7 +773,7 @@ def _is_page_item(label, next=True):
 
 def show_error(id, props=None):
     directory.add_menu_item(
-        title=settings.get_localized_string(30139).format(id),
+        title=settings.get_localized_string(30138).format(id),
         art=utils.get_art("alert"),
         props=props,
         isFolder=False,
@@ -762,7 +784,7 @@ def show_error(id, props=None):
 
 def show_empty(id, props=None):
     directory.add_menu_item(
-        title=settings.get_localized_string(30140).format(id),
+        title=settings.get_localized_string(30139).format(id),
         art=info,
         props=props,
         isFolder=False,

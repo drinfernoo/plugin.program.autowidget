@@ -22,11 +22,11 @@
                 <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
             </item>
 			<item library="context_refresh_single.py">
-                <label>$ADDON[plugin.program.autowidget 30047]</label>
+                <label>$ADDON[plugin.program.autowidget 30046]</label>
                 <visible>!String.IsEmpty(ListItem.Property(autoID)) + [!String.IsEqual(ListItem.Property(autoAction),static) + !String.IsEqual(ListItem.Property(autoAction),merged)]</visible>
             </item>
 			<item library="clear_cache_single.py">
-                <label>$ADDON[plugin.program.autowidget 30117]</label>
+                <label>$ADDON[plugin.program.autowidget 30116]</label>
                 <visible>!String.IsEmpty(ListItem.Property(autoCache))</visible>
             </item>
         </menu>

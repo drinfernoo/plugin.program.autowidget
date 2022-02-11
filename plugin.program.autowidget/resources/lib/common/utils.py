@@ -256,7 +256,7 @@ def ensure_addon_data():
 
 def wipe(folder=_addon_data):
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno("AutoWidget", get_string(30044))
+    choice = dialog.yesno("AutoWidget", get_string(30043))
     del dialog
 
     if choice:
@@ -308,16 +308,16 @@ def set_color(setting=False):
 
     choice = dialog.yesno(
         "AutoWidget",
-        get_string(30107),
-        yeslabel=get_string(30108),
-        nolabel=get_string(30109),
+        get_string(30106),
+        yeslabel=get_string(30107),
+        nolabel=get_string(30108),
     )
 
     if choice:
-        value = dialog.input(get_string(30110)).lower()
+        value = dialog.input(get_string(30109)).lower()
     else:
         value = dialog.select(
-            get_string(30111),
+            get_string(30110),
             ["[COLOR {0}]{0}[/COLOR]".format(i) for i in colors],
             preselect=colors.index(color) if color in colors else -1,
         )
@@ -327,7 +327,7 @@ def set_color(setting=False):
     if value != -1:
         if value not in colors:
             if len(value) < 6:
-                dialog.notification("AutoWidget", get_string(30112))
+                dialog.notification("AutoWidget", get_string(30111))
                 del dialog
                 return
             elif len(value) == 6 and not value.startswith("#"):

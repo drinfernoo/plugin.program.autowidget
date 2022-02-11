@@ -79,7 +79,7 @@ def clean(widget_id=None, notify=False, all=False):
     if notify:
         dialog.notification(
             "AutoWidget",
-            utils.get_string(30106).format("No" if removed == 0 else removed),
+            utils.get_string(30105).format("No" if removed == 0 else removed),
         )
         del dialog
     del dialog
@@ -134,15 +134,18 @@ def write_path(group_def, path_def=None, update=""):
         if update:
             for path in group_def["paths"]:
                 if path["id"] == update:
+                    path["version"] = settings.get_addon_info("version")
                     group_def["paths"][group_def["paths"].index(path)] = path_def
         else:
             group_def["paths"].append(path_def)
 
+    group_def["version"] = settings.get_addon_info("version")
     utils.write_json(filename, group_def)
 
 
 def save_path_details(params):
     path_to_saved = os.path.join(_addon_data, "{}.widget".format(params["id"]))
+    params["version"] = settings.get_addon_info("version")
     utils.write_json(path_to_saved, params)
 
     return params
@@ -182,21 +185,35 @@ def get_widget_by_id(widget_id, group_id=None):
             return defined
 
 
+def highest_group_sort_order():
+    groups = find_defined_groups()
+    return groups[-1].get("sort_order", 0) if len(groups) > 0 else 0
+
+
 def find_defined_groups(_type=""):
     groups = []
+    sort_order = 0
 
     for filename in [x for x in os.listdir(_addon_data) if x.endswith(".group")]:
         path = os.path.join(_addon_data, filename)
 
         group_def = utils.read_json(path)
         if group_def:
+            if not group_def.get("sort_order"):
+                group_def["sort_order"] = "{}".format(sort_order)
+                utils.write_json(path, group_def)
+            if group_def.get("content") is None:
+                group_def["content"] = ""
+                utils.write_json(path, group_def)
+
             if _type:
                 if group_def["type"] == _type:
                     groups.append(group_def)
             else:
                 groups.append(group_def)
+        sort_order += 1
 
-    return groups
+    return sorted(groups, key=lambda x: x["sort_order"])
 
 
 def find_defined_paths(group_id=None):
@@ -236,7 +253,7 @@ def find_defined_widgets(group_id=None):
 
 
 def choose_paths(
-    label=utils.get_string(30122),
+    label=utils.get_string(30121),
     paths=None,
     threshold=None,
     indices=True,
