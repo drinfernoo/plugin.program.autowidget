@@ -29,7 +29,6 @@ sync = utils.get_art("sync")
 tools = utils.get_art("tools")
 unpack = utils.get_art("unpack")
 
-_next = utils.get_string(30132)
 _next_page = utils.get_string(30133)
 _previous = utils.get_string(30134)
 _previous_page = utils.get_string(30135)

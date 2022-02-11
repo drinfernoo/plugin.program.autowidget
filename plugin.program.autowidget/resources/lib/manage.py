@@ -1,4 +1,5 @@
 import xbmcgui
+import xbmcvfs
 
 import os
 import random
@@ -6,8 +7,8 @@ import random
 from resources.lib.common import settings
 from resources.lib.common import utils
 
-_addon_data = utils.translate_path(settings.get_addon_info("profile"))
-_userdata = utils.translate_path("special://userdata/")
+_addon_data = settings.get_addon_info("profile")
+_userdata = "special://profile/"
 _skin_shortcuts = utils.translate_path(
     settings.get_addon_info("profile", addon="script.skinshortcuts")
 )
@@ -37,7 +38,7 @@ def clean(widget_id=None, notify=False, all=False):
             if os.path.exists(path):
                 files.append(path)
     if _skin_shortcuts and os.path.exists(_skin_shortcuts):
-        for xml in os.listdir(_skin_shortcuts):
+        for xml in xbmcvfs.listdir(_skin_shortcuts):
             ext = xml.split(".")
             if ext[-1] in ["xml", "properties"]:
                 path = os.path.join(_skin_shortcuts, xml)
@@ -194,7 +195,9 @@ def find_defined_groups(_type=""):
     groups = []
     sort_order = 0
 
-    for filename in [x for x in os.listdir(_addon_data) if x.endswith(".group")]:
+    for filename in [
+        x for x in xbmcvfs.listdir(_addon_data)[1] if x.endswith(".group")
+    ]:
         path = os.path.join(_addon_data, filename)
 
         group_def = utils.read_json(path)
@@ -236,7 +239,7 @@ def find_defined_paths(group_id=None):
 
 
 def find_defined_widgets(group_id=None):
-    addon_files = os.listdir(_addon_data)
+    addon_files = xbmcvfs.listdir(_addon_data)
     widgets = []
 
     widget_files = [x for x in addon_files if x.endswith(".widget")]
