@@ -24,7 +24,7 @@ DEFAULT_CACHE_TIME = 60 * 5
 def clear_cache(target=None):
     if not target:
         dialog = xbmcgui.Dialog()
-        choice = dialog.yesno("AutoWidget", utils.get_string(30118))
+        choice = dialog.yesno("AutoWidget", utils.get_string(30117))
         del dialog
 
         if choice:
@@ -240,7 +240,7 @@ def cache_expiry(path, widget_id, add=None, background=True):
         if not os.path.exists(cache_path):
             result = "Empty"
             if background:
-                contents = utils.make_holding_path(utils.get_string(30145), "refresh")
+                contents = utils.make_holding_path(utils.get_string(30144), "refresh")
                 push_cache_queue(path)
         else:
             contents = utils.read_json(cache_path, log_file=True)
@@ -248,7 +248,7 @@ def cache_expiry(path, widget_id, add=None, background=True):
                 result = "Invalid Read"
                 if background:
                     contents = utils.make_holding_path(
-                        utils.get_string(30139).format(hash), "alert"
+                        utils.get_string(30138).format(hash), "alert"
                     )
                     push_cache_queue(path)
             else:
