@@ -25,11 +25,11 @@ shortcut_types = [
 ]
 
 type_labels = [
+    30144,
     30145,
     30146,
     30147,
     30148,
-    30149,
 ]
 
 folder_shortcut = utils.get_art("folder-shortcut")
@@ -273,8 +273,8 @@ def _copy_path(path_def):
         return
 
     progress = xbmcgui.DialogProgressBG()
-    progress.create("AutoWidget", utils.get_string(30142))
-    progress.update(1, "AutoWidget", utils.get_string(30143))
+    progress.create("AutoWidget", utils.get_string(30141))
+    progress.update(1, "AutoWidget", utils.get_string(30142))
 
     files, hash = refresh.get_files_list(path_def["file"]["file"], background=False)
     if not files:
@@ -287,7 +287,7 @@ def _copy_path(path_def):
             continue
         progress.update(
             int(done / float(len(files)) * 100),
-            heading=utils.get_string(30142),
+            heading=utils.get_string(30141),
             message=file.get("label"),
         )
 

@@ -246,7 +246,7 @@ def cache_expiry(path, widget_id, add=None, background=True):
         if not xbmcvfs.exists(cache_path):
             result = "Empty"
             if background:
-                contents = utils.make_holding_path(utils.get_string(30144), "refresh")
+                contents = utils.make_holding_path(utils.get_string(30143), "refresh")
                 push_cache_queue(path)
         else:
             contents = utils.read_json(cache_path, log_file=True)
@@ -254,7 +254,7 @@ def cache_expiry(path, widget_id, add=None, background=True):
                 result = "Invalid Read"
                 if background:
                     contents = utils.make_holding_path(
-                        utils.get_string(30138).format(hash), "alert"
+                        utils.get_string(30137).format(hash), "alert"
                     )
                     push_cache_queue(path)
             else:
