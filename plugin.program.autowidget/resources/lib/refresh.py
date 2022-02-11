@@ -98,7 +98,7 @@ class RefreshService(xbmc.Monitor):
                 #     def __call__(self, groupname, path):
                 #         if self.dialog is None:
                 #             self.dialog = xbmcgui.DialogProgressBG()
-                #             self.dialog.create("AutoWidget", utils.get_string(30140))
+                #             self.dialog.create("AutoWidget", utils.get_string(30139))
                 #         if not self.service.player.isPlayingVideo():
                 #             percent = (
                 #                 len(self.done)
@@ -159,7 +159,7 @@ class RefreshService(xbmc.Monitor):
                 ):
                     dialog = xbmcgui.Dialog()
                     dialog.notification(
-                        u"AutoWidget", utils.get_string(30141), sound=False
+                        u"AutoWidget", utils.get_string(30140), sound=False
                     )
 
             if self.abortRequested():
@@ -338,7 +338,7 @@ def get_files_list(path, label=None, widget_id=None, background=True):
     elif "error" in files:
         utils.log("Error processing {}".format(hash), "error")
         error_tile = utils.make_holding_path(
-            utils.get_string(30138).format(label), "alert", hash=hash
+            utils.get_string(30137).format(label), "alert", hash=hash
         )
         files = error_tile.get("result", {}).get("files", [])
         cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
@@ -349,7 +349,7 @@ def get_files_list(path, label=None, widget_id=None, background=True):
     if not files:
         utils.log("No items found for {}".format(hash))
         empty_tile = utils.make_holding_path(
-            utils.get_string(30139).format(label), "information-outline", hash=hash
+            utils.get_string(30138).format(label), "information-outline", hash=hash
         )
         files = empty_tile.get("result", {}).get("files", [])
 
