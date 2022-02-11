@@ -64,7 +64,7 @@ def backup():
         content = six.BytesIO()
         with zipfile.ZipFile(content, "w", zipfile.ZIP_DEFLATED) as z:
             for file in files:
-                with xbmcvfs.File(os.path.join(_addon_data, file), "r") as f:
+                with xbmcvfs.File(os.path.join(_addon_data, file)) as f:
                     z.writestr(file, six.ensure_text(f.read()))
 
         with xbmcvfs.File(path, "w") as f:

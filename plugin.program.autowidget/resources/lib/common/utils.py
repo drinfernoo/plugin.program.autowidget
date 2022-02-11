@@ -244,13 +244,13 @@ def log(msg, level="debug"):
     except UnicodeEncodeError:
         xbmc.log(msg.encode("utf-8"), _level)
     if debug:
-        debug_size = os.path.getsize(logpath) if os.path.exists(logpath) else 0
+        debug_size = xbmcvfs.Stat(logpath).st_size() if xbmcvfs.exists(logpath) else 0
         debug_msg = u"{}  {}{}".format(time.ctime(), level.upper(), msg[25:])
         write_file(logpath, debug_msg + "\n", mode="a" if debug_size < 1048576 else "w")
 
 
 def ensure_addon_data():
-    if not xbvmcfs.exists(_addon_data):
+    if not xbmcvfs.exists(_addon_data):
         xbmcvfs.mkdirs(_addon_data)
 
 
@@ -280,8 +280,8 @@ def get_art(filename, color=None):
         color = settings.get_setting_string("ui.color")
 
     themed_path = os.path.join(_addon_data, color)
-    if not os.path.exists(themed_path):
-        os.makedirs(themed_path)
+    if not xbmcvfs.exists(themed_path):
+        xbmcvfs.mkdirs(themed_path)
 
     for i in art_types:
         _i = i
@@ -290,14 +290,14 @@ def get_art(filename, color=None):
         path = os.path.join(_art_path, _i, "{}.png".format(filename))
         new_path = ""
 
-        if os.path.exists(path):
+        if xbmcvfs.exists(path):
             if color.lower() not in ["white", "#ffffff"]:
                 new_path = os.path.join(themed_path, "{}-{}.png".format(filename, _i))
-                if not os.path.exists(new_path):
+                if not xbmcvfs.exists(new_path):
                     icon = Image.open(path).convert("RGBA")
                     overlay = Image.new("RGBA", icon.size, color)
                     Image.composite(overlay, icon, icon).save(new_path)
-            art[i] = clean_artwork_url(new_path if os.path.exists(new_path) else path)
+            art[i] = clean_artwork_url(new_path if xbmcvfs.exists(new_path) else path)
 
     return art
 
@@ -374,8 +374,8 @@ def update_container(reload=False):
         else:
             log("Triggering library update to reload widgets", "debug")
             xbmc.executebuiltin("UpdateLibrary(video, AutoWidget)")
-            if os.path.exists(refresh_time):
-                os.remove(refresh_time)
+            if xbmcvfs.exists(refresh_time):
+                remove_file(refresh_time)
     if in_plugin:
         xbmc.executebuiltin("Container.Refresh()")
 
@@ -425,7 +425,7 @@ def remove_file(file):
 def read_file(file):
     content = None
     if xbmcvfs.exists(file):
-        with xbmcvfs.File(os.path.join(_addon_data, file), "r") as f:
+        with xbmcvfs.File(file) as f:
             try:
                 content = f.read()
             except Exception as e:
@@ -450,7 +450,7 @@ def write_file(file, content, mode="w"):
 def read_json(file, log_file=False, default=None):
     data = None
     if xbmcvfs.exists(file):
-        with xbmcvfs.File(os.path.join(_addon_data, file), "r") as f:
+        with xbmcvfs.File(file) as f:
             content = six.ensure_text(f.read())
             try:
                 data = json.loads(content)

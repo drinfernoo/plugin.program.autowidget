@@ -239,7 +239,7 @@ def find_defined_paths(group_id=None):
 
 
 def find_defined_widgets(group_id=None):
-    addon_files = xbmcvfs.listdir(_addon_data)
+    addon_files = xbmcvfs.listdir(_addon_data)[1]
     widgets = []
 
     widget_files = [x for x in addon_files if x.endswith(".widget")]
