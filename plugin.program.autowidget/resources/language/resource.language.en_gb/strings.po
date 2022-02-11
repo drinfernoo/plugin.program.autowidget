@@ -427,8 +427,8 @@ msgstr "Choose Backup to Restore"
 
 #: /resources/lib/backup.py:84
 msgctxt "#30075"
-msgid "Would you like to restore {} group {} from this backup?"
-msgstr "Would you like to restore {} group {} from this backup?"
+msgid "Would you like to restore {} group{} from this backup?"
+msgstr "Would you like to restore {} group{} from this backup?"
 
 #: /resources/lib/backup.py:88
 msgctxt "#30076"

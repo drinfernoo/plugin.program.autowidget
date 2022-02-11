@@ -47,7 +47,7 @@ def backup():
 
         files = [
             x
-            for x in xbmcvfs.listdir(_addon_data)
+            for x in xbmcvfs.listdir(_addon_data)[1]
             if any(
                 x.endswith(i)
                 for i in [".group", ".widget", ".history", ".cache", ".log"]
@@ -78,7 +78,7 @@ def restore():
         1, utils.get_string(30074), "files", mask=".zip", defaultt=_backup_location
     )
 
-    if backup.endswith("zip"):
+    if backup.endswith(".zip"):
         with zipfile.ZipFile(backup, "r") as z:
             info = z.infolist()
             choice = dialog.yesno(
@@ -90,10 +90,10 @@ def restore():
                 overwrite = dialog.yesno("AutoWidget", utils.get_string(30076))
 
                 if overwrite:
-                    files = [x for x in os.listdir(_addon_data) if x.endswith(".group")]
+                    files = [x for x in xbmcvfs.listdir(_addon_data)[1] if x.endswith(".group")]
                     for file in files:
                         utils.remove_file(file)
-                z.extractall(_addon_data)
+                utils.call_builtin("Extract({},{})".format(backup, _addon_data))
             else:
                 dialog.notification("AutoWidget", utils.get_string(30077))
         del dialog
