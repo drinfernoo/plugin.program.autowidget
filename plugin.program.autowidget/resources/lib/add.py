@@ -14,7 +14,7 @@ from resources.lib import refresh
 from resources.lib.common import settings
 from resources.lib.common import utils
 
-_addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_addon_data = settings.get_addon_info("profile")
 
 shortcut_types = [
     30032,

@@ -1,4 +1,5 @@
 import xbmcgui
+import xbmcvfs
 
 import glob
 import hashlib
@@ -13,7 +14,7 @@ from resources.lib import manage
 from resources.lib.common import settings
 from resources.lib.common import utils
 
-_addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_addon_data = settings.get_addon_info("profile")
 
 _playback_history_path = os.path.join(_addon_data, "cache.history")
 
@@ -30,12 +31,12 @@ def clear_cache(target=None):
         if choice:
             for file in [
                 i
-                for i in os.listdir(_addon_data)
+                for i in xbmcvfs.listdir(_addon_data)
                 if i.split('.')[-1] in ["cache", "history", "queue"]
             ]:
-                os.remove(os.path.join(_addon_data, file))
+                utils.remove_file(os.path.join(_addon_data, file))
     else:
-        os.remove(os.path.join(_addon_data, "{}.cache".format(target)))
+        utils.remove_file(os.path.join(_addon_data, "{}.cache".format(target)))
         utils.update_container(True)
 
 
@@ -45,6 +46,7 @@ def hash_from_cache_path(path):
 
 
 def iter_queue():
+    # TODO glob in xbmcvfs?
     queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_data, "*.queue")))
     # TODO: sort by path instead so load plugins at the same time
     for path in sorted(queued, key=os.path.getmtime):
@@ -55,7 +57,7 @@ def iter_queue():
 def read_history(path, create_if_missing=True):
     hash = path2hash(path)
     history_path = os.path.join(_addon_data, "{}.history".format(hash))
-    if not os.path.exists(history_path):
+    if not xbmcvfs.exists(history_path):
         if create_if_missing:
             cache_data = {}
             history = cache_data.setdefault("history", [])
@@ -75,7 +77,7 @@ def next_cache_queue():
         # TODO: sort by path instead so load plugins at the same time
         hash = path2hash(path)
         queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
-        if not os.path.exists(queue_path):
+        if not xbmcvfs.exists(queue_path):
             # a widget update has already taken care of updating this path
             continue
         # We will let the update operation remove the item from the queue
@@ -112,7 +114,7 @@ def push_cache_queue(path, widget_id=None):
 
 def is_cache_queue(hash):
     queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
-    return os.path.exists(queue_path)
+    return xbmcvfs.exists(queue_path)
 
 
 def remove_cache_queue(hash):
@@ -292,6 +294,7 @@ def cache_expiry(path, widget_id, add=None, background=True):
 
 
 def last_read(hash):
+    # TODO getmtime in xbmcvfs?
     # Technically this is last read or updated but we can change it to be last read Later
     # if we create another file
     path = os.path.join(_addon_data, "{}.history".format(hash))
@@ -364,6 +367,7 @@ def widgets_changed_by_watching(media_type):
     # Predict which widgets the skin might have that could have changed based on recently finish
     # watching something
 
+    # TODO glob in xbmcvfs?
     all_cache = filter(
         os.path.isfile, glob.glob(os.path.join(_addon_data, "*.history"))
     )

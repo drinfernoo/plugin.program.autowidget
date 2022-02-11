@@ -1,5 +1,6 @@
 import xbmc
 import xbmcgui
+import xbmcvfs
 
 import os
 import random
@@ -11,7 +12,7 @@ from resources.lib.common import cache
 from resources.lib.common import settings
 from resources.lib.common import utils
 
-_addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_addon_data = settings.get_addon_info("profile")
 
 skin_string_pattern = "autowidget-{}-{}"
 _properties = ["context.autowidget"]
@@ -144,7 +145,7 @@ class RefreshService(xbmc.Monitor):
                         continue
                     _update_strings(widget_def)
                 if (
-                    os.path.exists(os.path.join(_addon_data, "refresh.time"))
+                    xbmcvfs.exists(os.path.join(_addon_data, "refresh.time"))
                     and utils.get_active_window() == "home"
                 ):
                     utils.update_container(True)
@@ -341,8 +342,8 @@ def get_files_list(path, label=None, widget_id=None, background=True):
         )
         files = error_tile.get("result", {}).get("files", [])
         cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
-        if os.path.exists(cache_path):
-            os.remove(cache_path)
+        if xbmcvfs.exists(cache_path):
+            utils.remove_file(cache_path)
         utils.log("Invalid cache file removed for {}".format(hash))
 
     if not files:

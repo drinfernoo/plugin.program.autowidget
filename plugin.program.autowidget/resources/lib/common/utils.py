@@ -28,7 +28,7 @@ except AttributeError:
     translate_path = xbmc.translatePath
 
 _addon_id = settings.get_addon_info("id")
-_addon_data = translate_path(settings.get_addon_info("profile"))
+_addon_data = settings.get_addon_info("profile")
 _addon_root = translate_path(settings.get_addon_info("path"))
 
 _art_path = os.path.join(_addon_root, "resources", "media")
@@ -250,8 +250,8 @@ def log(msg, level="debug"):
 
 
 def ensure_addon_data():
-    if not os.path.exists(_addon_data):
-        os.makedirs(_addon_data)
+    if not xbvmcfs.exists(_addon_data):
+        xbmcvfs.mkdirs(_addon_data)
 
 
 def wipe(folder=_addon_data):
@@ -415,17 +415,17 @@ def convert(input):
 
 
 def remove_file(file):
-    if os.path.exists(file):
+    if xbmcvfs.exists(file):
         try:
-            os.remove(file)
+            xbmcvfs.delete(file)
         except OSError as e:
             log("Could not remove {}: {}".format(file, e), level="error")
 
 
 def read_file(file):
     content = None
-    if os.path.exists(file):
-        with io.open(os.path.join(_addon_data, file), "r", encoding="utf-8") as f:
+    if xbmcvfs.exists(file):
+        with xbmcvfs.File(os.path.join(_addon_data, file), "r") as f:
             try:
                 content = f.read()
             except Exception as e:
@@ -437,7 +437,7 @@ def read_file(file):
 
 
 def write_file(file, content, mode="w"):
-    with open(file, mode) as f:
+    with xbmcvfs.File(file, mode) as f:
         try:
             f.write(content)
             return True
@@ -449,8 +449,8 @@ def write_file(file, content, mode="w"):
 
 def read_json(file, log_file=False, default=None):
     data = None
-    if os.path.exists(file):
-        with codecs.open(os.path.join(_addon_data, file), "r", encoding="utf-8") as f:
+    if xbmcvfs.exists(file):
+        with xbmcvfs.File(os.path.join(_addon_data, file), "r") as f:
             content = six.ensure_text(f.read())
             try:
                 data = json.loads(content)
@@ -467,7 +467,7 @@ def read_json(file, log_file=False, default=None):
 
 
 def write_json(file, content):
-    with codecs.open(file, "w", encoding="utf-8") as f:
+    with xbmcvfs.File(file, "w") as f:
         try:
             json.dump(content, f, indent=4)
         except Exception as e:

@@ -1,4 +1,5 @@
 import xbmcgui
+import xbmcvfs
 
 import os
 import zipfile
@@ -8,7 +9,7 @@ import six
 from resources.lib.common import settings
 from resources.lib.common import utils
 
-_addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_addon_data = settings.get_addon_info("profile")
 _backup_location = utils.translate_path(settings.get_setting_string("backup.location"))
 
 
@@ -46,7 +47,7 @@ def backup():
 
         files = [
             x
-            for x in os.listdir(_addon_data)
+            for x in xbmcvfs.listdir(_addon_data)
             if any(
                 x.endswith(i)
                 for i in [".group", ".widget", ".history", ".cache", ".log"]
@@ -63,10 +64,10 @@ def backup():
         content = six.BytesIO()
         with zipfile.ZipFile(content, "w", zipfile.ZIP_DEFLATED) as z:
             for file in files:
-                with open(os.path.join(_addon_data, file), "r") as f:
+                with xbmcvfs.File(os.path.join(_addon_data, file), "r") as f:
                     z.writestr(file, six.ensure_text(f.read()))
 
-        with open(path, "wb") as f:
+        with xbmcvfs.File(path, "w") as f:
             f.write(content.getvalue())
     del dialog
 
