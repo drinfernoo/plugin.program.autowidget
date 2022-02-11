@@ -9,9 +9,7 @@ from resources.lib.common import utils
 
 _addon_data = settings.get_addon_info("profile")
 _userdata = "special://profile/"
-_skin_shortcuts = utils.translate_path(
-    settings.get_addon_info("profile", addon="script.skinshortcuts")
-)
+_skin_shortcuts = settings.get_addon_info("profile", addon="script.skinshortcuts")
 
 
 def clean(widget_id=None, notify=False, all=False):
