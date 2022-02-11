@@ -10,13 +10,13 @@ from resources.lib.common import settings
 from resources.lib.common import utils
 
 _addon_data = settings.get_addon_info("profile")
-_backup_location = utils.translate_path(settings.get_setting_string("backup.location"))
+_backup_location = settings.get_setting_string("backup.location")
 
 
 def location():
     dialog = xbmcgui.Dialog()
     folder = dialog.browse(
-        0, utils.get_string(30067), "files", defaultt=_backup_location
+        3, utils.get_string(30067), "", defaultt=_backup_location
     )
     del dialog
 
@@ -36,9 +36,9 @@ def backup():
             del dialog
             return
 
-        if not os.path.exists(_backup_location):
+        if not xbmcvfs.exists(_backup_location):
             try:
-                os.makedirs(_backup_location)
+                xbmcvfs.mkdirs(_backup_location)
             except Exception as e:
                 utils.log(str(e), "error")
                 dialog.notification("AutoWidget", utils.get_string(30073))
@@ -75,7 +75,7 @@ def backup():
 def restore():
     dialog = xbmcgui.Dialog()
     backup = dialog.browse(
-        1, utils.get_string(30074), "files", mask=".zip", defaultt=_backup_location
+        1, utils.get_string(30074), "files", mask=".zip", defaultt=utils.translate_path(_backup_location)
     )
 
     if backup.endswith(".zip"):
@@ -90,7 +90,11 @@ def restore():
                 overwrite = dialog.yesno("AutoWidget", utils.get_string(30076))
 
                 if overwrite:
-                    files = [x for x in xbmcvfs.listdir(_addon_data)[1] if x.endswith(".group")]
+                    files = [
+                        x
+                        for x in xbmcvfs.listdir(_addon_data)[1]
+                        if x.endswith(".group")
+                    ]
                     for file in files:
                         utils.remove_file(file)
                 utils.call_builtin("Extract({},{})".format(backup, _addon_data))

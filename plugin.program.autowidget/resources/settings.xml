@@ -50,7 +50,7 @@
         
         <!-- Backup/Restore -->
         <setting label="$ADDON[plugin.program.autowidget 30066]" type="lsep" />
-        <setting label="$ADDON[plugin.program.autowidget 30067]" type="action" id="backup.location" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=location)" default="special://userdata/addon_data/plugin.program.autowidget/backups/" />
+        <setting label="$ADDON[plugin.program.autowidget 30067]" type="action" id="backup.location" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=location)" default="special://profile/plugin.program.autowidget/backups/" />
         <setting label="$ADDON[plugin.program.autowidget 30068]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=backup)" option="close" />
         <setting label="$ADDON[plugin.program.autowidget 30069]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=restore)" option="close" />
     </category>
