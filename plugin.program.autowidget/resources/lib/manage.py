@@ -31,12 +31,13 @@ def clean(widget_id=None, notify=False, all=False):
     if "error" not in addons:
         for addon in addons["result"]["addons"]:
             path = os.path.join(
-                _userdata, "addon_data", addon["addonid"], "settings.xml"
+                settings.get_addon_info("profile", addon=addon["addonid"]),
+                "settings.xml",
             )
-            if os.path.exists(path):
+            if xbmcvfs.exists(path):
                 files.append(path)
-    if _skin_shortcuts and os.path.exists(_skin_shortcuts):
-        for xml in xbmcvfs.listdir(_skin_shortcuts):
+    if _skin_shortcuts and xbmcvfs.exists(_skin_shortcuts):
+        for xml in xbmcvfs.listdir(_skin_shortcuts)[1]:
             ext = xml.split(".")
             if ext[-1] in ["xml", "properties"]:
                 path = os.path.join(_skin_shortcuts, xml)
