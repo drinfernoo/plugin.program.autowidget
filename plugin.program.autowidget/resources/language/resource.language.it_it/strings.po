@@ -248,26 +248,28 @@ msgctxt "#30042"
 msgid "Wipe Add-on Data"
 msgstr "Cancellare i dati del componente aggiuntivo"
 
-#: /resources/lib/common/utils.py:258
+#: /resources/lib/common/utils.py:260
 msgctxt "#30043"
 msgid ""
-"This will remove [B]all[/B] data for AutoWidget, excluding backups. Any "
-"current AutoWidgets will no longer refresh and may not work reliably. It is "
-"recommended that this only be done if you intend on repointing all of those "
-"widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
+"This will remove [B]all[/B] data for AutoWidget, [B]including backups[/B], "
+"if stored in the add-on data folder. Any current AutoWidgets will no longer "
+"refresh and may not work reliably. It is recommended that this only be done "
+"if you intend on repointing all of those widgets. This [COLOR "
+"firebrick]cannot[/COLOR] be undone."
 msgstr ""
-"In questo modo verranno rimuovono i dati [B]all[/B] per AutoWidget, esclusi "
-"i backup. Tutti iwidget automatici correnti non verranno più aggiornati e "
-"potrebbero non funzionare in modo affidabile. Si consiglia di farlo solo se "
-"si intende rinominare tutti questi widget. Questo [COLOR firebrick] non "
-"può[/COLOR] essere annullato."
+"Ciò rimuoverà [B]tutti[/B] dati per AutoWidget, [B]inclusi i backup[/B], se "
+"archiviati nella cartella dei dati aggiuntivi. Tutti gli AutoWidgets "
+"correnti non si aggiorneranno più e potrebbero non funzionare in modo "
+"affidabile. Si consiglia di eseguire questa operazione solo se si intende "
+"reindirizzare tutti quei widget. Questo [COLOR firebrick]non può[/COLOR] "
+"essere annullato."
 
 #: /resources/lib/menu.py:536 /resources/lib/menu.py:587
 msgctxt "#30044"
 msgid "Point a widget here to show items."
 msgstr "Punta un widget qui per mostrare gli elementi."
 
-#: /resources/lib/backup.py:56 /resources/lib/menu.py:83
+#: /resources/lib/backup.py:68 /resources/lib/menu.py:83
 msgctxt "#30045"
 msgid "No groups have been defined."
 msgstr "Nessun gruppo è stato definito."
@@ -384,61 +386,62 @@ msgctxt "#30066"
 msgid "Backup / Restore"
 msgstr "Backup/Ripristino"
 
-#: /resources/settings.xml:52 /resources/lib/backup.py:18
+#: /resources/settings.xml:52 /resources/lib/backup.py:30
 msgctxt "#30067"
 msgid "Choose Backup Location"
 msgstr "Scegliere Percorso backup"
 
-#: /resources/settings.xml:53
+#: /resources/settings.xml:53 /resources/lib/backup.py:73
 msgctxt "#30068"
 msgid "Create Backup"
 msgstr "Crea Backup"
 
-#: /resources/settings.xml:54
+#: /resources/settings.xml:54 /resources/lib/backup.py:131
+#: /resources/lib/backup.py:144
 msgctxt "#30069"
 msgid "Restore from Backup"
 msgstr "Ripristino da backup"
 
-#: /resources/lib/backup.py:28
+#: /resources/lib/backup.py:40
 msgctxt "#30070"
 msgid ""
-"Do you want to backup your groups? This will not backup any widgets defined "
-"in the skin."
+"Do you want to backup your AutoWidget configuration? This will include all "
+"groups, widgets, cache files, and settings."
 msgstr ""
-"Eseguire il backup dei gruppi? Ciò non erà il backup di widget definiti "
-"nell'skin."
+"Vuoi eseguire il backup della configurazione di AutoWidget? Ciò includerà "
+"tutti i gruppi, i widget, i file della cache e le impostazioni."
 
-#: /resources/lib/backup.py:31
+#: /resources/lib/backup.py:43
 msgctxt "#30071"
 msgid "Backup Name"
 msgstr "Backup Name"
 
-#: /resources/lib/backup.py:34
+#: /resources/lib/backup.py:46
 msgctxt "#30072"
 msgid "Backup Cancelled."
 msgstr "Backup annullato."
 
-#: /resources/lib/backup.py:43
+#: /resources/lib/backup.py:55
 msgctxt "#30073"
 msgid "Could not create backup location."
 msgstr "Impossibile creare il percorso di backup."
 
-#: /resources/lib/backup.py:77
+#: /resources/lib/backup.py:98
 msgctxt "#30074"
 msgid "Choose Backup to Restore"
 msgstr "Scegliere Backup da ripristinare"
 
-#: /resources/lib/backup.py:85
+#: /resources/lib/backup.py:118
 msgctxt "#30075"
-msgid "Would you like to restore {} group{} from this backup?"
-msgstr "Desideri ripristinare {}gruppo{} da questo backup?"
+msgid "Choose Which Files to Restore"
+msgstr "Scegli quali file ripristinare"
 
-#: /resources/lib/backup.py:89
+#: /resources/lib/backup.py:127
 msgctxt "#30076"
-msgid "Would you like to erase your current groups before restoring?"
-msgstr "Cancellare i gruppi correnti prima di ripristinarli?"
+msgid "Would you like to erase your current configuration before restoring?"
+msgstr "Vuoi cancellare la tua configurazione attuale prima del ripristino?"
 
-#: /resources/lib/backup.py:97 /resources/lib/backup.py:100
+#: /resources/lib/backup.py:171 /resources/lib/backup.py:174
 msgctxt "#30077"
 msgid "Restore Cancelled."
 msgstr "Ripristino annullato."
@@ -585,7 +588,7 @@ msgctxt "#30104"
 msgid "{} paths added to {}"
 msgstr "{} percorsi aggiunti a {}"
 
-#: /resources/lib/manage.py:80
+#: /resources/lib/manage.py:81
 msgctxt "#30105"
 msgid "{} unused widgets removed."
 msgstr "{} widget inutilizzati rimossi."
@@ -669,7 +672,7 @@ msgctxt "#30120"
 msgid "Choose Paths to Copy"
 msgstr "Scegli i percorsi da copiare"
 
-#: /resources/lib/manage.py:256
+#: /resources/lib/manage.py:257
 msgctxt "#30121"
 msgid "Choose Paths"
 msgstr "Scegli percorsi"
@@ -834,3 +837,73 @@ msgstr "Sposta gruppo in basso"
 msgctxt "#30152"
 msgid "Shift Group to Top"
 msgstr "Sposta gruppo in alto"
+
+#: /resources/lib/backup.py:16
+msgctxt "#30153"
+msgid "Group Files"
+msgstr "File di gruppo"
+
+#: /resources/lib/backup.py:16
+msgctxt "#30154"
+msgid "Includes created Groups and Paths"
+msgstr "Include gruppi e percorsi creati"
+
+#: /resources/lib/backup.py:17
+msgctxt "#30155"
+msgid "Widget Files"
+msgstr "File widget"
+
+#: /resources/lib/backup.py:17
+msgctxt "#30156"
+msgid "Includes created Widgets (Does not restore skin files)"
+msgstr "Include widget creati (non ripristina i file skin)"
+
+#: /resources/lib/backup.py:20
+msgctxt "#30157"
+msgid "Cache, History, and Queue Files"
+msgstr "File di cache, cronologia e coda"
+
+#: /resources/lib/backup.py:21
+msgctxt "#30158"
+msgid "Includes all of AutoWidget's Cache files"
+msgstr "Include tutti i file della cache di AutoWidget"
+
+#: /resources/lib/backup.py:23
+msgctxt "#30159"
+msgid "Settings File"
+msgstr "File delle impostazioni"
+
+#: /resources/lib/backup.py:23
+msgctxt "#30160"
+msgid "Includes all of AutoWidget's Settings"
+msgstr "Include tutte le impostazioni di AutoWidget"
+
+#: /resources/lib/backup.py:131
+msgctxt "#30161"
+msgid "Erasing files..."
+msgstr "Cancellazione di file..."
+
+#: /resources/lib/backup.py:144
+msgctxt "#30162"
+msgid "Extracting files..."
+msgstr "Check out dei file in corso..."
+
+#: /resources/lib/backup.py:153
+msgctxt "#30163"
+msgid "Restoring {} files..."
+msgstr "Ripristino di {} file..."
+
+#: /resources/lib/backup.py:169
+msgctxt "#30164"
+msgid "Restore complete."
+msgstr "Ripristino completato."
+
+#: /resources/lib/backup.py:73
+msgctxt "#30165"
+msgid "Backing up files..."
+msgstr "Backup dei file..."
+
+#: /resources/lib/backup.py:90
+msgctxt "#30166"
+msgid "Backup complete."
+msgstr "Backup completato."

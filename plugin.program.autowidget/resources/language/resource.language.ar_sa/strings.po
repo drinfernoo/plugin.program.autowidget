@@ -247,25 +247,27 @@ msgctxt "#30042"
 msgid "Wipe Add-on Data"
 msgstr "مسح البيانات الإضافية"
 
-#: /resources/lib/common/utils.py:258
+#: /resources/lib/common/utils.py:260
 msgctxt "#30043"
 msgid ""
-"This will remove [B]all[/B] data for AutoWidget, excluding backups. Any "
-"current AutoWidgets will no longer refresh and may not work reliably. It is "
-"recommended that this only be done if you intend on repointing all of those "
-"widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
+"This will remove [B]all[/B] data for AutoWidget, [B]including backups[/B], "
+"if stored in the add-on data folder. Any current AutoWidgets will no longer "
+"refresh and may not work reliably. It is recommended that this only be done "
+"if you intend on repointing all of those widgets. This [COLOR "
+"firebrick]cannot[/COLOR] be undone."
 msgstr ""
-"سيؤدي ذلك إلى إزالة [B]all [/B] البيانات الخاصة ب AutoWidget، باستثناء النسخ"
-" الاحتياطية. لن يتم تحديث أي AutoWidgets الحالي وقد لا يعمل بشكل موثوق. من "
-"المستحسن أن يتم ذلك فقط إذا كنت تنوي إعادة توجيه كل هذه الحاجيات. لا يمكن "
-"التراجع عن هذا [COLOR firebrick][/COLOR]."
+"سيؤدي هذا إلى إزالة [B] جميع [/ B] بيانات AutoWidget ، [B] بما في ذلك النسخ "
+"الاحتياطية [/ B] ، إذا تم تخزينها في مجلد بيانات الوظيفة الإضافية. لن يتم "
+"تحديث أي أدوات تلقائية حالية بعد الآن وقد لا تعمل بشكل موثوق. من المستحسن أن"
+" يتم ذلك فقط إذا كنت تنوي إعادة تعيين كل تلك الأدوات. لا يمكن التراجع عن "
+"[COLOR firebrick] [/ COLOR]."
 
 #: /resources/lib/menu.py:536 /resources/lib/menu.py:587
 msgctxt "#30044"
 msgid "Point a widget here to show items."
 msgstr "نقطة القطعة هنا لإظهار العناصر."
 
-#: /resources/lib/backup.py:56 /resources/lib/menu.py:83
+#: /resources/lib/backup.py:68 /resources/lib/menu.py:83
 msgctxt "#30045"
 msgid "No groups have been defined."
 msgstr "لم يتم تعريف أي مجموعات."
@@ -380,61 +382,62 @@ msgctxt "#30066"
 msgid "Backup / Restore"
 msgstr "Backup / Restore"
 
-#: /resources/settings.xml:52 /resources/lib/backup.py:18
+#: /resources/settings.xml:52 /resources/lib/backup.py:30
 msgctxt "#30067"
 msgid "Choose Backup Location"
 msgstr "اختيار موقع النسخ الاحتياطي"
 
-#: /resources/settings.xml:53
+#: /resources/settings.xml:53 /resources/lib/backup.py:73
 msgctxt "#30068"
 msgid "Create Backup"
 msgstr "إنشاء نسخة احتياطية"
 
-#: /resources/settings.xml:54
+#: /resources/settings.xml:54 /resources/lib/backup.py:131
+#: /resources/lib/backup.py:144
 msgctxt "#30069"
 msgid "Restore from Backup"
 msgstr "استعادة من نسخ احتياطي"
 
-#: /resources/lib/backup.py:28
+#: /resources/lib/backup.py:40
 msgctxt "#30070"
 msgid ""
-"Do you want to backup your groups? This will not backup any widgets defined "
-"in the skin."
+"Do you want to backup your AutoWidget configuration? This will include all "
+"groups, widgets, cache files, and settings."
 msgstr ""
-"هل تريد إجراء نسخ احتياطي لمجموعاتك؟ هذا لن النسخ الاحتياطي أي الحاجيات "
-"المحددة في الجلد."
+"هل تريد عمل نسخة احتياطية من تكوين AutoWidget الخاص بك؟ سيشمل ذلك جميع "
+"المجموعات والأدوات وملفات ذاكرة التخزين المؤقت والإعدادات."
 
-#: /resources/lib/backup.py:31
+#: /resources/lib/backup.py:43
 msgctxt "#30071"
 msgid "Backup Name"
 msgstr "اسم النسخ الاحتياطي"
 
-#: /resources/lib/backup.py:34
+#: /resources/lib/backup.py:46
 msgctxt "#30072"
 msgid "Backup Cancelled."
 msgstr "تم إلغاء النسخ الاحتياطي."
 
-#: /resources/lib/backup.py:43
+#: /resources/lib/backup.py:55
 msgctxt "#30073"
 msgid "Could not create backup location."
 msgstr "تعذر إنشاء موقع النسخ الاحتياطي."
 
-#: /resources/lib/backup.py:77
+#: /resources/lib/backup.py:98
 msgctxt "#30074"
 msgid "Choose Backup to Restore"
 msgstr "اختر النسخ الاحتياطي لاستعادته"
 
-#: /resources/lib/backup.py:85
+#: /resources/lib/backup.py:118
 msgctxt "#30075"
-msgid "Would you like to restore {} group{} from this backup?"
-msgstr "هل ترغب في استعادة {} المجموعة {} من هذه النسخة الاحتياطية؟"
+msgid "Choose Which Files to Restore"
+msgstr "اختر الملفات التي تريد استعادتها"
 
-#: /resources/lib/backup.py:89
+#: /resources/lib/backup.py:127
 msgctxt "#30076"
-msgid "Would you like to erase your current groups before restoring?"
-msgstr "هل تريد مسح المجموعات الحالية قبل استعادتها؟"
+msgid "Would you like to erase your current configuration before restoring?"
+msgstr "هل ترغب في مسح التكوين الحالي قبل الاستعادة؟"
 
-#: /resources/lib/backup.py:97 /resources/lib/backup.py:100
+#: /resources/lib/backup.py:171 /resources/lib/backup.py:174
 msgctxt "#30077"
 msgid "Restore Cancelled."
 msgstr "تم إلغاء الاستعادة."
@@ -581,7 +584,7 @@ msgctxt "#30104"
 msgid "{} paths added to {}"
 msgstr "{} مسارات تمت إضافتها إلى {}"
 
-#: /resources/lib/manage.py:80
+#: /resources/lib/manage.py:81
 msgctxt "#30105"
 msgid "{} unused widgets removed."
 msgstr "تمت إزالة {} أدوات غير مستخدمة."
@@ -665,7 +668,7 @@ msgctxt "#30120"
 msgid "Choose Paths to Copy"
 msgstr "اختر المسارات المراد نسخها"
 
-#: /resources/lib/manage.py:256
+#: /resources/lib/manage.py:257
 msgctxt "#30121"
 msgid "Choose Paths"
 msgstr "اختر المسارات"
@@ -825,3 +828,73 @@ msgstr "نقل المجموعة إلى أسفل"
 msgctxt "#30152"
 msgid "Shift Group to Top"
 msgstr "مجموعة التحول إلى الأعلى"
+
+#: /resources/lib/backup.py:16
+msgctxt "#30153"
+msgid "Group Files"
+msgstr "ملفات المجموعة"
+
+#: /resources/lib/backup.py:16
+msgctxt "#30154"
+msgid "Includes created Groups and Paths"
+msgstr "يشمل المجموعات والمسارات التي تم إنشاؤها"
+
+#: /resources/lib/backup.py:17
+msgctxt "#30155"
+msgid "Widget Files"
+msgstr "القطعة ملفات"
+
+#: /resources/lib/backup.py:17
+msgctxt "#30156"
+msgid "Includes created Widgets (Does not restore skin files)"
+msgstr "يتضمن أدوات تم إنشاؤها (لا يستعيد ملفات الجلد)"
+
+#: /resources/lib/backup.py:20
+msgctxt "#30157"
+msgid "Cache, History, and Queue Files"
+msgstr "ذاكرة التخزين المؤقت والتاريخ وملفات قائمة الانتظار"
+
+#: /resources/lib/backup.py:21
+msgctxt "#30158"
+msgid "Includes all of AutoWidget's Cache files"
+msgstr "يشمل جميع ملفات ذاكرة التخزين المؤقت لـ AutoWidget"
+
+#: /resources/lib/backup.py:23
+msgctxt "#30159"
+msgid "Settings File"
+msgstr "تنظیمات فایل"
+
+#: /resources/lib/backup.py:23
+msgctxt "#30160"
+msgid "Includes all of AutoWidget's Settings"
+msgstr "يشمل جميع إعدادات AutoWidget"
+
+#: /resources/lib/backup.py:131
+msgctxt "#30161"
+msgid "Erasing files..."
+msgstr "جاري محو الملفات ..."
+
+#: /resources/lib/backup.py:144
+msgctxt "#30162"
+msgid "Extracting files..."
+msgstr "Extracting files..."
+
+#: /resources/lib/backup.py:153
+msgctxt "#30163"
+msgid "Restoring {} files..."
+msgstr "استعادة الملفات..."
+
+#: /resources/lib/backup.py:169
+msgctxt "#30164"
+msgid "Restore complete."
+msgstr "تمت الاستعادة بنجاح."
+
+#: /resources/lib/backup.py:73
+msgctxt "#30165"
+msgid "Backing up files..."
+msgstr "جاري النسخ الاحتياطي للمفات..."
+
+#: /resources/lib/backup.py:90
+msgctxt "#30166"
+msgid "Backup complete."
+msgstr "اكتمال النسخ الاحتياطي."

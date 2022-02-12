@@ -250,26 +250,28 @@ msgctxt "#30042"
 msgid "Wipe Add-on Data"
 msgstr "Διαγραφή πρόσθετων δεδομένων"
 
-#: /resources/lib/common/utils.py:258
+#: /resources/lib/common/utils.py:260
 msgctxt "#30043"
 msgid ""
-"This will remove [B]all[/B] data for AutoWidget, excluding backups. Any "
-"current AutoWidgets will no longer refresh and may not work reliably. It is "
-"recommended that this only be done if you intend on repointing all of those "
-"widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
+"This will remove [B]all[/B] data for AutoWidget, [B]including backups[/B], "
+"if stored in the add-on data folder. Any current AutoWidgets will no longer "
+"refresh and may not work reliably. It is recommended that this only be done "
+"if you intend on repointing all of those widgets. This [COLOR "
+"firebrick]cannot[/COLOR] be undone."
 msgstr ""
-"Αυτό θα καταργήσει [B]όλα τα [/B] δεδομένα για το AutoWidget, εξαιρουμένων "
-"των αντιγράφων ασφαλείας. Οποιαδήποτε τρέχοντα AutoWidgets δεν θα "
-"ανανεώνονται πλέον και ενδέχεται να μην λειτουργούν αξιόπιστα. Συνιστάται "
-"αυτό να γίνει μόνο εάν σκοπεύετε να επαναδιορίσετε όλα αυτά τα widgets. Αυτό"
-" το [COLOR firebrick] δεν μπορεί[/COLOR] να αναιρεθεί."
+"Αυτό θα καταργήσει [B]όλα[/B] δεδομένα για το AutoWidget, "
+"[B]συμπεριλαμβανομένων των αντιγράφων ασφαλείας[/B], εάν είναι αποθηκευμένα "
+"στον φάκελο δεδομένων πρόσθετου. Τυχόν τρέχοντα AutoWidgets δεν θα "
+"ανανεώνονται πλέον και ενδέχεται να μην λειτουργούν αξιόπιστα. Συνιστάται να"
+" γίνεται αυτό μόνο εάν σκοπεύετε να επανατοποθετήσετε όλα αυτά τα γραφικά "
+"στοιχεία. Αυτό το [COLOR πυρότουβλο]δεν μπορεί[/COLOR] να αναιρεθεί."
 
 #: /resources/lib/menu.py:536 /resources/lib/menu.py:587
 msgctxt "#30044"
 msgid "Point a widget here to show items."
 msgstr "Τοποθετήστε ένα widget εδώ για να εμφανίσετε στοιχεία."
 
-#: /resources/lib/backup.py:56 /resources/lib/menu.py:83
+#: /resources/lib/backup.py:68 /resources/lib/menu.py:83
 msgctxt "#30045"
 msgid "No groups have been defined."
 msgstr "Δεν έχουν καθοριστεί ομάδες."
@@ -386,62 +388,64 @@ msgctxt "#30066"
 msgid "Backup / Restore"
 msgstr "Backup / Restore"
 
-#: /resources/settings.xml:52 /resources/lib/backup.py:18
+#: /resources/settings.xml:52 /resources/lib/backup.py:30
 msgctxt "#30067"
 msgid "Choose Backup Location"
 msgstr "Επιλογή θέσης δημιουργίας αντιγράφων ασφαλείας"
 
-#: /resources/settings.xml:53
+#: /resources/settings.xml:53 /resources/lib/backup.py:73
 msgctxt "#30068"
 msgid "Create Backup"
 msgstr "Δημιουργία σχήματος"
 
-#: /resources/settings.xml:54
+#: /resources/settings.xml:54 /resources/lib/backup.py:131
+#: /resources/lib/backup.py:144
 msgctxt "#30069"
 msgid "Restore from Backup"
 msgstr "Επαναφορά από εφεδρεία"
 
-#: /resources/lib/backup.py:28
+#: /resources/lib/backup.py:40
 msgctxt "#30070"
 msgid ""
-"Do you want to backup your groups? This will not backup any widgets defined "
-"in the skin."
+"Do you want to backup your AutoWidget configuration? This will include all "
+"groups, widgets, cache files, and settings."
 msgstr ""
-"Θέλετε να δημιουργήσετε αντίγραφα ασφαλείας των ομάδων σας; Αυτό δεν θα "
-"δημιουργήσει αντίγραφα ασφαλείας οποιωνδήποτε widgets που ορίζονται στο "
-"δέρμα."
+"Θέλετε να δημιουργήσετε αντίγραφα ασφαλείας της διαμόρφωσης του AutoWidget; "
+"Αυτό θα περιλαμβάνει όλες τις ομάδες, τα γραφικά στοιχεία, τα αρχεία κρυφής "
+"μνήμης και τις ρυθμίσεις."
 
-#: /resources/lib/backup.py:31
+#: /resources/lib/backup.py:43
 msgctxt "#30071"
 msgid "Backup Name"
 msgstr "Όνομα αντιγράφου ασφαλείας"
 
-#: /resources/lib/backup.py:34
+#: /resources/lib/backup.py:46
 msgctxt "#30072"
 msgid "Backup Cancelled."
 msgstr "Το αντίγραφο ασφαλείας ακυρώθηκε."
 
-#: /resources/lib/backup.py:43
+#: /resources/lib/backup.py:55
 msgctxt "#30073"
 msgid "Could not create backup location."
 msgstr "Αδύνατη η δημιουργία αντιγράφου ασφαλείας location."
 
-#: /resources/lib/backup.py:77
+#: /resources/lib/backup.py:98
 msgctxt "#30074"
 msgid "Choose Backup to Restore"
 msgstr "Επιλογή δημιουργίας αντιγράφων ασφαλείας για επαναφορά"
 
-#: /resources/lib/backup.py:85
+#: /resources/lib/backup.py:118
 msgctxt "#30075"
-msgid "Would you like to restore {} group{} from this backup?"
-msgstr "Θέλετε να επαναφέρετε την {} ομάδα{} από αυτό το αντίγραφο ασφαλείας;"
+msgid "Choose Which Files to Restore"
+msgstr "Επιλέξτε ποια αρχεία θα επαναφέρετε"
 
-#: /resources/lib/backup.py:89
+#: /resources/lib/backup.py:127
 msgctxt "#30076"
-msgid "Would you like to erase your current groups before restoring?"
-msgstr "Θέλετε να διαγράψετε τις τρέχουσες ομάδες σας πριν από την επαναφορά;"
+msgid "Would you like to erase your current configuration before restoring?"
+msgstr ""
+"Θέλετε να διαγράψετε την τρέχουσα διαμόρφωσή σας πριν από την επαναφορά;"
 
-#: /resources/lib/backup.py:97 /resources/lib/backup.py:100
+#: /resources/lib/backup.py:171 /resources/lib/backup.py:174
 msgctxt "#30077"
 msgid "Restore Cancelled."
 msgstr "Η επαναφορά ακυρώθηκε."
@@ -588,7 +592,7 @@ msgctxt "#30104"
 msgid "{} paths added to {}"
 msgstr "{} διαδρομές που προστέθηκαν στο {}"
 
-#: /resources/lib/manage.py:80
+#: /resources/lib/manage.py:81
 msgctxt "#30105"
 msgid "{} unused widgets removed."
 msgstr "{} αφαιρέθηκαν τα αχρησιμοποίητα widgets."
@@ -673,7 +677,7 @@ msgctxt "#30120"
 msgid "Choose Paths to Copy"
 msgstr "Επιλέξτε Διαδρομές προς αντιγραφή"
 
-#: /resources/lib/manage.py:256
+#: /resources/lib/manage.py:257
 msgctxt "#30121"
 msgid "Choose Paths"
 msgstr "Επιλέξτε Διαδρομές"
@@ -838,3 +842,75 @@ msgstr "Μετατόπιση ομάδας προς τα κάτω"
 msgctxt "#30152"
 msgid "Shift Group to Top"
 msgstr "Μετατόπιση ομάδας στην κορυφή"
+
+#: /resources/lib/backup.py:16
+msgctxt "#30153"
+msgid "Group Files"
+msgstr "Ομαδικά αρχεία"
+
+#: /resources/lib/backup.py:16
+msgctxt "#30154"
+msgid "Includes created Groups and Paths"
+msgstr "Περιλαμβάνει δημιουργημένες Ομάδες και Διαδρομές"
+
+#: /resources/lib/backup.py:17
+msgctxt "#30155"
+msgid "Widget Files"
+msgstr "Αρχεία widget"
+
+#: /resources/lib/backup.py:17
+msgctxt "#30156"
+msgid "Includes created Widgets (Does not restore skin files)"
+msgstr ""
+"Περιλαμβάνει δημιουργημένα γραφικά στοιχεία (Δεν επαναφέρει τα αρχεία "
+"δέρματος)"
+
+#: /resources/lib/backup.py:20
+msgctxt "#30157"
+msgid "Cache, History, and Queue Files"
+msgstr "Αρχεία προσωρινής μνήμης, ιστορικού και ουράς"
+
+#: /resources/lib/backup.py:21
+msgctxt "#30158"
+msgid "Includes all of AutoWidget's Cache files"
+msgstr "Περιλαμβάνει όλα τα αρχεία Cache του AutoWidget"
+
+#: /resources/lib/backup.py:23
+msgctxt "#30159"
+msgid "Settings File"
+msgstr "Αρχείο ρυθμίσεων"
+
+#: /resources/lib/backup.py:23
+msgctxt "#30160"
+msgid "Includes all of AutoWidget's Settings"
+msgstr "Περιλαμβάνει όλες τις ρυθμίσεις του AutoWidget"
+
+#: /resources/lib/backup.py:131
+msgctxt "#30161"
+msgid "Erasing files..."
+msgstr "Διαγραφή αρχείων..."
+
+#: /resources/lib/backup.py:144
+msgctxt "#30162"
+msgid "Extracting files..."
+msgstr "Εξαγωγή αρχείων..."
+
+#: /resources/lib/backup.py:153
+msgctxt "#30163"
+msgid "Restoring {} files..."
+msgstr "Επαναφορά {} αρχείων..."
+
+#: /resources/lib/backup.py:169
+msgctxt "#30164"
+msgid "Restore complete."
+msgstr "Η επαναφορά ολοκληρώθηκε."
+
+#: /resources/lib/backup.py:73
+msgctxt "#30165"
+msgid "Backing up files..."
+msgstr "Δημιουργία αντιγράφων ασφαλείας αρχείων..."
+
+#: /resources/lib/backup.py:90
+msgctxt "#30166"
+msgid "Backup complete."
+msgstr "Η λήψη αντιγράφου ασφαλείας ολοκληρώθηκε."

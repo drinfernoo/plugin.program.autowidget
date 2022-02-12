@@ -248,26 +248,28 @@ msgctxt "#30042"
 msgid "Wipe Add-on Data"
 msgstr "Slet tilføjelsesdata"
 
-#: /resources/lib/common/utils.py:258
+#: /resources/lib/common/utils.py:260
 msgctxt "#30043"
 msgid ""
-"This will remove [B]all[/B] data for AutoWidget, excluding backups. Any "
-"current AutoWidgets will no longer refresh and may not work reliably. It is "
-"recommended that this only be done if you intend on repointing all of those "
-"widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
+"This will remove [B]all[/B] data for AutoWidget, [B]including backups[/B], "
+"if stored in the add-on data folder. Any current AutoWidgets will no longer "
+"refresh and may not work reliably. It is recommended that this only be done "
+"if you intend on repointing all of those widgets. This [COLOR "
+"firebrick]cannot[/COLOR] be undone."
 msgstr ""
-"Derved fjernes [B]alle[/B]-data for AutoWidget, bortset fra "
-"sikkerhedskopier. Alle aktuelle AutoWidgets opdateres ikke længere og "
-"fungerer muligvis ikke pålideligt. Det anbefales, at dette kun gøres, hvis "
-"du har til hensigt at repointing alle disse widgets. Denne [COLOR firebrick]"
-" kan ikke[/COLOR] fortrydes."
+"Dette vil fjerne [B]alle[/B] data for AutoWidget, [B]inklusive "
+"sikkerhedskopier[/B], hvis de er gemt i tilføjelsesdatamappen. Eventuelle "
+"aktuelle AutoWidgets vil ikke længere opdateres og fungerer muligvis ikke "
+"pålideligt. Det anbefales, at dette kun gøres, hvis du har til hensigt at "
+"pege alle disse widgets igen. Denne [COLOR firebrick]kan ikke[/COLOR] "
+"fortrydes."
 
 #: /resources/lib/menu.py:536 /resources/lib/menu.py:587
 msgctxt "#30044"
 msgid "Point a widget here to show items."
 msgstr "Peg en widget her for at vise elementer."
 
-#: /resources/lib/backup.py:56 /resources/lib/menu.py:83
+#: /resources/lib/backup.py:68 /resources/lib/menu.py:83
 msgctxt "#30045"
 msgid "No groups have been defined."
 msgstr "Der er ikke defineret nogen grupper."
@@ -384,61 +386,62 @@ msgctxt "#30066"
 msgid "Backup / Restore"
 msgstr "Backup/Restore"
 
-#: /resources/settings.xml:52 /resources/lib/backup.py:18
+#: /resources/settings.xml:52 /resources/lib/backup.py:30
 msgctxt "#30067"
 msgid "Choose Backup Location"
 msgstr "Vælg placering til sikkerhedskopi"
 
-#: /resources/settings.xml:53
+#: /resources/settings.xml:53 /resources/lib/backup.py:73
 msgctxt "#30068"
 msgid "Create Backup"
 msgstr "Opret Sikkerhedskopi"
 
-#: /resources/settings.xml:54
+#: /resources/settings.xml:54 /resources/lib/backup.py:131
+#: /resources/lib/backup.py:144
 msgctxt "#30069"
 msgid "Restore from Backup"
 msgstr "Restore from Backup"
 
-#: /resources/lib/backup.py:28
+#: /resources/lib/backup.py:40
 msgctxt "#30070"
 msgid ""
-"Do you want to backup your groups? This will not backup any widgets defined "
-"in the skin."
+"Do you want to backup your AutoWidget configuration? This will include all "
+"groups, widgets, cache files, and settings."
 msgstr ""
-"Vil du sikkerhedskopiere grupperne? Dette vil ikke sikkerhedskopiere nogen "
-"widgets defineret i huden."
+"Vil du sikkerhedskopiere din AutoWidget-konfiguration? Dette vil inkludere "
+"alle grupper, widgets, cachefiler og indstillinger."
 
-#: /resources/lib/backup.py:31
+#: /resources/lib/backup.py:43
 msgctxt "#30071"
 msgid "Backup Name"
 msgstr "Navn på sikkerhedskopi"
 
-#: /resources/lib/backup.py:34
+#: /resources/lib/backup.py:46
 msgctxt "#30072"
 msgid "Backup Cancelled."
 msgstr "Sikkerhedskopieringen blev annulleret."
 
-#: /resources/lib/backup.py:43
+#: /resources/lib/backup.py:55
 msgctxt "#30073"
 msgid "Could not create backup location."
 msgstr "Placeringen af sikkerhedskopien kunne ikke oprettes."
 
-#: /resources/lib/backup.py:77
+#: /resources/lib/backup.py:98
 msgctxt "#30074"
 msgid "Choose Backup to Restore"
 msgstr "Vælg sikkerhedskopi, der skal gendannes"
 
-#: /resources/lib/backup.py:85
+#: /resources/lib/backup.py:118
 msgctxt "#30075"
-msgid "Would you like to restore {} group{} from this backup?"
-msgstr "Vil du gendanne {} gruppe{} fra denne sikkerhedskopi?"
+msgid "Choose Which Files to Restore"
+msgstr "Vælg hvilke filer der skal gendannes"
 
-#: /resources/lib/backup.py:89
+#: /resources/lib/backup.py:127
 msgctxt "#30076"
-msgid "Would you like to erase your current groups before restoring?"
-msgstr "Vil du slette de aktuelle grupper, før du gendanner?"
+msgid "Would you like to erase your current configuration before restoring?"
+msgstr "Vil du slette din nuværende konfiguration før gendannelse?"
 
-#: /resources/lib/backup.py:97 /resources/lib/backup.py:100
+#: /resources/lib/backup.py:171 /resources/lib/backup.py:174
 msgctxt "#30077"
 msgid "Restore Cancelled."
 msgstr "Gendannelsen blev annulleret."
@@ -585,7 +588,7 @@ msgctxt "#30104"
 msgid "{} paths added to {}"
 msgstr "{} stier føjet til {}"
 
-#: /resources/lib/manage.py:80
+#: /resources/lib/manage.py:81
 msgctxt "#30105"
 msgid "{} unused widgets removed."
 msgstr "{} ubrugte widgets er fjernet."
@@ -669,7 +672,7 @@ msgctxt "#30120"
 msgid "Choose Paths to Copy"
 msgstr "Vælg stier, der skal kopieres"
 
-#: /resources/lib/manage.py:256
+#: /resources/lib/manage.py:257
 msgctxt "#30121"
 msgid "Choose Paths"
 msgstr "Vælg stier"
@@ -830,3 +833,73 @@ msgstr "Skift gruppe til bund"
 msgctxt "#30152"
 msgid "Shift Group to Top"
 msgstr "Skift gruppe til top"
+
+#: /resources/lib/backup.py:16
+msgctxt "#30153"
+msgid "Group Files"
+msgstr "Gruppe filer"
+
+#: /resources/lib/backup.py:16
+msgctxt "#30154"
+msgid "Includes created Groups and Paths"
+msgstr "Indeholder oprettede grupper og stier"
+
+#: /resources/lib/backup.py:17
+msgctxt "#30155"
+msgid "Widget Files"
+msgstr "Widget filer"
+
+#: /resources/lib/backup.py:17
+msgctxt "#30156"
+msgid "Includes created Widgets (Does not restore skin files)"
+msgstr "Indeholder oprettede widgets (gendanner ikke hudfiler)"
+
+#: /resources/lib/backup.py:20
+msgctxt "#30157"
+msgid "Cache, History, and Queue Files"
+msgstr "Cache-, historik- og køfiler"
+
+#: /resources/lib/backup.py:21
+msgctxt "#30158"
+msgid "Includes all of AutoWidget's Cache files"
+msgstr "Indeholder alle AutoWidgets cache-filer"
+
+#: /resources/lib/backup.py:23
+msgctxt "#30159"
+msgid "Settings File"
+msgstr "Indstillingsfil"
+
+#: /resources/lib/backup.py:23
+msgctxt "#30160"
+msgid "Includes all of AutoWidget's Settings"
+msgstr "Indeholder alle AutoWidgets indstillinger"
+
+#: /resources/lib/backup.py:131
+msgctxt "#30161"
+msgid "Erasing files..."
+msgstr "Sletter filer..."
+
+#: /resources/lib/backup.py:144
+msgctxt "#30162"
+msgid "Extracting files..."
+msgstr "Udpakker filer..."
+
+#: /resources/lib/backup.py:153
+msgctxt "#30163"
+msgid "Restoring {} files..."
+msgstr "Gendanner {} filer..."
+
+#: /resources/lib/backup.py:169
+msgctxt "#30164"
+msgid "Restore complete."
+msgstr "Genopretning fuldført."
+
+#: /resources/lib/backup.py:73
+msgctxt "#30165"
+msgid "Backing up files..."
+msgstr "Sikkerhedskopierer filer..."
+
+#: /resources/lib/backup.py:90
+msgctxt "#30166"
+msgid "Backup complete."
+msgstr "Sikkerhedskopiering fuldført"
