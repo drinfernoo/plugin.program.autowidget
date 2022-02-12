@@ -294,9 +294,11 @@ def get_art(filename, color=None):
             if color.lower() not in ["white", "#ffffff"]:
                 new_path = os.path.join(themed_path, "{}-{}.png".format(filename, _i))
                 if not xbmcvfs.exists(new_path):
+                    new_bytes = six.BytesIO()
                     icon = Image.open(path).convert("RGBA")
                     overlay = Image.new("RGBA", icon.size, color)
-                    Image.composite(overlay, icon, icon).save(new_path)
+                    Image.composite(overlay, icon, icon).save(new_bytes, format='png')
+                    write_file(new_path, new_bytes.getvalue())
             art[i] = clean_artwork_url(new_path if xbmcvfs.exists(new_path) else path)
 
     return art
