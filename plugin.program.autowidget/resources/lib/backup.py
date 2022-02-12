@@ -1,3 +1,4 @@
+import xbmc
 import xbmcgui
 import xbmcvfs
 
@@ -12,11 +13,22 @@ from resources.lib.common import utils
 _addon_data = settings.get_addon_info("profile")
 _backup_location = settings.get_setting_string("backup.location")
 
+_choices = [
+    (".group", utils.get_string(30153), utils.get_string(30154)),
+    (".widget", utils.get_string(30155), utils.get_string(30156)),
+    (
+        (".cache", ".history", ".queue", ".time"),
+        utils.get_string(30157),
+        utils.get_string(30158),
+    ),
+    (".xml", utils.get_string(30159), utils.get_string(30160)),
+]
+
 
 def location():
     dialog = xbmcgui.Dialog()
     folder = dialog.browse(
-        3, utils.get_string(30067), "", defaultt=_backup_location
+        0, utils.get_string(30067), "files", defaultt=_backup_location
     )
     del dialog
 
@@ -50,7 +62,7 @@ def backup():
             for x in xbmcvfs.listdir(_addon_data)[1]
             if any(
                 x.endswith(i)
-                for i in [".group", ".widget", ".history", ".cache", ".log"]
+                for i in [".group", ".widget", ".history", ".cache", ".log", ".xml"]
             )
         ]
         if len(files) == 0:
@@ -75,31 +87,65 @@ def backup():
 def restore():
     dialog = xbmcgui.Dialog()
     backup = dialog.browse(
-        1, utils.get_string(30074), "files", mask=".zip", defaultt=utils.translate_path(_backup_location)
+        1,
+        utils.get_string(30074),
+        "",
+        mask=".zip",
+        defaultt=utils.translate_path(_backup_location),
     )
 
     if backup.endswith(".zip"):
-    
+
         content = six.BytesIO(xbmcvfs.File(backup).readBytes())
         with zipfile.ZipFile(content, "r") as z:
             info = z.infolist()
-            choice = dialog.yesno(
-                "AutoWidget",
-                utils.get_string(30075).format(len(info), "s" if len(info) > 1 else ""),
-            )
+            choice_items = []
+            chosen = []
+            for c in _choices:
+                for i in info:
+                    if i.filename.endswith(c[0]):
+                        item = xbmcgui.ListItem(c[1], label2=c[2])
+                        choice_items.append(item)
+                        break
+            choices = dialog.multiselect(utils.get_string(30075), choice_items, useDetails=True)
 
-            if choice:
+            if choices:
+                temp_path = os.path.join(_addon_data, "temp")
+                if not xbmcvfs.exists(temp_path):
+                    xbmcvfs.mkdirs(temp_path)
+            
+                restore_progress = xbmcgui.DialogProgress()
                 overwrite = dialog.yesno("AutoWidget", utils.get_string(30076))
 
                 if overwrite:
+                    restore_progress.create("Restoring Backup", "Erasing files...")
                     files = [
                         x
                         for x in xbmcvfs.listdir(_addon_data)[1]
-                        if x.endswith(".group")
+                        if not x.endswith(".log")
                     ]
-                    for file in files:
-                        utils.remove_file(file)
-                utils.call_builtin("Extract({},{})".format(backup, _addon_data))
+                    for idx, file in enumerate(files):
+                        restore_progress.update(int(idx / len(files) * 100))
+                        utils.remove_file(os.path.join(_addon_data, file))
+                    restore_progress.close()
+                    
+                restore_progress.create("Restoring Backup", "Extracting files...")
+                utils.call_builtin("Extract({},{})".format(backup, temp_path))
+                xbmc.sleep(1000)
+                
+                for t in choices:
+                    ext = _choices[t][0]
+                    restore_progress.update(0, "Restoring {} files...".format(ext if type(ext) != tuple else ', '.join(ext)))
+                    files = [x for x in xbmcvfs.listdir(temp_path)[1] if x.endswith(ext)]
+                    for idx, file in enumerate(files):
+                        restore_progress.update(int(idx / len(files) * 100))
+                        xbmcvfs.copy(
+                            os.path.join(temp_path, file),
+                            os.path.join(_addon_data, file),
+                        )
+                restore_progress.close()
+                del restore_progress
+                utils.wipe(temp_path, True)
             else:
                 dialog.notification("AutoWidget", utils.get_string(30077))
         del dialog

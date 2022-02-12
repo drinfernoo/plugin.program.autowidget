@@ -251,12 +251,12 @@ msgstr "Wipe Add-on Data"
 #: /resources/lib/common/utils.py:258
 msgctxt "#30043"
 msgid ""
-"This will remove [B]all[/B] data for AutoWidget, excluding backups. Any "
+"This will remove [B]all[/B] data for AutoWidget, [B]including backups[/B], if stored in the add-on data folder. Any "
 "current AutoWidgets will no longer refresh and may not work reliably. It is "
 "recommended that this only be done if you intend on repointing all of those "
 "widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
 msgstr ""
-"This will remove [B]all[/B] data for AutoWidget, excluding backups. Any "
+"This will remove [B]all[/B] data for AutoWidget, [B]including backups[/B], if stored in the add-on data folder. Any "
 "current AutoWidgets will no longer refresh and may not work reliably. It is "
 "recommended that this only be done if you intend on repointing all of those "
 "widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
@@ -399,11 +399,9 @@ msgstr "Restore from Backup"
 #: /resources/lib/backup.py:28
 msgctxt "#30070"
 msgid ""
-"Do you want to backup your groups? This will not backup any widgets defined "
-"in the skin."
+"Do you want to backup your AutoWidget configuration? This will include all groups, widgets, cache files, and settings."
 msgstr ""
-"Do you want to backup your groups? This will not backup any widgets defined "
-"in the skin."
+"Do you want to backup your AutoWidget configuration? This will include all groups, widgets, cache files, and settings."
 
 #: /resources/lib/backup.py:31
 msgctxt "#30071"
@@ -427,13 +425,13 @@ msgstr "Choose Backup to Restore"
 
 #: /resources/lib/backup.py:85
 msgctxt "#30075"
-msgid "Would you like to restore {} group{} from this backup?"
-msgstr "Would you like to restore {} group{} from this backup?"
+msgid "Choose Which Files to Restore"
+msgstr "Choose Which Files to Restore"
 
 #: /resources/lib/backup.py:89
 msgctxt "#30076"
-msgid "Would you like to erase your current groups before restoring?"
-msgstr "Would you like to erase your current groups before restoring?"
+msgid "Would you like to erase your current configuration before restoring?"
+msgstr "Would you like to erase your current configuration before restoring?"
 
 #: /resources/lib/backup.py:97 /resources/lib/backup.py:100
 msgctxt "#30077"
@@ -826,3 +824,35 @@ msgstr "Shift Group to Bottom"
 msgctxt "#30152"
 msgid "Shift Group to Top"
 msgstr "Shift Group to Top"
+
+msgctxt "#30153"
+msgid "Group Files"
+msgstr "Group Files"
+
+msgctxt "#30154"
+msgid "Includes created Groups and Paths"
+msgstr "Includes created Groups and Paths"
+
+msgctxt "#30155"
+msgid "Widget Files"
+msgstr "Widget Files"
+
+msgctxt "#30156"
+msgid "Includes created Widgets (Does not restore skin files)"
+msgstr "Includes created Widgets (Does not restore skin files)"
+
+msgctxt "#30157"
+msgid "Cache, History, and Queue Files"
+msgstr "Cache, History, and Queue Files"
+
+msgctxt "#30158"
+msgid "Includes all of AutoWidget's Cache files"
+msgstr "Includes all of AutoWidget's Cache files"
+
+msgctxt "#30159"
+msgid "Settings File"
+msgstr "Settings File"
+
+msgctxt "#30160"
+msgid "Includes all of AutoWidget's Settings"
+msgstr "Includes all of AutoWidget's Settings"
