@@ -856,3 +856,27 @@ msgstr "Settings File"
 msgctxt "#30160"
 msgid "Includes all of AutoWidget's Settings"
 msgstr "Includes all of AutoWidget's Settings"
+
+msgctxt "#30161"
+msgid "Erasing files..."
+msgstr "Erasing files..."
+
+msgctxt "#30162"
+msgid "Extracting files..."
+msgstr "Extracting files..."
+
+msgctxt "#30163"
+msgid "Restoring {} files..."
+msgstr "Restoring {} files..."
+
+msgctxt "#30164"
+msgid "Restore complete."
+msgstr "Restore complete."
+
+msgctxt "#30165"
+msgid "Backing up files..."
+msgstr "Backing up files..."
+
+msgctxt "#30166"
+msgid "Backup complete."
+msgstr "Backup complete."
