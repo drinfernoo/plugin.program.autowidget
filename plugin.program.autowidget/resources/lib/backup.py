@@ -116,7 +116,10 @@ def restore():
                         choice_items.append(item)
                         break
             choices = dialog.multiselect(
-                utils.get_string(30075), choice_items, useDetails=True
+                utils.get_string(30075),
+                choice_items,
+                preselect=list(range(len(choice_items))),
+                useDetails=True,
             )
 
             if choices:
