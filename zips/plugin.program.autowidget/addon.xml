@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1357" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1376" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
@@ -255,11 +255,13 @@
  - Add extra error checking for file operations
 1.3.4
  - Add proper migration from old JSON to current
-       <banner>resources/media/banner.png</banner>
-            <clearlogo>resources/media/clearlogo.png</clearlogo>
-        </assets>
-    </extension>
-</addon>
+1.3.3
+ - Rewrite editor dialog
+ - Fix path conversion for skin string paths
+1.3.2
+ - Fixes and cleanup in editor dialog
+1.3.1
+ - Cleanup skin string conversion
 1.3.0
  - Add group editing dialog
  - Non-Skin Shortcuts skin support
@@ -319,11 +321,7 @@
         </assets>
     </extension>
 </addon>
-ontext menu option not showing
-1.0.6
- - Fix paths not saving
-1.0.5
- - Raise required Skin Shortcuts version to  1.0.19
+n Shortcuts version to  1.0.19
 1.0.4
  - Allow custom labels
  - Add removal notifications    
@@ -342,6 +340,10 @@ ontext menu option not showing
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+o>resources/media/clearlogo.png</clearlogo>
         </assets>
     </extension>
 </addon>
