@@ -248,26 +248,28 @@ msgctxt "#30042"
 msgid "Wipe Add-on Data"
 msgstr "Add-on-gegevens wissen"
 
-#: /resources/lib/common/utils.py:258
+#: /resources/lib/common/utils.py:260
 msgctxt "#30043"
 msgid ""
-"This will remove [B]all[/B] data for AutoWidget, excluding backups. Any "
-"current AutoWidgets will no longer refresh and may not work reliably. It is "
-"recommended that this only be done if you intend on repointing all of those "
-"widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
+"This will remove [B]all[/B] data for AutoWidget, [B]including backups[/B], "
+"if stored in the add-on data folder. Any current AutoWidgets will no longer "
+"refresh and may not work reliably. It is recommended that this only be done "
+"if you intend on repointing all of those widgets. This [COLOR "
+"firebrick]cannot[/COLOR] be undone."
 msgstr ""
-"Hiermee worden [B]all[/B] gegevens voor AutoWidget verwijderd, met "
-"uitzondering van back-ups. Alle huidige AutoWidgets worden niet meer "
-"vernieuwd en werken mogelijk niet betrouwbaar. Het wordt aanbevolen om dit "
-"alleen te doen als u van plan bent al deze widgets opnieuw te lokaliseren. "
-"Deze [COLOR firebrick]kan niet ongedaan worden gemaakt."
+"Hiermee worden [B]alle[/B]-gegevens voor AutoWidget verwijderd, [B]inclusief"
+" back-ups[/B], indien opgeslagen in de map met add-ongegevens. Alle huidige "
+"AutoWidgets worden niet meer vernieuwd en werken mogelijk niet betrouwbaar. "
+"Het wordt aanbevolen dit alleen te doen als u van plan bent al deze widgets "
+"opnieuw te gebruiken. Deze [COLOR firebrick]kan niet[/COLOR] ongedaan worden"
+" gemaakt."
 
 #: /resources/lib/menu.py:536 /resources/lib/menu.py:587
 msgctxt "#30044"
 msgid "Point a widget here to show items."
 msgstr "Wijs hier een widget aan om items weer te geven."
 
-#: /resources/lib/backup.py:56 /resources/lib/menu.py:83
+#: /resources/lib/backup.py:68 /resources/lib/menu.py:83
 msgctxt "#30045"
 msgid "No groups have been defined."
 msgstr "Er zijn geen groepen gedefinieerd."
@@ -383,61 +385,62 @@ msgctxt "#30066"
 msgid "Backup / Restore"
 msgstr "Backup/restore"
 
-#: /resources/settings.xml:52 /resources/lib/backup.py:18
+#: /resources/settings.xml:52 /resources/lib/backup.py:30
 msgctxt "#30067"
 msgid "Choose Backup Location"
 msgstr "Back-uplocatie kiezen"
 
-#: /resources/settings.xml:53
+#: /resources/settings.xml:53 /resources/lib/backup.py:73
 msgctxt "#30068"
 msgid "Create Backup"
 msgstr "Backup maken"
 
-#: /resources/settings.xml:54
+#: /resources/settings.xml:54 /resources/lib/backup.py:131
+#: /resources/lib/backup.py:144
 msgctxt "#30069"
 msgid "Restore from Backup"
 msgstr "Reservekopie terugzetten"
 
-#: /resources/lib/backup.py:28
+#: /resources/lib/backup.py:40
 msgctxt "#30070"
 msgid ""
-"Do you want to backup your groups? This will not backup any widgets defined "
-"in the skin."
+"Do you want to backup your AutoWidget configuration? This will include all "
+"groups, widgets, cache files, and settings."
 msgstr ""
-"Wilt u een back-up maken van uw groepen? Dit maakt geen back-up van widgets "
-"die in de skin zijn gedefinieerd."
+"Wilt u een back-up maken van uw AutoWidget-configuratie? Dit omvat alle "
+"groepen, widgets, cachebestanden en instellingen."
 
-#: /resources/lib/backup.py:31
+#: /resources/lib/backup.py:43
 msgctxt "#30071"
 msgid "Backup Name"
 msgstr "Back-upnaam"
 
-#: /resources/lib/backup.py:34
+#: /resources/lib/backup.py:46
 msgctxt "#30072"
 msgid "Backup Cancelled."
 msgstr "Back-up geannuleerd."
 
-#: /resources/lib/backup.py:43
+#: /resources/lib/backup.py:55
 msgctxt "#30073"
 msgid "Could not create backup location."
 msgstr "Kan geen back-uplocatie maken."
 
-#: /resources/lib/backup.py:77
+#: /resources/lib/backup.py:98
 msgctxt "#30074"
 msgid "Choose Backup to Restore"
 msgstr "Kies Back-up om te herstellen"
 
-#: /resources/lib/backup.py:85
+#: /resources/lib/backup.py:118
 msgctxt "#30075"
-msgid "Would you like to restore {} group{} from this backup?"
-msgstr "Wilt u {} group{} herstellen vanaf deze back-up?"
+msgid "Choose Which Files to Restore"
+msgstr "Kies welke bestanden u wilt herstellen"
 
-#: /resources/lib/backup.py:89
+#: /resources/lib/backup.py:127
 msgctxt "#30076"
-msgid "Would you like to erase your current groups before restoring?"
-msgstr "Wilt u uw huidige groepen wissen voordat u deze herstelt?"
+msgid "Would you like to erase your current configuration before restoring?"
+msgstr "Wilt u uw huidige configuratie wissen voordat u herstelt?"
 
-#: /resources/lib/backup.py:97 /resources/lib/backup.py:100
+#: /resources/lib/backup.py:171 /resources/lib/backup.py:174
 msgctxt "#30077"
 msgid "Restore Cancelled."
 msgstr "Herstel geannuleerd."
@@ -584,7 +587,7 @@ msgctxt "#30104"
 msgid "{} paths added to {}"
 msgstr "{} paden toegevoegd aan {}"
 
-#: /resources/lib/manage.py:80
+#: /resources/lib/manage.py:81
 msgctxt "#30105"
 msgid "{} unused widgets removed."
 msgstr "{} ongebruikte widgets verwijderd."
@@ -668,7 +671,7 @@ msgctxt "#30120"
 msgid "Choose Paths to Copy"
 msgstr "Kies paden om te kopiëren"
 
-#: /resources/lib/manage.py:256
+#: /resources/lib/manage.py:257
 msgctxt "#30121"
 msgid "Choose Paths"
 msgstr "Kies paden"
@@ -829,3 +832,73 @@ msgstr "Groep naar beneden verplaatsen"
 msgctxt "#30152"
 msgid "Shift Group to Top"
 msgstr "Groep naar boven verplaatsen"
+
+#: /resources/lib/backup.py:16
+msgctxt "#30153"
+msgid "Group Files"
+msgstr "Groepsbestanden"
+
+#: /resources/lib/backup.py:16
+msgctxt "#30154"
+msgid "Includes created Groups and Paths"
+msgstr "Bevat aangemaakte groepen en paden"
+
+#: /resources/lib/backup.py:17
+msgctxt "#30155"
+msgid "Widget Files"
+msgstr "Widgetbestanden"
+
+#: /resources/lib/backup.py:17
+msgctxt "#30156"
+msgid "Includes created Widgets (Does not restore skin files)"
+msgstr "Bevat gemaakte widgets (herstelt geen skinbestanden)"
+
+#: /resources/lib/backup.py:20
+msgctxt "#30157"
+msgid "Cache, History, and Queue Files"
+msgstr "Cache-, geschiedenis- en wachtrijbestanden"
+
+#: /resources/lib/backup.py:21
+msgctxt "#30158"
+msgid "Includes all of AutoWidget's Cache files"
+msgstr "Bevat alle cachebestanden van AutoWidget"
+
+#: /resources/lib/backup.py:23
+msgctxt "#30159"
+msgid "Settings File"
+msgstr "Instellingenbestand"
+
+#: /resources/lib/backup.py:23
+msgctxt "#30160"
+msgid "Includes all of AutoWidget's Settings"
+msgstr "Bevat alle instellingen van AutoWidget"
+
+#: /resources/lib/backup.py:131
+msgctxt "#30161"
+msgid "Erasing files..."
+msgstr "Bestanden wissen..."
+
+#: /resources/lib/backup.py:144
+msgctxt "#30162"
+msgid "Extracting files..."
+msgstr "Uitpakken van bestanden..."
+
+#: /resources/lib/backup.py:153
+msgctxt "#30163"
+msgid "Restoring {} files..."
+msgstr "Restoring {} files..."
+
+#: /resources/lib/backup.py:169
+msgctxt "#30164"
+msgid "Restore complete."
+msgstr "Terugzetten is voltooid."
+
+#: /resources/lib/backup.py:73
+msgctxt "#30165"
+msgid "Backing up files..."
+msgstr "Back-up van bestanden maken..."
+
+#: /resources/lib/backup.py:90
+msgctxt "#30166"
+msgid "Backup complete."
+msgstr "Backup voltooid."
