@@ -79,7 +79,9 @@ def restore():
     )
 
     if backup.endswith(".zip"):
-        with zipfile.ZipFile(backup, "r") as z:
+    
+        content = six.BytesIO(xbmcvfs.File(backup).readBytes())
+        with zipfile.ZipFile(content, "r") as z:
             info = z.infolist()
             choice = dialog.yesno(
                 "AutoWidget",
