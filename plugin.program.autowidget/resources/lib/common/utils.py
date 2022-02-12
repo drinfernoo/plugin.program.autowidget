@@ -254,24 +254,24 @@ def ensure_addon_data():
         xbmcvfs.mkdirs(_addon_data)
 
 
-def wipe(folder=_addon_data):
+def wipe(folder=_addon_data, over=False):
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno("AutoWidget", get_string(30043))
-    del dialog
+    choice = None
+    if not over:
+        choice = dialog.yesno("AutoWidget", get_string(30043))
+        del dialog
 
-    if choice:
-        for root, dirs, files in os.walk(folder):
-            backup_location = translate_path(
-                settings.get_setting_string("backup.location")
-            )
-            for name in files:
-                file = os.path.join(root, name)
-                if backup_location not in file:
-                    os.remove(file)
-            for name in dirs:
-                dir = os.path.join(root, name)
-                if backup_location[:-1] not in dir:
-                    os.rmdir(dir)
+    if choice or over:
+        dirs = xbmcvfs.listdir(folder)[0]
+        files = xbmcvfs.listdir(folder)[1]
+        
+        for f in files:
+            path = os.path.join(folder, f)
+            remove_file(path)
+        for d in dirs:
+            path = os.path.join(folder, d)
+            wipe(path, True)
+            xbmcvfs.rmdir(path, True)
 
 
 def get_art(filename, color=None):
