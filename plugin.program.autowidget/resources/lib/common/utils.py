@@ -28,7 +28,7 @@ except AttributeError:
     translate_path = xbmc.translatePath
 
 _addon_id = settings.get_addon_info("id")
-_addon_data = translate_path(settings.get_addon_info("profile"))
+_addon_data = settings.get_addon_info("profile")
 _addon_root = translate_path(settings.get_addon_info("path"))
 
 _art_path = os.path.join(_addon_root, "resources", "media")
@@ -244,34 +244,34 @@ def log(msg, level="debug"):
     except UnicodeEncodeError:
         xbmc.log(msg.encode("utf-8"), _level)
     if debug:
-        debug_size = os.path.getsize(logpath) if os.path.exists(logpath) else 0
+        debug_size = xbmcvfs.Stat(logpath).st_size() if xbmcvfs.exists(logpath) else 0
         debug_msg = u"{}  {}{}".format(time.ctime(), level.upper(), msg[25:])
         write_file(logpath, debug_msg + "\n", mode="a" if debug_size < 1048576 else "w")
 
 
 def ensure_addon_data():
-    if not os.path.exists(_addon_data):
-        os.makedirs(_addon_data)
+    if not xbmcvfs.exists(_addon_data):
+        xbmcvfs.mkdirs(_addon_data)
 
 
-def wipe(folder=_addon_data):
+def wipe(folder=_addon_data, over=False):
     dialog = xbmcgui.Dialog()
-    choice = dialog.yesno("AutoWidget", get_string(30043))
-    del dialog
+    choice = None
+    if not over:
+        choice = dialog.yesno("AutoWidget", get_string(30043))
+        del dialog
 
-    if choice:
-        for root, dirs, files in os.walk(folder):
-            backup_location = translate_path(
-                settings.get_setting_string("backup.location")
-            )
-            for name in files:
-                file = os.path.join(root, name)
-                if backup_location not in file:
-                    os.remove(file)
-            for name in dirs:
-                dir = os.path.join(root, name)
-                if backup_location[:-1] not in dir:
-                    os.rmdir(dir)
+    if choice or over:
+        dirs = xbmcvfs.listdir(folder)[0]
+        files = xbmcvfs.listdir(folder)[1]
+        
+        for f in files:
+            path = os.path.join(folder, f)
+            remove_file(path)
+        for d in dirs:
+            path = os.path.join(folder, d)
+            wipe(path, True)
+            xbmcvfs.rmdir(path, True)
 
 
 def get_art(filename, color=None):
@@ -280,8 +280,8 @@ def get_art(filename, color=None):
         color = settings.get_setting_string("ui.color")
 
     themed_path = os.path.join(_addon_data, color)
-    if not os.path.exists(themed_path):
-        os.makedirs(themed_path)
+    if not xbmcvfs.exists(themed_path):
+        xbmcvfs.mkdirs(themed_path)
 
     for i in art_types:
         _i = i
@@ -290,14 +290,16 @@ def get_art(filename, color=None):
         path = os.path.join(_art_path, _i, "{}.png".format(filename))
         new_path = ""
 
-        if os.path.exists(path):
+        if xbmcvfs.exists(path):
             if color.lower() not in ["white", "#ffffff"]:
                 new_path = os.path.join(themed_path, "{}-{}.png".format(filename, _i))
-                if not os.path.exists(new_path):
+                if not xbmcvfs.exists(new_path):
+                    new_bytes = six.BytesIO()
                     icon = Image.open(path).convert("RGBA")
                     overlay = Image.new("RGBA", icon.size, color)
-                    Image.composite(overlay, icon, icon).save(new_path)
-            art[i] = clean_artwork_url(new_path if os.path.exists(new_path) else path)
+                    Image.composite(overlay, icon, icon).save(new_bytes, format='png')
+                    write_file(new_path, new_bytes.getvalue())
+            art[i] = clean_artwork_url(new_path if xbmcvfs.exists(new_path) else path)
 
     return art
 
@@ -374,8 +376,8 @@ def update_container(reload=False):
         else:
             log("Triggering library update to reload widgets", "debug")
             xbmc.executebuiltin("UpdateLibrary(video, AutoWidget)")
-            if os.path.exists(refresh_time):
-                os.remove(refresh_time)
+            if xbmcvfs.exists(refresh_time):
+                remove_file(refresh_time)
     if in_plugin:
         xbmc.executebuiltin("Container.Refresh()")
 
@@ -415,17 +417,17 @@ def convert(input):
 
 
 def remove_file(file):
-    if os.path.exists(file):
+    if xbmcvfs.exists(file):
         try:
-            os.remove(file)
+            xbmcvfs.delete(file)
         except OSError as e:
             log("Could not remove {}: {}".format(file, e), level="error")
 
 
 def read_file(file):
     content = None
-    if os.path.exists(file):
-        with io.open(os.path.join(_addon_data, file), "r", encoding="utf-8") as f:
+    if xbmcvfs.exists(file):
+        with xbmcvfs.File(file) as f:
             try:
                 content = f.read()
             except Exception as e:
@@ -437,7 +439,7 @@ def read_file(file):
 
 
 def write_file(file, content, mode="w"):
-    with open(file, mode) as f:
+    with xbmcvfs.File(file, mode) as f:
         try:
             f.write(content)
             return True
@@ -449,8 +451,8 @@ def write_file(file, content, mode="w"):
 
 def read_json(file, log_file=False, default=None):
     data = None
-    if os.path.exists(file):
-        with codecs.open(os.path.join(_addon_data, file), "r", encoding="utf-8") as f:
+    if xbmcvfs.exists(file):
+        with xbmcvfs.File(file) as f:
             content = six.ensure_text(f.read())
             try:
                 data = json.loads(content)
@@ -467,7 +469,7 @@ def read_json(file, log_file=False, default=None):
 
 
 def write_json(file, content):
-    with codecs.open(file, "w", encoding="utf-8") as f:
+    with xbmcvfs.File(file, "w") as f:
         try:
             json.dump(content, f, indent=4)
         except Exception as e:

@@ -29,12 +29,11 @@ sync = utils.get_art("sync")
 tools = utils.get_art("tools")
 unpack = utils.get_art("unpack")
 
-_next = utils.get_string(30132)
-_next_page = utils.get_string(30133)
-_previous = utils.get_string(30134)
-_previous_page = utils.get_string(30135)
-_back = utils.get_string(30136)
-_page = utils.get_string(30137)
+_next_page = utils.get_string(30132)
+_previous = utils.get_string(30133)
+_previous_page = utils.get_string(30134)
+_back = utils.get_string(30135)
+_page = utils.get_string(30136)
 
 
 def root_menu():
@@ -603,7 +602,7 @@ def _create_group_context_items(group_id, target, idx, length):
             ).format(group_id),
         ),
         (
-            utils.get_string(30150) if idx > 0 else utils.get_string(30152),
+            utils.get_string(30149) if idx > 0 else utils.get_string(30151),
             (
                 "RunPlugin("
                 "plugin://plugin.program.autowidget/"
@@ -614,7 +613,7 @@ def _create_group_context_items(group_id, target, idx, length):
             ).format(group_id),
         ),
         (
-            utils.get_string(30151) if idx < length - 1 else utils.get_string(30153),
+            utils.get_string(30150) if idx < length - 1 else utils.get_string(30152),
             (
                 "RunPlugin("
                 "plugin://plugin.program.autowidget/"
@@ -773,7 +772,7 @@ def _is_page_item(label, next=True):
 
 def show_error(id, props=None):
     directory.add_menu_item(
-        title=settings.get_localized_string(30138).format(id),
+        title=settings.get_localized_string(30137).format(id),
         art=utils.get_art("alert"),
         props=props,
         isFolder=False,
@@ -784,7 +783,7 @@ def show_error(id, props=None):
 
 def show_empty(id, props=None):
     directory.add_menu_item(
-        title=settings.get_localized_string(30139).format(id),
+        title=settings.get_localized_string(30138).format(id),
         art=info,
         props=props,
         isFolder=False,
