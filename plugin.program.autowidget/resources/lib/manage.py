@@ -213,7 +213,7 @@ def find_defined_groups(_type=""):
                 groups.append(group_def)
         sort_order += 1
 
-    return sorted(groups, key=lambda x: x["sort_order"])
+    return sorted(groups, key=lambda x: int(x["sort_order"]))
 
 
 def find_defined_paths(group_id=None):
