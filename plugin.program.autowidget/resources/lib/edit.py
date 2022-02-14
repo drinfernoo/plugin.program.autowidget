@@ -9,7 +9,7 @@ from resources.lib import manage
 from resources.lib.common import settings
 from resources.lib.common import utils
 
-_addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_addon_data = settings.get_addon_info("profile")
 
 advanced = settings.get_setting_bool("context.advanced")
 warning_shown = settings.get_setting_bool("context.warning")

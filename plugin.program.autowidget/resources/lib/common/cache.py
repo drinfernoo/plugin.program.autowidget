@@ -1,4 +1,5 @@
 import xbmcgui
+import xbmcvfs
 
 import glob
 import hashlib
@@ -13,7 +14,7 @@ from resources.lib import manage
 from resources.lib.common import settings
 from resources.lib.common import utils
 
-_addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_addon_data = settings.get_addon_info("profile")
 
 _playback_history_path = os.path.join(_addon_data, "cache.history")
 
@@ -30,12 +31,12 @@ def clear_cache(target=None):
         if choice:
             for file in [
                 i
-                for i in os.listdir(_addon_data)
+                for i in xbmcvfs.listdir(_addon_data)
                 if i.split('.')[-1] in ["cache", "history", "queue"]
             ]:
-                os.remove(os.path.join(_addon_data, file))
+                utils.remove_file(os.path.join(_addon_data, file))
     else:
-        os.remove(os.path.join(_addon_data, "{}.cache".format(target)))
+        utils.remove_file(os.path.join(_addon_data, "{}.cache".format(target)))
         utils.update_container(True)
 
 
@@ -45,9 +46,14 @@ def hash_from_cache_path(path):
 
 
 def iter_queue():
-    queued = filter(os.path.isfile, glob.glob(os.path.join(_addon_data, "*.queue")))
+    queued = [
+        os.path.join(_addon_data, x)
+        for x in xbmcvfs.listdir(_addon_data)[1]
+        if x.endswith(".queue")
+    ]
     # TODO: sort by path instead so load plugins at the same time
-    for path in sorted(queued, key=os.path.getmtime):
+
+    for path in sorted(queued, key=lambda x: xbmcvfs.Stat(x).st_mtime()):
         queue_data = utils.read_json(path)
         yield queue_data.get("path", "")
 
@@ -55,7 +61,7 @@ def iter_queue():
 def read_history(path, create_if_missing=True):
     hash = path2hash(path)
     history_path = os.path.join(_addon_data, "{}.history".format(hash))
-    if not os.path.exists(history_path):
+    if not xbmcvfs.exists(history_path):
         if create_if_missing:
             cache_data = {}
             history = cache_data.setdefault("history", [])
@@ -75,7 +81,7 @@ def next_cache_queue():
         # TODO: sort by path instead so load plugins at the same time
         hash = path2hash(path)
         queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
-        if not os.path.exists(queue_path):
+        if not xbmcvfs.exists(queue_path):
             # a widget update has already taken care of updating this path
             continue
         # We will let the update operation remove the item from the queue
@@ -102,7 +108,7 @@ def push_cache_queue(path, widget_id=None):
         history_path = os.path.join(_addon_data, "{}.history".format(hash))
         utils.write_json(history_path, history)
 
-    if os.path.exists(queue_path):
+    if xbmcvfs.exists(queue_path):
         pass  # Leave original modification date so item is higher priority
     else:
         utils.write_json(
@@ -112,7 +118,7 @@ def push_cache_queue(path, widget_id=None):
 
 def is_cache_queue(hash):
     queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
-    return os.path.exists(queue_path)
+    return xbmcvfs.exists(queue_path)
 
 
 def remove_cache_queue(hash):
@@ -190,7 +196,7 @@ def cache_expiry(path, widget_id, add=None, background=True):
 
     # Read file every time as we might be called from multiple processes
     history_path = os.path.join(_addon_data, "{}.history".format(hash))
-    cache_data = utils.read_json(history_path) if os.path.exists(history_path) else None
+    cache_data = utils.read_json(history_path) if xbmcvfs.exists(history_path) else None
     if cache_data is None:
         cache_data = {}
         since_read = 0
@@ -237,10 +243,10 @@ def cache_expiry(path, widget_id, add=None, background=True):
         # write any updated widget_ids so we know what to update when we dequeue
         # Also important as wwe use last modified of .history as accessed time
         utils.write_json(history_path, cache_data)
-        if not os.path.exists(cache_path):
+        if not xbmcvfs.exists(cache_path):
             result = "Empty"
             if background:
-                contents = utils.make_holding_path(utils.get_string(30144), "refresh")
+                contents = utils.make_holding_path(utils.get_string(30143), "refresh")
                 push_cache_queue(path)
         else:
             contents = utils.read_json(cache_path, log_file=True)
@@ -248,7 +254,7 @@ def cache_expiry(path, widget_id, add=None, background=True):
                 result = "Invalid Read"
                 if background:
                     contents = utils.make_holding_path(
-                        utils.get_string(30138).format(hash), "alert"
+                        utils.get_string(30137).format(hash), "alert"
                     )
                     push_cache_queue(path)
             else:
@@ -295,7 +301,7 @@ def last_read(hash):
     # Technically this is last read or updated but we can change it to be last read Later
     # if we create another file
     path = os.path.join(_addon_data, "{}.history".format(hash))
-    return os.path.getmtime(path)
+    return xbmcvfs.Stat(path).st_mtime()
 
 
 def predict_update_frequency(history):
@@ -364,9 +370,11 @@ def widgets_changed_by_watching(media_type):
     # Predict which widgets the skin might have that could have changed based on recently finish
     # watching something
 
-    all_cache = filter(
-        os.path.isfile, glob.glob(os.path.join(_addon_data, "*.history"))
-    )
+    all_cache = [
+        os.path.join(_addon_data, x)
+        for x in xbmcvfs.listdir(_addon_data)[1]
+        if x.endswith(".history")
+    ]
 
     # Simple version. Anything updated recently (since startup?)
     # priority = sorted(all_cache, key=os.path.getmtime)
@@ -387,7 +395,7 @@ def widgets_changed_by_watching(media_type):
 
     for chance, path, history_path in priority:
         hash = path2hash(path)
-        last_update = os.path.getmtime(history_path) - _startup_time
+        last_update = xbmcvfs.Stat(history_path).st_mtime() - _startup_time
         if last_update < 0:
             utils.log(
                 "widget not updated since startup {} {}".format(last_update, hash[:5]),
