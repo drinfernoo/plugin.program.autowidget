@@ -56,6 +56,7 @@ _video_keys = {
     "file": "path",
     "type": "mediatype",
     "tvshowid": "id",
+    "id": "dbid",
 }
 
 _music_keys = {"disc": "discnumber", "track": "tracknumber", "type": "mediatype"}
@@ -251,8 +252,8 @@ def add_menu_item(
     )
 
     return _plugin
-    
-    
+
+
 def make_library_path(library, type, id):
     if not library or not type or id == -1:
         return ""
