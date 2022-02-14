@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1436" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1498" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
@@ -22,11 +22,11 @@
                 <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
             </item>
 			<item library="context_refresh_single.py">
-                <label>$ADDON[plugin.program.autowidget 30047]</label>
+                <label>$ADDON[plugin.program.autowidget 30046]</label>
                 <visible>!String.IsEmpty(ListItem.Property(autoID)) + [!String.IsEqual(ListItem.Property(autoAction),static) + !String.IsEqual(ListItem.Property(autoAction),merged)]</visible>
             </item>
 			<item library="clear_cache_single.py">
-                <label>$ADDON[plugin.program.autowidget 30117]</label>
+                <label>$ADDON[plugin.program.autowidget 30116]</label>
                 <visible>!String.IsEmpty(ListItem.Property(autoCache))</visible>
             </item>
         </menu>
@@ -43,6 +43,20 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.5.0
+ - Allow bulk operations in some groups
+ - More informative dialogs
+ - Allow manually sorting groups in "My Groups"
+ - Fixes for direct shortcuts
+ - Update "version" attribute in metafiles when updating
+3.4.2
+ - Some fixes for constant notification
+3.4.1
+ - Fix clearing cache from settings
+3.4.0
+ - Rework caching mechanism
+ - Add more notifications of progress
+ - Add placeholder items when no content is loaded
 3.3.7
  - Delay widget updates during library scans or when in media views
  - Fix widget cleaning scan for skins which don't use Skin Shortcuts
@@ -248,19 +262,6 @@
  - Add context menu on more items
  - Fix some log spam
  - Catch more errors from invalid files
- - Fix "Settings" shortcems as shortcuts
- - Fix crashes in Krypton
- - Fix crashes from invalid group/widget files
- - Fix Unicode compatibility
-1.4.5
- - Refresh Shortcut widgets Automatically
- - Add "Next Path" widget action
- - Add "Clone" and "Explode" widget modes
- - Allow refreshing between 15m-2h, at 15m intervals
-1.4.3
- - Add context menu on more items
- - Fix some log spam
- - Catch more errors from invalid files
  - Fix "Settings" shortcuts
  - Gracefully handle remote artwork
  - Use special paths for artwork
@@ -347,6 +348,10 @@
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+logo>
         </assets>
     </extension>
 </addon>
