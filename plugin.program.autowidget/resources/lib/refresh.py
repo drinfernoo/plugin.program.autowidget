@@ -243,6 +243,9 @@ def back_to_top(target):
 
 
 def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
+    if widget_id == "auto":
+        widget_id = utils.get_infolabel("ListItem.Property(autoID)")
+    
     if not widget_def:
         widget_def = manage.get_widget_by_id(widget_id)
 
