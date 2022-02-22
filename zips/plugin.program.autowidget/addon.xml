@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1513" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1488" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
@@ -43,8 +43,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-3.5.1
- - Fix sorting bug with higher group counts
 3.5.0
  - Allow bulk operations in some groups
  - More informative dialogs
@@ -350,6 +348,10 @@
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+logo>
         </assets>
     </extension>
 </addon>
