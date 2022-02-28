@@ -72,10 +72,10 @@ def build_labels(source, path_def=None, target=""):
             "art": {},
         }  # would be fun to set some "placeholder" art here
 
-        for i in utils.get_info_keys():
+        for i in utils.get_info_keys() + ["DBType"]:
             info = utils.get_infolabel("ListItem.{}".format(i.capitalize()))
             if info and not info.startswith("ListItem"):
-                path_def[i] = info
+                path_def[i if i != "DBType" else "type"] = info
 
         for i in utils.art_types:
             art = utils.get_infolabel("ListItem.Art({})".format(i))
