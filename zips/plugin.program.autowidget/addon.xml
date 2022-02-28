@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1488" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1436" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
@@ -22,11 +22,11 @@
                 <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
             </item>
 			<item library="context_refresh_single.py">
-                <label>$ADDON[plugin.program.autowidget 30046]</label>
+                <label>$ADDON[plugin.program.autowidget 30047]</label>
                 <visible>!String.IsEmpty(ListItem.Property(autoID)) + [!String.IsEqual(ListItem.Property(autoAction),static) + !String.IsEqual(ListItem.Property(autoAction),merged)]</visible>
             </item>
 			<item library="clear_cache_single.py">
-                <label>$ADDON[plugin.program.autowidget 30116]</label>
+                <label>$ADDON[plugin.program.autowidget 30117]</label>
                 <visible>!String.IsEmpty(ListItem.Property(autoCache))</visible>
             </item>
         </menu>
@@ -43,20 +43,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-3.5.0
- - Allow bulk operations in some groups
- - More informative dialogs
- - Allow manually sorting groups in "My Groups"
- - Fixes for direct shortcuts
- - Update "version" attribute in metafiles when updating
-3.4.2
- - Some fixes for constant notification
-3.4.1
- - Fix clearing cache from settings
-3.4.0
- - Rework caching mechanism
- - Add more notifications of progress
- - Add placeholder items when no content is loaded
 3.3.7
  - Delay widget updates during library scans or when in media views
  - Fix widget cleaning scan for skins which don't use Skin Shortcuts
@@ -351,11 +337,22 @@
         </assets>
     </extension>
 </addon>
-logo>
-        </assets>
-    </extension>
-</addon>
-g</banner>
+stom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>resources/media/icon.png</icon>
+            <fanart>resources/media/fanart.png</fanart>
+            <poster>resources/media/poster.png</poster>
+            <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
         </assets>
     </extension>
