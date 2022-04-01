@@ -43,6 +43,9 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.6.1
+ - Fix playing direct shortcuts for some items
+ - Fix cache clearing again
 3.6.0
  - Convert all file and path handling to xbmcvfs
  - Add more feedback and granular controls during backup/restore
