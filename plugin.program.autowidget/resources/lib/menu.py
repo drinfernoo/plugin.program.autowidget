@@ -442,8 +442,8 @@ def call_path(path_id):
                 final_path = "StartAndroidActivity({})".format(
                     path_def["file"]["file"].replace("androidapp://sources/apps/", "")
                 )
-            elif path_def["file"]["file"].startswith("pvr://"):
-                final_path = "PlayMedia({})".format(path_def["file"]["file"])
+            elif path_def["file"]["file"].startswith("pvr://") or path_def["file"].get("type") in ["video", "movie", "episode", "musicvideo", "music", "song"]:
+                final_path = "PlayMedia(\"{}\")".format(path_def["file"]["file"])
             else:
                 final_path = "RunPlugin({})".format(path_def["file"]["file"])
         elif (

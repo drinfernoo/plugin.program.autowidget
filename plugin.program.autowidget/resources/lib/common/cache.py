@@ -31,8 +31,9 @@ def clear_cache(target=None):
         if choice:
             for file in [
                 i
-                for i in xbmcvfs.listdir(_addon_data)
-                if i.split('.')[-1] in ["cache", "history", "queue"]
+                for j in xbmcvfs.listdir(_addon_data)
+                for i in j
+                if i.endswith((".cache", ".history", ".queue", ".time"))
             ]:
                 utils.remove_file(os.path.join(_addon_data, file))
     else:
