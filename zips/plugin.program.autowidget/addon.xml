@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="3.3.7" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="3.4.0" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
@@ -43,6 +43,10 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.4.0
+ - Rework caching mechanism
+ - Add more notifications of progress
+ - Add placeholder items when no content is loaded
 3.3.7
  - Delay widget updates during library scans or when in media views
  - Fix widget cleaning scan for skins which don't use Skin Shortcuts
@@ -332,11 +336,6 @@
             <icon>resources/media/icon.png</icon>
             <fanart>resources/media/fanart.png</fanart>
             <poster>resources/media/poster.png</poster>
-            <banner>resources/media/banner.png</banner>
-            <clearlogo>resources/media/clearlogo.png</clearlogo>
-        </assets>
-    </extension>
-</addon>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
         </assets>
