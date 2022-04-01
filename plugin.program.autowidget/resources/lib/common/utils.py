@@ -264,7 +264,7 @@ def wipe(folder=_addon_data, over=False):
     if choice or over:
         dirs = xbmcvfs.listdir(folder)[0]
         files = xbmcvfs.listdir(folder)[1]
-        
+
         for f in files:
             path = os.path.join(folder, f)
             remove_file(path)
@@ -449,7 +449,7 @@ def write_file(file, content, mode="w"):
     return False
 
 
-def read_json(file, log_file=False, default=None):
+def read_json(file, log_file=False, default={}):
     data = None
     if xbmcvfs.exists(file):
         with xbmcvfs.File(file) as f:
