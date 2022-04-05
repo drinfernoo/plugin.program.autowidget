@@ -54,6 +54,8 @@ def dispatch(_handle, _params):
             add.add_path(group, target)
         elif action == "shift_path" and group and path_id and target:
             edit.shift_path(group, path_id, target)
+        elif action == "shift_group" and group and target:
+            edit.shift_group(group, target)
         elif action == "edit":
             edit.edit_dialog(group, type="group")
         elif action == "edit_path":

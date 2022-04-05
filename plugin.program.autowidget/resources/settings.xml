@@ -2,57 +2,57 @@
 <settings>
     <category label="$ADDON[plugin.program.autowidget 30000]">        
         <!-- Widget Settings -->
-        <setting label="$ADDON[plugin.program.autowidget 30080]" type="lsep" />
-        <setting label="$ADDON[plugin.program.autowidget 30081]" type="bool" id="widgets.hide_watched" default="false" />
-        <setting label="$ADDON[plugin.program.autowidget 30079]" type="enum" id="widgets.show_next" lvalues="30065|30084|30063" default="1" />
-        <setting label="$ADDON[plugin.program.autowidget 30082]" type="bool" id="widgets.paged" default="true" />
-		<setting label="$ADDON[plugin.program.autowidget 30115]" type="bool" id="widgets.hide_duplicates" default="true" />
-		<setting label="$ADDON[plugin.program.autowidget 30116]" subsetting="true" type="bool" id="widgets.prefer_episodes" default="true" enable="eq(-1,true)" />
+        <setting label="$ADDON[plugin.program.autowidget 30079]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 30080]" type="bool" id="widgets.hide_watched" default="false" />
+        <setting label="$ADDON[plugin.program.autowidget 30078]" type="enum" id="widgets.show_next" lvalues="30064|30083|30062" default="1" />
+        <setting label="$ADDON[plugin.program.autowidget 30081]" type="bool" id="widgets.paged" default="true" />
+		<setting label="$ADDON[plugin.program.autowidget 30114]" type="bool" id="widgets.hide_duplicates" default="true" />
+		<setting label="$ADDON[plugin.program.autowidget 30115]" subsetting="true" type="bool" id="widgets.prefer_episodes" default="true" enable="eq(-1,true)" />
         
         <!-- Path Service -->
         <setting label="$ADDON[plugin.program.autowidget 30001]" type="lsep" />
-        <setting label="$ADDON[plugin.program.autowidget 30026]" type="enum" id="service.refresh_enabled" default="0" lvalues="30063|30064|30065" />
+        <setting label="$ADDON[plugin.program.autowidget 30025]" type="enum" id="service.refresh_enabled" default="0" lvalues="30062|30063|30064" />
         <setting label="$ADDON[plugin.program.autowidget 30005]" type="slider" id="service.refresh_duration" default="2" range="0.25,0.25,12" option="float" visible="lt(-1,2)" />
-        <setting label="$ADDON[plugin.program.autowidget 30027]" type="enum" id="service.refresh_notification" default="1" lvalues="30063|30064|30065" visible="lt(-2,2)" />
-        <setting label="$ADDON[plugin.program.autowidget 30083]" type="bool" id="service.refresh_sound" default="false" visible="lt(-3,2)" enable="lt(-1,2)" />
+        <setting label="$ADDON[plugin.program.autowidget 30026]" type="enum" id="service.refresh_notification" default="1" lvalues="30062|30063|30064" visible="lt(-2,2)" />
+        <setting label="$ADDON[plugin.program.autowidget 30082]" type="bool" id="service.refresh_sound" default="false" visible="lt(-3,2)" enable="lt(-1,2)" />
         
         <!-- Hidden Settings -->
         <setting type="bool" id="context.warning" default="false" visible="false" />
     </category>
 
-    <category label="30124">
-		<setting label="$ADDON[plugin.program.autowidget 30125]" type="lsep" />
-        <setting label="$ADDON[plugin.program.autowidget 30104]" type="action" id="ui.color" default="white" action="RunPlugin(plugin://plugin.program.autowidget/?mode=set_color)" option="close" />
+    <category label="30123">
+		<setting label="$ADDON[plugin.program.autowidget 30124]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 30103]" type="action" id="ui.color" default="white" action="RunPlugin(plugin://plugin.program.autowidget/?mode=set_color)" option="close" />
 		
-		<setting label="$ADDON[plugin.program.autowidget 30126]" type="lsep" />
-        <setting label="$ADDON[plugin.program.autowidget 30127]" type="addon" addontype="kodi.resource.images" id="icons.video_genre_icons" default="resource.images.moviegenreicons.transparent" />
-		<setting label="$ADDON[plugin.program.autowidget 30128]" type="addon" addontype="kodi.resource.images" id="icons.video_genre_fanart" default="resource.images.moviegenrefanart.metrocity" />
-		<setting label="$ADDON[plugin.program.autowidget 30129]" type="addon" addontype="kodi.resource.images" id="icons.music_genre_icons" default="resource.images.musicgenreicons.poster" />
-		<setting label="$ADDON[plugin.program.autowidget 30130]" type="addon" addontype="kodi.resource.images" id="icons.music_genre_fanart" default="resource.images.musicgenrefanart.coloured" />
-		<setting label="$ADDON[plugin.program.autowidget 30131]" type="addon" addontype="kodi.resource.images" id="icons.studios" default="resource.images.studios.white" />
-		<setting label="$ADDON[plugin.program.autowidget 30132]" type="addon" addontype="kodi.resource.images" id="icons.countries" default="resource.images.moviecountryicons.maps" />
+		<setting label="$ADDON[plugin.program.autowidget 30125]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 30126]" type="addon" addontype="kodi.resource.images" id="icons.video_genre_icons" default="resource.images.moviegenreicons.transparent" />
+		<setting label="$ADDON[plugin.program.autowidget 30127]" type="addon" addontype="kodi.resource.images" id="icons.video_genre_fanart" default="resource.images.moviegenrefanart.metrocity" />
+		<setting label="$ADDON[plugin.program.autowidget 30128]" type="addon" addontype="kodi.resource.images" id="icons.music_genre_icons" default="resource.images.musicgenreicons.poster" />
+		<setting label="$ADDON[plugin.program.autowidget 30129]" type="addon" addontype="kodi.resource.images" id="icons.music_genre_fanart" default="resource.images.musicgenrefanart.coloured" />
+		<setting label="$ADDON[plugin.program.autowidget 30130]" type="addon" addontype="kodi.resource.images" id="icons.studios" default="resource.images.studios.white" />
+		<setting label="$ADDON[plugin.program.autowidget 30131]" type="addon" addontype="kodi.resource.images" id="icons.countries" default="resource.images.moviecountryicons.maps" />
     </category>
     
     <category label="$ADDON[plugin.program.autowidget 30008]">    
         <!-- Shortcuts -->
         <setting label="$ADDON[plugin.program.autowidget 30002]" type="lsep" />
         <setting label="$ADDON[plugin.program.autowidget 30006]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=force)" option="close" />
-        <setting label="$ADDON[plugin.program.autowidget 30103]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clean)" option="close" />
-        <setting label="$ADDON[plugin.program.autowidget 30043]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=wipe)" option="close" />
-        <setting label="$ADDON[plugin.program.autowidget 30101]" type="action" action="Skin.ToggleDebug" />
-        <setting label="$ADDON[plugin.program.autowidget 30117]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clear_cache)" option="close" />
+        <setting label="$ADDON[plugin.program.autowidget 30102]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clean)" option="close" />
+        <setting label="$ADDON[plugin.program.autowidget 30042]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=wipe)" option="close" />
+        <setting label="$ADDON[plugin.program.autowidget 30100]" type="action" action="Skin.ToggleDebug" />
+        <setting label="$ADDON[plugin.program.autowidget 30116]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=clear_cache)" option="close" />
         
         <!-- Management -->
-        <setting label="$ADDON[plugin.program.autowidget 30037]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 30036]" type="lsep" />
         <setting label="$ADDON[plugin.program.autowidget 30004]" type="bool" id="context.autowidget" default="true" />
-        <setting label="$ADDON[plugin.program.autowidget 30038]" type="bool" id="context.advanced" default="false" />
-        <setting label="$ADDON[plugin.program.autowidget 30113]" type="bool" id="logging.debug" default="false" />
+        <setting label="$ADDON[plugin.program.autowidget 30037]" type="bool" id="context.advanced" default="false" />
+        <setting label="$ADDON[plugin.program.autowidget 30112]" type="bool" id="logging.debug" default="false" />
         
         <!-- Backup/Restore -->
-        <setting label="$ADDON[plugin.program.autowidget 30067]" type="lsep" />
-        <setting label="$ADDON[plugin.program.autowidget 30068]" type="action" id="backup.location" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=location)" default="special://userdata/addon_data/plugin.program.autowidget/backups/" />
-        <setting label="$ADDON[plugin.program.autowidget 30069]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=backup)" option="close" />
-        <setting label="$ADDON[plugin.program.autowidget 30070]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=restore)" option="close" />
+        <setting label="$ADDON[plugin.program.autowidget 30066]" type="lsep" />
+        <setting label="$ADDON[plugin.program.autowidget 30067]" type="action" id="backup.location" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=location)" default="special://profile/plugin.program.autowidget/backups/" />
+        <setting label="$ADDON[plugin.program.autowidget 30068]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=backup)" option="close" />
+        <setting label="$ADDON[plugin.program.autowidget 30069]" type="action" action="RunPlugin(plugin://plugin.program.autowidget/?mode=backup&action=restore)" option="close" />
     </category>
 </settings>
 

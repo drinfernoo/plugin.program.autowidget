@@ -1,4 +1,5 @@
 import xbmcgui
+import xbmcvfs
 
 import os
 import random
@@ -6,11 +7,9 @@ import random
 from resources.lib.common import settings
 from resources.lib.common import utils
 
-_addon_data = utils.translate_path(settings.get_addon_info("profile"))
-_userdata = utils.translate_path("special://userdata/")
-_skin_shortcuts = utils.translate_path(
-    settings.get_addon_info("profile", addon="script.skinshortcuts")
-)
+_addon_data = settings.get_addon_info("profile")
+_userdata = "special://profile/"
+_skin_shortcuts = settings.get_addon_info("profile", addon="script.skinshortcuts")
 
 
 def clean(widget_id=None, notify=False, all=False):
@@ -32,12 +31,13 @@ def clean(widget_id=None, notify=False, all=False):
     if "error" not in addons:
         for addon in addons["result"]["addons"]:
             path = os.path.join(
-                _userdata, "addon_data", addon["addonid"], "settings.xml"
+                settings.get_addon_info("profile", addon=addon["addonid"]),
+                "settings.xml",
             )
-            if os.path.exists(path):
+            if xbmcvfs.exists(path):
                 files.append(path)
-    if _skin_shortcuts and os.path.exists(_skin_shortcuts):
-        for xml in os.listdir(_skin_shortcuts):
+    if _skin_shortcuts and xbmcvfs.exists(_skin_shortcuts):
+        for xml in xbmcvfs.listdir(_skin_shortcuts)[1]:
             ext = xml.split(".")
             if ext[-1] in ["xml", "properties"]:
                 path = os.path.join(_skin_shortcuts, xml)
@@ -79,7 +79,7 @@ def clean(widget_id=None, notify=False, all=False):
     if notify:
         dialog.notification(
             "AutoWidget",
-            utils.get_string(30106).format("No" if removed == 0 else removed),
+            utils.get_string(30105).format("No" if removed == 0 else removed),
         )
         del dialog
     del dialog
@@ -134,15 +134,18 @@ def write_path(group_def, path_def=None, update=""):
         if update:
             for path in group_def["paths"]:
                 if path["id"] == update:
+                    path["version"] = settings.get_addon_info("version")
                     group_def["paths"][group_def["paths"].index(path)] = path_def
         else:
             group_def["paths"].append(path_def)
 
+    group_def["version"] = settings.get_addon_info("version")
     utils.write_json(filename, group_def)
 
 
 def save_path_details(params):
     path_to_saved = os.path.join(_addon_data, "{}.widget".format(params["id"]))
+    params["version"] = settings.get_addon_info("version")
     utils.write_json(path_to_saved, params)
 
     return params
@@ -182,21 +185,37 @@ def get_widget_by_id(widget_id, group_id=None):
             return defined
 
 
+def highest_group_sort_order():
+    groups = find_defined_groups()
+    return groups[-1].get("sort_order", 0) if len(groups) > 0 else 0
+
+
 def find_defined_groups(_type=""):
     groups = []
+    sort_order = 0
 
-    for filename in [x for x in os.listdir(_addon_data) if x.endswith(".group")]:
+    for filename in [
+        x for x in xbmcvfs.listdir(_addon_data)[1] if x.endswith(".group")
+    ]:
         path = os.path.join(_addon_data, filename)
 
         group_def = utils.read_json(path)
         if group_def:
+            if not group_def.get("sort_order"):
+                group_def["sort_order"] = "{}".format(sort_order)
+                utils.write_json(path, group_def)
+            if group_def.get("content") is None:
+                group_def["content"] = ""
+                utils.write_json(path, group_def)
+
             if _type:
                 if group_def["type"] == _type:
                     groups.append(group_def)
             else:
                 groups.append(group_def)
+        sort_order += 1
 
-    return groups
+    return sorted(groups, key=lambda x: int(x["sort_order"]))
 
 
 def find_defined_paths(group_id=None):
@@ -219,7 +238,7 @@ def find_defined_paths(group_id=None):
 
 
 def find_defined_widgets(group_id=None):
-    addon_files = os.listdir(_addon_data)
+    addon_files = xbmcvfs.listdir(_addon_data)[1]
     widgets = []
 
     widget_files = [x for x in addon_files if x.endswith(".widget")]
@@ -236,7 +255,7 @@ def find_defined_widgets(group_id=None):
 
 
 def choose_paths(
-    label=utils.get_string(30122),
+    label=utils.get_string(30121),
     paths=None,
     threshold=None,
     indices=True,

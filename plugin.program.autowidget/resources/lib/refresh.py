@@ -1,5 +1,6 @@
 import xbmc
 import xbmcgui
+import xbmcvfs
 
 import os
 import random
@@ -11,7 +12,7 @@ from resources.lib.common import cache
 from resources.lib.common import settings
 from resources.lib.common import utils
 
-_addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_addon_data = settings.get_addon_info("profile")
 
 skin_string_pattern = "autowidget-{}-{}"
 _properties = ["context.autowidget"]
@@ -97,7 +98,7 @@ class RefreshService(xbmc.Monitor):
                 #     def __call__(self, groupname, path):
                 #         if self.dialog is None:
                 #             self.dialog = xbmcgui.DialogProgressBG()
-                #             self.dialog.create("AutoWidget", utils.get_string(30141))
+                #             self.dialog.create("AutoWidget", utils.get_string(30139))
                 #         if not self.service.player.isPlayingVideo():
                 #             percent = (
                 #                 len(self.done)
@@ -144,7 +145,7 @@ class RefreshService(xbmc.Monitor):
                         continue
                     _update_strings(widget_def)
                 if (
-                    os.path.exists(os.path.join(_addon_data, "refresh.time"))
+                    xbmcvfs.exists(os.path.join(_addon_data, "refresh.time"))
                     and utils.get_active_window() == "home"
                 ):
                     utils.update_container(True)
@@ -158,7 +159,7 @@ class RefreshService(xbmc.Monitor):
                 ):
                     dialog = xbmcgui.Dialog()
                     dialog.notification(
-                        u"AutoWidget", utils.get_string(30142), sound=False
+                        u"AutoWidget", utils.get_string(30140), sound=False
                     )
 
             if self.abortRequested():
@@ -242,6 +243,9 @@ def back_to_top(target):
 
 
 def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
+    if widget_id == "auto":
+        widget_id = utils.get_infolabel("ListItem.Property(autoID)")
+    
     if not widget_def:
         widget_def = manage.get_widget_by_id(widget_id)
 
@@ -304,7 +308,7 @@ def refresh_paths(notify=False, force=False):
         dialog = xbmcgui.Dialog()
         dialog.notification(
             "AutoWidget",
-            utils.get_string(30020),
+            utils.get_string(30019),
             sound=settings.get_setting_bool("service.refresh_sound"),
         )
         del dialog
@@ -337,18 +341,18 @@ def get_files_list(path, label=None, widget_id=None, background=True):
     elif "error" in files:
         utils.log("Error processing {}".format(hash), "error")
         error_tile = utils.make_holding_path(
-            utils.get_string(30139).format(label), "alert", hash=hash
+            utils.get_string(30137).format(label), "alert", hash=hash
         )
         files = error_tile.get("result", {}).get("files", [])
         cache_path = os.path.join(_addon_data, "{}.cache".format(hash))
-        if os.path.exists(cache_path):
-            os.remove(cache_path)
+        if xbmcvfs.exists(cache_path):
+            utils.remove_file(cache_path)
         utils.log("Invalid cache file removed for {}".format(hash))
 
     if not files:
         utils.log("No items found for {}".format(hash))
         empty_tile = utils.make_holding_path(
-            utils.get_string(30140).format(label), "information-outline", hash=hash
+            utils.get_string(30138).format(label), "information-outline", hash=hash
         )
         files = empty_tile.get("result", {}).get("files", [])
 
