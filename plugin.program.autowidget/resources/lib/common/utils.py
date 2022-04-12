@@ -458,6 +458,7 @@ def read_json(file, log_file=False, default=None):
                 log("Could not read JSON from {}: {}".format(file, e), level="error")
                 if log_file:
                     log(content, level="debug")
+                os.remove(file)
                 return default
     else:
         log("{} does not exist.".format(file), level="error")
