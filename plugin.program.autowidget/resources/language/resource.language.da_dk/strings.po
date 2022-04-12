@@ -46,90 +46,85 @@ msgctxt "#30005"
 msgid "Default time between widget refreshes (in hours)"
 msgstr "Standardtid mellem opdatering af widget (i timer)"
 
-#: addon.xml:20 /resources/settings.xml:38 /resources/lib/menu.py:251
+#: addon.xml:20 /resources/settings.xml:38 /resources/lib/menu.py:252
 msgctxt "#30006"
 msgid "Force Refresh Widgets"
 msgstr "Gennemtving opdaterings widgets"
 
-#: /resources/lib/menu.py:41 /resources/lib/menu.py:100
+#: /resources/lib/menu.py:40 /resources/lib/menu.py:101
 msgctxt "#30007"
 msgid "My Groups"
 msgstr "Mine grupper"
 
-#: /resources/settings.xml:35 /resources/lib/menu.py:53
+#: /resources/settings.xml:35 /resources/lib/menu.py:52
 #: /resources/lib/menu.py:282
 msgctxt "#30008"
 msgid "Tools"
 msgstr "Værktøjer"
 
-#: /resources/lib/menu.py:690
+#: /resources/lib/menu.py:699
 msgctxt "#30009"
 msgid "Actions"
 msgstr "Handlinger"
 
-#: /resources/lib/add.py:160 /resources/lib/menu.py:90
+#: /resources/lib/add.py:164 /resources/lib/menu.py:95
 msgctxt "#30010"
 msgid "Create New Widget Group"
 msgstr "Opret ny widgetgruppe"
 
-#: /resources/lib/add.py:164 /resources/lib/menu.py:95
+#: /resources/lib/add.py:168 /resources/lib/menu.py:89
 msgctxt "#30011"
 msgid "Create New Shortcut Group"
 msgstr "Opret ny genvejsgruppe"
 
-#: /resources/lib/menu.py:254
+#: /resources/lib/edit.py:155
 msgctxt "#30012"
-msgid "Force all defined widgets to refresh."
-msgstr "Tving alle definerede widgets til at opdatere."
-
-#: /resources/lib/edit.py:120
-msgctxt "#30013"
 msgid "Remove Group"
 msgstr "Fjern FAQ kategori"
 
-#: /resources/lib/edit.py:120
-msgctxt "#30014"
+#: /resources/lib/edit.py:155
+msgctxt "#30013"
 msgid "Remove"
 msgstr "Fjern"
 
-#: /resources/lib/menu.py:653
-msgctxt "#30015"
+#: /resources/lib/menu.py:662
+msgctxt "#30014"
 msgid "Shift Path Up"
 msgstr "Skift sti op"
 
-#: /resources/lib/menu.py:665
-msgctxt "#30016"
+#: /resources/lib/menu.py:674
+msgctxt "#30015"
 msgid "Shift Path Down"
 msgstr "Skift kurve nedad"
 
-#: /resources/lib/menu.py:705
-msgctxt "#30017"
+#: /resources/lib/menu.py:714
+msgctxt "#30016"
 msgid "{} (Cycling)"
 msgstr "{} (Cykling)"
 
-#: /resources/lib/menu.py:193
-msgctxt "#30018"
+#: /resources/lib/menu.py:194
+msgctxt "#30017"
 msgid "Shortcuts from {}"
 msgstr "Genveje fra {}"
 
-#: /resources/lib/menu.py:147 /resources/lib/menu.py:496
-#: /resources/lib/menu.py:560
-msgctxt "#30019"
+#: /resources/lib/menu.py:148 /resources/lib/menu.py:483
+#: /resources/lib/menu.py:547
+msgctxt "#30018"
 msgid "No paths have been defined for this group."
 msgstr "Der er ikke defineret nogen stier for denne gruppe."
 
-#: /resources/lib/refresh.py:299
-msgctxt "#30020"
+#: /resources/lib/refresh.py:307
+msgctxt "#30019"
 msgid "Refreshing widgets..."
 msgstr "Opdaterer widgets..."
 
-#: /resources/lib/add.py:184
-msgctxt "#30021"
+#: /resources/lib/add.py:188
+msgctxt "#30020"
 msgid "Addition cancelled."
 msgstr "Tilføjelsen blev annulleret."
 
-#: /resources/lib/edit.py:72
-msgctxt "#30022"
+#: /resources/lib/edit.py:107
+msgctxt "#30021"
 msgid ""
 "Are you sure you want to remove this path? This action [COLOR "
 "firebrick][B]cannot[/B][/COLOR] be undone."
@@ -137,18 +132,18 @@ msgstr ""
 "Er du sikker på, at du vil fjerne denne sti? Denne handling [COLOR "
 "firebrick][B]kan ikke[/B][/COLOR] fortrydes."
 
-#: /resources/lib/add.py:196
-msgctxt "#30023"
+#: /resources/lib/add.py:200
+msgctxt "#30022"
 msgid "Name for Group"
 msgstr "Navn på gruppe"
 
-#: /resources/lib/add.py:214
-msgctxt "#30024"
+#: /resources/lib/add.py:219
+msgctxt "#30023"
 msgid "Cannot create a group with no name."
 msgstr "Der kan ikke oprettes en gruppe uden navn."
 
-#: /resources/lib/edit.py:58 /resources/lib/edit.py:92
-msgctxt "#30025"
+#: /resources/lib/edit.py:93 /resources/lib/edit.py:127
+msgctxt "#30024"
 msgid ""
 "Are you sure you want to remove this group? This action [COLOR "
 "firebrick][B]cannot[/B][/COLOR] be undone."
@@ -157,73 +152,73 @@ msgstr ""
 "firebrick][B]kan ikke[/B][/COLOR] fortrydes."
 
 #: /resources/settings.xml:13
-msgctxt "#30026"
+msgctxt "#30025"
 msgid "Enable Path Refreshing Service"
 msgstr "Aktiver tjenesten Til opdatering af sti"
 
 #: /resources/settings.xml:15
-msgctxt "#30027"
+msgctxt "#30026"
 msgid "Show 'Refreshing Paths' Notification"
 msgstr "Vis meddelelse om opdatering af stier"
 
-#: /resources/lib/add.py:244
-msgctxt "#30028"
+#: /resources/lib/add.py:249
+msgctxt "#30027"
 msgid "Shortcut Label"
 msgstr "Genvejsetiket"
 
-#: /resources/lib/add.py:246
-msgctxt "#30029"
+#: /resources/lib/add.py:251
+msgctxt "#30028"
 msgid "Widget Label"
 msgstr "Etiket til widget"
 
-#: /resources/lib/edit.py:64 /resources/lib/edit.py:83
-#: /resources/lib/edit.py:97
-msgctxt "#30030"
+#: /resources/lib/edit.py:99 /resources/lib/edit.py:118
+#: /resources/lib/edit.py:132
+msgctxt "#30029"
 msgid "{} removed."
 msgstr "{} removed."
 
-#: /resources/lib/edit.py:128 /resources/lib/menu.py:637
-msgctxt "#30031"
+#: /resources/lib/edit.py:163 /resources/lib/menu.py:646
+msgctxt "#30030"
 msgid "Edit Shortcut"
 msgstr "Redigér genvej"
 
-#: /resources/lib/edit.py:316 /resources/lib/edit.py:337
-msgctxt "#30032"
+#: /resources/lib/edit.py:351 /resources/lib/edit.py:372
+msgctxt "#30031"
 msgid "Select {}"
 msgstr "Vælg {}"
 
 #: /resources/lib/add.py:19
-msgctxt "#30033"
+msgctxt "#30032"
 msgid "Shortcut"
 msgstr "Genvej"
 
 #: /resources/lib/add.py:20
-msgctxt "#30034"
+msgctxt "#30033"
 msgid "Widget"
 msgstr "Widget"
 
 #: /resources/lib/add.py:23
-msgctxt "#30035"
+msgctxt "#30034"
 msgid "Settings Shortcut"
 msgstr "Genvej til indstillinger"
 
-#: /resources/lib/add.py:178
-msgctxt "#30036"
+#: /resources/lib/add.py:182
+msgctxt "#30035"
 msgid "Choose a Group"
 msgstr "Vælg en gruppe"
 
 #: /resources/settings.xml:45
-msgctxt "#30037"
+msgctxt "#30036"
 msgid "Management"
 msgstr "Administration"
 
 #: /resources/settings.xml:47
-msgctxt "#30038"
+msgctxt "#30037"
 msgid "Show Advanced Editing Options"
 msgstr "Vis avancerede redigeringsindstillinger"
 
-#: /resources/lib/edit.py:105
-msgctxt "#30039"
+#: /resources/lib/edit.py:140
+msgctxt "#30038"
 msgid ""
 "Changing of any of the advanced options may cause paths to [COLOR "
 "firebrick]no longer[/COLOR] function correctly. This message will only be "
@@ -233,314 +228,317 @@ msgstr ""
 "stierne til [COLOR firebrick]ikke længere[/COLOR] fungerer korrekt. Denne "
 "meddelelse vises kun én gang."
 
-#: /resources/lib/edit.py:106
-msgctxt "#30040"
+#: /resources/lib/edit.py:141
+msgctxt "#30039"
 msgid "[COLOR firebrick][B]Continue[/B][/COLOR]"
 msgstr "[COLOR firebrick] [B] Fortsæt[/B][/COLOR]"
 
-#: /resources/lib/edit.py:107
-msgctxt "#30041"
+#: /resources/lib/edit.py:142
+msgctxt "#30040"
 msgid "[COLOR lawngreen][B]Disable[/B][/COLOR]"
 msgstr "[COLOR plæneklipp] [B] Deaktiver[/B][/COLOR]"
 
-#: /resources/lib/edit.py:133 /resources/lib/menu.py:607
-msgctxt "#30042"
+#: /resources/lib/edit.py:168 /resources/lib/menu.py:594
+msgctxt "#30041"
 msgid "Edit Group"
 msgstr "Redigér gruppe"
 
 #: /resources/settings.xml:40 /resources/lib/menu.py:264
-msgctxt "#30043"
+msgctxt "#30042"
 msgid "Wipe Add-on Data"
 msgstr "Slet tilføjelsesdata"
 
-#: /resources/lib/common/utils.py:258
-msgctxt "#30044"
+#: /resources/lib/common/utils.py:260
+msgctxt "#30043"
 msgid ""
-"This will remove [B]all[/B] data for AutoWidget, excluding backups. Any "
-"current AutoWidgets will no longer refresh and may not work reliably. It is "
-"recommended that this only be done if you intend on repointing all of those "
-"widgets. This [COLOR firebrick]cannot[/COLOR] be undone."
+"This will remove [B]all[/B] data for AutoWidget, [B]including backups[/B], "
+"if stored in the add-on data folder. Any current AutoWidgets will no longer "
+"refresh and may not work reliably. It is recommended that this only be done "
+"if you intend on repointing all of those widgets. This [COLOR "
+"firebrick]cannot[/COLOR] be undone."
 msgstr ""
-"Derved fjernes [B]alle[/B]-data for AutoWidget, bortset fra "
-"sikkerhedskopier. Alle aktuelle AutoWidgets opdateres ikke længere og "
-"fungerer muligvis ikke pålideligt. Det anbefales, at dette kun gøres, hvis "
-"du har til hensigt at repointing alle disse widgets. Denne [COLOR firebrick]"
-" kan ikke[/COLOR] fortrydes."
+"Dette vil fjerne [B]alle[/B] data for AutoWidget, [B]inklusive "
+"sikkerhedskopier[/B], hvis de er gemt i tilføjelsesdatamappen. Eventuelle "
+"aktuelle AutoWidgets vil ikke længere opdateres og fungerer muligvis ikke "
+"pålideligt. Det anbefales, at dette kun gøres, hvis du har til hensigt at "
+"pege alle disse widgets igen. Denne [COLOR firebrick]kan ikke[/COLOR] "
+"fortrydes."
 
-#: /resources/lib/menu.py:549 /resources/lib/menu.py:600
-msgctxt "#30045"
+#: /resources/lib/menu.py:536 /resources/lib/menu.py:587
+msgctxt "#30044"
 msgid "Point a widget here to show items."
 msgstr "Peg en widget her for at vise elementer."
 
-#: /resources/lib/backup.py:55 /resources/lib/menu.py:84
-msgctxt "#30046"
+#: /resources/lib/backup.py:68 /resources/lib/menu.py:83
+msgctxt "#30045"
 msgid "No groups have been defined."
 msgstr "Der er ikke defineret nogen grupper."
 
-#: addon.xml:24 /resources/lib/menu.py:199
-msgctxt "#30047"
+#: addon.xml:24 /resources/lib/menu.py:200
+msgctxt "#30046"
 msgid "Refresh Widget"
 msgstr "Opdater widget"
 
-#: /resources/lib/edit.py:125 /resources/lib/edit.py:160
-#: /resources/lib/menu.py:215 /resources/lib/menu.py:634
-msgctxt "#30048"
+#: /resources/lib/edit.py:160 /resources/lib/edit.py:195
+#: /resources/lib/menu.py:216 /resources/lib/menu.py:643
+msgctxt "#30047"
 msgid "Edit Widget"
 msgstr "Rediger widget"
 
-#: /resources/lib/menu.py:228
-msgctxt "#30049"
+#: /resources/lib/menu.py:229
+msgctxt "#30048"
 msgid "Orphaned"
 msgstr "Forældreløse"
 
-#: /resources/lib/menu.py:240
-msgctxt "#30050"
+#: /resources/lib/menu.py:241
+msgctxt "#30049"
 msgid "No widgets have been initialized."
 msgstr "Ingen widgets er blevet initialiseret."
 
-#: /resources/lib/menu.py:486
-msgctxt "#30051"
+#: /resources/lib/menu.py:473
+msgctxt "#30050"
 msgid "Broken Widget"
 msgstr "Ødelagt widget"
 
-#: /resources/lib/menu.py:47 /resources/lib/menu.py:246
-msgctxt "#30052"
+#: /resources/lib/menu.py:46 /resources/lib/menu.py:247
+msgctxt "#30051"
 msgid "Active Widgets"
 msgstr "Aktive widgets"
 
-#: /resources/lib/menu.py:487
-msgctxt "#30053"
+#: /resources/lib/menu.py:474
+msgctxt "#30052"
 msgid "This widget is broken, repoint or remove it to stop seeing this."
 msgstr ""
 "Denne widget er brudt, repoint eller fjerne det for at stoppe med at se "
 "dette."
 
-#: /resources/lib/menu.py:692
-msgctxt "#30054"
+#: /resources/lib/menu.py:701
+msgctxt "#30053"
 msgid "{} (Static)"
 msgstr "{} (Statisk)"
 
-#: /resources/lib/edit.py:213
-msgctxt "#30055"
+#: /resources/lib/edit.py:248
+msgctxt "#30054"
 msgid "Add New InfoLabel"
 msgstr "Tilføj nyt infolabel"
 
-#: /resources/lib/edit.py:213
-msgctxt "#30056"
+#: /resources/lib/edit.py:248
+msgctxt "#30055"
 msgid "Add New Artwork"
 msgstr "Tilføj ny illustration"
 
-#: /resources/lib/edit.py:243 /resources/lib/edit.py:395
-#: /resources/lib/menu.py:513
-msgctxt "#30057"
+#: /resources/lib/edit.py:278 /resources/lib/edit.py:447
+#: /resources/lib/menu.py:500
+msgctxt "#30056"
 msgid "Random Path"
 msgstr "Tilfældig sti"
 
-#: /resources/lib/edit.py:245 /resources/lib/edit.py:395
-#: /resources/lib/menu.py:513
-msgctxt "#30058"
+#: /resources/lib/edit.py:280 /resources/lib/edit.py:447
+#: /resources/lib/menu.py:500
+msgctxt "#30057"
 msgid "Next Path"
 msgstr "Næste sti"
 
-#: /resources/lib/edit.py:396 /resources/lib/menu.py:512
-msgctxt "#30059"
+#: /resources/lib/edit.py:448 /resources/lib/menu.py:499
+msgctxt "#30058"
 msgid "Choose an Action"
 msgstr "Vælg en handling"
 
 #: /resources/lib/add.py:21
-msgctxt "#30060"
+msgctxt "#30059"
 msgid "Clone as Shortcut Group"
 msgstr "Klon som genvejsgruppe"
 
 #: /resources/lib/add.py:22
-msgctxt "#30061"
+msgctxt "#30060"
 msgid "Explode as Widget Group"
 msgstr "Udfold som widgetgruppe"
 
-#: /resources/lib/add.py:131
-msgctxt "#30062"
+#: /resources/lib/add.py:135
+msgctxt "#30061"
 msgid "Add as"
 msgstr "Tilføj som"
 
 #: /resources/settings.xml:6 /resources/settings.xml:13
 #: /resources/settings.xml:15
-msgctxt "#30063"
+msgctxt "#30062"
 msgid "Always"
 msgstr "Altid"
 
 #: /resources/settings.xml:13 /resources/settings.xml:15
-msgctxt "#30064"
+msgctxt "#30063"
 msgid "While Nothing Playing"
 msgstr "Mens intet spiller"
 
 #: /resources/settings.xml:6 /resources/settings.xml:13
 #: /resources/settings.xml:15
-msgctxt "#30065"
+msgctxt "#30064"
 msgid "Never"
 msgstr "Aldrig"
 
-#: /resources/lib/menu.py:718
-msgctxt "#30066"
+#: /resources/lib/menu.py:727
+msgctxt "#30065"
 msgid "{} (Merged)"
 msgstr "{} (Flettet)"
 
 #: /resources/settings.xml:51
-msgctxt "#30067"
+msgctxt "#30066"
 msgid "Backup / Restore"
 msgstr "Backup/Restore"
 
-#: /resources/settings.xml:52 /resources/lib/backup.py:17
-msgctxt "#30068"
+#: /resources/settings.xml:52 /resources/lib/backup.py:30
+msgctxt "#30067"
 msgid "Choose Backup Location"
 msgstr "Vælg placering til sikkerhedskopi"
 
-#: /resources/settings.xml:53
-msgctxt "#30069"
+#: /resources/settings.xml:53 /resources/lib/backup.py:73
+msgctxt "#30068"
 msgid "Create Backup"
 msgstr "Opret Sikkerhedskopi"
 
-#: /resources/settings.xml:54
-msgctxt "#30070"
+#: /resources/settings.xml:54 /resources/lib/backup.py:131
+#: /resources/lib/backup.py:144
+msgctxt "#30069"
 msgid "Restore from Backup"
 msgstr "Restore from Backup"
 
-#: /resources/lib/backup.py:27
-msgctxt "#30071"
+#: /resources/lib/backup.py:40
+msgctxt "#30070"
 msgid ""
-"Do you want to backup your groups? This will not backup any widgets defined "
-"in the skin."
+"Do you want to backup your AutoWidget configuration? This will include all "
+"groups, widgets, cache files, and settings."
 msgstr ""
-"Vil du sikkerhedskopiere grupperne? Dette vil ikke sikkerhedskopiere nogen "
-"widgets defineret i huden."
+"Vil du sikkerhedskopiere din AutoWidget-konfiguration? Dette vil inkludere "
+"alle grupper, widgets, cachefiler og indstillinger."
 
-#: /resources/lib/backup.py:30
-msgctxt "#30072"
+#: /resources/lib/backup.py:43
+msgctxt "#30071"
 msgid "Backup Name"
 msgstr "Navn på sikkerhedskopi"
 
-#: /resources/lib/backup.py:33
-msgctxt "#30073"
+#: /resources/lib/backup.py:46
+msgctxt "#30072"
 msgid "Backup Cancelled."
 msgstr "Sikkerhedskopieringen blev annulleret."
 
-#: /resources/lib/backup.py:42
-msgctxt "#30074"
+#: /resources/lib/backup.py:55
+msgctxt "#30073"
 msgid "Could not create backup location."
 msgstr "Placeringen af sikkerhedskopien kunne ikke oprettes."
 
-#: /resources/lib/backup.py:76
-msgctxt "#30075"
+#: /resources/lib/backup.py:98
+msgctxt "#30074"
 msgid "Choose Backup to Restore"
 msgstr "Vælg sikkerhedskopi, der skal gendannes"
 
-#: /resources/lib/backup.py:84
+#: /resources/lib/backup.py:118
+msgctxt "#30075"
+msgid "Choose Which Files to Restore"
+msgstr "Vælg hvilke filer der skal gendannes"
+
+#: /resources/lib/backup.py:127
 msgctxt "#30076"
-msgid "Would you like to restore {} group {} from this backup?"
-msgstr "Vil du gendanne {} gruppen {} fra denne sikkerhedskopi?"
+msgid "Would you like to erase your current configuration before restoring?"
+msgstr "Vil du slette din nuværende konfiguration før gendannelse?"
 
-#: /resources/lib/backup.py:88
+#: /resources/lib/backup.py:171 /resources/lib/backup.py:174
 msgctxt "#30077"
-msgid "Would you like to erase your current groups before restoring?"
-msgstr "Vil du slette de aktuelle grupper, før du gendanner?"
-
-#: /resources/lib/backup.py:96 /resources/lib/backup.py:99
-msgctxt "#30078"
 msgid "Restore Cancelled."
 msgstr "Gendannelsen blev annulleret."
 
 #: /resources/settings.xml:6
-msgctxt "#30079"
+msgctxt "#30078"
 msgid "Show 'Next Page' Items"
 msgstr "Vis 'Næste side'-elementer"
 
 #: /resources/settings.xml:4
-msgctxt "#30080"
+msgctxt "#30079"
 msgid "Widget Settings"
 msgstr "Indstilling af widget"
 
 #: /resources/settings.xml:5
-msgctxt "#30081"
+msgctxt "#30080"
 msgid "Hide Watched Items"
 msgstr "Skjul overvågede elementer"
 
 #: /resources/settings.xml:7
-msgctxt "#30082"
+msgctxt "#30081"
 msgid "Use Paged Widgets (Doesn't Affect Merged Widgets)"
 msgstr "Brug af sideinddeler widgets (påvirker ikke flettede widgets)"
 
 #: /resources/settings.xml:16
-msgctxt "#30083"
+msgctxt "#30082"
 msgid "Notification Sound"
 msgstr "Notifikations lyd"
 
 #: /resources/settings.xml:6
-msgctxt "#30084"
+msgctxt "#30083"
 msgid "Not on Merged Widgets"
 msgstr "Ikke på flettede widgets"
 
-#: /resources/lib/menu.py:332
-msgctxt "#30085"
+#: /resources/lib/menu.py:319
+msgctxt "#30084"
 msgid "Back to Page {}"
 msgstr "Tilbage til side {}"
 
-#: /resources/lib/menu.py:665
-msgctxt "#30086"
+#: /resources/lib/menu.py:674
+msgctxt "#30085"
 msgid "Shift Path to Top"
 msgstr "Skift sti til toppen"
 
-#: /resources/lib/menu.py:653
-msgctxt "#30087"
+#: /resources/lib/menu.py:662
+msgctxt "#30086"
 msgid "Shift Path to Bottom"
 msgstr "Skift sti til bund"
 
-#: /resources/lib/edit.py:444 /resources/lib/menu.py:504
-msgctxt "#30088"
+#: /resources/lib/edit.py:496 /resources/lib/menu.py:491
+msgctxt "#30087"
 msgid "Choose a Path"
 msgstr "Vælg en sti"
 
-#: /resources/lib/edit.py:437 /resources/lib/menu.py:567
-msgctxt "#30089"
+#: /resources/lib/edit.py:489 /resources/lib/menu.py:554
+msgctxt "#30088"
 msgid "Choose Paths to Merge"
 msgstr "Vælg kurver, der skal flettes"
 
-#: /resources/lib/edit.py:157
-msgctxt "#30090"
+#: /resources/lib/edit.py:192
+msgctxt "#30089"
 msgid "Remove Widget"
 msgstr "Fjern widget"
 
-#: /resources/lib/edit.py:283
-msgctxt "#30091"
+#: /resources/lib/edit.py:318
+msgctxt "#30090"
 msgid "Edit Artwork"
 msgstr "Rediger illustration"
 
-#: /resources/lib/edit.py:283
-msgctxt "#30092"
+#: /resources/lib/edit.py:318
+msgctxt "#30091"
 msgid "Edit InfoLabels"
 msgstr "Rediger InfoLabels"
 
-#: /resources/lib/edit.py:299
-msgctxt "#30093"
+#: /resources/lib/edit.py:334
+msgctxt "#30092"
 msgid "Select Artwork to Add"
 msgstr "Vælg illustrationer, der skal tilføjes"
 
-#: /resources/lib/edit.py:299
-msgctxt "#30094"
+#: /resources/lib/edit.py:334
+msgctxt "#30093"
 msgid "Select InfoLabel to Add"
 msgstr "Vælg det infomærke, der skal tilføjes"
 
-#: /resources/lib/edit.py:307 /resources/lib/edit.py:370
-#: /resources/lib/edit.py:452
-msgctxt "#30095"
+#: /resources/lib/edit.py:342 /resources/lib/edit.py:422
+#: /resources/lib/edit.py:504
+msgctxt "#30094"
 msgid "New Value for {}:"
 msgstr "Ny værdi for {}:"
 
-#: /resources/lib/edit.py:346
-msgctxt "#30096"
+#: /resources/lib/edit.py:381
+msgctxt "#30095"
 msgid "Select Filetype"
 msgstr "Vælg filtype"
 
-#: /resources/lib/edit.py:375
-msgctxt "#30097"
+#: /resources/lib/edit.py:427
+msgctxt "#30096"
 msgid ""
 "Do you want to clear or keep the current {}?\n"
 "\n"
@@ -550,108 +548,108 @@ msgstr ""
 "\n"
 "[B] {}[/B]: {}"
 
-#: /resources/lib/edit.py:378
-msgctxt "#30098"
+#: /resources/lib/edit.py:430
+msgctxt "#30097"
 msgid "Clear"
 msgstr "Ryd"
 
-#: /resources/lib/edit.py:379
-msgctxt "#30099"
+#: /resources/lib/edit.py:431
+msgctxt "#30098"
 msgid "Keep"
 msgstr "Behold"
 
-#: /resources/lib/edit.py:418
-msgctxt "#30100"
+#: /resources/lib/edit.py:470
+msgctxt "#30099"
 msgid "Refresh Duration"
 msgstr "Opdater varighed"
 
 #: /resources/settings.xml:41 /resources/lib/menu.py:270
-msgctxt "#30101"
+msgctxt "#30100"
 msgid "Toggle Skin Debugging"
 msgstr "Slå temafejlfinding til/fra"
 
-#: /resources/lib/menu.py:178
-msgctxt "#30102"
+#: /resources/lib/menu.py:179
+msgctxt "#30101"
 msgid "{} Paths Merged"
 msgstr "{} Flettede stier"
 
 #: /resources/settings.xml:39 /resources/lib/menu.py:258
-msgctxt "#30103"
+msgctxt "#30102"
 msgid "Clean Old Widget Files"
 msgstr "Rens gamle widgetfiler"
 
 #: /resources/settings.xml:24
-msgctxt "#30104"
+msgctxt "#30103"
 msgid "Icon Color"
 msgstr "Ikon farve"
 
-#: /resources/lib/add.py:295
-msgctxt "#30105"
+#: /resources/lib/add.py:299
+msgctxt "#30104"
 msgid "{} paths added to {}"
 msgstr "{} stier føjet til {}"
 
-#: /resources/lib/manage.py:79
-msgctxt "#30106"
+#: /resources/lib/manage.py:81
+msgctxt "#30105"
 msgid "{} unused widgets removed."
 msgstr "{} ubrugte widgets er fjernet."
 
 #: /resources/lib/common/utils.py:310
-msgctxt "#30107"
+msgctxt "#30106"
 msgid "Choose from a predefined color or hexcode input?"
 msgstr "Vil du vælge mellem et foruddefineret farve- eller hexcode-input?"
 
 #: /resources/lib/common/utils.py:311
-msgctxt "#30108"
+msgctxt "#30107"
 msgid "Hex Input"
 msgstr "Hex-input"
 
 #: /resources/lib/common/utils.py:312
-msgctxt "#30109"
+msgctxt "#30108"
 msgid "Predefined Color"
 msgstr "Foruddefineret farve"
 
 #: /resources/lib/common/utils.py:316
-msgctxt "#30110"
+msgctxt "#30109"
 msgid "Hex codes must be of the format '#RRGGBB'."
 msgstr "Hex-koder skal have formatet '#RRGGBB'."
 
 #: /resources/lib/common/utils.py:319
-msgctxt "#30111"
+msgctxt "#30110"
 msgid "Select a Color"
 msgstr "Select a Color"
 
 #: /resources/lib/common/utils.py:329
-msgctxt "#30112"
+msgctxt "#30111"
 msgid "Invalid color code."
 msgstr "Ugyldig farvekode."
 
 #: /resources/settings.xml:48
-msgctxt "#30113"
+msgctxt "#30112"
 msgid "Debug Logging"
 msgstr "Logføring af fejlfinding"
 
-#: /resources/lib/edit.py:130 /resources/lib/menu.py:637
-msgctxt "#30114"
+#: /resources/lib/edit.py:165 /resources/lib/menu.py:646
+msgctxt "#30113"
 msgid "Edit Path"
 msgstr "Redigér sti"
 
 #: /resources/settings.xml:8
-msgctxt "#30115"
+msgctxt "#30114"
 msgid "Hide Duplicates"
 msgstr "Skjul dubletter"
 
 #: /resources/settings.xml:9
-msgctxt "#30116"
+msgctxt "#30115"
 msgid "Prefer Episode if Show Available"
 msgstr "Foretrækker Episode hvis Show Tilgængelig"
 
 #: addon.xml:28 /resources/settings.xml:42 /resources/lib/menu.py:276
-msgctxt "#30117"
+msgctxt "#30116"
 msgid "Clear Cache"
 msgstr "Ryd cache"
 
-#: /resources/lib/common/cache.py:26
-msgctxt "#30118"
+#: /resources/lib/common/cache.py:27
+msgctxt "#30117"
 msgid ""
 "Are you sure you want to clear the cache? This action may make widgets load "
 "slower for some time."
@@ -659,138 +657,249 @@ msgstr ""
 "Er du sikker på, at du vil rydde cachen? Denne handling kan få widgets til "
 "at indlæse langsommere i et stykke tid."
 
-#: /resources/lib/edit.py:366
-msgctxt "#30119"
+#: /resources/lib/edit.py:416
+msgctxt "#30118"
 msgid "Select Content Type"
 msgstr "Vælg indholdstype"
 
-#: /resources/lib/menu.py:617
-msgctxt "#30120"
+#: /resources/lib/menu.py:626
+msgctxt "#30119"
 msgid "Copy Group"
 msgstr "Kopier gruppe"
 
-#: /resources/lib/add.py:234
-msgctxt "#30121"
+#: /resources/lib/add.py:239
+msgctxt "#30120"
 msgid "Choose Paths to Copy"
 msgstr "Vælg stier, der skal kopieres"
 
-#: /resources/lib/manage.py:234
-msgctxt "#30122"
+#: /resources/lib/manage.py:257
+msgctxt "#30121"
 msgid "Choose Paths"
 msgstr "Vælg stier"
 
-#: /resources/lib/menu.py:522
-msgctxt "#30123"
+#: /resources/lib/menu.py:509
+msgctxt "#30122"
 msgid "Choose Paths to Cycle"
 msgstr "Vælg Stier til at cykle"
 
 #: /resources/settings.xml:22
-msgctxt "#30124"
+msgctxt "#30123"
 msgid "Icons"
 msgstr "Ikoner"
 
 #: /resources/settings.xml:23
-msgctxt "#30125"
+msgctxt "#30124"
 msgid "Addon Icons"
 msgstr "Addon-ikoner"
 
 #: /resources/settings.xml:26
-msgctxt "#30126"
+msgctxt "#30125"
 msgid "Icon Packs"
 msgstr "Ikonpakker"
 
 #: /resources/settings.xml:27
-msgctxt "#30127"
+msgctxt "#30126"
 msgid "Video Genre Icons"
 msgstr "Ikoner for videogenre"
 
 #: /resources/settings.xml:28
-msgctxt "#30128"
+msgctxt "#30127"
 msgid "Video Genre Fanart"
 msgstr "Video Genre Fanart"
 
 #: /resources/settings.xml:29
-msgctxt "#30129"
+msgctxt "#30128"
 msgid "Music Genre Icons"
 msgstr "Musikgenre ikoner"
 
 #: /resources/settings.xml:30
-msgctxt "#30130"
+msgctxt "#30129"
 msgid "Music Genre Fanart"
 msgstr "Musikgenre Fanart"
 
 #: /resources/settings.xml:31
-msgctxt "#30131"
+msgctxt "#30130"
 msgid "Studio Icons"
 msgstr "Studio-ikoner"
 
 #: /resources/settings.xml:32
-msgctxt "#30132"
+msgctxt "#30131"
 msgid "Country Icons"
 msgstr "Landsikoner"
 
 #: /resources/lib/menu.py:31
-msgctxt "#30133"
-msgid "Next"
-msgstr "Næste"
-
-#: /resources/lib/menu.py:32
-msgctxt "#30134"
+msgctxt "#30132"
 msgid "Next Page"
 msgstr "Næste side"
 
-#: /resources/lib/menu.py:33
-msgctxt "#30135"
+#: /resources/lib/menu.py:32
+msgctxt "#30133"
 msgid "Previous"
 msgstr "Forrig"
 
-#: /resources/lib/menu.py:34
-msgctxt "#30136"
+#: /resources/lib/menu.py:33
+msgctxt "#30134"
 msgid "Previous Page"
 msgstr "Forrige side"
 
-#: /resources/lib/menu.py:35
-msgctxt "#30137"
+#: /resources/lib/menu.py:34
+msgctxt "#30135"
 msgid "Back"
 msgstr "Tilbage"
 
-#: /resources/lib/menu.py:36
-msgctxt "#30138"
+#: /resources/lib/menu.py:35
+msgctxt "#30136"
 msgid "Page"
 msgstr "Side"
 
-#: /resources/lib/menu.py:753 /resources/lib/refresh.py:332
-#: /resources/lib/common/cache.py:276
-msgctxt "#30139"
+#: /resources/lib/menu.py:774 /resources/lib/refresh.py:340
+#: /resources/lib/common/cache.py:256
+msgctxt "#30137"
 msgid "Error showing {}"
 msgstr "Fejl ved visning af {}"
 
-#: /resources/lib/menu.py:764 /resources/lib/refresh.py:343
-msgctxt "#30140"
+#: /resources/lib/menu.py:785 /resources/lib/refresh.py:351
+msgctxt "#30138"
 msgid "No content found for {}"
 msgstr "Ingen indhold blev fundet for {}"
 
-#: /resources/lib/refresh.py:95
-msgctxt "#30141"
+#: /resources/lib/refresh.py:100
+msgctxt "#30139"
 msgid "Updating Widgets"
 msgstr "Opdatering af widgets"
 
-#: /resources/lib/refresh.py:153
-msgctxt "#30142"
+#: /resources/lib/refresh.py:161
+msgctxt "#30140"
 msgid "Finished Updating Widgets"
 msgstr "Færdig opdatering af widgets"
 
-#: /resources/lib/add.py:270 /resources/lib/add.py:285
-msgctxt "#30143"
+#: /resources/lib/add.py:275 /resources/lib/add.py:289
+msgctxt "#30141"
 msgid "Copying paths..."
 msgstr "Kopier stier ..."
 
-#: /resources/lib/add.py:271
-msgctxt "#30144"
+#: /resources/lib/add.py:276
+msgctxt "#30142"
 msgid "Retrieving paths..."
 msgstr "Henter stier ..."
 
-#: /resources/lib/common/cache.py:268
-msgctxt "#30145"
+#: /resources/lib/common/cache.py:248
+msgctxt "#30143"
 msgid "Loading content..."
 msgstr "Indlæser indhold ..."
+
+#: /resources/lib/add.py:27
+msgctxt "#30144"
+msgid "Create a Shortcut to this item"
+msgstr "Opret en genvej til dette element"
+
+#: /resources/lib/add.py:28
+msgctxt "#30145"
+msgid "Create a Widget out of this item's contents"
+msgstr "Opret en widget ud af dette elements indhold"
+
+#: /resources/lib/add.py:29
+msgctxt "#30146"
+msgid "Create a Shortcut to each sub-item inside of this item"
+msgstr "Opret en genvej til hvert underelement inde i dette element"
+
+#: /resources/lib/add.py:30
+msgctxt "#30147"
+msgid "Create a Widget out of each sub-item's contents inside of this item"
+msgstr ""
+"Opret en widget ud af hvert underelements indhold inde i dette element"
+
+#: /resources/lib/add.py:31
+msgctxt "#30148"
+msgid "Create a Shortcut to this add-on's Settings dialog"
+msgstr "Opret en genvej til denne tilføjelses dialogboks Indstillinger"
+
+#: /resources/lib/menu.py:604
+msgctxt "#30149"
+msgid "Shift Group Up"
+msgstr "Skift gruppe op"
+
+#: /resources/lib/menu.py:615
+msgctxt "#30150"
+msgid "Shift Group Down"
+msgstr "Skift gruppe ned"
+
+#: /resources/lib/menu.py:604
+msgctxt "#30151"
+msgid "Shift Group to Bottom"
+msgstr "Skift gruppe til bund"
+
+#: /resources/lib/menu.py:615
+msgctxt "#30152"
+msgid "Shift Group to Top"
+msgstr "Skift gruppe til top"
+
+#: /resources/lib/backup.py:16
+msgctxt "#30153"
+msgid "Group Files"
+msgstr "Gruppe filer"
+
+#: /resources/lib/backup.py:16
+msgctxt "#30154"
+msgid "Includes created Groups and Paths"
+msgstr "Indeholder oprettede grupper og stier"
+
+#: /resources/lib/backup.py:17
+msgctxt "#30155"
+msgid "Widget Files"
+msgstr "Widget filer"
+
+#: /resources/lib/backup.py:17
+msgctxt "#30156"
+msgid "Includes created Widgets (Does not restore skin files)"
+msgstr "Indeholder oprettede widgets (gendanner ikke hudfiler)"
+
+#: /resources/lib/backup.py:20
+msgctxt "#30157"
+msgid "Cache, History, and Queue Files"
+msgstr "Cache-, historik- og køfiler"
+
+#: /resources/lib/backup.py:21
+msgctxt "#30158"
+msgid "Includes all of AutoWidget's Cache files"
+msgstr "Indeholder alle AutoWidgets cache-filer"
+
+#: /resources/lib/backup.py:23
+msgctxt "#30159"
+msgid "Settings File"
+msgstr "Indstillingsfil"
+
+#: /resources/lib/backup.py:23
+msgctxt "#30160"
+msgid "Includes all of AutoWidget's Settings"
+msgstr "Indeholder alle AutoWidgets indstillinger"
+
+#: /resources/lib/backup.py:131
+msgctxt "#30161"
+msgid "Erasing files..."
+msgstr "Sletter filer..."
+
+#: /resources/lib/backup.py:144
+msgctxt "#30162"
+msgid "Extracting files..."
+msgstr "Udpakker filer..."
+
+#: /resources/lib/backup.py:153
+msgctxt "#30163"
+msgid "Restoring {} files..."
+msgstr "Gendanner {} filer..."
+
+#: /resources/lib/backup.py:169
+msgctxt "#30164"
+msgid "Restore complete."
+msgstr "Genopretning fuldført."
+
+#: /resources/lib/backup.py:73
+msgctxt "#30165"
+msgid "Backing up files..."
+msgstr "Sikkerhedskopierer filer..."
+
+#: /resources/lib/backup.py:90
+msgctxt "#30166"
+msgid "Backup complete."
+msgstr "Sikkerhedskopiering fuldført"

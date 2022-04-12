@@ -14,14 +14,22 @@ from resources.lib import refresh
 from resources.lib.common import settings
 from resources.lib.common import utils
 
-_addon_data = utils.translate_path(settings.get_addon_info("profile"))
+_addon_data = settings.get_addon_info("profile")
 
 shortcut_types = [
-    utils.get_string(30033),
-    utils.get_string(30034),
-    utils.get_string(30060),
-    utils.get_string(30061),
-    utils.get_string(30035),
+    30032,
+    30033,
+    30059,
+    30060,
+    30034,
+]
+
+type_labels = [
+    30144,
+    30145,
+    30146,
+    30147,
+    30148,
 ]
 
 folder_shortcut = utils.get_art("folder-shortcut")
@@ -41,11 +49,8 @@ def add(labels):
         group_def = _group_dialog(_type)
         if group_def:
             _add_path(group_def, labels)
-    elif _type == "clone":
-        labels["target"] = "shortcut"
-        _copy_path(labels)
-    elif _type == "explode":
-        labels["target"] = "widget"
+    else:
+        labels["target"] = "shortcut" if _type == "clone" else "widget"
         _copy_path(labels)
 
     utils.update_container(_type == "shortcut")
@@ -67,10 +72,10 @@ def build_labels(source, path_def=None, target=""):
             "art": {},
         }  # would be fun to set some "placeholder" art here
 
-        for i in utils.get_info_keys():
+        for i in utils.get_info_keys() + ["DBType"]:
             info = utils.get_infolabel("ListItem.{}".format(i.capitalize()))
             if info and not info.startswith("ListItem"):
-                path_def[i] = info
+                path_def[i if i != "DBType" else "type"] = info
 
         for i in utils.art_types:
             art = utils.get_infolabel("ListItem.Art({})".format(i))
@@ -109,33 +114,32 @@ def _add_as(path_def):
     art = [folder_shortcut, folder_sync, folder_clone, folder_explode, folder_settings]
 
     path = path_def["file"]
-    types = shortcut_types[:]
+    types = list(zip(shortcut_types[:], type_labels[:]))
     if path_def["filetype"] == "directory" and utils.get_active_window() != "home":
-        types = shortcut_types[:4]
+        types = list(zip(shortcut_types[:4], type_labels[:4]))
     else:
-        if (
-            any(i in path for i in ["addons://user", "plugin://", "script://"])
-            and not parse_qsl(path)
-        ) or ("widget", "True") in parse_qsl(path):
+        if any(
+            i in path for i in ["addons://user", "plugin://", "script://"]
+        ) and not parse_qsl(path):
             pass
         else:
-            types = [shortcut_types[0]]
+            types = [(shortcut_types[0], type_labels[0])]
 
     options = []
     for idx, type in enumerate(types):
-        li = xbmcgui.ListItem(type)
+        li = xbmcgui.ListItem(utils.get_string(type[0]), utils.get_string(type[1]))
 
         li.setArt(art[idx])
         options.append(li)
 
     dialog = xbmcgui.Dialog()
-    idx = dialog.select(utils.get_string(30062), options, useDetails=True)
+    idx = dialog.select(utils.get_string(30061), options, useDetails=True)
     del dialog
 
     if idx < 0:
         return
 
-    chosen = types[idx]
+    chosen = types[idx][0]
     if chosen == shortcut_types[0]:
         return "shortcut"
     elif chosen == shortcut_types[1]:
@@ -176,13 +180,13 @@ def _group_dialog(_type, group_id=None):
 
     dialog = xbmcgui.Dialog()
     choice = dialog.select(
-        utils.get_string(30036), options, preselect=index, useDetails=True
+        utils.get_string(30035), options, preselect=index, useDetails=True
     )
     del dialog
 
     if choice < 0:
         dialog = xbmcgui.Dialog()
-        dialog.notification("AutoWidget", utils.get_string(30021))
+        dialog.notification("AutoWidget", utils.get_string(30020))
         del dialog
     elif (choice, _type) == (0, "widget"):
         return _group_dialog(_type, add_group("widget"))
@@ -194,7 +198,7 @@ def _group_dialog(_type, group_id=None):
 
 def add_group(target, group_name=""):
     dialog = xbmcgui.Dialog()
-    group_name = dialog.input(heading=utils.get_string(30023), defaultt=group_name)
+    group_name = dialog.input(heading=utils.get_string(30022), defaultt=group_name)
     group_id = ""
 
     if group_name:
@@ -207,12 +211,13 @@ def add_group(target, group_name=""):
             "id": group_id,
             "art": folder_sync if target == "widget" else folder_shortcut,
             "version": settings.get_addon_info("version"),
-            "content": None,
+            "content": "",
+            "sort_order": "{}".format(int(manage.highest_group_sort_order()) + 1),
         }
 
         utils.write_json(filename, group_def)
     else:
-        dialog.notification("AutoWidget", utils.get_string(30024))
+        dialog.notification("AutoWidget", utils.get_string(30023))
 
     del dialog
     return group_id
@@ -232,7 +237,7 @@ def copy_group(group_id, type):
 
     paths = old_group_def.get("paths", [])
     new_group_def["paths"] = manage.choose_paths(
-        utils.get_string(30121), paths, indices=False
+        utils.get_string(30120), paths, indices=False
     )
     manage.write_path(new_group_def)
 
@@ -242,9 +247,9 @@ def copy_group(group_id, type):
 def _add_path(group_def, labels, over=False):
     if not over:
         if group_def["type"] == "shortcut":
-            heading = utils.get_string(30028)
+            heading = utils.get_string(30027)
         elif group_def["type"] == "widget":
-            heading = utils.get_string(30029)
+            heading = utils.get_string(30028)
 
         dialog = xbmcgui.Dialog()
         labels["label"] = dialog.input(heading=heading, defaultt=labels["label"])
@@ -263,15 +268,14 @@ def _add_path(group_def, labels, over=False):
 
 
 def _copy_path(path_def):
-    group_id = add_group(path_def["target"], path_def["label"])
-    if not group_id:
+    group_def = _group_dialog(path_def['target'])
+    if not group_def:
         return
 
     progress = xbmcgui.DialogProgressBG()
-    progress.create("AutoWidget", utils.get_string(30143))
-    progress.update(1, "AutoWidget", utils.get_string(30144))
+    progress.create("AutoWidget", utils.get_string(30141))
+    progress.update(1, "AutoWidget", utils.get_string(30142))
 
-    group_def = manage.get_group_by_id(group_id)
     files, hash = refresh.get_files_list(path_def["file"]["file"], background=False)
     if not files:
         progress.close()
@@ -283,7 +287,7 @@ def _copy_path(path_def):
             continue
         progress.update(
             int(done / float(len(files)) * 100),
-            heading=utils.get_string(30143),
+            heading=utils.get_string(30141),
             message=file.get("label"),
         )
 
@@ -293,6 +297,6 @@ def _copy_path(path_def):
     del progress
     dialog = xbmcgui.Dialog()
     dialog.notification(
-        "AutoWidget", utils.get_string(30105).format(len(files), group_def["label"])
+        "AutoWidget", utils.get_string(30104).format(len(files), group_def["label"])
     )
     del dialog
