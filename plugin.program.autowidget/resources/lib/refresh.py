@@ -190,6 +190,14 @@ class RefreshService(xbmc.Monitor):
         else:
             utils.log("+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++", "info")
 
+        utils.log("+++++ AUTOWIDGET Refreshing widgets changed after playback +++++", "info")
+        # because update after playback could have been interupted
+        for hash, path in cache.widgets_changed_by_watching(None):
+            # Queue them for refresh
+            cache.push_cache_queue(path)
+            # utils.log("Queued cache update: {}".format(hash[:5]), "notice")
+        # utils.update_container(reload=True)
+
 
 def _update_strings(widget_def):
     refresh = skin_string_pattern.format(widget_def["id"], "refresh")
@@ -488,7 +496,8 @@ class Player(xbmc.Player):
             # Queue them for refresh
             cache.push_cache_queue(path)
             # utils.log("Queued cache update: {}".format(hash[:5]), "notice")
-        utils.update_container(reload=True)
+        # utils.update_container(reload=True)
+        utils.log("++ Finished queing widget updates after playback ++", "notice")
 
     def onPlayBackStopped(self):
         self.onPlayBackEnded()

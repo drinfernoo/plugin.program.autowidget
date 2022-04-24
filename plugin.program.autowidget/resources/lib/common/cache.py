@@ -54,9 +54,9 @@ def iter_queue():
         if x.endswith(".queue")
     ]
     # TODO: sort by path instead so load plugins at the same time
-    for path in sorted(queued, key=lambda x: xbmcvfs.Stat(x).st_mtime()):
-        queue_data = utils.read_json(path, None)
-        yield queue_data.get("path", "") if queue_data else ""
+    for queuefile in sorted(queued, key=lambda x: xbmcvfs.Stat(x).st_mtime()):
+        queue_data = utils.read_json(queuefile, default={})
+        yield queue_data.get("path", "")
 
 
 def read_history(path, create_if_missing=True):
@@ -64,14 +64,12 @@ def read_history(path, create_if_missing=True):
     history_path = os.path.join(_addon_data, "{}.history".format(hash))
     if not xbmcvfs.exists(history_path):
         if create_if_missing:
-            cache_data = {}
-            history = cache_data.setdefault("history", [])
-            widgets = cache_data.setdefault("widgets", [])
+            cache_data = dict(history=[], widgets=[])
             utils.write_json(history_path, cache_data)
         else:
             cache_data = None
     else:
-        cache_data = utils.read_json(history_path)
+        cache_data = utils.read_json(history_path, default=dict(history=[], widgets=[]))
     return cache_data
 
 
@@ -371,7 +369,7 @@ def widgets_changed_by_watching(media_type):
     # Predict which widgets the skin might have that could have changed based on recently finish
     # watching something
 
-    all_cache = [
+    all_hist = [
         os.path.join(_addon_data, x)
         for x in xbmcvfs.listdir(_addon_data)[1]
         if x.endswith(".history")
@@ -381,27 +379,28 @@ def widgets_changed_by_watching(media_type):
     # priority = sorted(all_cache, key=os.path.getmtime)
     # Sort by chance of it updating
     plays = utils.read_json(_playback_history_path, default={}).setdefault("plays", [])
-    plays_for_type = [(time, t) for time, t in plays if t == media_type]
+    plays_for_type = [(time, t) for time, t in plays if t == media_type or media_type is None]
     priority = sorted(
         [
             (
-                chance_playback_updates_widget(path, plays_for_type),
-                utils.read_json(path).get("path", ""),
-                path,
+                chance_playback_updates_widget(hist_path, plays_for_type),
+                utils.read_json(hist_path, default={}).get("path", ""),
+                hist_path,
             )
-            for path in all_cache
+            for hist_path in all_hist
         ],
         reverse=True,
     )
     
     not_changed = []
 
+    count_prob_changed = 0
     for chance, path, history_path in priority:
         hash = path2hash(path)
         last_update = xbmcvfs.Stat(history_path).st_mtime() - _startup_time
         if last_update < 0:
             utils.log(
-                "skipped. unused {:0.2} {} {}".format(chance, hash[:5], path),
+                "skipped. unused {:0.2}% {} {}".format(chance * 100, hash[:5], path),
                 "debug",
             )
             pass
@@ -409,24 +408,26 @@ def widgets_changed_by_watching(media_type):
             not_changed.append((hash, path, chance))
         else:
             utils.log(
-                "Queue {:.2}% {} {}".format(chance, hash[:5], path),
+                "Queue {:.2}% {} {}".format(chance * 100, hash[:5], path),
                 "notice",
             )
+            count_prob_changed += 1
             yield hash, path
-    # If widgets never get updated after playback we never get to know if they change after playback. So always pick 2 randomly
+    # If widgets never get updated after playback we never get to know if they change after playback. So always pick some randomly
     count = 0
+    target = min(2, math.ceil(len(not_changed) / 10.0))
     random.shuffle(not_changed)
     for hash, path, chance in not_changed:
-        if count < 2:
-            utils.log("Queue random {:.2}% {} {}".format(chance, hash[:5], path), 'notice')
+        if count < target:
+            utils.log("Queue random {:.2}% {} {}".format(chance * 100, hash[:5], path), 'notice')
             yield hash, path
         else:
-            utils.log("Skip queue {:.2}% {} {}".format(chance, hash[:5], path), 'notice')
+            utils.log("Skip queue {:.2}% {} {}".format(chance * 100, hash[:5], path), 'notice')
         count += 1
-
+    utils.log("=== End Widget update: {} prob changed after playback {} randoms".format(count_prob_changed, count), 'notice')
 
 def chance_playback_updates_widget(history_path, plays, cutoff_time=60 * 5):
-    cache_data = utils.read_json(history_path)
+    cache_data = utils.read_json(history_path, default={})
     history = cache_data.setdefault("history", [])
     # Complex version
     # - for each widget
@@ -472,9 +473,14 @@ def chance_playback_updates_widget(history_path, plays, cutoff_time=60 * 5):
         "debug",
     )
     datapoints = float(changes + non_changes)
-    prob = changes / float(changes + non_changes + unrelated_changes)
-    unknown_weight = 4
-    prob = (prob * datapoints + 0.5 * unknown_weight) / (datapoints + unknown_weight)
+    all_changes = float(changes + non_changes + unrelated_changes)
+    if all_changes == 0:
+        # we have no data or lost it. let's get it updated
+        prob = 1.0
+    else:
+        prob = changes / all_changes
+        unknown_weight = 4
+        prob = (prob * datapoints + 0.5 * unknown_weight) / (datapoints + unknown_weight)
     return prob
 
 

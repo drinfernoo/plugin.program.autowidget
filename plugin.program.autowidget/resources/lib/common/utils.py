@@ -451,20 +451,21 @@ def write_file(file, content, mode="w"):
 
 def read_json(file, log_file=False, default=None):
     data = None
-    if xbmcvfs.exists(file):
-        with codecs.open(os.path.join(_addon_data, file), "r", encoding="utf-8") as f:
-            try:
-                content = six.ensure_text(f.read())
-                data = json.loads(content)
-            except (ValueError, TypeError, UnicodeDecodeError) as e:
-                log("Could not read JSON from {}: {}".format(file, e), level="error")
-                if log_file:
-                    log(content, level="debug")
-                os.remove(file)
-                return default
-    else:
+    # path = os.path.join(_addon_data, file) if _addon_data not in file else file
+    path = xbmcvfs.translatePath(file)
+    if not os.path.exists(path):
         log("{} does not exist.".format(file), level="error")
         return default
+    with codecs.open(path, "r", encoding="utf-8") as f:
+        try:
+            content = six.ensure_text(f.read())
+            data = json.loads(content)
+        except (ValueError, TypeError, UnicodeDecodeError, NameError) as e:
+            log("Could not read JSON from {}: {}".format(file, e), level="error")
+            if log_file:
+                log(content, level="debug")
+            os.remove(path)
+            return default
 
     return convert(data)
 
