@@ -77,11 +77,20 @@ class RefreshService(xbmc.Monitor):
             yield i
 
     def _update_widgets(self):
-        self._refresh(True)
+        startup = True
 
         while not self.abortRequested():
-            for _ in self.tick(step=1, max=60 * 15):
+            if self.abortRequested():
+                break
+            self._refresh(startup)
+            startup = False
+            
+            # process the queue every 5s and refresh based on settings
+            utils.log("Time till refresh: {}s".format(60 * 60 * self.refresh_duration), "notice")
+            for _ in self.tick(step=5, max=60 * 60 * self.refresh_duration):
                 # don't process cache queue during video playback
+                if self.abortRequested():
+                    break
                 if self.player.isPlayingVideo():
                     continue
 
@@ -162,12 +171,6 @@ class RefreshService(xbmc.Monitor):
                         u"AutoWidget", utils.get_string(30140), sound=False
                     )
 
-            if self.abortRequested():
-                break
-
-            if not self._refresh():
-                continue
-
     def _refresh(self, startup=False):
         if self.refresh_enabled in [0, 1] and manage.find_defined_widgets():
             notification = False
@@ -190,8 +193,10 @@ class RefreshService(xbmc.Monitor):
         else:
             utils.log("+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++", "info")
 
-        utils.log("+++++ AUTOWIDGET Refreshing widgets changed after playback +++++", "info")
-        # because update after playback could have been interupted
+        if not startup:
+            return
+        utils.log("+++++ AUTOWIDGET Refreshing widgets changed after playback in case of crash +++++", "info")
+        # because update after playback could have been interupted. Do on startup too
         for hash, path in cache.widgets_changed_by_watching(None):
             # Queue them for refresh
             cache.push_cache_queue(path)

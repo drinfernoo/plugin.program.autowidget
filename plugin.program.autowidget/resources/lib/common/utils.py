@@ -427,7 +427,7 @@ def remove_file(file):
 def read_file(file):
     content = None
     if xbmcvfs.exists(file):
-        with xbmcvfs.File(file) as f:
+        with contextlib.closing(xbmcvfs.File(file)) as f:
             try:
                 content = f.read()
             except Exception as e:
@@ -439,7 +439,7 @@ def read_file(file):
 
 
 def write_file(file, content, mode="w"):
-    with xbmcvfs.File(file, mode) as f:
+    with contextlib.closing(xbmcvfs.File(file, mode)) as f:
         try:
             f.write(content)
             return True
@@ -456,14 +456,14 @@ def read_json(file, log_file=False, default=None):
     if not os.path.exists(path):
         log("{} does not exist.".format(file), level="error")
         return default
-    with codecs.open(path, "r", encoding="utf-8") as f:
+    with contextlib.closing(codecs.open(path, "r", encoding="utf-8")) as f:
         try:
             content = six.ensure_text(f.read())
             data = json.loads(content)
         except (ValueError, TypeError, UnicodeDecodeError, NameError) as e:
             log("Could not read JSON from {}: {}".format(file, e), level="error")
             if log_file:
-                log(content, level="debug")
+                log(content, level="info")
             os.remove(path)
             return default
 
@@ -471,7 +471,7 @@ def read_json(file, log_file=False, default=None):
 
 
 def write_json(file, content):
-    with xbmcvfs.File(file, "w") as f:
+    with contextlib.closing(xbmcvfs.File(file, "w")) as f:
         try:
             json.dump(content, f, indent=4)
         except Exception as e:
