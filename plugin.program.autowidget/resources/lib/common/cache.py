@@ -1,5 +1,6 @@
 import xbmcgui
 import xbmcvfs
+import xbmc
 
 import glob
 import hashlib
@@ -47,18 +48,6 @@ def hash_from_cache_path(path):
     return os.path.splitext(base)[0]
 
 
-def iter_queue():
-    queued = [
-        os.path.join(_addon_data, x)
-        for x in xbmcvfs.listdir(_addon_data)[1]
-        if x.endswith(".queue")
-    ]
-    # TODO: sort by path instead so load plugins at the same time
-    for queuefile in sorted(queued, key=lambda x: xbmcvfs.Stat(x).st_mtime()):
-        queue_data = utils.read_json(queuefile, default={})
-        yield queue_data.get("path", "")
-
-
 def read_history(path, create_if_missing=True):
     hash = path2hash(path)
     history_path = os.path.join(_addon_data, "{}.history".format(hash))
@@ -71,25 +60,6 @@ def read_history(path, create_if_missing=True):
     else:
         cache_data = utils.read_json(history_path, default=dict(history=[], widgets=[]))
     return cache_data
-
-
-def next_cache_queue():
-    # Simple queue by creating a .queue file
-    # TODO: use watchdog to use less resources
-    for path in iter_queue():
-        # TODO: sort by path instead so load plugins at the same time
-        hash = path2hash(path)
-        queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
-        if not xbmcvfs.exists(queue_path):
-            # a widget update has already taken care of updating this path
-            continue
-        # We will let the update operation remove the item from the queue
-
-        # TODO: need to workout if a blocking write is happen while it was queued or right now.
-        # probably need a .lock file to ensure foreground calls can get priority.
-        cache_data = read_history(path, create_if_missing=True)
-        widget_id = utils.read_json(queue_path).get("widget_id", None)
-        yield path, cache_data, widget_id
 
 
 def push_cache_queue(path, widget_id=None):
@@ -107,22 +77,18 @@ def push_cache_queue(path, widget_id=None):
         history_path = os.path.join(_addon_data, "{}.history".format(hash))
         utils.write_json(history_path, history)
 
-    if xbmcvfs.exists(queue_path):
-        pass  # Leave original modification date so item is higher priority
-    else:
-        utils.write_json(
-            queue_path, {"hash": hash, "path": path, "widget_id": widget_id}
-        )
+    params = {'sender': "AutoWidget",
+                  'message': "queue",
+                  'data': {"hash": hash, "path": path, "widget_id": widget_id},
+                  }
 
-
-def is_cache_queue(hash):
-    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
-    return xbmcvfs.exists(queue_path)
-
-
-def remove_cache_queue(hash):
-    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
-    utils.remove_file(queue_path)
+    command = json.dumps({'jsonrpc': '2.0',
+                                'method': 'JSONRPC.NotifyAll',
+                                'params': params,
+                                'id': 1,
+                                })
+    result = xbmc.executeJSONRPC(command)
+    assert result is None, result
 
 
 def path2hash(path):
@@ -152,8 +118,8 @@ def cache_and_update(path, widget_id, cache_data, notify=None):
     assert widget_id in cache_data["widgets"]
 
     hash = path2hash(path)
-    if not is_cache_queue(hash):
-        return []
+    # if not is_cache_queue(hash):
+    #     return []
 
     if notify is not None:
         widget_def = manage.get_widget_by_id(widget_id)
@@ -161,7 +127,6 @@ def cache_and_update(path, widget_id, cache_data, notify=None):
             notify(widget_def.get("label", ""), path)
 
     new_files, files_changed = cache_files(path, widget_id)
-    remove_cache_queue(hash)
 
     # TODO: this is all widgets that ever requested this path. do we
     # need to update all of them?
@@ -383,11 +348,11 @@ def widgets_changed_by_watching(media_type):
     priority = sorted(
         [
             (
-                chance_playback_updates_widget(hist_path, plays_for_type),
-                utils.read_json(hist_path, default={}).get("path", ""),
+                chance_playback_updates_widget(cache_data, plays_for_type),
+                cache_data.get("path", ""),
                 hist_path,
             )
-            for hist_path in all_hist
+            for hist_path, cache_data in [(p, utils.read_json(p, default={})) for p in all_hist]
         ],
         reverse=True,
     )
@@ -400,10 +365,10 @@ def widgets_changed_by_watching(media_type):
         last_update = xbmcvfs.Stat(history_path).st_mtime() - _startup_time
         if last_update < 0:
             utils.log(
-                "skipped. unused {:0.2}% {} {}".format(chance * 100, hash[:5], path),
+                "skipped. unused {:.2}% {} {}".format(chance * 100, hash[:5], path),
                 "debug",
             )
-            pass
+            continue
         elif chance < 0.3:
             not_changed.append((hash, path, chance))
         else:
@@ -426,8 +391,7 @@ def widgets_changed_by_watching(media_type):
         count += 1
     utils.log("=== End Widget update: {} prob changed after playback {} randoms".format(count_prob_changed, count), 'notice')
 
-def chance_playback_updates_widget(history_path, plays, cutoff_time=60 * 5):
-    cache_data = utils.read_json(history_path, default={})
+def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 5):
     history = cache_data.setdefault("history", [])
     # Complex version
     # - for each widget
