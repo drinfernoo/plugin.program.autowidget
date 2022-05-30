@@ -19,9 +19,6 @@ _addon_data = settings.get_addon_info("profile")
 skin_string_pattern = "autowidget-{}-{}"
 _properties = ["context.autowidget"]
 
-_thread = None
-
-
 class RefreshService(xbmc.Monitor):
     def __init__(self):
         """Starts all of the actions of AutoWidget's service."""
@@ -102,6 +99,7 @@ class RefreshService(xbmc.Monitor):
                 "notice",
             )
             self.queue.put(json.loads(data))
+            return True
 
 
     def _processQueue(self):

@@ -87,8 +87,8 @@ def push_cache_queue(path, widget_id=None):
                                 'params': params,
                                 'id': 1,
                                 })
-    result = xbmc.executeJSONRPC(command)
-    assert result is None, result
+    while not xbmc.executeJSONRPC(command):
+        xbmc.sleep(1000) # Wait untl service starts
 
 
 def path2hash(path):
@@ -340,6 +340,9 @@ def widgets_changed_by_watching(media_type):
         if x.endswith(".history")
     ]
 
+    # Get rid of ones not read this session. These are old
+    all_hist = [hist_path for hist_path in all_hist if (xbmcvfs.Stat(hist_path).st_mtime() - _startup_time) >= 0]
+
     # Simple version. Anything updated recently (since startup?)
     # priority = sorted(all_cache, key=os.path.getmtime)
     # Sort by chance of it updating
@@ -357,42 +360,29 @@ def widgets_changed_by_watching(media_type):
         reverse=True,
     )
     
-    not_changed = []
-
     count_prob_changed = 0
+    randoms = 0
     for chance, path, history_path in priority:
         hash = path2hash(path)
-        last_update = xbmcvfs.Stat(history_path).st_mtime() - _startup_time
-        if last_update < 0:
-            utils.log(
-                "skipped. unused {:.2}% {} {}".format(chance * 100, hash[:5], path),
-                "debug",
-            )
-            continue
-        elif chance < 0.3:
-            not_changed.append((hash, path, chance))
-        else:
+        if chance >= 0.3:
             utils.log(
                 "Queue {:.2}% {} {}".format(chance * 100, hash[:5], path),
                 "notice",
             )
             count_prob_changed += 1
             yield hash, path
-    # If widgets never get updated after playback we never get to know if they change after playback. So always pick some randomly
-    count = 0
-    target = min(2, math.ceil(len(not_changed) / 10.0))
-    random.shuffle(not_changed)
-    for hash, path, chance in not_changed:
-        if count < target:
+        elif random.random() <= (1/len(priority)):
+            # If widgets never get updated after playback we never get to know if they change after playback. So always pick some randomly
             utils.log("Queue random {:.2}% {} {}".format(chance * 100, hash[:5], path), 'notice')
+            randoms += 1
             yield hash, path
         else:
-            utils.log("Skip queue {:.2}% {} {}".format(chance * 100, hash[:5], path), 'notice')
-        count += 1
-    utils.log("=== End Widget update: {} prob changed after playback {} randoms".format(count_prob_changed, count), 'notice')
+            utils.log("Prob not changes due to playback {:.2}% {} {}".format(chance * 100, hash[:5], path), 'notice')
+    utils.log("=== End Widget update: {} prob changed after playback {} randoms".format(count_prob_changed, randoms), 'notice')
 
 def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 5):
     history = cache_data.setdefault("history", [])
+    path = cache_data.get("path", "")
     # Complex version
     # - for each widget
     #    - come up with chance it will update after a playback
@@ -431,10 +421,10 @@ def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 5):
     # TODO: currently random widgets score higher than recently played widgets. need to score them lower
     # as they are less relevent
     utils.log(
-        "changes={}, non_changes={}, unrelated_changes={}".format(
-            changes, non_changes, unrelated_changes
+        "changes={}, non_changes={}, unrelated_changes={}: {}".format(
+            changes, non_changes, unrelated_changes, path,
         ),
-        "debug",
+        "notice",
     )
     datapoints = float(changes + non_changes)
     all_changes = float(changes + non_changes + unrelated_changes)
