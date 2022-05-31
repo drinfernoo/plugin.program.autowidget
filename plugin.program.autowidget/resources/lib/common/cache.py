@@ -77,17 +77,13 @@ def push_cache_queue(path, widget_id=None):
         history_path = os.path.join(_addon_data, "{}.history".format(hash))
         utils.write_json(history_path, history)
 
-    params = {'sender': "AutoWidget",
-                  'message': "queue",
-                  'data': {"hash": hash, "path": path, "widget_id": widget_id},
-                  }
-
-    command = json.dumps({'jsonrpc': '2.0',
-                                'method': 'JSONRPC.NotifyAll',
-                                'params': params,
-                                'id': 1,
-                                })
-    while not xbmc.executeJSONRPC(command):
+    command = {'jsonrpc': '2.0', 'method': 'JSONRPC.NotifyAll',
+                'params': {'sender': "AutoWidget",
+                    'message': "queue",
+                    'data': {"hash": hash, "path": path, "widget_id": widget_id},
+                },
+                'id': 1,}
+    while not utils.call_jsonrpc(command):
         xbmc.sleep(1000) # Wait untl service starts
 
 
@@ -380,7 +376,7 @@ def widgets_changed_by_watching(media_type):
             utils.log("Prob not changes due to playback {:.2}% {} {}".format(chance * 100, hash[:5], path), 'notice')
     utils.log("=== End Widget update: {} prob changed after playback {} randoms".format(count_prob_changed, randoms), 'notice')
 
-def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 5):
+def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 60 * 24 * 30):
     history = cache_data.setdefault("history", [])
     path = cache_data.get("path", "")
     # Complex version
@@ -388,12 +384,15 @@ def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 5):
     #    - come up with chance it will update after a playback
     #    - each pair of updates, is there a playback inbetween and updated with X min after playback
     #    - num playback with change / num playback with no change
-    changes, non_changes, unrelated_changes = 0, 0, 0
+    # C C P C C
+    changes, non_changes, unrelated_changes, too_late_changes = 0, 0, 0, 0
     update = ""
+    update_time = None
     time_since_play = 0
     for play_time, media_type in plays:
         while True:
             last_update = update
+            last_update_time = update_time
             if not history:
                 break
             update_time, update = history.pop(0)
@@ -402,16 +401,25 @@ def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 5):
             if time_since_play > 0:
                 break
             elif update != last_update:
+                # Update that happened with no play inbetween
                 unrelated_changes += 1
+        # We now have a update after a playback
 
         if update == last_update:
-            non_changes += 1
-        elif (
-            time_since_play > cutoff_time
-        ):  # update too long after playback to be releated
-            pass
-        else:
+            if update_time == last_update_time:
+                # Two playbacks without any updates
+                pass
+            else:
+                # Didn't change after playback
+                non_changes += 1
+        elif time_since_play <= cutoff_time:
+            # Did change after playback
             changes += 1
+        else:
+            # update too long after playback to be releated
+            too_late_changes += 1
+            pass
+            
         # TODO: what if the previous update was a long time before playback?
 
     # There is probably a more statistically correct way of doing this but the idea is that
@@ -421,8 +429,8 @@ def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 5):
     # TODO: currently random widgets score higher than recently played widgets. need to score them lower
     # as they are less relevent
     utils.log(
-        "changes={}, non_changes={}, unrelated_changes={}: {}".format(
-            changes, non_changes, unrelated_changes, path,
+        "changes={}, non_changes={}, non_play_changes={}, too_late={}, plays={}: {}".format(
+            changes, non_changes, unrelated_changes, too_late_changes, len(plays), path,
         ),
         "notice",
     )

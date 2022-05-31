@@ -94,10 +94,6 @@ class RefreshService(xbmc.Monitor):
     def onNotification(self, sender, method, data):
         
         if sender == "AutoWidget":
-            utils.log(
-                "Noify {}".format(sender),
-                "notice",
-            )
             self.queue.put(json.loads(data))
             return True
 

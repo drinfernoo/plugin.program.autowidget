@@ -23,16 +23,16 @@ except ImportError:
     from urlparse import unquote
 
 try:
-    translate_path = xbmcvfs.translatePath
+    translatePath = xbmcvfs.translatePath
 except AttributeError:
-    translate_path = xbmc.translatePath
+    translatePath = xbmc.translatePath
 
 _addon_id = settings.get_addon_info("id")
 _addon_data = settings.get_addon_info("profile")
-_addon_root = translate_path(settings.get_addon_info("path"))
+_addon_root = translatePath(settings.get_addon_info("path"))
 
 _art_path = os.path.join(_addon_root, "resources", "media")
-_home = translate_path("special://home/")
+_home = translatePath("special://home/")
 
 windows = {
     "programs": ["program", "script"],
@@ -452,15 +452,15 @@ def write_file(file, content, mode="w"):
 def read_json(file, log_file=False, default=None):
     data = None
     # path = os.path.join(_addon_data, file) if _addon_data not in file else file
-    path = xbmcvfs.translatePath(file)
+    path = translatePath(file)
     if not os.path.exists(path):
         log("{} does not exist.".format(file), level="error")
         return default
-    with contextlib.closing(codecs.open(path, "r", encoding="utf-8")) as f:
+    with contextlib.closing(xbmcvfs.File(file, "r")) as f:
         try:
             content = six.ensure_text(f.read())
             data = json.loads(content)
-        except (ValueError, TypeError, UnicodeDecodeError, NameError) as e:
+        except (ValueError, TypeError, UnicodeDecodeError, NameError, FileNotFoundError) as e:
             log("Could not read JSON from {}: {}".format(file, e), level="error")
             if log_file:
                 log(content, level="info")
