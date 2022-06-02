@@ -428,6 +428,7 @@ def call_path(path_id):
             path_def["file"]["file"]
             .replace("plugin://", "")
             .replace("script://", "")
+            .replace("dependency://", "")
             .split("/")[0]
         )
     elif (
