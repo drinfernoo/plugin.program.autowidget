@@ -23,16 +23,21 @@ class RefreshService(xbmc.Monitor):
     def __init__(self):
         """Starts all of the actions of AutoWidget's service."""
         super(RefreshService, self).__init__()
-        utils.log("+++++ STARTING AUTOWIDGET SERVICE +++++", "info")
+        # Threads is IO bound more than CPU bound so would depend more disk
+        # speed and RAM than anything else. how to pick a default value for that?
+        # RAM is maybe biggest factor. low ram = more plugins at once = more swap on low disks
+        mem_used = float(xbmc.getInfoLabel('System.FreeMemory').replace("MB",""))
+        self.low_end = mem_used < 500
+        utils.log("+++++ STARTING AUTOWIDGET SERVICE Free Ram: {}, Low End: {} +++++".format(mem_used, self.low_end), "info")
 
         self.player = Player()
         utils.ensure_addon_data()
         self._update_properties()
         self._clean_widgets()
         self.queue = queue.Queue()
-        # TODO: could increase threads to process updates faster on higher end machines
-        self._thread = threading.Thread(target=self._processQueue)
-        self._thread.start()
+        for _ in range(1 if self.low_end else 4):
+            thread = threading.Thread(target=self._processQueue)
+            thread.start()
         self._update_widgets()
 
     def onSettingsChanged(self):
@@ -78,8 +83,10 @@ class RefreshService(xbmc.Monitor):
 
 
     def _update_widgets(self):
-        startup = True
+        if self.low_end:
+            self.waitForAbort(120)
 
+        startup = True
         while not self.abortRequested():
             self._refresh(startup)
             startup = False
@@ -91,14 +98,18 @@ class RefreshService(xbmc.Monitor):
                     break
 
 
-    def onNotification(self, sender, method, data):
-        
+    def onNotification(self, sender, method, data):     
         if sender == "AutoWidget":
-            self.queue.put(json.loads(data))
+            data = json.loads(data)
+            # TODO: ensure we don't queue same one twice
+            utils.log("Added to queue: {} {}".format(data['hash'][:5], data['path']), "notice")
+            self.queue.put(data)
             return True
 
 
     def _processQueue(self):
+        if self.low_end:
+            self.waitForAbort(170)  # TODO: wait until no more added to queue?
         utils.log("Starting processing queue", "notice")
 
         while not self.abortRequested():
@@ -109,9 +120,7 @@ class RefreshService(xbmc.Monitor):
                 res = self.queue.get(timeout=5)
             except queue.Empty:
                 continue
-            path = res['path']
-            hash = res['hash']
-            widget_id = res['widget_id']
+            path, hash, widget_id = res['path'], res['hash'], res['widget_id']
             history_path = os.path.join(_addon_data, "{}.history".format(hash))
             cache_data = utils.read_json(history_path) if xbmcvfs.exists(history_path) else None
             # class Progress(object):
@@ -182,6 +191,7 @@ class RefreshService(xbmc.Monitor):
             #     dialog.notification(
             #         u"AutoWidget", utils.get_string(30140), sound=False
             #     )
+        utils.log("Stop processing queue", "notice")
 
 
     def _refresh(self, startup=False):
