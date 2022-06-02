@@ -473,9 +473,11 @@ def read_json(file, log_file=False, default=None):
 def write_json(file, content):
     with contextlib.closing(xbmcvfs.File(file, "w")) as f:
         try:
-            json.dump(content, f, indent=4)
+            f.write(bytearray(json.dumps(content, indent=4).encode('utf-8')))
         except Exception as e:
             log("Could not write to {}: {}".format(file, e), level="error")
+            return False
+    return True
 
 
 def get_string(_id, kodi=False):
