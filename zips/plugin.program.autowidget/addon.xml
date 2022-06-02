@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1492" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1479" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
@@ -43,12 +43,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-3.5.0
- - Allow bulk operations in some groups
- - More informative dialogs
- - Allow manually sorting groups in "My Groups"
- - Fixes for direct shortcuts
- - Update "version" attribute in metafiles when updating
 3.4.2
  - Some fixes for constant notification
 3.4.1
@@ -351,13 +345,18 @@
         </assets>
     </extension>
 </addon>
-ter>
+n-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>resources/media/icon.png</icon>
+            <fanart>resources/media/fanart.png</fanart>
+            <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
-        </assets>
-    </extension>
-</addon>
-rces/media/clearlogo.png</clearlogo>
         </assets>
     </extension>
 </addon>
