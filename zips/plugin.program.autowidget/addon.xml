@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1479" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1549" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
@@ -43,6 +43,20 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
+3.6.1
+ - Fix playing direct shortcuts for some items
+ - Fix cache clearing again
+3.6.0
+ - Convert all file and path handling to xbmcvfs
+ - Add more feedback and granular controls during backup/restore
+3.5.1
+ - Fix sorting bug with higher group counts
+3.5.0
+ - Allow bulk operations in some groups
+ - More informative dialogs
+ - Allow manually sorting groups in "My Groups"
+ - Fixes for direct shortcuts
+ - Update "version" attribute in metafiles when updating
 3.4.2
  - Some fixes for constant notification
 3.4.1
@@ -331,21 +345,6 @@
  - Fix shortcuts and widgets added from context menu
 1.0.2
  - Fix crash from non-XML files
-1.0.1
- - Fix crash from non-existent context menu setting
-1.0.0
- - First stable release
-        </news>
-        <assets>
-            <icon>resources/media/icon.png</icon>
-            <fanart>resources/media/fanart.png</fanart>
-            <poster>resources/media/poster.png</poster>
-            <banner>resources/media/banner.png</banner>
-            <clearlogo>resources/media/clearlogo.png</clearlogo>
-        </assets>
-    </extension>
-</addon>
-n-XML files
 1.0.1
  - Fix crash from non-existent context menu setting
 1.0.0
