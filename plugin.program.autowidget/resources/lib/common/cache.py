@@ -1,3 +1,4 @@
+import threading
 import xbmcgui
 import xbmcvfs
 import xbmc
@@ -83,8 +84,12 @@ def push_cache_queue(path, widget_id=None):
                     'data': {"hash": hash, "path": path, "widget_id": widget_id},
                 },
                 'id': 1,}
-    while not utils.call_jsonrpc(command):
-        xbmc.sleep(1000) # Wait untl service starts
+    def send():
+        while not utils.call_jsonrpc(command):
+            xbmc.sleep(1000) # Wait untl service starts
+    # Don't wait in case service hasn't started
+    # TODO: check this doesn't still block until thread finishes
+    threading.Thread(target=send).start()
 
 
 def path2hash(path):
@@ -218,9 +223,6 @@ def cache_expiry(path, widget_id, add=None, background=True):
                     )
                     push_cache_queue(path)
             else:
-                # write any updated widget_ids so we know what to update when we dequeue
-                # Also important as wwe use last modified of .history as accessed time
-                utils.write_json(history_path, cache_data)
                 size = len(json.dumps(contents))
                 if history:
                     expiry = history[-1][0] + predict_update_frequency(history)
@@ -378,6 +380,7 @@ def widgets_changed_by_watching(media_type):
 
 def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 60 * 24 * 30):
     history = cache_data.setdefault("history", [])
+    hist_len = len(history)
     path = cache_data.get("path", "")
     # Complex version
     # - for each widget
@@ -428,21 +431,23 @@ def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 60 * 24 *
     # We will do a simple weighted average with 0.5 to simulate this
     # TODO: currently random widgets score higher than recently played widgets. need to score them lower
     # as they are less relevent
-    utils.log(
-        "changes={}, non_changes={}, non_play_changes={}, too_late={}, plays={}: {}".format(
-            changes, non_changes, unrelated_changes, too_late_changes, len(plays), path,
-        ),
-        "notice",
-    )
-    datapoints = float(changes + non_changes)
-    all_changes = float(changes + non_changes + unrelated_changes)
+    # HACK: could too late changes for now until we work out why
+    datapoints = float(changes + too_late_changes + non_changes)
+    all_changes = float(datapoints + unrelated_changes)
     if all_changes == 0:
         # we have no data or lost it. let's get it updated
         prob = 1.0
     else:
-        prob = changes / all_changes
+        prob = (changes + too_late_changes) / all_changes
         unknown_weight = 4
         prob = (prob * datapoints + 0.5 * unknown_weight) / (datapoints + unknown_weight)
+
+    utils.log(
+        "prob:{} changes:{} non_changes:{} non_play_changes:{} too_late:{} plays:{} hist:{}: {}".format(
+            prob, changes, non_changes, unrelated_changes, too_late_changes, len(plays), hist_len, path,
+        ),
+        "notice",
+    )
     return prob
 
 
