@@ -167,7 +167,7 @@ class RefreshService(xbmc.Monitor):
                 break
             if self.player.isPlayingVideo():
                 # Video stop will cause another refresh anyway.
-                break
+                continue
 
             for widget_id in affected_widgets:
                 widget_def = manage.get_widget_by_id(widget_id)
