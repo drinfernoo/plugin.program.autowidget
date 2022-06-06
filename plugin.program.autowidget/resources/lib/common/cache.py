@@ -360,25 +360,30 @@ def widgets_changed_by_watching(media_type):
     
     count_prob_changed = 0
     randoms = 0
+    i = 0
     for chance, path, history_path in priority:
         hash = path2hash(path)
-        if chance >= 0.3:
+        if "page=" in path:
+            # HACK: must be a better way
+            continue
+        elif chance >= 0.3 or i < 7:
             utils.log(
-                "Queue {:.2}% {} {}".format(chance * 100, hash[:5], path),
+                "Queue {:.2f}% {} {}".format(chance * 100, hash[:5], path),
                 "notice",
             )
             count_prob_changed += 1
             yield hash, path
         elif random.random() <= (1/len(priority)):
             # If widgets never get updated after playback we never get to know if they change after playback. So always pick some randomly
-            utils.log("Queue random {:.2}% {} {}".format(chance * 100, hash[:5], path), 'notice')
+            utils.log("Queue random {:.2f}% {} {}".format(chance * 100, hash[:5], path), 'notice')
             randoms += 1
             yield hash, path
         else:
-            utils.log("Prob not changes due to playback {:.2}% {} {}".format(chance * 100, hash[:5], path), 'notice')
+            utils.log("Prob not changes due to playback {:.2f}% {} {}".format(chance * 100, hash[:5], path), 'notice')
+        i += 1
     utils.log("=== End Widget update: {} prob changed after playback {} randoms".format(count_prob_changed, randoms), 'notice')
 
-def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 60 * 24 * 30):
+def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 60):
     history = cache_data.setdefault("history", [])
     hist_len = len(history)
     path = cache_data.get("path", "")
@@ -390,32 +395,34 @@ def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 60 * 24 *
     # C C P C C
     changes, non_changes, unrelated_changes, too_late_changes = 0, 0, 0, 0
     update = ""
-    update_time = None
-    time_since_play = 0
+    update_time = 0
     for play_time, media_type in plays:
-        while True:
+        while (update_time - play_time) <= 0:
             last_update = update
             last_update_time = update_time
             if not history:
                 break
             update_time, update = history.pop(0)
-            time_since_play = update_time - play_time
             # log("{} {} {} {}".format(update[:5],last_update[:5], unrelated_changes, time_since_play), 'notice')
-            if time_since_play > 0:
+            if (update_time - play_time) > 0:
                 break
             elif update != last_update:
                 # Update that happened with no play inbetween
                 unrelated_changes += 1
         # We now have a update after a playback
-
-        if update == last_update:
+        if not update_time:
+            break
+        elif not last_update:
+            # haven't got to first update yet
+            pass
+        elif update == last_update:
             if update_time == last_update_time:
                 # Two playbacks without any updates
                 pass
             else:
                 # Didn't change after playback
                 non_changes += 1
-        elif time_since_play <= cutoff_time:
+        elif (update_time - play_time) <= cutoff_time:
             # Did change after playback
             changes += 1
         else:
@@ -438,13 +445,13 @@ def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 60 * 24 *
         # we have no data or lost it. let's get it updated
         prob = 1.0
     else:
-        prob = (changes + too_late_changes) / all_changes
+        prob = (changes) / all_changes
         unknown_weight = 4
         prob = (prob * datapoints + 0.5 * unknown_weight) / (datapoints + unknown_weight)
 
     utils.log(
-        "prob:{} changes:{} non_changes:{} non_play_changes:{} too_late:{} plays:{} hist:{}: {}".format(
-            prob, changes, non_changes, unrelated_changes, too_late_changes, len(plays), hist_len, path,
+        "prob:{:.2f}% changes:{} non_changes:{} non_play_changes:{} too_late:{} plays:{} hist:{}: {}".format(
+            prob*100, changes, non_changes, unrelated_changes, too_late_changes, len(plays), hist_len, path,
         ),
         "notice",
     )
