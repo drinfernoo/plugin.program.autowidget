@@ -99,7 +99,7 @@ def restore():
         utils.get_string(30074),
         "",
         mask=".zip",
-        defaultt=utils.translate_path(_backup_location),
+        defaultt=utils.translatePath(_backup_location),
     )
 
     if backup.endswith(".zip"):
