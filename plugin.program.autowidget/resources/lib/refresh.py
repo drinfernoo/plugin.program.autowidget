@@ -34,7 +34,7 @@ class RefreshService(xbmc.Monitor):
         utils.ensure_addon_data()
         self._update_properties()
         self._clean_widgets()
-        self.queue = queue.Queue()
+        self.queue = OrderedSetQueue()
         for _ in range(1 if self.low_end else 4):
             thread = threading.Thread(target=self._processQueue)
             thread.start()
@@ -84,7 +84,7 @@ class RefreshService(xbmc.Monitor):
 
     def _update_widgets(self):
         if self.low_end:
-            self.waitForAbort(120)
+            self.waitForAbort(30)
 
         startup = True
         while not self.abortRequested():
@@ -101,15 +101,15 @@ class RefreshService(xbmc.Monitor):
     def onNotification(self, sender, method, data):     
         if sender == "AutoWidget":
             data = json.loads(data)
-            # TODO: ensure we don't queue same one twice
-            utils.log("Added to queue: {} {}".format(data['hash'][:5], data['path']), "notice")
-            self.queue.put(data)
+            utils.log("Added to queue: {} {} {}".format(*data), "notice")
+            # special queue ensures we don't queue same one twice at the same time
+            self.queue.put(tuple(data))
             return True
 
 
     def _processQueue(self):
         if self.low_end:
-            self.waitForAbort(170)  # TODO: wait until no more added to queue?
+            self.waitForAbort(70)  # TODO: wait until no more added to queue?
         utils.log("Starting processing queue", "notice")
 
         while not self.abortRequested():
@@ -117,10 +117,10 @@ class RefreshService(xbmc.Monitor):
                 xbmc.sleep(1000)
                 continue
             try:
-                res = self.queue.get(timeout=5)
+                hash, path, widget_id = self.queue.get(timeout=5)
             except queue.Empty:
+                # TODO: first run of queue. first refresh now?
                 continue
-            path, hash, widget_id = res['path'], res['hash'], res['widget_id']
             history_path = os.path.join(_addon_data, "{}.history".format(hash))
             cache_data = utils.read_json(history_path) if xbmcvfs.exists(history_path) else None
             # class Progress(object):
@@ -433,6 +433,7 @@ class Player(xbmc.Player):
         self.totalTime = -1
         self.playingTime = 0
         self.info = {}
+        self.path = None
 
     def playing_type(self):
         """
@@ -488,6 +489,7 @@ class Player(xbmc.Player):
                 self.totalTime = -1
         # self.recordPlay()
         self.type = self.playing_type()
+        self.path = self.getPlayingFile()
 
         def update_playback_time(self=self):
             while self.isPlaying():
@@ -515,8 +517,10 @@ class Player(xbmc.Player):
         self.totalTime = -1.0
         self.playingTime = 0.0
         self.info = {}
-        cache.save_playback_history(self.type, pp)
+        cache.save_playback_history(self.type, pp, self.path)
         utils.log("recorded playback of {}% {}".format(pp, self.type), "notice")
+
+        # TODO: find which cache file has self.path in it. This probably would have changed
 
         # wait for a bit so scrobing can happen
         # time.sleep(5)
@@ -547,3 +551,13 @@ class Player(xbmc.Player):
 
     def onQueueNextItem(self):
         pass
+
+class OrderedSetQueue(queue.Queue):
+    def _init(self, maxsize):
+        self.queue = {}  # Python 3 dict is ordered
+    def _put(self, item):
+        self.queue[item] = None
+    def _get(self):
+        val = next(iter(self.queue.keys()))
+        del self.queue[val]
+        return val

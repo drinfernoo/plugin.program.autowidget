@@ -65,7 +65,6 @@ def read_history(path, create_if_missing=True):
 
 def push_cache_queue(path, widget_id=None):
     hash = path2hash(path)
-    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
     history = read_history(path, create_if_missing=True)  # Ensure its created
     changed = False
     if widget_id is not None and widget_id not in history["widgets"]:
@@ -81,7 +80,7 @@ def push_cache_queue(path, widget_id=None):
     command = {'jsonrpc': '2.0', 'method': 'JSONRPC.NotifyAll',
                 'params': {'sender': "AutoWidget",
                     'message': "queue",
-                    'data': {"hash": hash, "path": path, "widget_id": widget_id},
+                    'data': (hash, path, widget_id),
                 },
                 'id': 1,}
     def send():
@@ -458,7 +457,7 @@ def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 60):
     return prob
 
 
-def save_playback_history(media_type, playback_percentage):
+def save_playback_history(media_type, playback_percentage, path):
     # Record in json when things got played to help predict which widgets will change after playback
     # if playback_percentage < 0.7:
     #    return
