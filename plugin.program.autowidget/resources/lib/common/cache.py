@@ -1,5 +1,7 @@
+import threading
 import xbmcgui
 import xbmcvfs
+import xbmc
 
 import glob
 import hashlib
@@ -7,6 +9,7 @@ import json
 import math
 import os
 import time
+import random
 
 import six
 
@@ -46,57 +49,22 @@ def hash_from_cache_path(path):
     return os.path.splitext(base)[0]
 
 
-def iter_queue():
-    queued = [
-        os.path.join(_addon_data, x)
-        for x in xbmcvfs.listdir(_addon_data)[1]
-        if x.endswith(".queue")
-    ]
-    # TODO: sort by path instead so load plugins at the same time
-
-    for path in sorted(queued, key=lambda x: xbmcvfs.Stat(x).st_mtime()):
-        queue_data = utils.read_json(path)
-        yield queue_data.get("path", "")
-
-
 def read_history(path, create_if_missing=True):
     hash = path2hash(path)
     history_path = os.path.join(_addon_data, "{}.history".format(hash))
     if not xbmcvfs.exists(history_path):
         if create_if_missing:
-            cache_data = {}
-            history = cache_data.setdefault("history", [])
-            widgets = cache_data.setdefault("widgets", [])
+            cache_data = dict(history=[], widgets=[])
             utils.write_json(history_path, cache_data)
         else:
             cache_data = None
     else:
-        cache_data = utils.read_json(history_path)
+        cache_data = utils.read_json(history_path, default=dict(history=[], widgets=[]))
     return cache_data
-
-
-def next_cache_queue():
-    # Simple queue by creating a .queue file
-    # TODO: use watchdog to use less resources
-    for path in iter_queue():
-        # TODO: sort by path instead so load plugins at the same time
-        hash = path2hash(path)
-        queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
-        if not xbmcvfs.exists(queue_path):
-            # a widget update has already taken care of updating this path
-            continue
-        # We will let the update operation remove the item from the queue
-
-        # TODO: need to workout if a blocking write is happen while it was queued or right now.
-        # probably need a .lock file to ensure foreground calls can get priority.
-        cache_data = read_history(path, create_if_missing=True)
-        widget_id = utils.read_json(queue_path).get("widget_id", None)
-        yield path, cache_data, widget_id
 
 
 def push_cache_queue(path, widget_id=None):
     hash = path2hash(path)
-    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
     history = read_history(path, create_if_missing=True)  # Ensure its created
     changed = False
     if widget_id is not None and widget_id not in history["widgets"]:
@@ -109,22 +77,18 @@ def push_cache_queue(path, widget_id=None):
         history_path = os.path.join(_addon_data, "{}.history".format(hash))
         utils.write_json(history_path, history)
 
-    if xbmcvfs.exists(queue_path):
-        pass  # Leave original modification date so item is higher priority
-    else:
-        utils.write_json(
-            queue_path, {"hash": hash, "path": path, "widget_id": widget_id}
-        )
-
-
-def is_cache_queue(hash):
-    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
-    return xbmcvfs.exists(queue_path)
-
-
-def remove_cache_queue(hash):
-    queue_path = os.path.join(_addon_data, "{}.queue".format(hash))
-    utils.remove_file(queue_path)
+    command = {'jsonrpc': '2.0', 'method': 'JSONRPC.NotifyAll',
+                'params': {'sender': "AutoWidget",
+                    'message': "queue",
+                    'data': (hash, path, widget_id),
+                },
+                'id': 1,}
+    def send():
+        while not utils.call_jsonrpc(command):
+            xbmc.sleep(1000) # Wait untl service starts
+    # Don't wait in case service hasn't started
+    # TODO: check this doesn't still block until thread finishes
+    threading.Thread(target=send).start()
 
 
 def path2hash(path):
@@ -154,8 +118,8 @@ def cache_and_update(path, widget_id, cache_data, notify=None):
     assert widget_id in cache_data["widgets"]
 
     hash = path2hash(path)
-    if not is_cache_queue(hash):
-        return []
+    # if not is_cache_queue(hash):
+    #     return []
 
     if notify is not None:
         widget_def = manage.get_widget_by_id(widget_id)
@@ -163,7 +127,6 @@ def cache_and_update(path, widget_id, cache_data, notify=None):
             notify(widget_def.get("label", ""), path)
 
     new_files, files_changed = cache_files(path, widget_id)
-    remove_cache_queue(hash)
 
     # TODO: this is all widgets that ever requested this path. do we
     # need to update all of them?
@@ -259,9 +222,6 @@ def cache_expiry(path, widget_id, add=None, background=True):
                     )
                     push_cache_queue(path)
             else:
-                # write any updated widget_ids so we know what to update when we dequeue
-                # Also important as wwe use last modified of .history as accessed time
-                utils.write_json(history_path, cache_data)
                 size = len(json.dumps(contents))
                 if history:
                     expiry = history[-1][0] + predict_update_frequency(history)
@@ -371,79 +331,104 @@ def widgets_changed_by_watching(media_type):
     # Predict which widgets the skin might have that could have changed based on recently finish
     # watching something
 
-    all_cache = [
+    all_hist = [
         os.path.join(_addon_data, x)
         for x in xbmcvfs.listdir(_addon_data)[1]
         if x.endswith(".history")
     ]
 
+    # Get rid of ones not read this session. These are old
+    all_hist = [hist_path for hist_path in all_hist if (xbmcvfs.Stat(hist_path).st_mtime() - _startup_time) >= 0]
+
     # Simple version. Anything updated recently (since startup?)
     # priority = sorted(all_cache, key=os.path.getmtime)
     # Sort by chance of it updating
     plays = utils.read_json(_playback_history_path, default={}).setdefault("plays", [])
-    plays_for_type = [(time, t) for time, t in plays if t == media_type]
+    plays_for_type = [(time, t) for time, t in plays if t == media_type or media_type is None]
     priority = sorted(
         [
             (
-                chance_playback_updates_widget(path, plays_for_type),
-                utils.read_json(path).get("path", ""),
-                path,
+                chance_playback_updates_widget(cache_data, plays_for_type),
+                cache_data.get("path", ""),
+                hist_path,
             )
-            for path in all_cache
+            for hist_path, cache_data in [(p, utils.read_json(p, default={})) for p in all_hist]
         ],
         reverse=True,
     )
-
+    
+    count_prob_changed = 0
+    randoms = 0
+    i = 0
     for chance, path, history_path in priority:
         hash = path2hash(path)
-        last_update = xbmcvfs.Stat(history_path).st_mtime() - _startup_time
-        if last_update < 0:
+        if "page=" in path:
+            # HACK: must be a better way
+            continue
+        elif chance >= 0.3 or i < 7:
             utils.log(
-                "widget not updated since startup {} {}".format(last_update, hash[:5]),
+                "Queue {:.2f}% {} {}".format(chance * 100, hash[:5], path),
                 "notice",
             )
-        # elif chance < 0.3:
-        #     log("chance widget changed after play {}% {}".format(chance, hash[:5]), 'notice')
-        else:
-            utils.log(
-                "chance widget changed after play {}% {}".format(chance, hash[:5]),
-                "notice",
-            )
+            count_prob_changed += 1
             yield hash, path
+        elif random.random() <= (1/len(priority)):
+            # If widgets never get updated after playback we never get to know if they change after playback. So always pick some randomly
+            utils.log("Queue random {:.2f}% {} {}".format(chance * 100, hash[:5], path), 'notice')
+            randoms += 1
+            yield hash, path
+        else:
+            utils.log("Prob not changes due to playback {:.2f}% {} {}".format(chance * 100, hash[:5], path), 'notice')
+        i += 1
+    utils.log("=== End Widget update: {} prob changed after playback {} randoms".format(count_prob_changed, randoms), 'notice')
 
-
-def chance_playback_updates_widget(history_path, plays, cutoff_time=60 * 5):
-    cache_data = utils.read_json(history_path)
+def chance_playback_updates_widget(cache_data, plays, cutoff_time=60 * 60):
     history = cache_data.setdefault("history", [])
+    hist_len = len(history)
+    path = cache_data.get("path", "")
     # Complex version
     # - for each widget
     #    - come up with chance it will update after a playback
     #    - each pair of updates, is there a playback inbetween and updated with X min after playback
     #    - num playback with change / num playback with no change
-    changes, non_changes, unrelated_changes = 0, 0, 0
+    # C C P C C
+    changes, non_changes, unrelated_changes, too_late_changes = 0, 0, 0, 0
     update = ""
-    time_since_play = 0
+    update_time = 0
     for play_time, media_type in plays:
-        while True:
+        while (update_time - play_time) <= 0:
             last_update = update
+            last_update_time = update_time
             if not history:
                 break
             update_time, update = history.pop(0)
-            time_since_play = update_time - play_time
             # log("{} {} {} {}".format(update[:5],last_update[:5], unrelated_changes, time_since_play), 'notice')
-            if time_since_play > 0:
+            if (update_time - play_time) > 0:
                 break
             elif update != last_update:
+                # Update that happened with no play inbetween
                 unrelated_changes += 1
-
-        if update == last_update:
-            non_changes += 1
-        elif (
-            time_since_play > cutoff_time
-        ):  # update too long after playback to be releated
+        # We now have a update after a playback
+        if not update_time:
+            break
+        elif not last_update:
+            # haven't got to first update yet
             pass
-        else:
+        elif update == last_update:
+            if update_time == last_update_time:
+                # Two playbacks without any updates
+                pass
+            else:
+                # Didn't change after playback
+                non_changes += 1
+        elif (update_time - play_time) <= cutoff_time:
+            # Did change after playback
             changes += 1
+        else:
+            # update too long after playback to be releated
+            too_late_changes += 1
+            pass
+            
         # TODO: what if the previous update was a long time before playback?
 
     # There is probably a more statistically correct way of doing this but the idea is that
@@ -452,20 +437,27 @@ def chance_playback_updates_widget(history_path, plays, cutoff_time=60 * 5):
     # We will do a simple weighted average with 0.5 to simulate this
     # TODO: currently random widgets score higher than recently played widgets. need to score them lower
     # as they are less relevent
+    # HACK: could too late changes for now until we work out why
+    datapoints = float(changes + too_late_changes + non_changes)
+    all_changes = float(datapoints + unrelated_changes)
+    if all_changes == 0:
+        # we have no data or lost it. let's get it updated
+        prob = 1.0
+    else:
+        prob = (changes) / all_changes
+        unknown_weight = 4
+        prob = (prob * datapoints + 0.5 * unknown_weight) / (datapoints + unknown_weight)
+
     utils.log(
-        "changes={}, non_changes={}, unrelated_changes={}".format(
-            changes, non_changes, unrelated_changes
+        "prob:{:.2f}% changes:{} non_changes:{} non_play_changes:{} too_late:{} plays:{} hist:{}: {}".format(
+            prob*100, changes, non_changes, unrelated_changes, too_late_changes, len(plays), hist_len, path,
         ),
-        "debug",
+        "notice",
     )
-    datapoints = float(changes + non_changes)
-    prob = changes / float(changes + non_changes + unrelated_changes)
-    unknown_weight = 4
-    prob = (prob * datapoints + 0.5 * unknown_weight) / (datapoints + unknown_weight)
     return prob
 
 
-def save_playback_history(media_type, playback_percentage):
+def save_playback_history(media_type, playback_percentage, path):
     # Record in json when things got played to help predict which widgets will change after playback
     # if playback_percentage < 0.7:
     #    return

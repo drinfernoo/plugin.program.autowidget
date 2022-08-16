@@ -1,3 +1,4 @@
+import json
 import xbmc
 import xbmcgui
 import xbmcvfs
@@ -6,6 +7,7 @@ import os
 import random
 import time
 import threading
+import queue
 
 from resources.lib import manage
 from resources.lib.common import cache
@@ -17,23 +19,26 @@ _addon_data = settings.get_addon_info("profile")
 skin_string_pattern = "autowidget-{}-{}"
 _properties = ["context.autowidget"]
 
-_thread = None
-
-
 class RefreshService(xbmc.Monitor):
     def __init__(self):
         """Starts all of the actions of AutoWidget's service."""
         super(RefreshService, self).__init__()
-        utils.log("+++++ STARTING AUTOWIDGET SERVICE +++++", "info")
+        # Threads is IO bound more than CPU bound so would depend more disk
+        # speed and RAM than anything else. how to pick a default value for that?
+        # RAM is maybe biggest factor. low ram = more plugins at once = more swap on low disks
+        mem_used = float(xbmc.getInfoLabel('System.FreeMemory').replace("MB",""))
+        self.low_end = mem_used < 500
+        utils.log("+++++ STARTING AUTOWIDGET SERVICE Free Ram: {}, Low End: {} +++++".format(mem_used, self.low_end), "info")
 
         self.player = Player()
         utils.ensure_addon_data()
         self._update_properties()
         self._clean_widgets()
+        self.queue = OrderedSetQueue()
+        for _ in range(1 if self.low_end else 4):
+            thread = threading.Thread(target=self._processQueue)
+            thread.start()
         self._update_widgets()
-        # Shutting down. Close thread
-        if _thread is not None:
-            _thread.stop()
 
     def onSettingsChanged(self):
         self._update_properties()
@@ -76,97 +81,118 @@ class RefreshService(xbmc.Monitor):
             i += step
             yield i
 
+
     def _update_widgets(self):
-        self._refresh(True)
+        if self.low_end:
+            self.waitForAbort(30)
+
+        startup = True
+        while not self.abortRequested():
+            self._refresh(startup)
+            startup = False
+
+            utils.log("Time till refresh: {}s".format(60 * 60 * self.refresh_duration), "notice")
+            for _ in self.tick(step=5, max=60 * 60 * self.refresh_duration):
+                # don't process cache queue during video playback
+                if self.abortRequested():
+                    break
+
+
+    def onNotification(self, sender, method, data):     
+        if sender == "AutoWidget":
+            data = json.loads(data)
+            utils.log("Added to queue: {} {} {}".format(*data), "notice")
+            # special queue ensures we don't queue same one twice at the same time
+            self.queue.put(tuple(data))
+            return True
+
+
+    def _processQueue(self):
+        if self.low_end:
+            self.waitForAbort(70)  # TODO: wait until no more added to queue?
+        utils.log("Starting processing queue", "notice")
 
         while not self.abortRequested():
-            for _ in self.tick(step=1, max=60 * 15):
-                # don't process cache queue during video playback
-                if self.player.isPlayingVideo():
-                    continue
+            if self.player.isPlayingVideo():
+                xbmc.sleep(1000)
+                continue
+            try:
+                hash, path, widget_id = self.queue.get(timeout=5)
+            except queue.Empty:
+                # TODO: first run of queue. first refresh now?
+                continue
+            history_path = os.path.join(_addon_data, "{}.history".format(hash))
+            cache_data = utils.read_json(history_path) if xbmcvfs.exists(history_path) else None
+            # class Progress(object):
+            #     dialog = None
+            #     service = self
+            #     done = set()
 
-                # TODO: somehow delay till all other plugins loaded?
-                updated = False
-                unrefreshed_widgets = set()
-                queue = list(cache.next_cache_queue())
+            #     def __call__(self, groupname, path):
+            #         if self.dialog is None:
+            #             self.dialog = xbmcgui.DialogProgressBG()
+            #             self.dialog.create("AutoWidget", utils.get_string(30139))
+            #         if not self.service.player.isPlayingVideo():
+            #             percent = (
+            #                 len(self.done)
+            #                 / float(len(queue) + len(self.done) + 1)
+            #                 * 100
+            #             )
+            #             self.dialog.update(
+            #                 int(percent), "AutoWidget", message=groupname
+            #             )
+            #         self.done.add(path)
 
-                # class Progress(object):
-                #     dialog = None
-                #     service = self
-                #     done = set()
+            # progress = Progress()
 
-                #     def __call__(self, groupname, path):
-                #         if self.dialog is None:
-                #             self.dialog = xbmcgui.DialogProgressBG()
-                #             self.dialog.create("AutoWidget", utils.get_string(30139))
-                #         if not self.service.player.isPlayingVideo():
-                #             percent = (
-                #                 len(self.done)
-                #                 / float(len(queue) + len(self.done) + 1)
-                #                 * 100
-                #             )
-                #             self.dialog.update(
-                #                 int(percent), "AutoWidget", message=groupname
-                #             )
-                #         self.done.add(path)
+            utils.log("Dequeued cache update: {} {}".format(hash[:5], path), "notice")
 
-                # progress = Progress()
-
-                while queue:
-                    path, cache_data, widget_id = queue.pop(0)
-                    hash = cache.path2hash(path)
-                    utils.log("Dequeued cache update: {}".format(hash[:5]), "notice")
-
-                    affected_widgets = set(
-                        cache.cache_and_update(
-                            path,
-                            widget_id,
-                            cache_data,  # notify=progress
-                        )
-                    )
-                    if affected_widgets:
-                        updated = True
-                    unrefreshed_widgets = unrefreshed_widgets.union(affected_widgets)
-                    # # wait 5s or for the skin to reload the widget
-                    # # this should reduce churn at startup where widgets take too long too long show up
-                    # before_update = time.time() # TODO: have .access file so we can put above update
-                    # while _ in self.tick(1, 10, lambda: cache.last_read(hash) > before_update):
-                    #     pass
-                    # utils.log("paused queue until read {:.2} for {}".format(cache.last_read(hash)-before_update, hash[:5]), 'info')
-                    if self.abortRequested():
-                        break
-                    if self.player.isPlayingVideo():
-                        # Video stop will cause another refresh anyway.
-                        break
-                    queue = list(cache.next_cache_queue())
-                for widget_id in unrefreshed_widgets:
-                    widget_def = manage.get_widget_by_id(widget_id)
-                    if not widget_def:
-                        continue
-                    _update_strings(widget_def)
-                if (
-                    xbmcvfs.exists(os.path.join(_addon_data, "refresh.time"))
-                    and utils.get_active_window() == "home"
-                ):
-                    utils.update_container(True)
-                # if progress.dialog is not None:
-                #     progress.dialog.update(100)
-                #     progress.dialog.close()
-                if (
-                    updated
-                    and self.refresh_enabled == 1
-                    and not self.player.isPlayingVideo()
-                ):
-                    dialog = xbmcgui.Dialog()
-                    dialog.notification(
-                        u"AutoWidget", utils.get_string(30140), sound=False
-                    )
-
+            affected_widgets = set(
+                cache.cache_and_update(
+                    path,
+                    widget_id,
+                    cache_data,  # notify=progress
+                )
+            )
+            if affected_widgets:
+                updated = True
+            # unrefreshed_widgets = unrefreshed_widgets.union(affected_widgets)
+            # # wait 5s or for the skin to reload the widget
+            # # this should reduce churn at startup where widgets take too long too long show up
+            # before_update = time.time() # TODO: have .access file so we can put above update
+            # while _ in self.tick(1, 10, lambda: cache.last_read(hash) > before_update):
+            #     pass
+            # utils.log("paused queue until read {:.2} for {}".format(cache.last_read(hash)-before_update, hash[:5]), 'info')
             if self.abortRequested():
                 break
-
-            if not self._refresh():
+            if self.player.isPlayingVideo():
+                # Video stop will cause another refresh anyway.
                 continue
+
+            for widget_id in affected_widgets:
+                widget_def = manage.get_widget_by_id(widget_id)
+                if not widget_def:
+                    continue
+                _update_strings(widget_def)
+            if (
+                xbmcvfs.exists(os.path.join(_addon_data, "refresh.time"))
+                and utils.get_active_window() == "home"
+            ):
+                utils.update_container(True)
+            # # if progress.dialog is not None:
+            # #     progress.dialog.update(100)
+            # #     progress.dialog.close()
+            # if (
+            #     updated
+            #     and self.refresh_enabled == 1
+            #     and not self.player.isPlayingVideo()
+            # ):
+            #     dialog = xbmcgui.Dialog()
+            #     dialog.notification(
+            #         u"AutoWidget", utils.get_string(30140), sound=False
+            #     )
+        utils.log("Stop processing queue", "notice")
+
 
     def _refresh(self, startup=False):
         if self.refresh_enabled in [0, 1] and manage.find_defined_widgets():
@@ -189,6 +215,16 @@ class RefreshService(xbmc.Monitor):
             refresh_paths(notify=notification and not startup)
         else:
             utils.log("+++++ AUTOWIDGET REFRESHING NOT ENABLED +++++", "info")
+
+        if not startup:
+            return
+        utils.log("+++++ AUTOWIDGET Refreshing widgets changed after playback in case of crash +++++", "info")
+        # because update after playback could have been interupted. Do on startup too
+        for hash, path in cache.widgets_changed_by_watching(None):
+            # Queue them for refresh
+            cache.push_cache_queue(path)
+            # utils.log("Queued cache update: {}".format(hash[:5]), "notice")
+        # utils.update_container(reload=True)
 
 
 def _update_strings(widget_def):
@@ -397,6 +433,7 @@ class Player(xbmc.Player):
         self.totalTime = -1
         self.playingTime = 0
         self.info = {}
+        self.path = None
 
     def playing_type(self):
         """
@@ -452,6 +489,7 @@ class Player(xbmc.Player):
                 self.totalTime = -1
         # self.recordPlay()
         self.type = self.playing_type()
+        self.path = self.getPlayingFile()
 
         def update_playback_time(self=self):
             while self.isPlaying():
@@ -479,16 +517,19 @@ class Player(xbmc.Player):
         self.totalTime = -1.0
         self.playingTime = 0.0
         self.info = {}
-        cache.save_playback_history(self.type, pp)
+        cache.save_playback_history(self.type, pp, self.path)
         utils.log("recorded playback of {}% {}".format(pp, self.type), "notice")
 
+        # TODO: find which cache file has self.path in it. This probably would have changed
+
         # wait for a bit so scrobing can happen
-        time.sleep(5)
+        # time.sleep(5)
         for hash, path in cache.widgets_changed_by_watching(self.type):
             # Queue them for refresh
             cache.push_cache_queue(path)
-            utils.log("Queued cache update: {}".format(hash[:5]), "notice")
-        utils.update_container(reload=True)
+            # utils.log("Queued cache update: {}".format(hash[:5]), "notice")
+        # utils.update_container(reload=True)
+        utils.log("++ Finished queing widget updates after playback ++", "notice")
 
     def onPlayBackStopped(self):
         self.onPlayBackEnded()
@@ -510,3 +551,13 @@ class Player(xbmc.Player):
 
     def onQueueNextItem(self):
         pass
+
+class OrderedSetQueue(queue.Queue):
+    def _init(self, maxsize):
+        self.queue = {}  # Python 3 dict is ordered
+    def _put(self, item):
+        self.queue[item] = None
+    def _get(self):
+        val = next(iter(self.queue.keys()))
+        del self.queue[val]
+        return val
