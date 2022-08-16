@@ -97,6 +97,7 @@ def build_labels(source, path_def=None, target=""):
 
     if path != "addons://user/":
         path = path.replace("addons://user/", "plugin://")
+        path = path.replace("addons://dependencies/", "dependency://")
     if "plugin://plugin.video.themoviedb.helper" in path and not "&widget=True" in path:
         path += "&widget=True"
     labels["file"]["file"] = path
@@ -122,6 +123,8 @@ def _add_as(path_def):
             i in path for i in ["addons://user", "plugin://", "script://"]
         ) and not parse_qsl(path):
             pass
+        elif "dependency://" in path:
+            types = [(shortcut_types[4], type_labels[4])]
         else:
             types = [(shortcut_types[0], type_labels[0])]
 
