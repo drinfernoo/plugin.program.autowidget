@@ -113,18 +113,19 @@ def cache_and_update(path, widget_id, cache_data, notify=None):
     or is expired and if so force it to be refreshed. When going through the queue this
     could mean we refresh paths that other widgets also use. These will then be skipped.
     """
-    assert widget_id
+    # assert widget_id
     assert cache_data.get("path") == path
-    assert widget_id in cache_data["widgets"]
+    assert widget_id in cache_data["widgets"] or widget_id is None
 
     hash = path2hash(path)
     # if not is_cache_queue(hash):
     #     return []
 
     if notify is not None:
-        widget_def = manage.get_widget_by_id(widget_id)
-        if widget_def is not None:
-            notify(widget_def.get("label", ""), path)
+        if widget_id is not None:
+            widget_def = manage.get_widget_by_id(widget_id)
+            if widget_def is not None:
+                notify(widget_def.get("label", ""), path)
 
     new_files, files_changed = cache_files(path, widget_id)
 
@@ -169,7 +170,7 @@ def cache_expiry(path, widget_id, add=None, background=True):
 
     history = cache_data.setdefault("history", [])
     widgets = cache_data.setdefault("widgets", [])
-    if widget_id not in widgets:
+    if widget_id is not None and widget_id not in widgets:
         widgets.append(widget_id)
 
     expiry = time.time() - 20
