@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1477" provider-name="drinfernoo">
+<addon id="plugin.program.autowidget" name="AutoWidget" version="0.0.1458" provider-name="drinfernoo">
     <requires>
         <import addon="script.module.pil" />
         <import addon="script.module.six" />
@@ -22,11 +22,11 @@
                 <visible>String.Contains(ListItem.FolderPath, plugin://plugin.program.autowidget)</visible>
             </item>
 			<item library="context_refresh_single.py">
-                <label>$ADDON[plugin.program.autowidget 30046]</label>
+                <label>$ADDON[plugin.program.autowidget 30047]</label>
                 <visible>!String.IsEmpty(ListItem.Property(autoID)) + [!String.IsEqual(ListItem.Property(autoAction),static) + !String.IsEqual(ListItem.Property(autoAction),merged)]</visible>
             </item>
 			<item library="clear_cache_single.py">
-                <label>$ADDON[plugin.program.autowidget 30116]</label>
+                <label>$ADDON[plugin.program.autowidget 30117]</label>
                 <visible>!String.IsEmpty(ListItem.Property(autoCache))</visible>
             </item>
         </menu>
@@ -43,10 +43,6 @@
         <website>https://www.github.com/drinfernoo/</website>
         <source>https://www.github.com/drinfernoo/plugin.program.autowidget/</source>
         <news>
-3.4.2
- - Some fixes for constant notification
-3.4.1
- - Fix clearing cache from settings
 3.4.0
  - Rework caching mechanism
  - Add more notifications of progress
@@ -250,60 +246,9 @@
 1.4.5
  - Refresh Shortcut widgets Automatically
  - Add "Next Path" widget action
- - Add "C nodes
- - Reduce refreshes
- - Prettify .props file output
-1.5.5
- - Fix regex for labels in some skins
-1.5.4
- - Fix recursion crash during refresh
-1.5.3
- - Fix indent error
-1.5.2
- - Fix shortcut calls for YouTube
-1.5.1
- - Fix error in editor dialog
- - Fix changelog
-1.5.0
- - Add "Active Widgets" menu
- - Consistency fixes during initialization and refresh
- - Allow adding playable items as shortcuts
- - Fix crashes in Krypton
- - Fix crashes from invalid group/widget files
- - Fix Unicode compatibility
-1.4.5
- - Refresh Shortcut widgets Automatically
- - Add "Next Path" widget action
  - Add "Clone" and "Explode" widget modes
  - Allow refreshing between 15m-2h, at 15m intervals
-1.4.3
- - Add context menu on more items
- - Fix some log spam
- - Catch more errors from invalid files
- - Fix "Settings" shortcuts
- - Gracefully handle remote artwork
- - Use special paths for artwork
-1.4.2
- - Fix bug in conversion
-1.4.1
- - Fix bug in migration
-1.4.0
- - Add "Clean Old References" shortcuts
- - Change main menu layout
-1.3.9
- - Fix label bug in Embuary (and maybe elsewhere)
-1.3.8
- - Add "Wipe Add-on Data" shortcuts
- - Allow Unicode characters in labels
-1.3.7
- - Fix typo in path handling
-1.3.6
- - Fix error handling
-1.3.5
- - Add extra error checking for file operations
-1.3.4
- - Add proper migration from old JSON to current
-1.3.3
+1.1.3.3
  - Rewrite editor dialog
  - Fix path conversion for skin string paths
 1.3.2
@@ -365,6 +310,52 @@
             <fanart>resources/media/fanart.png</fanart>
             <poster>resources/media/poster.png</poster>
             <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+n Shortcuts version to  1.0.19
+1.0.4
+ - Allow custom labels
+ - Add removal notifications    
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>resources/media/icon.png</icon>
+            <fanart>resources/media/fanart.png</fanart>
+            <poster>resources/media/poster.png</poster>
+            <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+  
+1.0.3
+ - Fix shortcuts and widgets added from context menu
+1.0.2
+ - Fix crash from non-XML files
+1.0.1
+ - Fix crash from non-existent context menu setting
+1.0.0
+ - First stable release
+        </news>
+        <assets>
+            <icon>resources/media/icon.png</icon>
+            <fanart>resources/media/fanart.png</fanart>
+            <poster>resources/media/poster.png</poster>
+            <banner>resources/media/banner.png</banner>
+            <clearlogo>resources/media/clearlogo.png</clearlogo>
+        </assets>
+    </extension>
+</addon>
+a/banner.png</banner>
             <clearlogo>resources/media/clearlogo.png</clearlogo>
         </assets>
     </extension>
