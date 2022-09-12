@@ -323,11 +323,10 @@ def refresh(widget_id, widget_def=None, paths=None, force=False, single=False):
                 paths.remove(paths[next])
 
                 widget_def["path"] = path_id
-                if widget_def["path"]:
-                    path_label = manage.get_path_by_id(path_id, group_id).get(
+                if path_id and manage.get_path_by_id(path_id, group_id):
+                    widget_def["label"] = manage.get_path_by_id(path_id, group_id).get(
                         "label", ""
                     )
-                    widget_def["label"] = path_label
                     widget_def["updated"] = 0 if force else current_time
 
                     manage.save_path_details(widget_def)
