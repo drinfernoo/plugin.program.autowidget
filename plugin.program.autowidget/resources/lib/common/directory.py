@@ -186,6 +186,10 @@ def add_menu_item(
                     item.setMimeType(value)
                 elif key == "artist":
                     new_value = [value]
+                elif key == "duration" and isinstance(value, str) and ":" in value:
+                    # Fix duration from [HH:]MM:SS to the number of seconds (integer)
+                    factors = (1, 60, 3600)
+                    new_value = sum(int(v) * f for v, f in zip(value.split(':')[::-1], factors))
                 else:
                     new_value = (
                         value
