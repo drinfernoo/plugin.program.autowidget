@@ -116,7 +116,7 @@ msgstr "Aucun chemin d’accès n’a été défini pour ce groupe."
 #: /resources/lib/refresh.py:307
 msgctxt "#30019"
 msgid "Refreshing widgets..."
-msgstr "Rafraîchissement des widgets..."
+msgstr "Actualisation des widgets..."
 
 #: /resources/lib/add.py:188
 msgctxt "#30020"
